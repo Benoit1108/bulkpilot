@@ -2,9 +2,16 @@
 set -e
 
 if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
-	if [ "$APP_ENV" = 'prod' ] && [ -z "$APP_SECRET" ]; then
-		echo 'APP_SECRET must be provided in production.' >&2
-		exit 1
+	if [ "$APP_ENV" = 'prod' ]; then
+		for required in APP_SECRET APP_ENCRYPTION_KEY DEFAULT_URI MAILER_DSN MAILER_FROM; do
+			if [ -z "$(printenv "$required")" ]; then
+				echo "$required must be provided in production." >&2
+				exit 1
+			fi
+		done
+		# Verification and reset emails must actually leave, with links that work.
+		case "$MAILER_DSN" in null://*) echo 'MAILER_DSN must be a real transport in production.' >&2; exit 1 ;; esac
+		case "$DEFAULT_URI" in *://localhost*) echo 'DEFAULT_URI must be the public URL in production.' >&2; exit 1 ;; esac
 	fi
 
 	if [ -z "$(ls -A 'vendor/' 2>/dev/null)" ]; then

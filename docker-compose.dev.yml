@@ -10,9 +10,13 @@ services:
       SERVER_NAME: ${SERVER_NAME:-localhost, https://php}
       CADDY_SERVER_EXTRA_DIRECTIVES: tls internal
       APP_SECRET: dev-only-not-a-secret
+      APP_ENCRYPTION_KEY: ZGV2LW9ubHktbm90LWEtc2VjcmV0LWtleS0zMmJ5dGU= # gitleaks:allow (readable non-secret key)
       PWA_MODE: pwa_dev
       PWA_UPSTREAM: pwa:3000
       MAILER_DSN: smtp://mailer:1025
+      DEFAULT_URI: https://localhost
+      MAILER_FROM: no-reply@localhost
+      REGISTRATION_ENABLED: "true"
       XDEBUG_MODE: ${XDEBUG_MODE:-off}
     volumes:
       - ./api:/app
@@ -52,7 +56,7 @@ services:
         protocol: tcp
 
   mailer:
-    image: axllent/mailpit:v1
+    image: axllent/mailpit:v1.31.3
     ports:
       - target: 8025
         published: ${MAILPIT_PORT:-8025}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Identity\Domain\User\User" table="users">
+        <unique-constraints>
+            <unique-constraint name="users_email_unique" columns="email"/>
+        </unique-constraints>
+
+        <id name="id" type="user_id"/>
+        <field name="email" type="email_address" length="254"/>
+        <field name="version" type="integer" version="true"/>
+        <field name="password" column="password_hash" type="hashed_password" length="255" nullable="true"/>
+        <field name="emailVerifiedAt" type="datetimetz_immutable" nullable="true"/>
+        <field name="registeredAt" type="datetimetz_immutable"/>
+        <field name="pendingTotpSecret" column="two_factor_pending_secret" type="encrypted_secret" nullable="true"/>
+        <field name="totpSecret" column="two_factor_secret" type="encrypted_secret" nullable="true"/>
+        <field name="twoFactorEnabledAt" type="datetimetz_immutable" nullable="true"/>
+        <field name="lastTotpStep" column="two_factor_last_step" type="bigint" nullable="true"/>
+        <field name="recoveryCodeHashes" column="two_factor_recovery_codes" type="json"/>
+        <embedded name="profile" class="App\Identity\Domain\User\Profile" column-prefix="profile_"/>
+    </entity>
+</doctrine-mapping>

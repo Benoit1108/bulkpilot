@@ -6,7 +6,7 @@ export type Health = components['schemas']['Health']
 export type ServiceStatus = 'checking' | 'ok' | 'degraded' | 'unreachable'
 
 export function fetchHealth(api: ApiClient): Promise<Health> {
-  return api.get<Health>('/health')
+  return api.get('/api/health')
 }
 
 /**

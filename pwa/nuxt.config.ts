@@ -40,7 +40,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       appName,
-      apiBase: '/api',
     },
   },
   compatibilityDate: '2026-09-01',

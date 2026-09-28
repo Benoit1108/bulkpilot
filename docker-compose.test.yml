@@ -6,11 +6,30 @@ services:
   php:
     environment:
       APP_SECRET: test-only-not-a-secret-4f1c2b9e8d7a6f5e
+      APP_ENCRYPTION_KEY: ZTJlLW9ubHktbm90LWEtc2VjcmV0LWtleS0zMmJ5dGU= # gitleaks:allow (readable non-secret key)
       SERVER_NAME: localhost, https://php
       CADDY_SERVER_EXTRA_DIRECTIVES: tls internal
+      # Links in emails must open in the Playwright browser.
+      DEFAULT_URI: https://php
+      MAILER_DSN: smtp://mailer:1025
+      MAILER_FROM: no-reply@e2e.test
+      REGISTRATION_ENABLED: "true"
+      # Every E2E test creates its own account from the same IP.
+      RATE_LIMIT_SIGN_IN_IP: "1000"
+      RATE_LIMIT_REGISTRATION: "1000"
+      RATE_LIMIT_EMAIL_LINKS: "1000"
     ports: !reset []
+    depends_on:
+      mailer:
+        condition: service_healthy
 
   database:
     volumes: !reset []
     tmpfs:
       - /var/lib/postgresql
+
+  mailer:
+    image: axllent/mailpit:v1.31.3
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1

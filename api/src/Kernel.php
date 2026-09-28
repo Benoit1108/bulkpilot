@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Identity\Application\Port\ExternalIdentityProvider;
 use App\Shared\Application\Bus\Command\CommandHandler;
 use App\Shared\Application\Bus\Event\DomainEventSubscriber;
 use App\Shared\Application\Bus\Query\QueryHandler;
@@ -31,6 +32,8 @@ class Kernel extends BaseKernel
             ->addTag('messenger.message_handler', ['bus' => 'event.bus']);
         $container->registerForAutoconfiguration(HealthCheck::class)
             ->addTag('app.health_check');
+        $container->registerForAutoconfiguration(ExternalIdentityProvider::class)
+            ->addTag('app.identity_provider');
     }
 
     /**

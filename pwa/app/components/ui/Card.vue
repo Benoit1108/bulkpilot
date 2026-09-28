@@ -35,6 +35,7 @@ const titleId = useId()
 
 <style scoped>
 .ui-card {
+  scroll-margin-top: var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);

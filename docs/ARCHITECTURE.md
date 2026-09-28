@@ -88,10 +88,31 @@ Le transport `async` (Doctrine, table `messenger_messages`) est prêt pour les t
 (rapports, exports, photos, IA, notifications). Rien n'y est routé tant qu'aucun message asynchrone n'existe ;
 un service `worker` sera ajouté au compose à ce moment-là.
 
+### Authentification
+
+Symfony Security ne voit qu'un `SecurityUser` (Infrastructure d'Identity) : identifiant utilisateur + appareil.
+Les identifiants sont vérifiés par le use case `CheckCredentials` ; la Presentation ouvre alors une `UserSession`
+puis appelle le port `SessionAuthenticator` (implémenté avec `Security::login()`). À chaque requête, le provider
+recharge l'appareil : révoqué ⇒ requête déconnectée ⇒ 401. Les sessions HTTP vivent en base (`PdoSessionHandler`).
+
+### Emails
+
+Les emails partent **après la réponse** (`DeferredMailer`, sur `kernel.terminate`) : le temps de réponse ne révèle pas si
+un email a été envoyé (pas d'énumération des comptes), et une panne SMTP n'échoue pas la requête (erreur journalisée,
+lien redemandable). Le lien lui-même est créé dans la transaction de la commande.
+
+### Concurrence
+
+Les agrégats qui portent des valeurs à usage unique (`User` : pas TOTP, codes de secours ; `OneTimeToken`) ont une
+colonne `version` (verrou optimiste). Une course détectée par la base (version, contrainte d'unicité) devient
+`ConcurrentUpdate` (409) dans le bus de commandes, jamais une 500.
+
 ### Persistance
 
 - Mapping Doctrine **XML** dans `<Context>/Infrastructure/Persistence/Doctrine/Mapping` : le domaine reste pur (ADR-0009).
-- Identifiants UUID v7 (ordonnés dans le temps), encapsulés dans des value objects héritant de `Shared\Domain\Identifier\Uuid`.
+- Identifiants UUID v7 (ordonnés dans le temps), encapsulés dans des value objects héritant de `Shared\Domain\Identifier\Uuid`,
+  stockés en colonnes `uuid` natives via des types Doctrine dédiés (`UuidType`). Dates en `timestamptz`.
+- Les agrégats se référencent par identifiant, sans clé étrangère ORM entre agrégats.
 - Migrations versionnées dans `api/migrations`, exécutées au démarrage du conteneur.
 
 ### FrankenPHP worker mode
@@ -104,21 +125,24 @@ Le kernel reste en mémoire entre les requêtes. Règles :
 
 En dev, le worker redémarre quand `src/` ou `config/` changent ; après un changement de `vendor/`, `make restart`.
 Le healthcheck du conteneur interroge PHP (`/api/health` sur un listener interne), un worker bloqué est donc détecté.
-La revue de code vérifie ces points ; des tests dédiés au worker arriveront avec le premier état sensible (Identity).
+Vérifié par `tests/Api/Identity/WorkerModeTest.php` : deux utilisateurs alternent 20 fois sur un même kernel,
+avec seulement le `services_resetter` entre deux requêtes (ce que fait la boucle du worker) ; aucun jeton ne survit au reset.
+Un service qui garde un état par requête l'annonce et implémente `ResetInterface` (ex. `DeferredMailer`).
 
 ## Frontend
 
 ```text
 pwa/app/
-├── pages/          routes (une page par section, fines) + reglages/
-├── layouts/        shell : navigation, en-tête, bandeau de connectivité, contenu
+├── pages/          routes fines : sections, pages publiques d'identité (connexion…), reglages/{index,profil,compte}
+├── layouts/        default (navigation, en-tête, bandeau de connectivité) · auth (pages publiques)
+├── middleware/     auth.global.ts : pages privées → connexion (règles pures dans features/identity/access.ts)
 ├── components/
-│   ├── ui/         design system (UiButton, UiCard, UiEmptyState…)
-│   └── shell/      ShellNav, ShellConnectivityBanner, ShellUpdatePrompt
-├── features/       code par fonctionnalité (appels API typés, état dérivé) : shell/, system/
-├── composables/    useApi, useTheme, usePwaUpdate, useEventListener
-├── services/api/   client HTTP unique + normalisation des erreurs
-├── plugins/        initialisations côté client (thème)
+│   ├── ui/         design system (UiButton, UiCard, UiInput, UiSelect, UiAlert, UiEmptyState…)
+│   └── shell/      ShellNav, ShellConnectivityBanner, ShellUpdatePrompt, ShellBackLink
+├── features/       code par fonctionnalité : identity/ (compte, messages, règles, composants), shell/, system/
+├── composables/    useApi, useAccount, useSubmission, useTheme, usePwaUpdate, useEventListener
+├── services/api/   contrat typé (contract.ts), client unique (client.ts), erreurs et messages par code
+├── plugins/        api (client + gestion du 401), messages (enregistrement par fonctionnalité), theme
 ├── error.vue       page d'erreur en français, sans détail technique
 └── types/          api.d.ts généré depuis l'OpenAPI (ne pas éditer)
 ```
@@ -128,7 +152,10 @@ pwa/app/
   en `ApiError` (message utilisateur / message technique / `traceId` = en-tête `X-Request-Id` posé par Caddy).
   Les lectures sont réessayées une fois (coupure réseau, 500/502/503/504), jamais les écritures.
   `asApiError()` récupère l'`ApiError` d'origine derrière l'enveloppe de `useAsyncData`.
-- **Types générés** : `make openapi` exporte la spec et régénère `app/types/api.d.ts` ; `make openapi-check` (CI) échoue si elle est périmée.
+- **Types générés** : `make openapi` exporte la spec (et `openapi/error-codes.json`) et régénère `app/types/api.d.ts` ;
+  `make openapi-check` (CI) échoue si l'un est périmé. Un test Vitest exige un message français pour chaque code d'erreur.
+- **Session perdue** : seul un appareil *qui était connecté* est renvoyé vers la connexion (et ses données en cache vidées) ;
+  le 401 attendu d'un visiteur ne déclenche rien.
 - **Navigation** : barre basse sur téléphone ; rail vertical dès 48rem ; barre latérale libellée dès 75rem.
   Les Réglages sont séparés des cinq sections (en-tête sur téléphone, bas du rail sinon).
 - **Design system** : tokens CSS (`assets/css/tokens.css`), thème sombre par défaut (clair et « système » dans les Réglages),

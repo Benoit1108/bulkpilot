@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, signedInTest as test } from './support/fixtures'
 
 const sections = ['Accueil', 'Nutrition', 'Training', 'Progression', 'Coach'] as const
 
@@ -50,6 +50,17 @@ test.describe('settings', () => {
     await page.reload()
     await expect(html).toHaveAttribute('data-theme', 'light')
     await expect(page.getByRole('radio', { name: 'Clair' })).toBeChecked()
+  })
+
+  test('long pages scroll in both themes', async ({ page }) => {
+    for (const theme of ['Sombre', 'Clair']) {
+      await page.goto('/reglages')
+      await page.getByRole('radio', { name: theme }).check()
+      await page.goto('/reglages/compte')
+      await page.getByRole('button', { name: 'Déconnecter', exact: false }).or(page.getByText('Cet appareil')).first().scrollIntoViewIfNeeded()
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+      expect(await page.evaluate(() => window.scrollY), theme).toBeGreaterThan(0)
+    }
   })
 
   test('the stored theme is applied before the app bundle runs', async ({ page }) => {
@@ -114,6 +125,14 @@ test.describe('production serving', () => {
     expect(response.headers()['content-type']).toContain('json')
   })
 
+  test('the fake sign-in provider does not exist in production', async ({ request }) => {
+    expect(await (await request.get('/api/auth/providers', { headers: { Accept: 'application/json' } })).json()).toEqual({ providers: [] })
+
+    const start = await request.get('/api/auth/oauth/fake/start?login_hint=anyone@example.com', { maxRedirects: 0 })
+    expect(start.status()).toBe(302)
+    expect(start.headers().location).toBe('/connexion?oauth_error=identity.external_provider_unavailable')
+  })
+
   test('health answers 200 with every dependency up', async ({ request }) => {
     const response = await request.get('/api/health', { headers: { Accept: 'application/json' } })
 
@@ -136,7 +155,9 @@ test.describe('production serving', () => {
 
     await context.setOffline(true)
     await page.reload()
+    // The shell boots from the service worker cache; the server being unreachable is explained.
     await expect(page.getByRole('heading', { level: 1, name: 'Accueil' })).toBeVisible()
+    await expect(page.getByText('Connexion impossible')).toBeVisible()
     await context.setOffline(false)
   })
 })

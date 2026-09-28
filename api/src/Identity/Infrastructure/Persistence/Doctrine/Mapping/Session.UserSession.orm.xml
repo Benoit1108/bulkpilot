@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Identity\Domain\Session\UserSession" table="user_sessions">
+        <indexes>
+            <index name="user_sessions_user_active" columns="user_id,revoked_at"/>
+        </indexes>
+
+        <id name="id" type="user_session_id"/>
+        <field name="userId" type="user_id"/>
+        <field name="deviceLabel" length="100"/>
+        <field name="openedAt" type="datetimetz_immutable"/>
+        <field name="lastSeenAt" type="datetimetz_immutable"/>
+        <field name="revokedAt" type="datetimetz_immutable" nullable="true"/>
+    </entity>
+</doctrine-mapping>

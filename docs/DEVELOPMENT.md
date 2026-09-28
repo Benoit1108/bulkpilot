@@ -22,7 +22,7 @@ make down
 
 ```bash
 make sh-php                                  # shell PHP
-docker compose -f docker-compose.yml -f docker-compose.dev.yml exec php composer require vendor/pkg && make restart
+make composer ARGS="require vendor/pkg" && make restart   # exécuté avec ton uid : pas de fichiers root
 docker compose -f docker-compose.yml -f docker-compose.dev.yml exec pwa pnpm add pkg
 
 make db-diff && make db-migrate              # après un changement de mapping

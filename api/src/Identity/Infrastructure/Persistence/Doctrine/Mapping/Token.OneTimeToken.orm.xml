@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Identity\Domain\Token\OneTimeToken" table="one_time_tokens">
+        <indexes>
+            <index name="one_time_tokens_user_purpose" columns="user_id,purpose"/>
+        </indexes>
+
+        <id name="id" type="one_time_token_id"/>
+        <field name="purpose" length="30" enum-type="App\Identity\Domain\Token\TokenPurpose"/>
+        <field name="userId" type="user_id"/>
+        <field name="version" type="integer" version="true"/>
+        <field name="secretHash" length="64"/>
+        <field name="expiresAt" type="datetimetz_immutable"/>
+        <field name="consumedAt" type="datetimetz_immutable" nullable="true"/>
+    </entity>
+</doctrine-mapping>

@@ -12,6 +12,384 @@
         }
     ],
     "paths": {
+        "/api/auth/register": {
+            "post": {
+                "operationId": "api_authregister_post",
+                "tags": [
+                    "Account"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Account resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Account resource.",
+                "description": "Creates a Account resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Account resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Account.RegistrationInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Account.RegistrationInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/me": {
+            "get": {
+                "operationId": "api_me_get",
+                "tags": [
+                    "Account"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Account resource.",
+                "description": "Retrieves a Account resource.",
+                "parameters": []
+            }
+        },
+        "/api/me/profile": {
+            "put": {
+                "operationId": "api_meprofile_put",
+                "tags": [
+                    "Account"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Replaces the Account resource.",
+                "description": "Replaces the Account resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The updated Account resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Account.ProfileInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Account.ProfileInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/auth/email-verification": {
+            "post": {
+                "operationId": "api_authemail-verification_post",
+                "tags": [
+                    "EmailVerification"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "EmailVerification resource created",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a EmailVerification resource.",
+                "description": "Creates a EmailVerification resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new EmailVerification resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailVerification"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailVerification"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/me/email-verification": {
+            "post": {
+                "operationId": "api_meemail-verification_post",
+                "tags": [
+                    "EmailVerification"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "EmailVerification resource created",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a EmailVerification resource.",
+                "description": "Creates a EmailVerification resource.",
+                "parameters": []
+            }
+        },
         "/api/health": {
             "get": {
                 "operationId": "api_health_get",
@@ -63,10 +441,1430 @@
                 "description": "Retrieves a Health resource.",
                 "parameters": []
             }
+        },
+        "/api/me/password": {
+            "post": {
+                "operationId": "api_mepassword_post",
+                "tags": [
+                    "PasswordChange"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "PasswordChange resource created",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a PasswordChange resource.",
+                "description": "Creates a PasswordChange resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new PasswordChange resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordChange"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordChange"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/auth/password-reset": {
+            "post": {
+                "operationId": "api_authpassword-reset_post",
+                "tags": [
+                    "PasswordReset"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "PasswordReset resource created",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a PasswordReset resource.",
+                "description": "Creates a PasswordReset resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new PasswordReset resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordReset"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordReset"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/auth/password-reset-request": {
+            "post": {
+                "operationId": "api_authpassword-reset-request_post",
+                "tags": [
+                    "PasswordResetRequest"
+                ],
+                "responses": {
+                    "202": {
+                        "description": "PasswordResetRequest resource created",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a PasswordResetRequest resource.",
+                "description": "Creates a PasswordResetRequest resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new PasswordResetRequest resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordResetRequest"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordResetRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/me/two-factor/confirm": {
+            "post": {
+                "operationId": "api_metwo-factorconfirm_post",
+                "tags": [
+                    "RecoveryCodes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "RecoveryCodes resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RecoveryCodes.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RecoveryCodes"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a RecoveryCodes resource.",
+                "description": "Creates a RecoveryCodes resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new RecoveryCodes resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecoveryCodes.CodeInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecoveryCodes.CodeInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/me/two-factor/recovery-codes": {
+            "post": {
+                "operationId": "api_metwo-factorrecovery-codes_post",
+                "tags": [
+                    "RecoveryCodes"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "RecoveryCodes resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RecoveryCodes.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RecoveryCodes"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a RecoveryCodes resource.",
+                "description": "Creates a RecoveryCodes resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new RecoveryCodes resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecoveryCodes.PasswordConfirmation"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecoveryCodes.PasswordConfirmation"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/me/sessions": {
+            "get": {
+                "operationId": "api_mesessions_get_collection",
+                "tags": [
+                    "Session"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Session collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Session.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Session.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Session"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Session resources.",
+                "description": "Retrieves the collection of Session resources.",
+                "parameters": []
+            }
+        },
+        "/api/me/sessions/{id}": {
+            "delete": {
+                "operationId": "api_mesessions_id_delete",
+                "tags": [
+                    "Session"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Session resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Session resource.",
+                "description": "Removes the Session resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Session identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/auth/sign-in": {
+            "post": {
+                "operationId": "api_authsign-in_post",
+                "tags": [
+                    "SignIn"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SignIn resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SignIn.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SignIn"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a SignIn resource.",
+                "description": "Creates a SignIn resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new SignIn resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignIn.SignInInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignIn.SignInInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/auth/sign-in/second-factor": {
+            "post": {
+                "operationId": "api_authsign-insecond-factor_post",
+                "tags": [
+                    "SignIn"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SignIn resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SignIn.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SignIn"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a SignIn resource.",
+                "description": "Creates a SignIn resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new SignIn resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignIn.SecondFactorInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignIn.SecondFactorInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/auth/providers": {
+            "get": {
+                "operationId": "api_authproviders_get",
+                "tags": [
+                    "SignInProviders"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SignInProviders resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SignInProviders.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SignInProviders"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a SignInProviders resource.",
+                "description": "Retrieves a SignInProviders resource.",
+                "parameters": []
+            }
+        },
+        "/api/auth/sign-out": {
+            "post": {
+                "operationId": "api_authsign-out_post",
+                "tags": [
+                    "SignOut"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "SignOut resource created",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a SignOut resource.",
+                "description": "Creates a SignOut resource.",
+                "parameters": []
+            }
+        },
+        "/api/me/two-factor/disable": {
+            "post": {
+                "operationId": "api_metwo-factordisable_post",
+                "tags": [
+                    "TwoFactorDisabling"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "TwoFactorDisabling resource created",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a TwoFactorDisabling resource.",
+                "description": "Creates a TwoFactorDisabling resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new TwoFactorDisabling resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TwoFactorDisabling.PasswordConfirmation"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TwoFactorDisabling.PasswordConfirmation"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/me/two-factor/setup": {
+            "post": {
+                "operationId": "api_metwo-factorsetup_post",
+                "tags": [
+                    "TwoFactorSetup"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TwoFactorSetup resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TwoFactorSetup.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TwoFactorSetup"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a TwoFactorSetup resource.",
+                "description": "Creates a TwoFactorSetup resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new TwoFactorSetup resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TwoFactorSetup.PasswordConfirmation"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TwoFactorSetup.PasswordConfirmation"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
         }
     },
     "components": {
         "schemas": {
+            "Account": {
+                "type": "object",
+                "description": "The signed-in account.",
+                "required": [
+                    "id",
+                    "email",
+                    "emailVerified",
+                    "firstName",
+                    "birthDate",
+                    "sex",
+                    "heightCm",
+                    "twoFactorEnabled",
+                    "hasPassword"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "emailVerified": {
+                        "type": "boolean"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "birthDate": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    },
+                    "sex": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "female",
+                            "male",
+                            null
+                        ]
+                    },
+                    "heightCm": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "twoFactorEnabled": {
+                        "type": "boolean"
+                    },
+                    "hasPassword": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Account.ProfileInput": {
+                "type": "object",
+                "description": "Replaces the profile (identity only: body metrics live in Progression).",
+                "required": [
+                    "firstName"
+                ],
+                "properties": {
+                    "firstName": {
+                        "maxLength": 50,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "birthDate": {
+                        "externalDocs": {
+                            "url": "https://schema.org/Date"
+                        },
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "sex": {
+                        "enum": [
+                            "female",
+                            "male"
+                        ],
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "heightCm": {
+                        "minimum": 100,
+                        "maximum": 250,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "Account.RegistrationInput": {
+                "type": "object",
+                "description": "Creates an account, emails a verification link and signs the device in.",
+                "required": [
+                    "firstName",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "firstName": {
+                        "maxLength": 50,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "email": {
+                        "format": "email",
+                        "maxLength": 254,
+                        "externalDocs": {
+                            "url": "https://schema.org/email"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "password": {
+                        "minLength": 12,
+                        "maxLength": 4096,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "Account.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "email",
+                            "emailVerified",
+                            "firstName",
+                            "birthDate",
+                            "sex",
+                            "heightCm",
+                            "twoFactorEnabled",
+                            "hasPassword"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "emailVerified": {
+                                "type": "boolean"
+                            },
+                            "firstName": {
+                                "type": "string"
+                            },
+                            "birthDate": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date"
+                            },
+                            "sex": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "female",
+                                    "male",
+                                    null
+                                ]
+                            },
+                            "heightCm": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            },
+                            "twoFactorEnabled": {
+                                "type": "boolean"
+                            },
+                            "hasPassword": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                ],
+                "description": "The signed-in account."
+            },
+            "Account.jsonld_noid": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchemaWithoutId"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "email",
+                            "emailVerified",
+                            "firstName",
+                            "birthDate",
+                            "sex",
+                            "heightCm",
+                            "twoFactorEnabled",
+                            "hasPassword"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "emailVerified": {
+                                "type": "boolean"
+                            },
+                            "firstName": {
+                                "type": "string"
+                            },
+                            "birthDate": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date"
+                            },
+                            "sex": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "female",
+                                    "male",
+                                    null
+                                ]
+                            },
+                            "heightCm": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            },
+                            "twoFactorEnabled": {
+                                "type": "boolean"
+                            },
+                            "hasPassword": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                ],
+                "description": "The signed-in account."
+            },
+            "Account_noid": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "email",
+                    "emailVerified",
+                    "firstName",
+                    "birthDate",
+                    "sex",
+                    "heightCm",
+                    "twoFactorEnabled",
+                    "hasPassword"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "emailVerified": {
+                        "type": "boolean"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "birthDate": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    },
+                    "sex": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "female",
+                            "male",
+                            null
+                        ]
+                    },
+                    "heightCm": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "twoFactorEnabled": {
+                        "type": "boolean"
+                    },
+                    "hasPassword": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ConstraintViolation": {
+                "type": "object",
+                "description": "Unprocessable entity",
+                "properties": {
+                    "status": {
+                        "default": 422,
+                        "type": "integer"
+                    },
+                    "violations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "propertyPath": {
+                                    "type": "string",
+                                    "description": "The property path of the violation"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "The message associated with the violation"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "description": "The code of the violation"
+                                },
+                                "hint": {
+                                    "type": "string",
+                                    "description": "An extra hint to understand the violation"
+                                },
+                                "payload": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "The serialized payload of the violation"
+                                }
+                            },
+                            "required": [
+                                "propertyPath",
+                                "message"
+                            ]
+                        }
+                    },
+                    "detail": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "title": {
+                        "readOnly": true,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "instance": {
+                        "readOnly": true,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "ConstraintViolation.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "default": 422,
+                                "type": "integer"
+                            },
+                            "violations": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "propertyPath": {
+                                            "type": "string",
+                                            "description": "The property path of the violation"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "The message associated with the violation"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "description": "The code of the violation"
+                                        },
+                                        "hint": {
+                                            "type": "string",
+                                            "description": "An extra hint to understand the violation"
+                                        },
+                                        "payload": {
+                                            "type": "object",
+                                            "additionalProperties": true,
+                                            "description": "The serialized payload of the violation"
+                                        }
+                                    },
+                                    "required": [
+                                        "propertyPath",
+                                        "message"
+                                    ]
+                                }
+                            },
+                            "detail": {
+                                "readOnly": true,
+                                "type": "string"
+                            },
+                            "description": {
+                                "readOnly": true,
+                                "type": "string"
+                            },
+                            "type": {
+                                "readOnly": true,
+                                "type": "string"
+                            },
+                            "title": {
+                                "readOnly": true,
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "instance": {
+                                "readOnly": true,
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "Unprocessable entity"
+            },
+            "EmailVerification": {
+                "type": "object",
+                "description": "Redeems the link emailed at registration (works signed in or not).",
+                "required": [
+                    "token"
+                ],
+                "properties": {
+                    "token": {
+                        "maxLength": 200,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
             "Error": {
                 "type": "object",
                 "description": "A representation of common errors.",
@@ -232,6 +2030,112 @@
                 ],
                 "description": "Readiness of the API and its dependencies. Answers 503 with the same body when degraded."
             },
+            "HydraCollectionBaseSchema": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "view": {
+                                "type": "object",
+                                "properties": {
+                                    "@id": {
+                                        "type": "string",
+                                        "format": "iri-reference"
+                                    },
+                                    "@type": {
+                                        "type": "string"
+                                    },
+                                    "first": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "iri-reference"
+                                    },
+                                    "last": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "iri-reference"
+                                    },
+                                    "previous": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "iri-reference"
+                                    },
+                                    "next": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "iri-reference"
+                                    }
+                                },
+                                "example": {
+                                    "@id": "string",
+                                    "@type": "string",
+                                    "first": "string",
+                                    "last": "string",
+                                    "previous": "string",
+                                    "next": "string"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "HydraCollectionBaseSchemaNoPagination": {
+                "type": "object",
+                "properties": {
+                    "totalItems": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "search": {
+                        "type": "object",
+                        "properties": {
+                            "@type": {
+                                "type": "string"
+                            },
+                            "template": {
+                                "type": "string"
+                            },
+                            "variableRepresentation": {
+                                "type": "string"
+                            },
+                            "mapping": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "@type": {
+                                            "type": "string"
+                                        },
+                                        "variable": {
+                                            "type": "string"
+                                        },
+                                        "property": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "required": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "HydraItemBaseSchema": {
                 "type": "object",
                 "properties": {
@@ -272,6 +2176,439 @@
                     "@id",
                     "@type"
                 ]
+            },
+            "HydraItemBaseSchemaWithoutId": {
+                "type": "object",
+                "properties": {
+                    "@context": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "type": "string"
+                    },
+                    "@type": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "@type"
+                ]
+            },
+            "PasswordChange": {
+                "type": "object",
+                "description": "Changes the password; every other device is signed out.",
+                "required": [
+                    "currentPassword",
+                    "newPassword"
+                ],
+                "properties": {
+                    "currentPassword": {
+                        "maxLength": 4096,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "newPassword": {
+                        "minLength": 12,
+                        "maxLength": 4096,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "PasswordReset": {
+                "type": "object",
+                "description": "Sets a new password from an emailed link and signs every device out.",
+                "required": [
+                    "token",
+                    "newPassword"
+                ],
+                "properties": {
+                    "token": {
+                        "maxLength": 200,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "newPassword": {
+                        "minLength": 12,
+                        "maxLength": 4096,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "PasswordResetRequest": {
+                "type": "object",
+                "description": "Emails a reset link if a verified account uses this address. Always 202: accounts are never revealed.",
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "maxLength": 254,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "RecoveryCodes": {
+                "type": "object",
+                "description": "Activates two-factor authentication with a first valid code; returns the recovery codes.",
+                "required": [
+                    "recoveryCodes"
+                ],
+                "properties": {
+                    "recoveryCodes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 10,
+                        "maxItems": 10
+                    }
+                }
+            },
+            "RecoveryCodes.CodeInput": {
+                "type": "object",
+                "description": "Activates two-factor authentication with a first valid code; returns the recovery codes.",
+                "required": [
+                    "code"
+                ],
+                "properties": {
+                    "code": {
+                        "pattern": "^(\\s*\\d{3}\\s?\\d{3}\\s*)$",
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "RecoveryCodes.PasswordConfirmation": {
+                "type": "object",
+                "description": "Replaces the recovery codes (password required); previous ones stop working.",
+                "required": [
+                    "password"
+                ],
+                "properties": {
+                    "password": {
+                        "maxLength": 4096,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "RecoveryCodes.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "recoveryCodes"
+                        ],
+                        "properties": {
+                            "recoveryCodes": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "minItems": 10,
+                                "maxItems": 10
+                            }
+                        }
+                    }
+                ],
+                "description": "Activates two-factor authentication with a first valid code; returns the recovery codes."
+            },
+            "Session": {
+                "type": "object",
+                "description": "Signed-in devices, most recently active first.",
+                "required": [
+                    "id",
+                    "deviceLabel",
+                    "openedAt",
+                    "lastSeenAt",
+                    "current"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "deviceLabel": {
+                        "type": "string"
+                    },
+                    "openedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "lastSeenAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "current": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Session.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "deviceLabel",
+                            "openedAt",
+                            "lastSeenAt",
+                            "current"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "deviceLabel": {
+                                "type": "string"
+                            },
+                            "openedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "lastSeenAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "current": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                ],
+                "description": "Signed-in devices, most recently active first."
+            },
+            "SignIn": {
+                "type": "object",
+                "description": "Checks email and password; signs the device in, or asks for the second factor.",
+                "required": [
+                    "twoFactorRequired",
+                    "account"
+                ],
+                "properties": {
+                    "twoFactorRequired": {
+                        "type": "boolean"
+                    },
+                    "account": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Account_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                }
+            },
+            "SignIn.SecondFactorInput": {
+                "type": "object",
+                "description": "Completes a pending sign-in with an authenticator code or a recovery code.",
+                "required": [
+                    "code"
+                ],
+                "properties": {
+                    "code": {
+                        "maxLength": 20,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "SignIn.SignInInput": {
+                "type": "object",
+                "description": "Checks email and password; signs the device in, or asks for the second factor.",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "maxLength": 254,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "password": {
+                        "maxLength": 4096,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "SignIn.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "twoFactorRequired",
+                            "account"
+                        ],
+                        "properties": {
+                            "twoFactorRequired": {
+                                "type": "boolean"
+                            },
+                            "account": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Account.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "Checks email and password; signs the device in, or asks for the second factor."
+            },
+            "SignInProviders": {
+                "type": "object",
+                "description": "Enabled external sign-in providers.",
+                "required": [
+                    "providers"
+                ],
+                "properties": {
+                    "providers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "google",
+                                "apple",
+                                "fake"
+                            ]
+                        }
+                    }
+                }
+            },
+            "SignInProviders.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "providers"
+                        ],
+                        "properties": {
+                            "providers": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "enum": [
+                                        "google",
+                                        "apple",
+                                        "fake"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "Enabled external sign-in providers."
+            },
+            "TwoFactorDisabling.PasswordConfirmation": {
+                "type": "object",
+                "description": "Turns two-factor authentication off (password required).",
+                "required": [
+                    "password"
+                ],
+                "properties": {
+                    "password": {
+                        "maxLength": 4096,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "TwoFactorSetup": {
+                "type": "object",
+                "description": "Starts enrolling an authenticator app (password required, email must be verified).",
+                "required": [
+                    "secret",
+                    "otpauthUri"
+                ],
+                "properties": {
+                    "secret": {
+                        "type": "string"
+                    },
+                    "otpauthUri": {
+                        "type": "string"
+                    }
+                }
+            },
+            "TwoFactorSetup.PasswordConfirmation": {
+                "type": "object",
+                "description": "Starts enrolling an authenticator app (password required, email must be verified).",
+                "required": [
+                    "password"
+                ],
+                "properties": {
+                    "password": {
+                        "maxLength": 4096,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "TwoFactorSetup.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "secret",
+                            "otpauthUri"
+                        ],
+                        "properties": {
+                            "secret": {
+                                "type": "string"
+                            },
+                            "otpauthUri": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "description": "Starts enrolling an authenticator app (password required, email must be verified)."
             }
         },
         "responses": {},
@@ -283,6 +2620,54 @@
     },
     "security": [],
     "tags": [
+        {
+            "name": "Account",
+            "description": "Resource 'Account' operations."
+        },
+        {
+            "name": "SignInProviders",
+            "description": "External providers the PWA may offer on the sign-in page (none unless configured)."
+        },
+        {
+            "name": "SignIn",
+            "description": "Either the device is signed in (`account`), or a second factor is expected\n(`twoFactorRequired`, then POST /auth/sign-in/second-factor)."
+        },
+        {
+            "name": "EmailVerification",
+            "description": "Resource 'EmailVerification' operations."
+        },
+        {
+            "name": "PasswordChange",
+            "description": "Resource 'PasswordChange' operations."
+        },
+        {
+            "name": "PasswordReset",
+            "description": "Resource 'PasswordReset' operations."
+        },
+        {
+            "name": "PasswordResetRequest",
+            "description": "Resource 'PasswordResetRequest' operations."
+        },
+        {
+            "name": "SignOut",
+            "description": "Resource 'SignOut' operations."
+        },
+        {
+            "name": "Session",
+            "description": "Resource 'Session' operations."
+        },
+        {
+            "name": "RecoveryCodes",
+            "description": "Plain recovery codes, returned exactly once: only their hashes are stored."
+        },
+        {
+            "name": "TwoFactorDisabling",
+            "description": "Resource 'TwoFactorDisabling' operations."
+        },
+        {
+            "name": "TwoFactorSetup",
+            "description": "Resource 'TwoFactorSetup' operations."
+        },
         {
             "name": "Health",
             "description": "Resource 'Health' operations."

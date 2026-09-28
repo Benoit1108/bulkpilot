@@ -1,5 +1,5 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import Button from '~/components/ui/Button.vue'
 
 describe('UiButton', () => {
@@ -10,11 +10,15 @@ describe('UiButton', () => {
     expect(wrapper.text()).toBe('Valider')
   })
 
-  it('is disabled and busy while loading', async () => {
-    const wrapper = await mountSuspended(Button, { props: { loading: true } })
+  it('stays focusable but inert while loading', async () => {
+    const onClick = vi.fn()
+    const wrapper = await mountSuspended(Button, { props: { loading: true, onClick } })
 
     const button = wrapper.get('button')
-    expect(button.attributes('disabled')).toBeDefined()
+    expect(button.attributes('disabled')).toBeUndefined()
+    expect(button.attributes('aria-disabled')).toBe('true')
     expect(button.attributes('aria-busy')).toBe('true')
+    await button.trigger('click')
+    expect(onClick).not.toHaveBeenCalled()
   })
 })

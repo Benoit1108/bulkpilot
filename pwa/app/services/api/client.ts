@@ -1,29 +1,43 @@
 import { createFetch, FetchError } from 'ofetch'
+import type { paths } from '~/types/api'
+import type { HttpMethod, PathParamsOf, PathWith, RequestBodyOf, ResponseOf } from './contract'
+import { fillPath } from './contract'
 import { ApiError, apiErrorFromResponse, networkError } from './errors'
 
 export type QueryParams = Record<string, string | number | boolean | undefined>
-export type JsonBody = Record<string, unknown> | unknown[]
 
+type Params<P extends keyof paths, M extends HttpMethod>
+  = PathParamsOf<P, M> extends undefined ? { path?: undefined } : { path: PathParamsOf<P, M> }
+
+/**
+ * Typed against the OpenAPI contract: `api.get('/api/me')` returns an `Account`,
+ * a wrong path, body or parameter does not compile.
+ */
 export interface ApiClient {
-  get<T>(path: string, query?: QueryParams): Promise<T>
-  post<T>(path: string, body?: JsonBody): Promise<T>
-  put<T>(path: string, body?: JsonBody): Promise<T>
-  patch<T>(path: string, body?: JsonBody): Promise<T>
-  delete(path: string): Promise<void>
+  get<P extends PathWith<'get'>>(path: P, options?: Params<P, 'get'> & { query?: QueryParams }): Promise<ResponseOf<P, 'get'>>
+  post<P extends PathWith<'post'>>(path: P, body?: RequestBodyOf<P, 'post'>, options?: Params<P, 'post'>): Promise<ResponseOf<P, 'post'>>
+  put<P extends PathWith<'put'>>(path: P, body: RequestBodyOf<P, 'put'>, options?: Params<P, 'put'>): Promise<ResponseOf<P, 'put'>>
+  delete<P extends PathWith<'delete'>>(path: P, options?: Params<P, 'delete'>): Promise<void>
+}
+
+export interface ApiClientOptions {
+  fetch?: typeof fetch
+  /** Called when the server says the device is no longer signed in (expired or revoked session). */
+  onUnauthenticated?: () => void
 }
 
 // Reads are idempotent: retried once on network failures (ofetch reports them as 500) and gateway errors.
 const READ_RETRY = { retry: 1, retryDelay: 300, retryStatusCodes: [500, 502, 503, 504] }
 
 /**
- * Single entry point for every call to the Symfony API: same-origin session cookie,
- * JSON in/out, normalised {@link ApiError}s. Writes are never retried automatically.
+ * Single entry point for every call to the Symfony API: same-origin session cookie, JSON in/out,
+ * normalised {@link ApiError}s. Writes are never retried automatically.
  */
-export function createApiClient(baseURL: string, fetchImplementation: typeof fetch = globalThis.fetch): ApiClient {
+export function createApiClient(options: ApiClientOptions = {}): ApiClient {
   const http = createFetch({
-    fetch: fetchImplementation,
+    // Resolved per call, so a fetch replaced after start-up (tests, polyfills) is honoured.
+    fetch: (input, init) => (options.fetch ?? globalThis.fetch)(input, init),
     defaults: {
-      baseURL,
       credentials: 'same-origin',
       headers: { Accept: 'application/json' },
       retry: 0,
@@ -35,19 +49,30 @@ export function createApiClient(baseURL: string, fetchImplementation: typeof fet
       return await request()
     }
     catch (error) {
-      throw asApiError(error)
+      const apiError = asApiError(error)
+      if (apiError.code === 'shared.not_authenticated') options.onUnauthenticated?.()
+      throw apiError
     }
   }
 
+  const url = (path: string, params?: { path?: unknown }) => fillPath(path, params?.path as Record<string, string> | undefined)
+  const json = (body: unknown) => body as Record<string, unknown> | undefined
+
   return {
-    get: <T>(path: string, query?: QueryParams) => send(() => http<T>(path, { method: 'GET', query, ...READ_RETRY })),
-    post: <T>(path: string, body?: JsonBody) => send(() => http<T>(path, { method: 'POST', body })),
-    put: <T>(path: string, body?: JsonBody) => send(() => http<T>(path, { method: 'PUT', body })),
-    patch: <T>(path: string, body?: JsonBody) =>
-      send(() => http<T>(path, { method: 'PATCH', body, headers: { 'Content-Type': 'application/merge-patch+json' } })),
-    delete: path => send(async () => {
-      await http(path, { method: 'DELETE' })
-    }),
+    get<P extends PathWith<'get'>>(path: P, params?: Params<P, 'get'> & { query?: QueryParams }) {
+      return send(() => http<ResponseOf<P, 'get'>>(url(path, params), { method: 'GET', query: params?.query, ...READ_RETRY }))
+    },
+    post<P extends PathWith<'post'>>(path: P, body?: RequestBodyOf<P, 'post'>, params?: Params<P, 'post'>) {
+      return send(() => http<ResponseOf<P, 'post'>>(url(path, params), { method: 'POST', body: json(body) }))
+    },
+    put<P extends PathWith<'put'>>(path: P, body: RequestBodyOf<P, 'put'>, params?: Params<P, 'put'>) {
+      return send(() => http<ResponseOf<P, 'put'>>(url(path, params), { method: 'PUT', body: json(body) }))
+    },
+    delete<P extends PathWith<'delete'>>(path: P, params?: Params<P, 'delete'>) {
+      return send(async () => {
+        await http(url(path, params), { method: 'DELETE' })
+      })
+    },
   }
 }
 

@@ -2,6 +2,16 @@ doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
         profiling_collect_backtrace: '%kernel.debug%'
+        # The HTTP session table is owned by PdoSessionHandler, not by the ORM mapping.
+        schema_filter: '~^(?!sessions$)~'
+        types:
+            user_id: App\Shared\Infrastructure\Persistence\Doctrine\UserIdType
+            user_session_id: App\Identity\Infrastructure\Persistence\Doctrine\Type\UserSessionIdType
+            one_time_token_id: App\Identity\Infrastructure\Persistence\Doctrine\Type\OneTimeTokenIdType
+            email_address: App\Identity\Infrastructure\Persistence\Doctrine\Type\EmailAddressType
+            hashed_password: App\Identity\Infrastructure\Persistence\Doctrine\Type\HashedPasswordType
+            external_identity_id: App\Identity\Infrastructure\Persistence\Doctrine\Type\ExternalIdentityIdType
+            encrypted_secret: App\Identity\Infrastructure\Persistence\Doctrine\Type\EncryptedSecretType
 
     orm:
         validate_xml_mapping: true
@@ -9,14 +19,14 @@ doctrine:
         identity_generation_preferences:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: false
-        # Domain models stay free of persistence concerns: each bounded context declares its
-        # XML mapping here, e.g.
-        #   Identity:
-        #       type: xml
-        #       is_bundle: false
-        #       dir: '%kernel.project_dir%/src/Identity/Infrastructure/Persistence/Doctrine/Mapping'
-        #       prefix: 'App\Identity\Domain'
-        mappings: {}
+        # Domain models stay free of persistence concerns: each bounded context declares
+        # its XML mapping directory here (ADR-0009).
+        mappings:
+            Identity:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Identity/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Identity\Domain'
 
 when@test:
     doctrine:

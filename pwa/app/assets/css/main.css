@@ -63,3 +63,62 @@ textarea {
     transition-duration: 0.01ms !important;
   }
 }
+
+/*
+ * iOS standalone: the status bar keeps white icons (black-translucent), so the light theme keeps a
+ * dark strip behind it. Global on purpose: a scoped :global() selector would style <html> itself.
+ */
+:root[data-theme='light'] body::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 30;
+  height: env(safe-area-inset-top);
+  background: #17141f;
+  pointer-events: none;
+}
+
+/* Shared form layout (auth pages, settings forms). */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form__intro {
+  color: var(--color-text-muted);
+}
+
+.form__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.form__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  color: var(--color-accent-text);
+  font-weight: 600;
+}
+
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--color-accent-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

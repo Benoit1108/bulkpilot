@@ -6,21 +6,25 @@ import SettingsPage from '~/pages/reglages/index.vue'
 import type { ApiClient } from '~/services/api/client'
 import { ApiError } from '~/services/api/errors'
 
-const { get } = vi.hoisted(() => ({ get: vi.fn<ApiClient['get']>() }))
+const { health } = vi.hoisted(() => ({ health: vi.fn<() => Promise<unknown>>() }))
+const signedOut = new ApiError('unauthenticated', 401, 'x', 'x', 'shared.not_authenticated')
 
-mockNuxtImport('useApi', () => () => ({ get }) as unknown as ApiClient)
+// Only the health endpoint is under test; the visitor is signed out.
+mockNuxtImport('useApi', () => () => ({
+  get: (path: string) => (path === '/api/health' ? health() : Promise.reject(signedOut)),
+}) as unknown as ApiClient)
 
 const unreachable = new ApiError('network', null, 'Connexion impossible. Vérifie ta connexion puis réessaie.', 'offline')
 const degraded = new ApiError('server', 503, 'Une erreur est survenue. Réessaie dans un instant.', 'HTTP 503')
 
 beforeEach(() => {
   clearNuxtData('system-health')
-  get.mockReset()
+  health.mockReset()
 })
 
 describe('connectivity banner', () => {
   it('stays empty while the server answers', async () => {
-    get.mockResolvedValue({ status: 'ok', checks: { database: 'up' } })
+    health.mockResolvedValue({ status: 'ok', checks: { database: 'up' } })
 
     const wrapper = await mountSuspended(ConnectivityBanner)
     await flushPromises()
@@ -29,7 +33,7 @@ describe('connectivity banner', () => {
   })
 
   it('shows the user message and retries on demand when the server is unreachable', async () => {
-    get.mockRejectedValueOnce(unreachable).mockResolvedValueOnce({ status: 'ok', checks: {} })
+    health.mockRejectedValueOnce(unreachable).mockResolvedValueOnce({ status: 'ok', checks: {} })
 
     const wrapper = await mountSuspended(ConnectivityBanner)
     await flushPromises()
@@ -38,16 +42,16 @@ describe('connectivity banner', () => {
     await wrapper.get('button').trigger('click')
     await flushPromises()
 
-    expect(get).toHaveBeenCalledTimes(2)
+    expect(health).toHaveBeenCalledTimes(2)
     expect(wrapper.get('[role="status"]').text()).toBe('')
   })
 })
 
 describe('settings page', () => {
   it.each([
-    [() => get.mockResolvedValue({ status: 'ok', checks: {} }), 'Connecté'],
-    [() => get.mockRejectedValue(degraded), 'Service dégradé'],
-    [() => get.mockRejectedValue(unreachable), 'Serveur injoignable'],
+    [() => health.mockResolvedValue({ status: 'ok', checks: {} }), 'Connecté'],
+    [() => health.mockRejectedValue(degraded), 'Service dégradé'],
+    [() => health.mockRejectedValue(unreachable), 'Serveur injoignable'],
   ])('reports the server status (%#)', async (arrange, label) => {
     arrange()
 
@@ -58,7 +62,7 @@ describe('settings page', () => {
   })
 
   it('switches the theme from the radio group', async () => {
-    get.mockResolvedValue({ status: 'ok', checks: {} })
+    health.mockResolvedValue({ status: 'ok', checks: {} })
     const wrapper = await mountSuspended(SettingsPage)
 
     await wrapper.get('input[value="light"]').setValue(true)

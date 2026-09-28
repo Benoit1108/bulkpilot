@@ -65,16 +65,6 @@ useHead({
   padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
 }
 
-/* iOS standalone: the status bar keeps white icons, so the light theme keeps a dark strip behind it. */
-:global(:root[data-theme='light']) .shell::before {
-  content: '';
-  position: fixed;
-  inset: 0 0 auto;
-  z-index: 30;
-  height: env(safe-area-inset-top);
-  background: #17141f;
-}
-
 .shell__skip-link {
   position: absolute;
   top: var(--space-3);

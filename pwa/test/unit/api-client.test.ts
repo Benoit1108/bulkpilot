@@ -16,7 +16,7 @@ function clientReturning(...responses: Array<Response | Error>) {
     else fetchMock.mockResolvedValueOnce(response)
   }
 
-  return { client: createApiClient('https://app.test/api', fetchMock), fetchMock }
+  return { client: createApiClient({ fetch: fetchMock }), fetchMock }
 }
 
 afterEach(() => {
@@ -27,13 +27,13 @@ describe('api client', () => {
   it('prefixes the base URL and sends JSON with the same-origin session cookie', async () => {
     const { client, fetchMock } = clientReturning(jsonResponse(201, { id: 'abc' }))
 
-    await expect(client.post('/weights', { kg: 48.2 })).resolves.toEqual({ id: 'abc' })
+    await expect(client.post('/api/auth/sign-in', { email: 'a@b.c', password: 'x' })).resolves.toEqual({ id: 'abc' })
 
     const [url, init] = fetchMock.mock.calls[0]!
-    expect(String(url)).toBe('https://app.test/api/weights')
+    expect(String(url)).toBe('/api/auth/sign-in')
     expect(init?.method).toBe('POST')
     expect(init?.credentials).toBe('same-origin')
-    expect(init?.body).toBe(JSON.stringify({ kg: 48.2 }))
+    expect(init?.body).toBe(JSON.stringify({ email: 'a@b.c', password: 'x' }))
   })
 
   it('normalises problem+json errors with violations and trace id', async () => {
@@ -43,7 +43,7 @@ describe('api client', () => {
       violations: [{ propertyPath: 'kg', message: 'must be positive' }, { nope: true }],
     }, { 'X-Request-Id': 'req-1' }))
 
-    const error = await client.post('/weights', { kg: -1 }).catch((e: unknown) => e)
+    const error = await client.post('/api/auth/register', { firstName: '', email: 'x', password: 'y' }).catch((e: unknown) => e)
 
     expect(error).toBeInstanceOf(ApiError)
     expect(error).toMatchObject({
@@ -59,7 +59,7 @@ describe('api client', () => {
     vi.useFakeTimers()
     const { client } = clientReturning(new TypeError('Failed to fetch'), new TypeError('Failed to fetch'))
 
-    const pending = client.get('/health').catch((e: unknown) => e)
+    const pending = client.get('/api/health').catch((e: unknown) => e)
     await vi.runAllTimersAsync()
     const error = await pending
 
@@ -71,7 +71,7 @@ describe('api client', () => {
     vi.useFakeTimers()
     const { client, fetchMock } = clientReturning(jsonResponse(503, {}), jsonResponse(200, { status: 'ok' }))
 
-    const result = client.get('/health')
+    const result = client.get('/api/health')
     await vi.runAllTimersAsync()
 
     await expect(result).resolves.toEqual({ status: 'ok' })
@@ -82,7 +82,7 @@ describe('api client', () => {
     vi.useFakeTimers()
     const { client, fetchMock } = clientReturning(new TypeError('Failed to fetch'), jsonResponse(200, { status: 'ok' }))
 
-    const result = client.get('/health')
+    const result = client.get('/api/health')
     await vi.runAllTimersAsync()
 
     await expect(result).resolves.toEqual({ status: 'ok' })
@@ -92,17 +92,8 @@ describe('api client', () => {
   it('never retries writes', async () => {
     const { client, fetchMock } = clientReturning(jsonResponse(503, {}), jsonResponse(201, {}))
 
-    await expect(client.post('/weights', {})).rejects.toMatchObject({ kind: 'server', status: 503 })
+    await expect(client.post('/api/auth/sign-out')).rejects.toMatchObject({ kind: 'server', status: 503 })
     expect(fetchMock).toHaveBeenCalledTimes(1)
-  })
-
-  it('sends merge-patch for partial updates', async () => {
-    const { client, fetchMock } = clientReturning(jsonResponse(200, {}))
-
-    await client.patch('/me', { firstName: 'Alex' })
-
-    const headers = new Headers(fetchMock.mock.calls[0]![1]?.headers)
-    expect(headers.get('content-type')).toBe('application/merge-patch+json')
   })
 
   it.each([
@@ -115,14 +106,35 @@ describe('api client', () => {
   ])('maps HTTP %i to %s', async (status, kind) => {
     const { client } = clientReturning(jsonResponse(status, {}))
 
-    await expect(client.delete('/x')).rejects.toMatchObject({ kind, status })
+    await expect(client.delete('/api/me/sessions/{id}', { path: { id: 'x' } })).rejects.toMatchObject({ kind, status })
   })
 
   it('sends full replacements with PUT', async () => {
     const { client, fetchMock } = clientReturning(jsonResponse(200, { ok: true }))
 
-    await expect(client.put('/goals/1', { kg: 55 })).resolves.toEqual({ ok: true })
+    await expect(client.put('/api/me/profile', { firstName: 'Alex' })).resolves.toEqual({ ok: true })
     expect(fetchMock.mock.calls[0]![1]?.method).toBe('PUT')
+  })
+
+  it('fills and encodes path parameters', async () => {
+    const { client, fetchMock } = clientReturning(new Response(null, { status: 204 }))
+
+    await client.delete('/api/me/sessions/{id}', { path: { id: 'a/b c' } })
+
+    expect(String(fetchMock.mock.calls[0]![0])).toBe('/api/me/sessions/a%2Fb%20c')
+  })
+
+  it('tells the app when the session is gone, and only then', async () => {
+    const onUnauthenticated = vi.fn()
+    const fetchMock = vi.fn<typeof fetch>()
+      .mockResolvedValueOnce(jsonResponse(401, { code: 'identity.invalid_credentials' }))
+      .mockResolvedValueOnce(jsonResponse(401, { code: 'shared.not_authenticated' }))
+    const client = createApiClient({ fetch: fetchMock, onUnauthenticated })
+
+    await expect(client.post('/api/auth/sign-in', { email: 'a@b.c', password: 'x' })).rejects.toMatchObject({ code: 'identity.invalid_credentials' })
+    expect(onUnauthenticated).not.toHaveBeenCalled()
+    await expect(client.get('/api/me')).rejects.toMatchObject({ kind: 'unauthenticated' })
+    expect(onUnauthenticated).toHaveBeenCalledOnce()
   })
 })
 

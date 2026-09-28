@@ -11,7 +11,13 @@ const props = withDefaults(defineProps<{
   disabled: false,
 })
 
-const isDisabled = computed(() => props.disabled || props.loading)
+// While loading the button stays focusable (aria-disabled), so focus does not fall back to <body>.
+function guard(event: MouseEvent): void {
+  if (props.loading) {
+    event.preventDefault()
+    event.stopImmediatePropagation()
+  }
+}
 </script>
 
 <template>
@@ -19,8 +25,10 @@ const isDisabled = computed(() => props.disabled || props.loading)
     :type="type"
     class="ui-button"
     :class="`ui-button--${variant}`"
-    :disabled="isDisabled"
+    :disabled="disabled"
+    :aria-disabled="loading || undefined"
     :aria-busy="loading || undefined"
+    @click.capture="guard"
   >
     <span
       v-if="loading"
@@ -47,7 +55,8 @@ const isDisabled = computed(() => props.disabled || props.loading)
   touch-action: manipulation;
 }
 
-.ui-button:disabled {
+.ui-button:disabled,
+.ui-button[aria-disabled='true'] {
   cursor: not-allowed;
   opacity: 0.55;
 }
@@ -57,7 +66,7 @@ const isDisabled = computed(() => props.disabled || props.loading)
   color: var(--color-accent-contrast);
 }
 
-.ui-button--primary:not(:disabled):hover {
+.ui-button--primary:not(:disabled, [aria-disabled='true']):hover {
   background: var(--color-accent-fill-hover);
 }
 
@@ -67,7 +76,7 @@ const isDisabled = computed(() => props.disabled || props.loading)
   color: var(--color-text);
 }
 
-.ui-button--secondary:not(:disabled):hover {
+.ui-button--secondary:not(:disabled, [aria-disabled='true']):hover {
   border-color: var(--color-accent);
 }
 
@@ -76,7 +85,7 @@ const isDisabled = computed(() => props.disabled || props.loading)
   color: var(--color-accent-text);
 }
 
-.ui-button--ghost:not(:disabled):hover {
+.ui-button--ghost:not(:disabled, [aria-disabled='true']):hover {
   background: var(--color-accent-soft);
 }
 

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Shared\Infrastructure\Bus;
 
 use App\Shared\Application\Bus\Command\CommandBus;
+use App\Shared\Domain\Exception\ConcurrentUpdate;
+use App\Tests\Integration\Shared\Infrastructure\Bus\Fixture\DuplicateProbe;
 use App\Tests\Integration\Shared\Infrastructure\Bus\Fixture\Journal;
 use App\Tests\Integration\Shared\Infrastructure\Bus\Fixture\ProbeCommand;
 use App\Tests\Integration\Shared\Infrastructure\Bus\Fixture\ProbeFailure;
@@ -29,6 +31,7 @@ final class BusWiringTest extends KernelTestCase
 
         // Rolled back with the rest of the test transaction (DAMA).
         $this->connection->executeStatement('CREATE TABLE bus_probe (id TEXT NOT NULL, source TEXT NOT NULL)');
+        $this->connection->executeStatement('CREATE TABLE bus_probe_unique (id TEXT PRIMARY KEY)');
     }
 
     public function testEventsPublishedByAHandlerAreDeliveredAfterItReturnsInTheirOwnTransaction(): void
@@ -58,6 +61,13 @@ final class BusWiringTest extends KernelTestCase
 
         self::assertSame(['handler returned', 'subscriber ran, in transaction: yes'], $this->journal->entries);
         self::assertSame([['id' => 'late', 'source' => 'handler']], $this->rows());
+    }
+
+    public function testARaceCaughtByADatabaseConstraintIsAConflictNotAServerError(): void
+    {
+        $this->expectException(ConcurrentUpdate::class);
+
+        $this->commandBus->dispatch(new DuplicateProbe());
     }
 
     /**

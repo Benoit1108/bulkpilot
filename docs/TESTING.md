@@ -44,9 +44,12 @@ Playwright tourne dans le service compose `e2e` (profil `e2e`) ; l'image suit la
 
 ## Mode worker
 
-L'E2E s'exécute sur FrankenPHP en worker mode (image de prod). À ajouter avec l'authentification (phase 1) :
+- `WorkerModeTest` (API, déterministe) : deux utilisateurs alternent 20 fois sur un même kernel avec seulement le
+  `services_resetter` entre les requêtes ; le `TokenStorage` est vide après reset.
+- E2E sur l'image de prod : trois utilisateurs alternés sur les workers FrankenPHP, et un login échoué au milieu.
+- Isolation : les appareils d'un autre utilisateur sont invisibles et non révocables (404).
 
-- E2E : deux contextes navigateur alternés 20 fois sur un seul worker — la session de A n'apparaît jamais chez B ;
-- E2E : un login échoué n'altère pas la requête suivante ;
-- intégration : après `terminate()` + `services_resetter`, le `TokenStorage` est vide ;
-- API : un utilisateur ne peut ni lister ni lire les données d'un autre (404).
+## Temps
+
+Les tests d'API qui dépendent du temps (expiration d'une connexion en attente, d'un lien, d'un appareil inactif,
+renouvellement du cookie) utilisent `ClockSensitiveTrait::mockTime()` avec `disableReboot()`.

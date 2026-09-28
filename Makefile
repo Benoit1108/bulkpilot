@@ -25,7 +25,7 @@ help: ## List available targets
 	@grep -hE '^[a-zA-Z_:-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[35m%-18s\033[0m %s\n", $$1, $$2}'
 
 ## —— Development ————————————————————————————————————————————————
-.PHONY: up down restart logs sh-php sh-pwa db-migrate db-diff cert
+.PHONY: up down restart logs sh-php sh-pwa composer db-migrate db-diff cert
 up: ## Build and start the dev stack (https://localhost)
 	$(DC_DEV) up $(UP_FLAGS) --wait
 
@@ -37,6 +37,9 @@ restart: ## Restart PHP (needed after composer changes: vendor/ is not watched)
 
 logs: ## Follow logs
 	$(DC_DEV) logs -f
+
+composer: ## Run composer as your user, e.g. make composer ARGS="require vendor/pkg" (then make restart)
+	$(DC_DEV) exec -u $(HOST_UID):$(HOST_GID) -e HOME=/tmp -e COMPOSER_HOME=/tmp/composer php composer $(ARGS)
 
 sh-php: ## Shell in the PHP container
 	$(DC_DEV) exec php bash
@@ -55,13 +58,21 @@ cert: ## Copy Caddy's local root CA to ./caddy-root.crt (to trust it on your OS/
 
 ## —— API contract ——————————————————————————————————————————————
 .PHONY: openapi openapi-check
-openapi: ## Export the OpenAPI spec and regenerate the TypeScript API types
+# Stable business error codes (DomainException::errorCode()), so the PWA test suite can check
+# that every one of them has a French message.
+ERROR_CODES = grep -rhoE "return '[a-z_]+\.[a-z_.]+';" api/src | sed -E "s/return '(.*)';/\1/" | sort -u \
+	| python3 -c 'import json,sys; print(json.dumps([l.strip() for l in sys.stdin if l.strip()], indent=2))'
+
+openapi: ## Export the OpenAPI spec and error codes, regenerate the TypeScript API types
 	$(PHP) bin/console api:openapi:export > pwa/openapi/openapi.json
+	$(ERROR_CODES) > pwa/openapi/error-codes.json
 	$(PWA) pnpm api:types
 
-openapi-check: ## Fail if the committed OpenAPI spec is out of date
+openapi-check: ## Fail if the committed OpenAPI spec or error codes are out of date
 	@$(PHP) bin/console api:openapi:export | diff -q - pwa/openapi/openapi.json >/dev/null \
 		|| { echo 'pwa/openapi/openapi.json is out of date: run `make openapi`.'; exit 1; }
+	@$(ERROR_CODES) | diff -q - pwa/openapi/error-codes.json >/dev/null \
+		|| { echo 'pwa/openapi/error-codes.json is out of date: run `make openapi`.'; exit 1; }
 
 ## —— Quality (runs against the dev stack) ———————————————————————————
 .PHONY: qa composer-validate php-cs php-cs-fix phpstan deptrac schema-validate phpunit pwa-lint pwa-typecheck vitest
@@ -111,7 +122,7 @@ e2e: ## Playwright against the running dev stack (quick feedback; Nuxt DevTools 
 
 e2e-prod: ## Build the production image and run Playwright against it on a throwaway stack
 	@trap '$(DC_TEST) down --volumes --remove-orphans' EXIT; \
-	$(DC_TEST) up $(UP_FLAGS) --wait php database && \
+	$(DC_TEST) up $(UP_FLAGS) --wait php database mailer && \
 	CI=1 $(DC_TEST) --profile e2e run --rm e2e
 
 ## —— CI ————————————————————————————————————————————————————————

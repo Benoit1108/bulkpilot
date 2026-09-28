@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Identity\Domain\External\ExternalIdentity" table="user_external_identities">
+        <unique-constraints>
+            <unique-constraint name="user_external_identities_subject" columns="provider,subject"/>
+        </unique-constraints>
+        <indexes>
+            <index name="user_external_identities_user" columns="user_id"/>
+        </indexes>
+
+        <id name="id" type="external_identity_id"/>
+        <field name="userId" type="user_id"/>
+        <field name="provider" length="20" enum-type="App\Identity\Domain\External\IdentityProvider"/>
+        <field name="subject" length="255"/>
+        <field name="linkedAt" type="datetimetz_immutable"/>
+    </entity>
+</doctrine-mapping>

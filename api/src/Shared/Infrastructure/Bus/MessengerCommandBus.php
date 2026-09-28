@@ -6,6 +6,9 @@ namespace App\Shared\Infrastructure\Bus;
 
 use App\Shared\Application\Bus\Command\Command;
 use App\Shared\Application\Bus\Command\CommandBus;
+use App\Shared\Domain\Exception\ConcurrentUpdate;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\OptimisticLockException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Exception\DelayedMessageHandlingException;
@@ -26,6 +29,10 @@ final readonly class MessengerCommandBus implements CommandBus
     {
         try {
             $this->unwrap(fn () => $this->bus->dispatch($command));
+        } catch (UniqueConstraintViolationException|OptimisticLockException) {
+            // Two requests raced past the handler's checks (e.g. a double submit): the database
+            // constraint or version column caught it, the transaction was rolled back.
+            throw ConcurrentUpdate::create();
         } catch (DelayedMessageHandlingException $e) {
             // Domain events are delivered after the command's transaction committed: the write
             // succeeded, so reporting an error would make the client retry and apply it twice.

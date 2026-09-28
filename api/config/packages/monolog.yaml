@@ -1,5 +1,7 @@
 monolog:
-    channels: # To see all channels, run bin/console debug:autowiring logger
+    # To see all channels, run bin/console debug:autowiring logger
+    channels:
+        - audit # Security journal (sign-ups, verifications, password changes…), see LogSecurityEvent
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
 
 when@dev:
@@ -18,6 +20,10 @@ when@dev:
 when@test:
     monolog:
         handlers:
+            # Lets tests assert what the security journal records (see AuditLogTest).
+            audit_test:
+                type: test
+                channels: [audit]
             main:
                 type: fingers_crossed
                 action_level: error
@@ -32,12 +38,19 @@ when@test:
 when@prod:
     monolog:
         handlers:
+            # Always written (never buffered by fingers_crossed).
+            audit:
+                type: stream
+                path: php://stderr
+                level: info
+                channels: [audit]
+                formatter: monolog.formatter.json
             main:
                 type: fingers_crossed
                 action_level: error
                 handler: nested
                 excluded_http_codes: [404, 405]
-                channels: ["!deprecation"]
+                channels: ["!deprecation", "!audit"]
                 buffer_size: 50 # How many messages should be saved? Prevent memory leaks
             nested:
                 type: stream

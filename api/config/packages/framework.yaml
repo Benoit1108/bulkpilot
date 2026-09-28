@@ -1,12 +1,54 @@
-# see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
 
-    # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    # Sessions live in PostgreSQL (table `sessions`): they survive restarts and deployments,
+    # and one device session per sign-in is tracked in `user_sessions` (ADR-0008).
+    session:
+        handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+        name: sid
+        cookie_secure: auto
+        cookie_httponly: true
+        cookie_samesite: lax
+        # An installed PWA stays signed in for 30 days of inactivity.
+        cookie_lifetime: 2592000
+        gc_maxlifetime: 2592000
 
-    #esi: true
-    #fragments: true
+    rate_limiter:
+        # Keyed by IP + email: slows down guessing one account's password.
+        sign_in:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_SIGN_IN)%'
+            interval: '15 minutes'
+        # Keyed by IP: slows down credential stuffing across accounts.
+        sign_in_ip:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_SIGN_IN_IP)%'
+            interval: '15 minutes'
+        # Keyed by account only: password guessing spread over many IPs is still bounded.
+        sign_in_account:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_SIGN_IN_ACCOUNT)%'
+            interval: '1 hour'
+        # Keyed by account: re-entering the password on a signed-in device (2FA changes,
+        # password change) cannot be used to guess it from a stolen session.
+        password_confirm:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_PASSWORD_CONFIRM)%'
+            interval: '15 minutes'
+        registration:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_REGISTRATION)%'
+            interval: '1 hour'
+        # Keyed by account: at most 5 second-factor guesses per 15 minutes, whatever the session.
+        second_factor:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_SECOND_FACTOR)%'
+            interval: '15 minutes'
+        # Reset emails, verification resends, and link redemption attempts (keyed by IP).
+        email_links:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_EMAIL_LINKS)%'
+            interval: '1 hour'
 
 when@test:
     framework:

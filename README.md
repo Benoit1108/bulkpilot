@@ -57,5 +57,5 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 | Phase | Périmètre | Statut |
 | --- | --- | --- |
 | 0 | Architecture, Docker, CI, socle DDD, shell PWA | ✅ |
-| 1 | Identity : inscription, login, sessions, 2FA, OAuth | ⏳ |
+| 1 | Identity : comptes, sessions et appareils, mots de passe, 2FA (TOTP + codes de secours), Google (OIDC), architecture Apple | ✅ |
 | 2–10 | Nutrition, Barcode, Training, Progression, Coach, Dashboard, Export/Sécurité, Qualité, Production | — |

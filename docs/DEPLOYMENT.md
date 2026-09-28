@@ -36,15 +36,35 @@ GitHub → CI (qa + e2e sur l'image) → registre d'images → staging → valid
 | Variable | Rôle |
 | --- | --- |
 | `APP_SECRET` | secret Symfony (signature) — obligatoire : le conteneur refuse de démarrer sans |
+| `APP_ENCRYPTION_KEY` | 32 octets en base64, chiffre les graines 2FA — obligatoire ; le changer invalide les authentificateurs enrôlés |
+| `REGISTRATION_ENABLED` | `false` en production une fois le compte du propriétaire créé |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | connexion Google (facultatif) ; URI de redirection : `<DEFAULT_URI>/api/auth/oauth/google/callback` |
+| `RATE_LIMIT_*` | seuils anti-abus (valeurs par défaut sûres dans `api/.env`) |
 | `SERVER_NAME` | domaine public servi par Caddy |
 | `DATABASE_URL` | PostgreSQL managé |
-| `MAILER_DSN` | fournisseur email transactionnel |
-| `DEFAULT_URI` | URL publique utilisée pour les liens générés hors requête (emails) |
+| `MAILER_DSN` | fournisseur email transactionnel — obligatoire (le conteneur refuse `null://`) |
+| `MAILER_FROM` | expéditeur, sur un domaine authentifié (SPF/DKIM) — obligatoire |
+| `DEFAULT_URI` | URL publique des liens envoyés par email — obligatoire (refus de `localhost`) |
+| `LOCK_DSN` | verrous (limiteurs de débit) : `flock` pour une instance, `postgresql+advisory://…` pour plusieurs |
+
+## Premier démarrage
+
+1. Déployer avec `REGISTRATION_ENABLED=true`, créer le compte du propriétaire depuis la PWA, confirmer son email.
+2. Repasser `REGISTRATION_ENABLED=false` et redémarrer.
+
+## Notes d'exploitation
+
+- Chaque requête authentifiée ouvre sa propre connexion PostgreSQL pour la session (en plus de Doctrine) :
+  prévoir ~2 × threads worker connexions, ou un pooler (PgBouncer) devant une base managée.
+- Les emails partent après la réponse ; une panne SMTP est journalisée (`Email could not be sent`) sans échouer la requête.
 
 ## Restant pour la phase 10
 
 - Migrations dans un job de release unique plutôt qu'à chaque démarrage (dès qu'il y a plusieurs répliques).
 - Image : réduire la taille (~780 Mo), images de base épinglées par digest, SBOM, scan Trivy, push par digest sur GHCR.
+- Stockage des limiteurs de débit partagé entre répliques (base ou Redis) au lieu du cache fichier par conteneur,
+  et `LOCK_DSN` partagé ; `trusted_proxies` indispensable derrière un load balancer (sinon tous les clients partagent son IP).
+- Rétention des logs d'audit (ils contiennent des identifiants utilisateur).
 - Mot de passe PostgreSQL obligatoire (`${POSTGRES_PASSWORD:?}`) dans l'override de production, `trusted_proxies` si un load balancer est placé devant.
 
 Les environnements `local`, `staging` et `production` ont des données strictement séparées ;

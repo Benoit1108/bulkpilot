@@ -60,6 +60,12 @@ http://127.0.0.1:2080 {
 			request>headers>Cookie delete
 			request>headers>Authorization delete
 			resp_headers>Set-Cookie delete
+			# One-time link secrets and OAuth codes travel in query strings.
+			request>uri query {
+				replace token REDACTED
+				replace code REDACTED
+				replace state REDACTED
+			}
 		}
 	}
 

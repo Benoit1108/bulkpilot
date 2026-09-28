@@ -6,6 +6,7 @@ api_platform:
         # (scanning all of src/ would load Domain and Infrastructure classes too).
         paths:
             - '%kernel.project_dir%/src/System/Presentation/Api'
+            - '%kernel.project_dir%/src/Identity/Presentation/Api'
     formats:
         jsonld: ['application/ld+json']
         json: ['application/json']

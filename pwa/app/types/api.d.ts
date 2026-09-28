@@ -4,6 +4,106 @@
  */
 
 export interface paths {
+    "/api/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a Account resource.
+         * @description Creates a Account resource.
+         */
+        post: operations["api_authregister_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a Account resource.
+         * @description Retrieves a Account resource.
+         */
+        get: operations["api_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replaces the Account resource.
+         * @description Replaces the Account resource.
+         */
+        put: operations["api_meprofile_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/email-verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a EmailVerification resource.
+         * @description Creates a EmailVerification resource.
+         */
+        post: operations["api_authemail-verification_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/email-verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a EmailVerification resource.
+         * @description Creates a EmailVerification resource.
+         */
+        post: operations["api_meemail-verification_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -24,10 +124,398 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/me/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a PasswordChange resource.
+         * @description Creates a PasswordChange resource.
+         */
+        post: operations["api_mepassword_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/password-reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a PasswordReset resource.
+         * @description Creates a PasswordReset resource.
+         */
+        post: operations["api_authpassword-reset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/password-reset-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a PasswordResetRequest resource.
+         * @description Creates a PasswordResetRequest resource.
+         */
+        post: operations["api_authpassword-reset-request_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/two-factor/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a RecoveryCodes resource.
+         * @description Creates a RecoveryCodes resource.
+         */
+        post: operations["api_metwo-factorconfirm_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/two-factor/recovery-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a RecoveryCodes resource.
+         * @description Creates a RecoveryCodes resource.
+         */
+        post: operations["api_metwo-factorrecovery-codes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Session resources.
+         * @description Retrieves the collection of Session resources.
+         */
+        get: operations["api_mesessions_get_collection"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/sessions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Removes the Session resource.
+         * @description Removes the Session resource.
+         */
+        delete: operations["api_mesessions_id_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/sign-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a SignIn resource.
+         * @description Creates a SignIn resource.
+         */
+        post: operations["api_authsign-in_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/sign-in/second-factor": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a SignIn resource.
+         * @description Creates a SignIn resource.
+         */
+        post: operations["api_authsign-insecond-factor_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/providers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a SignInProviders resource.
+         * @description Retrieves a SignInProviders resource.
+         */
+        get: operations["api_authproviders_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/sign-out": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a SignOut resource.
+         * @description Creates a SignOut resource.
+         */
+        post: operations["api_authsign-out_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/two-factor/disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a TwoFactorDisabling resource.
+         * @description Creates a TwoFactorDisabling resource.
+         */
+        post: operations["api_metwo-factordisable_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/two-factor/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a TwoFactorSetup resource.
+         * @description Creates a TwoFactorSetup resource.
+         */
+        post: operations["api_metwo-factorsetup_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** @description The signed-in account. */
+        Account: {
+            id: string;
+            email: string;
+            emailVerified: boolean;
+            firstName: string;
+            /** Format: date */
+            birthDate: string | null;
+            /** @enum {string|null} */
+            sex: "female" | "male" | null;
+            heightCm: number | null;
+            twoFactorEnabled: boolean;
+            hasPassword: boolean;
+        };
+        /** @description Replaces the profile (identity only: body metrics live in Progression). */
+        "Account.ProfileInput": {
+            /** @default  */
+            firstName: string;
+            birthDate?: string | null;
+            /** @enum {string|null} */
+            sex?: "female" | "male" | null;
+            heightCm?: number | null;
+        };
+        /** @description Creates an account, emails a verification link and signs the device in. */
+        "Account.RegistrationInput": {
+            /** @default  */
+            firstName: string;
+            /**
+             * Format: email
+             * @default
+             */
+            email: string;
+            /** @default  */
+            password: string;
+        };
+        /** @description The signed-in account. */
+        "Account.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            email: string;
+            emailVerified: boolean;
+            firstName: string;
+            /** Format: date */
+            birthDate: string | null;
+            /** @enum {string|null} */
+            sex: "female" | "male" | null;
+            heightCm: number | null;
+            twoFactorEnabled: boolean;
+            hasPassword: boolean;
+        };
+        /** @description The signed-in account. */
+        "Account.jsonld_noid": components["schemas"]["HydraItemBaseSchemaWithoutId"] & {
+            id: string;
+            email: string;
+            emailVerified: boolean;
+            firstName: string;
+            /** Format: date */
+            birthDate: string | null;
+            /** @enum {string|null} */
+            sex: "female" | "male" | null;
+            heightCm: number | null;
+            twoFactorEnabled: boolean;
+            hasPassword: boolean;
+        };
+        Account_noid: {
+            id: string;
+            email: string;
+            emailVerified: boolean;
+            firstName: string;
+            /** Format: date */
+            birthDate: string | null;
+            /** @enum {string|null} */
+            sex: "female" | "male" | null;
+            heightCm: number | null;
+            twoFactorEnabled: boolean;
+            hasPassword: boolean;
+        };
+        /** @description Unprocessable entity */
+        ConstraintViolation: {
+            /** @default 422 */
+            status: number;
+            violations?: {
+                /** @description The property path of the violation */
+                propertyPath: string;
+                /** @description The message associated with the violation */
+                message: string;
+                /** @description The code of the violation */
+                code?: string;
+                /** @description An extra hint to understand the violation */
+                hint?: string;
+                /** @description The serialized payload of the violation */
+                payload?: {
+                    [key: string]: unknown;
+                };
+            }[];
+            readonly detail?: string;
+            readonly type?: string;
+            readonly title?: string | null;
+            readonly instance?: string | null;
+        };
+        /** @description Unprocessable entity */
+        "ConstraintViolation.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** @default 422 */
+            status: number;
+            violations?: {
+                /** @description The property path of the violation */
+                propertyPath: string;
+                /** @description The message associated with the violation */
+                message: string;
+                /** @description The code of the violation */
+                code?: string;
+                /** @description An extra hint to understand the violation */
+                hint?: string;
+                /** @description The serialized payload of the violation */
+                payload?: {
+                    [key: string]: unknown;
+                };
+            }[];
+            readonly detail?: string;
+            readonly description?: string;
+            readonly type?: string;
+            readonly title?: string | null;
+            readonly instance?: string | null;
+        };
+        /** @description Redeems the link emailed at registration (works signed in or not). */
+        EmailVerification: {
+            /** @default  */
+            token: string;
+        };
         /** @description A representation of common errors. */
         Error: {
             /** @description A short, human-readable summary of the problem. */
@@ -77,6 +565,45 @@ export interface components {
                 [key: string]: "up" | "down";
             };
         };
+        HydraCollectionBaseSchema: components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+            /**
+             * @example {
+             *       "@id": "string",
+             *       "@type": "string",
+             *       "first": "string",
+             *       "last": "string",
+             *       "previous": "string",
+             *       "next": "string"
+             *     }
+             */
+            view?: {
+                /** Format: iri-reference */
+                "@id"?: string;
+                "@type"?: string;
+                /** Format: iri-reference */
+                first?: string | null;
+                /** Format: iri-reference */
+                last?: string | null;
+                /** Format: iri-reference */
+                previous?: string | null;
+                /** Format: iri-reference */
+                next?: string | null;
+            };
+        };
+        HydraCollectionBaseSchemaNoPagination: {
+            totalItems?: number;
+            search?: {
+                "@type"?: string;
+                template?: string;
+                variableRepresentation?: string;
+                mapping?: {
+                    "@type"?: string;
+                    variable?: string;
+                    property?: string | null;
+                    required?: boolean;
+                }[];
+            };
+        };
         HydraItemBaseSchema: {
             "@context"?: string | ({
                 "@vocab": string;
@@ -88,6 +615,124 @@ export interface components {
             "@id": string;
             "@type": string;
         };
+        HydraItemBaseSchemaWithoutId: {
+            "@context"?: string | ({
+                "@vocab": string;
+                /** @enum {string} */
+                hydra: "http://www.w3.org/ns/hydra/core#";
+            } & {
+                [key: string]: unknown;
+            });
+            "@id"?: string;
+            "@type": string;
+        };
+        /** @description Changes the password; every other device is signed out. */
+        PasswordChange: {
+            /** @default  */
+            currentPassword: string;
+            /** @default  */
+            newPassword: string;
+        };
+        /** @description Sets a new password from an emailed link and signs every device out. */
+        PasswordReset: {
+            /** @default  */
+            token: string;
+            /** @default  */
+            newPassword: string;
+        };
+        /** @description Emails a reset link if a verified account uses this address. Always 202: accounts are never revealed. */
+        PasswordResetRequest: {
+            /** @default  */
+            email: string;
+        };
+        /** @description Activates two-factor authentication with a first valid code; returns the recovery codes. */
+        RecoveryCodes: {
+            recoveryCodes: string[];
+        };
+        /** @description Activates two-factor authentication with a first valid code; returns the recovery codes. */
+        "RecoveryCodes.CodeInput": {
+            /** @default  */
+            code: string;
+        };
+        /** @description Replaces the recovery codes (password required); previous ones stop working. */
+        "RecoveryCodes.PasswordConfirmation": {
+            /** @default  */
+            password: string;
+        };
+        /** @description Activates two-factor authentication with a first valid code; returns the recovery codes. */
+        "RecoveryCodes.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            recoveryCodes: string[];
+        };
+        /** @description Signed-in devices, most recently active first. */
+        Session: {
+            id: string;
+            deviceLabel: string;
+            /** Format: date-time */
+            openedAt: string;
+            /** Format: date-time */
+            lastSeenAt: string;
+            current: boolean;
+        };
+        /** @description Signed-in devices, most recently active first. */
+        "Session.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            deviceLabel: string;
+            /** Format: date-time */
+            openedAt: string;
+            /** Format: date-time */
+            lastSeenAt: string;
+            current: boolean;
+        };
+        /** @description Checks email and password; signs the device in, or asks for the second factor. */
+        SignIn: {
+            twoFactorRequired: boolean;
+            account: components["schemas"]["Account_noid"] | null;
+        };
+        /** @description Completes a pending sign-in with an authenticator code or a recovery code. */
+        "SignIn.SecondFactorInput": {
+            /** @default  */
+            code: string;
+        };
+        /** @description Checks email and password; signs the device in, or asks for the second factor. */
+        "SignIn.SignInInput": {
+            /** @default  */
+            email: string;
+            /** @default  */
+            password: string;
+        };
+        /** @description Checks email and password; signs the device in, or asks for the second factor. */
+        "SignIn.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            twoFactorRequired: boolean;
+            account: components["schemas"]["Account.jsonld_noid"] | null;
+        };
+        /** @description Enabled external sign-in providers. */
+        SignInProviders: {
+            providers: ("google" | "apple" | "fake")[];
+        };
+        /** @description Enabled external sign-in providers. */
+        "SignInProviders.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            providers: ("google" | "apple" | "fake")[];
+        };
+        /** @description Turns two-factor authentication off (password required). */
+        "TwoFactorDisabling.PasswordConfirmation": {
+            /** @default  */
+            password: string;
+        };
+        /** @description Starts enrolling an authenticator app (password required, email must be verified). */
+        TwoFactorSetup: {
+            secret: string;
+            otpauthUri: string;
+        };
+        /** @description Starts enrolling an authenticator app (password required, email must be verified). */
+        "TwoFactorSetup.PasswordConfirmation": {
+            /** @default  */
+            password: string;
+        };
+        /** @description Starts enrolling an authenticator app (password required, email must be verified). */
+        "TwoFactorSetup.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            secret: string;
+            otpauthUri: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -97,6 +742,233 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    api_authregister_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new Account resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Account.RegistrationInput"];
+                "application/json": components["schemas"]["Account.RegistrationInput"];
+            };
+        };
+        responses: {
+            /** @description Account resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Account.jsonld"];
+                    "application/json": components["schemas"]["Account"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Account resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Account.jsonld"];
+                    "application/json": components["schemas"]["Account"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_meprofile_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The updated Account resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Account.ProfileInput"];
+                "application/json": components["schemas"]["Account.ProfileInput"];
+            };
+        };
+        responses: {
+            /** @description Account resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Account.jsonld"];
+                    "application/json": components["schemas"]["Account"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_authemail-verification_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new EmailVerification resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["EmailVerification"];
+                "application/json": components["schemas"]["EmailVerification"];
+            };
+        };
+        responses: {
+            /** @description EmailVerification resource created */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_meemail-verification_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description EmailVerification resource created */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
     api_health_get: {
         parameters: {
             query?: never;
@@ -133,6 +1005,562 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    api_mepassword_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new PasswordChange resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["PasswordChange"];
+                "application/json": components["schemas"]["PasswordChange"];
+            };
+        };
+        responses: {
+            /** @description PasswordChange resource created */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_authpassword-reset_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new PasswordReset resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["PasswordReset"];
+                "application/json": components["schemas"]["PasswordReset"];
+            };
+        };
+        responses: {
+            /** @description PasswordReset resource created */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_authpassword-reset-request_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new PasswordResetRequest resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["PasswordResetRequest"];
+                "application/json": components["schemas"]["PasswordResetRequest"];
+            };
+        };
+        responses: {
+            /** @description PasswordResetRequest resource created */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_metwo-factorconfirm_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new RecoveryCodes resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["RecoveryCodes.CodeInput"];
+                "application/json": components["schemas"]["RecoveryCodes.CodeInput"];
+            };
+        };
+        responses: {
+            /** @description RecoveryCodes resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["RecoveryCodes.jsonld"];
+                    "application/json": components["schemas"]["RecoveryCodes"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_metwo-factorrecovery-codes_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new RecoveryCodes resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["RecoveryCodes.PasswordConfirmation"];
+                "application/json": components["schemas"]["RecoveryCodes.PasswordConfirmation"];
+            };
+        };
+        responses: {
+            /** @description RecoveryCodes resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["RecoveryCodes.jsonld"];
+                    "application/json": components["schemas"]["RecoveryCodes"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_mesessions_get_collection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Session collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Session.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Session"][];
+                };
+            };
+        };
+    };
+    api_mesessions_id_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Session identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Session resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "api_authsign-in_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new SignIn resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["SignIn.SignInInput"];
+                "application/json": components["schemas"]["SignIn.SignInInput"];
+            };
+        };
+        responses: {
+            /** @description SignIn resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["SignIn.jsonld"];
+                    "application/json": components["schemas"]["SignIn"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_authsign-insecond-factor_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new SignIn resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["SignIn.SecondFactorInput"];
+                "application/json": components["schemas"]["SignIn.SecondFactorInput"];
+            };
+        };
+        responses: {
+            /** @description SignIn resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["SignIn.jsonld"];
+                    "application/json": components["schemas"]["SignIn"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_authproviders_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description SignInProviders resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["SignInProviders.jsonld"];
+                    "application/json": components["schemas"]["SignInProviders"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "api_authsign-out_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description SignOut resource created */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_metwo-factordisable_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new TwoFactorDisabling resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["TwoFactorDisabling.PasswordConfirmation"];
+                "application/json": components["schemas"]["TwoFactorDisabling.PasswordConfirmation"];
+            };
+        };
+        responses: {
+            /** @description TwoFactorDisabling resource created */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_metwo-factorsetup_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new TwoFactorSetup resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["TwoFactorSetup.PasswordConfirmation"];
+                "application/json": components["schemas"]["TwoFactorSetup.PasswordConfirmation"];
+            };
+        };
+        responses: {
+            /** @description TwoFactorSetup resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["TwoFactorSetup.jsonld"];
+                    "application/json": components["schemas"]["TwoFactorSetup"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
             };
         };
     };

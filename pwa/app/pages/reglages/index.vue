@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { ChevronRight } from 'lucide-vue-next'
 import type { ThemePreference } from '~/features/shell/theme'
 import { useServiceHealth } from '~/features/system/health'
 
 definePageMeta({ title: 'Réglages' })
 
+const { account, signOut } = useAccount()
 const { preference, setPreference } = useTheme()
 const { serviceStatus, refresh } = useServiceHealth()
+const { pending: signingOut, message: signOutError, run } = useSubmission()
 const appName = useRuntimeConfig().public.appName
 
 const themeOptions: ReadonlyArray<{ value: ThemePreference, label: string }> = [
@@ -20,10 +23,64 @@ const statusLabels = {
   degraded: 'Service dégradé',
   unreachable: 'Serveur injoignable',
 } as const
+
+const securitySummary = computed(() => {
+  if (!account.value) return ''
+  const parts = [
+    account.value.emailVerified ? 'Email confirmé' : 'Email à confirmer',
+    account.value.twoFactorEnabled ? 'Double authentification active' : 'Double authentification désactivée',
+  ]
+  return parts.join(' · ')
+})
+
+async function leave(): Promise<void> {
+  if (await run(() => signOut())) await navigateTo('/connexion')
+}
 </script>
 
 <template>
   <div class="page">
+    <nav
+      v-if="account"
+      aria-label="Sections des réglages"
+    >
+      <ul class="rows">
+        <li>
+          <NuxtLink
+            to="/reglages/profil"
+            class="row"
+          >
+            <span class="row__text">
+              <span class="row__title">Profil</span>
+              <span class="row__summary">{{ account.firstName }}</span>
+            </span>
+            <ChevronRight
+              :size="20"
+              aria-hidden="true"
+            />
+          </NuxtLink>
+        </li>
+        <li>
+          <NuxtLink
+            to="/reglages/compte"
+            class="row"
+          >
+            <span class="row__text">
+              <span class="row__title">Compte et sécurité</span>
+              <span
+                class="row__summary"
+                data-testid="security-summary"
+              >{{ securitySummary }}</span>
+            </span>
+            <ChevronRight
+              :size="20"
+              aria-hidden="true"
+            />
+          </NuxtLink>
+        </li>
+      </ul>
+    </nav>
+
     <UiCard title="Apparence">
       <fieldset class="choice">
         <legend class="choice__legend">
@@ -67,6 +124,22 @@ const statusLabels = {
         Réessayer
       </UiButton>
     </UiCard>
+
+    <template v-if="account">
+      <UiAlert
+        v-if="signOutError"
+        tone="error"
+      >
+        {{ signOutError }} Tu es toujours connecté sur cet appareil.
+      </UiAlert>
+      <UiButton
+        variant="secondary"
+        :loading="signingOut"
+        @click="leave"
+      >
+        Se déconnecter
+      </UiButton>
+    </template>
   </div>
 </template>
 
@@ -76,6 +149,49 @@ const statusLabels = {
   flex-direction: column;
   gap: var(--space-4);
   max-width: var(--reading-max-width);
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.rows li + li {
+  border-top: 1px solid var(--color-border);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 3.5rem;
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.row:focus-visible {
+  outline-offset: -2px;
+  border-radius: var(--radius-lg);
+}
+
+.row__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.row__title {
+  font-weight: 600;
+}
+
+.row__summary {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
 }
 
 .choice {
