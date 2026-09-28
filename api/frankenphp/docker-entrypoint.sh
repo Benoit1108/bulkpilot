@@ -12,6 +12,11 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		# Verification and reset emails must actually leave, with links that work.
 		case "$MAILER_DSN" in null://*) echo 'MAILER_DSN must be a real transport in production.' >&2; exit 1 ;; esac
 		case "$DEFAULT_URI" in *://localhost*) echo 'DEFAULT_URI must be the public URL in production.' >&2; exit 1 ;; esac
+		# The fake product database ships in the image for E2E runs only (docker-compose.test.yml).
+		if [ "$FOOD_DATABASE" = 'fake' ] && [ "$ALLOW_FAKE_PROVIDERS" != '1' ]; then
+			echo 'FOOD_DATABASE=fake is for tests: set it to openfoodfacts in production.' >&2
+			exit 1
+		fi
 	fi
 
 	if [ -z "$(ls -A 'vendor/' 2>/dev/null)" ]; then

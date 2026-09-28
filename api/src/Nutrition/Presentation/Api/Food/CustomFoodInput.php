@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nutrition\Presentation\Api\Food;
 
 use App\Nutrition\Application\Food\CustomFoodDetails;
+use App\Nutrition\Domain\Food\Barcode;
 use App\Nutrition\Domain\Food\Food;
 use App\Nutrition\Domain\Food\FoodState;
 use App\Nutrition\Domain\Food\NutritionFacts;
@@ -53,6 +54,10 @@ final class CustomFoodInput
     #[Assert\Range(min: 0, max: 100)]
     public ?float $salt = null;
 
+    /** As printed under the bars, for a packaged product. */
+    #[Assert\Regex(Barcode::INPUT_PATTERN)]
+    public ?string $barcode = null;
+
     /** @var list<PortionInput> */
     #[Assert\Count(max: Food::MAX_PORTIONS)]
     #[Assert\Valid]
@@ -73,6 +78,7 @@ final class CustomFoodInput
             $this->saturatedFat,
             $this->salt,
             array_map(static fn (PortionInput $portion): array => ['label' => $portion->label, 'grams' => (float) $portion->grams], $this->portions),
+            $this->barcode,
         );
     }
 }

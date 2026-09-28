@@ -67,7 +67,8 @@ Règles transverses :
 
 | Concept | Règle |
 | --- | --- |
-| `Food` (agrégat) | Composition **pour 100 g** (`NutritionFacts`), état cru / cuit / sans objet, portions nommées (≤ 10). Source `ciqual` (partagée, lecture seule, rafraîchie à chaque import) ou `custom` (à un utilisateur, modifiable, soft delete). |
+| `Food` (agrégat) | Composition **pour 100 g** (`NutritionFacts`), état cru / cuit / sans objet, portions nommées (≤ 10), code-barres éventuel. Source `ciqual` (partagée, lecture seule, rafraîchie à chaque import), `off` (produit Open Food Facts confirmé par un utilisateur : partagé, lecture seule, clé = code-barres) ou `custom` (à un utilisateur, modifiable, soft delete). |
+| `Barcode` | 8, 12, 13 ou 14 chiffres, clé de contrôle GS1 vérifiée ; normalisé (UPC-A et GTIN-14 commençant par 0 → EAN-13). Un code désigne au plus un des aliments personnels d'un utilisateur. |
 | `NutritionFacts` | Énergie 0–950 kcal (l'huile fait 900–901 dans les tables), macros 0–100 g, somme ≤ 105 g (arrondis), sucres ≤ glucides, saturés ≤ lipides. |
 | `FoodState` | Déduit du nom CIQUAL (« cuit », « sauté/poêlé », « œuf dur »… avant « cru » ; « blé dur » n'est pas une cuisson) ; un aliment cru et son équivalent cuit sont deux aliments distincts. |
 | `JournalEntry` (agrégat) | Une quantité (0–5000 g) d'un aliment, dans un repas d'un jour. **Instantané** : nom, état et valeurs pour 100 g sont copiés à la saisie ; modifier ou supprimer l'aliment (ou un nouvel import CIQUAL) ne réécrit jamais le passé. |
@@ -94,6 +95,8 @@ Règles transverses :
 - Un aliment personnel ou une recette supprimés disparaissent de la recherche et des listes, mais continuent de **composer** les recettes et
   repas favoris qui les utilisent (soft delete) ; la fiche de la recette le signale.
 - **Base CIQUAL** (Anses, Licence Ouverte Etalab 2.0, ADR-0019) : importée par `nutrition:catalogue:import`, idempotente.
+- **Produits scannés** (ADR-0022) : un scan ne sauve rien ; l'utilisateur confirme (produit partagé, valeurs relues à la source) ou corrige
+  (son aliment personnel, avec le code-barres). Un scan trouve d'abord l'aliment de l'utilisateur, puis le produit partagé.
 
 Limites connues (assumées pour une application personnelle à un utilisateur, à revoir en phase 8) :
 
@@ -101,6 +104,9 @@ Limites connues (assumées pour une application personnelle à un utilisateur, �
   d'un même aliment, recette ou répartition : la dernière enregistrée l'emporte.
 - Pas de quota ni de limitation de débit sur les écritures Nutrition ni sur le Meal Builder (compte authentifié ; coût du Meal Builder borné
   par 6 candidats par rôle, quel que soit le nombre d'aliments).
+- Scan (phase 3), reporté volontairement : « ajouter et scanner le suivant » (enchaîner plusieurs produits sans refermer le tiroir),
+  rattacher un code inconnu à un aliment personnel déjà saisi (il faut aujourd'hui modifier cet aliment pour y mettre le code), et
+  l'E2E du lecteur WebAssembly avec une fausse caméra (couvert par Vitest ; l'E2E saisit le code).
 
 ## Événements de domaine prévus
 

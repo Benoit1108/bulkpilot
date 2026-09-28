@@ -20,6 +20,7 @@ use App\Nutrition\Application\Food\ListCustomFoods;
 use App\Nutrition\Application\Food\ListCustomFoodsHandler;
 use App\Nutrition\Application\Food\ListRecentFoods;
 use App\Nutrition\Application\Food\ListRecentFoodsHandler;
+use App\Nutrition\Application\Food\OwnBarcodes;
 use App\Nutrition\Application\Food\SearchFoods;
 use App\Nutrition\Application\Food\SearchFoodsHandler;
 use App\Nutrition\Application\Journal\LogFood;
@@ -63,7 +64,7 @@ final class FoodsTest extends NutritionTestCase
 
     public function testCustomFoodsAreCreatedEditedAndDeletedByTheirOwnerOnly(): void
     {
-        new CreateCustomFoodHandler($this->foods)(new CreateCustomFood(new FoodId(self::PASTA), $this->alex, $this->pasta()));
+        new CreateCustomFoodHandler($this->foods, new OwnBarcodes($this->foods))(new CreateCustomFood(new FoodId(self::PASTA), $this->alex, $this->pasta()));
 
         $view = new GetFoodHandler($this->foods)(new GetFood($this->alex, new FoodId(self::PASTA)));
         self::assertSame(FoodSource::Custom, $view->source);
@@ -73,7 +74,7 @@ final class FoodsTest extends NutritionTestCase
         self::assertCount(1, new ListCustomFoodsHandler($this->foods)(new ListCustomFoods($this->alex)));
         self::assertSame([], new ListCustomFoodsHandler($this->foods)(new ListCustomFoods($this->sam)));
 
-        new EditCustomFoodHandler($this->foods)(new EditCustomFood(new FoodId(self::PASTA), $this->alex, new CustomFoodDetails('Pâtes complètes', null, FoodState::Cooked, 150, 5.5, 29, 1.1)));
+        new EditCustomFoodHandler($this->foods, new OwnBarcodes($this->foods))(new EditCustomFood(new FoodId(self::PASTA), $this->alex, new CustomFoodDetails('Pâtes complètes', null, FoodState::Cooked, 150, 5.5, 29, 1.1)));
         self::assertSame('Pâtes complètes', new GetFoodHandler($this->foods)(new GetFood($this->alex, new FoodId(self::PASTA)))->name);
 
         try {
@@ -91,7 +92,7 @@ final class FoodsTest extends NutritionTestCase
     {
         $rice = $this->rice();
         $oats = $this->catalogueFood('9310', 'Flocons d\'avoine', $rice->facts());
-        new CreateCustomFoodHandler($this->foods)(new CreateCustomFood(new FoodId(self::PASTA), $this->alex, $this->pasta()));
+        new CreateCustomFoodHandler($this->foods, new OwnBarcodes($this->foods))(new CreateCustomFood(new FoodId(self::PASTA), $this->alex, $this->pasta()));
         $log = new LogFoodHandler($this->foods, $this->writer());
         foreach ([$rice->id(), new FoodId(self::PASTA), $oats->id(), $rice->id()] as $i => $foodId) {
             $this->clock->modify('+1 minute');

@@ -8,6 +8,7 @@ use App\Shared\Domain\Exception\AuthenticationFailed;
 use App\Shared\Domain\Exception\Conflict;
 use App\Shared\Domain\Exception\DomainException;
 use App\Shared\Domain\Exception\NotFound;
+use App\Shared\Domain\Exception\Unavailable;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +33,7 @@ final readonly class DomainExceptionListener
             $exception instanceof NotFound => Response::HTTP_NOT_FOUND,
             $exception instanceof Conflict => Response::HTTP_CONFLICT,
             $exception instanceof AuthenticationFailed => Response::HTTP_UNAUTHORIZED,
+            $exception instanceof Unavailable => Response::HTTP_SERVICE_UNAVAILABLE,
             default => Response::HTTP_UNPROCESSABLE_ENTITY,
         };
 

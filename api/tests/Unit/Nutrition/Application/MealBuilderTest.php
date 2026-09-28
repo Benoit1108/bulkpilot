@@ -10,6 +10,7 @@ use App\Nutrition\Application\Builder\MealBuilderView;
 use App\Nutrition\Application\Food\CreateCustomFood;
 use App\Nutrition\Application\Food\CreateCustomFoodHandler;
 use App\Nutrition\Application\Food\CustomFoodDetails;
+use App\Nutrition\Application\Food\OwnBarcodes;
 use App\Nutrition\Application\Journal\LogFood;
 use App\Nutrition\Application\Journal\LogFoodHandler;
 use App\Nutrition\Application\Journal\LogFoods;
@@ -94,7 +95,7 @@ final class MealBuilderTest extends NutritionTestCase
     public function testSomeoneElsesFoodsAreNeverCandidates(): void
     {
         $this->setTarget(new MacroTargets(2500, 150, 300, 75));
-        new CreateCustomFoodHandler($this->foods)(new CreateCustomFood(new FoodId('00000000-0000-7000-8000-0000000005c1'), $this->sam, new CustomFoodDetails('Whey de Sam', null, FoodState::NotApplicable, 380, 80, 6, 4)));
+        new CreateCustomFoodHandler($this->foods, new OwnBarcodes($this->foods))(new CreateCustomFood(new FoodId('00000000-0000-7000-8000-0000000005c1'), $this->sam, new CustomFoodDetails('Whey de Sam', null, FoodState::NotApplicable, 380, 80, 6, 4)));
 
         foreach ($this->build()->proposals as $proposal) {
             self::assertNotContains('Whey de Sam', array_map(static fn ($item): string => $item->name, $proposal->items));
@@ -104,7 +105,7 @@ final class MealBuilderTest extends NutritionTestCase
     public function testTheUsersOwnFoodsAreCandidatesToo(): void
     {
         $this->setTarget(new MacroTargets(2500, 150, 300, 75));
-        new CreateCustomFoodHandler($this->foods)(new CreateCustomFood(new FoodId('00000000-0000-7000-8000-0000000005c1'), $this->alex, new CustomFoodDetails('Whey', null, FoodState::NotApplicable, 380, 80, 6, 4)));
+        new CreateCustomFoodHandler($this->foods, new OwnBarcodes($this->foods))(new CreateCustomFood(new FoodId('00000000-0000-7000-8000-0000000005c1'), $this->alex, new CustomFoodDetails('Whey', null, FoodState::NotApplicable, 380, 80, 6, 4)));
 
         $names = [];
         foreach ($this->build()->proposals as $proposal) {

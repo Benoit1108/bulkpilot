@@ -96,6 +96,12 @@ export default defineNuxtConfig({
       runtimeCaching: [{
         urlPattern: ({ url, sameOrigin }) => sameOrigin && url.pathname.startsWith('/api/'),
         handler: 'NetworkOnly',
+      }, {
+        // The barcode reader for browsers without BarcodeDetector (~1 MB): fetched on first use
+        // only, then kept (its hashed name changes with each version).
+        urlPattern: ({ url, sameOrigin }) => sameOrigin && url.pathname.endsWith('.wasm'),
+        handler: 'CacheFirst',
+        options: { cacheName: 'wasm', expiration: { maxEntries: 4 } },
       }],
     },
     client: {

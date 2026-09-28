@@ -15,6 +15,8 @@ export type NutritionAverages = components['schemas']['NutritionAverages']
 export type Recipe = components['schemas']['Recipe']
 export type RecipeInput = components['schemas']['Recipe.RecipeInput']
 export type FavoriteMeal = components['schemas']['FavoriteMeal']
+export type BarcodeScan = components['schemas']['BarcodeScan']
+export type ScannedProduct = NonNullable<BarcodeScan['product']>
 export type MealBuilderResult = components['schemas']['MealBuilder']
 export type Proposal = MealBuilderResult['proposals'][number]
 

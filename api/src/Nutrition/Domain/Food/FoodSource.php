@@ -10,4 +10,9 @@ enum FoodSource: string
     case Ciqual = 'ciqual';
     /** Created by a user, visible to them only. */
     case Custom = 'custom';
+    /**
+     * A packaged product from Open Food Facts (ODbL), kept once a user confirmed it: shared, keyed
+     * by its barcode, refreshed from the source.
+     */
+    case OpenFoodFacts = 'off';
 }

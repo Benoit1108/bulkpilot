@@ -24,6 +24,8 @@ services:
       REGISTRATION_ENABLED: ${REGISTRATION_ENABLED:-false}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      FOOD_DATABASE: ${FOOD_DATABASE:-openfoodfacts}
+      OPEN_FOOD_FACTS_USER_AGENT: ${OPEN_FOOD_FACTS_USER_AGENT:-BulkPilot/0.1 (self-hosted personal app)}
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-app}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-18}&charset=utf8
       FRANKENPHP_CONFIG: ${FRANKENPHP_CONFIG:-}
     depends_on:

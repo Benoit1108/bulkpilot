@@ -14,6 +14,8 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Nutrition\Application\Food\FoodView;
 use App\Nutrition\Application\Food\SearchFoods;
+use App\Nutrition\Presentation\Api\Barcode\ConfirmProductInput;
+use App\Nutrition\Presentation\Api\Barcode\ConfirmProductProcessor;
 
 #[ApiResource(
     shortName: 'Food',
@@ -50,6 +52,13 @@ use App\Nutrition\Application\Food\SearchFoods;
             provider: FoodProvider::class,
         ),
         new Post(
+            uriTemplate: '/nutrition/barcode/confirm',
+            description: 'Keeps a scanned product: as Open Food Facts gives it (shared, values read again from the source), or corrected (the user\'s own food, with its barcode).',
+            input: ConfirmProductInput::class,
+            processor: ConfirmProductProcessor::class,
+            name: 'barcode_confirm',
+        ),
+        new Post(
             uriTemplate: '/foods',
             description: 'Creates a custom food (a packaged product, a food missing from CIQUAL).',
             input: CustomFoodInput::class,
@@ -80,7 +89,7 @@ final readonly class Food
     public function __construct(
         #[ApiProperty(identifier: true, required: true)]
         public string $id,
-        #[ApiProperty(required: true, schema: ['type' => 'string', 'enum' => ['ciqual', 'custom']])]
+        #[ApiProperty(required: true, schema: ['type' => 'string', 'enum' => ['ciqual', 'custom', 'off']])]
         public string $source,
         #[ApiProperty(required: true)]
         public string $name,
@@ -96,6 +105,8 @@ final readonly class Food
         public array $portions,
         #[ApiProperty(required: true)]
         public bool $editable,
+        #[ApiProperty(required: true)]
+        public ?string $barcode,
     ) {
     }
 
@@ -111,6 +122,7 @@ final readonly class Food
             Composition::of($view->per100Grams),
             array_map(FoodPortion::of(...), $view->portions),
             $view->editable,
+            $view->barcode,
         );
     }
 }

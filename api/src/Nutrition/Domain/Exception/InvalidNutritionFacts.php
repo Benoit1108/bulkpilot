@@ -8,9 +8,17 @@ use App\Shared\Domain\Exception\DomainException;
 
 final class InvalidNutritionFacts extends DomainException
 {
-    public static function because(string $reason): self
+    /**
+     * @param string|null $field the value at fault (energyKcal, protein, carbohydrate, fat, fibre, sugars, saturatedFat, salt, or macros for their sum), when one is
+     */
+    private function __construct(string $reason, public readonly ?string $field)
     {
-        return new self($reason);
+        parent::__construct($reason);
+    }
+
+    public static function because(string $reason, ?string $field = null): self
+    {
+        return new self($reason, $field);
     }
 
     public function errorCode(): string

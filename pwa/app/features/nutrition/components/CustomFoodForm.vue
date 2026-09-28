@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import { Trash2 } from 'lucide-vue-next'
+import { ScanBarcode, Trash2 } from 'lucide-vue-next'
+import BarcodeScanner from '~/features/nutrition/components/BarcodeScanner.vue'
 import { parseAmount } from '~/features/nutrition/format'
-import { FOOD_STATES, type CustomFoodInput, type Food, type FoodState } from '~/features/nutrition/nutrition'
+import { FOOD_STATES, type CustomFoodInput, type Food, type FoodState, type ScannedProduct } from '~/features/nutrition/nutrition'
 import { MAX_PORTIONS } from '~/features/nutrition/rules'
 
-/** Values per 100 g, as printed on the label. */
-const props = defineProps<{ food?: Food | null }>()
+/**
+ * Values per 100 g, as printed on the label. Starts from an existing food (editing), from what a
+ * scan proposed (`draft`, with its barcode), or empty. `save` replaces the default create/update;
+ * `fieldPrefix` is where its payload sits in the request (violations come back under that path).
+ */
+const props = withDefaults(defineProps<{
+  food?: Food | null
+  draft?: (Partial<ScannedProduct> & { barcode: string }) | null
+  save?: ((body: CustomFoodInput) => Promise<Food>) | null
+  submitLabel?: string
+  fieldPrefix?: string
+}>(), { food: null, draft: null, save: null, submitLabel: undefined, fieldPrefix: '' })
 const emit = defineEmits<{ saved: [food: Food] }>()
 
 const api = useApi()
@@ -26,12 +37,37 @@ const NUTRIENTS: ReadonlyArray<{ key: Nutrient, label: string, suffix: string, r
   { key: 'salt', label: 'Sel', suffix: 'g', required: false },
 ]
 
-const name = ref(props.food?.name ?? '')
-const brand = ref(props.food?.brand ?? '')
+const draft = props.draft
+const name = ref(props.food?.name ?? draft?.name ?? '')
+const brand = ref(props.food?.brand ?? draft?.brand ?? '')
 const state = ref<FoodState | null>(props.food?.state ?? 'not_applicable')
-const values = reactive(Object.fromEntries(NUTRIENTS.map(nutrient => [nutrient.key, props.food?.per100g[nutrient.key] ?? ''])) as Record<Nutrient, Amount>)
-const portions = ref<Array<{ id: number, label: string, grams: Amount }>>(props.food?.portions.map((portion, index) => ({ id: index, ...portion })) ?? [])
+const barcode = ref(props.food?.barcode ?? draft?.barcode ?? '')
+const values = reactive(Object.fromEntries(NUTRIENTS.map(nutrient => [nutrient.key, props.food?.per100g[nutrient.key] ?? draft?.[nutrient.key] ?? ''])) as Record<Nutrient, Amount>)
+const initialPortions = props.food?.portions ?? (draft?.servingGrams ? [{ label: '1 portion', grams: draft.servingGrams }] : [])
+const portions = ref<Array<{ id: number, label: string, grams: Amount }>>(initialPortions.map((portion, index) => ({ id: index, ...portion })))
+/** Values the scanned product did not give: the user is asked for them first. */
+const missing = new Set<string>(draft?.missing ?? [])
+/** Values that do not hold together with the others ("macros": protein, carbohydrate and fat). */
+const suspect = new Set<string>(draft?.suspect === 'macros' ? ['protein', 'carbohydrate', 'fat'] : draft?.suspect ? [draft.suspect] : [])
+/** The field to fill first: focused when the form opens from a scan. */
+const firstToCheck = draft ? (['name', ...NUTRIENTS.map(nutrient => nutrient.key)].find(key => missing.has(key) || suspect.has(key)) ?? null) : null
 let nextPortion = portions.value.length
+
+function hintFor(key: string): string | undefined {
+  if (missing.has(key)) return 'Absent d’Open Food Facts\u00A0: recopie-le de l’étiquette.'
+  if (suspect.has(key)) return 'À vérifier sur l’étiquette.'
+  return undefined
+}
+
+function fieldError(path: string): string | undefined {
+  return fields.value[props.fieldPrefix + path]
+}
+
+const scanning = ref(false)
+function scanned(code: string): void {
+  barcode.value = code
+  scanning.value = false
+}
 
 function addPortion(): void {
   portions.value.push({ id: nextPortion++, label: '', grams: '' })
@@ -57,6 +93,7 @@ function body(): CustomFoodInput {
     name: name.value,
     brand: brand.value || null,
     state: state.value ?? 'not_applicable',
+    barcode: barcode.value.trim() || null,
     ...nutrients,
     portions: portions.value.map(portion => ({ label: portion.label, grams: parseAmount(portion.grams) ?? undefined })),
   } as CustomFoodInput
@@ -64,9 +101,11 @@ function body(): CustomFoodInput {
 
 async function submit(): Promise<void> {
   await run(async () => {
-    const saved = props.food
-      ? await api.put('/api/foods/{id}', body(), { path: { id: props.food.id } })
-      : await api.post('/api/foods', body())
+    const saved = props.save
+      ? await props.save(body())
+      : props.food
+        ? await api.put('/api/foods/{id}', body(), { path: { id: props.food.id } })
+        : await api.post('/api/foods', body())
     emit('saved', saved)
   })
 }
@@ -89,20 +128,58 @@ async function submit(): Promise<void> {
       label="Nom"
       required
       :maxlength="200"
-      :error="fields.name"
+      :autofocus="firstToCheck === 'name'"
+      :hint="hintFor('name')"
+      :error="fieldError('name')"
     />
     <UiInput
       v-model="brand"
       label="Marque"
       :maxlength="100"
-      :error="fields.brand"
+      :error="fieldError('brand')"
     />
+    <div
+      v-if="!draft"
+      class="form__barcode"
+    >
+      <UiInput
+        v-model="barcode"
+        label="Code-barres"
+        inputmode="numeric"
+        literal
+        :maxlength="20"
+        hint="Facultatif&nbsp;: pour le retrouver en le scannant."
+        :error="fieldError('barcode')"
+      />
+      <UiButton
+        variant="secondary"
+        aria-label="Scanner le code-barres"
+        @click="scanning = true"
+      >
+        <ScanBarcode
+          :size="18"
+          aria-hidden="true"
+        />
+      </UiButton>
+      <!-- Outside the form: the scanner has its own (typed code). -->
+      <Teleport to="body">
+        <UiDrawer
+          v-model:open="scanning"
+          title="Scanner le code-barres"
+        >
+          <BarcodeScanner
+            v-if="scanning"
+            @code="scanned"
+          />
+        </UiDrawer>
+      </Teleport>
+    </div>
     <UiSelect
       v-model="state"
       label="État"
       :nullable="false"
       :options="FOOD_STATES"
-      :error="fields.state"
+      :error="fieldError('state')"
     />
 
     <fieldset class="form__group">
@@ -116,7 +193,9 @@ async function submit(): Promise<void> {
           type="number"
           :suffix="nutrient.suffix"
           :required="nutrient.required"
-          :error="fields[nutrient.key]"
+          :autofocus="firstToCheck === nutrient.key"
+          :hint="hintFor(nutrient.key)"
+          :error="fieldError(nutrient.key)"
         />
       </div>
     </fieldset>
@@ -136,14 +215,14 @@ async function submit(): Promise<void> {
             v-model="portion.label"
             :label="`Nom de la portion ${index + 1}`"
             :maxlength="40"
-            :error="fields[`portions[${index}].label`]"
+            :error="fieldError(`portions[${index}].label`)"
           />
           <UiInput
             v-model="portion.grams"
             :label="`Poids de la portion ${index + 1}`"
             type="number"
             suffix="g"
-            :error="fields[`portions[${index}].grams`]"
+            :error="fieldError(`portions[${index}].grams`)"
           />
           <UiButton
             variant="ghost"
@@ -171,7 +250,7 @@ async function submit(): Promise<void> {
       type="submit"
       :loading="pending"
     >
-      {{ food ? 'Enregistrer' : 'Créer l’aliment' }}
+      {{ submitLabel ?? (food ? 'Enregistrer' : 'Créer l’aliment') }}
     </UiButton>
   </form>
 </template>
@@ -211,6 +290,18 @@ async function submit(): Promise<void> {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
+}
+
+.form__barcode {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-2);
+}
+
+/* Level with the field, below its label. */
+.form__barcode > .ui-button {
+  margin-top: calc(var(--text-sm) * 1.5 + var(--space-1));
 }
 
 .portion {

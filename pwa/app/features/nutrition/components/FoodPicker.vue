@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ScanBarcode } from 'lucide-vue-next'
 import { NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
 import { formatKcal } from '~/features/nutrition/format'
 import { matches, type FavoriteMeal, type Food, type Loggable, type Recipe } from '~/features/nutrition/nutrition'
@@ -8,8 +9,8 @@ import { SEARCH_MIN_LENGTH } from '~/features/nutrition/rules'
  * Finds what to log: favourite meals and recent foods first, then as-you-type search over
  * CIQUAL, the user's own foods and recipes. Recipes and favourites can be left out (ingredients).
  */
-const props = withDefaults(defineProps<{ recipes?: boolean, favorites?: boolean }>(), { recipes: true, favorites: false })
-const emit = defineEmits<{ pick: [item: Loggable], favorite: [meal: FavoriteMeal] }>()
+const props = withDefaults(defineProps<{ recipes?: boolean, favorites?: boolean, scan?: boolean }>(), { recipes: true, favorites: false, scan: false })
+const emit = defineEmits<{ pick: [item: Loggable], favorite: [meal: FavoriteMeal], scan: [] }>()
 
 const api = useApi()
 const query = ref('')
@@ -81,6 +82,17 @@ function foodDetail(food: Food): string {
 
 <template>
   <div class="picker">
+    <UiButton
+      v-if="scan"
+      variant="secondary"
+      @click="emit('scan')"
+    >
+      <ScanBarcode
+        :size="18"
+        aria-hidden="true"
+      />
+      Scanner un code-barres
+    </UiButton>
     <UiInput
       v-model="query"
       :label="recipes ? 'Rechercher un aliment ou une recette' : 'Rechercher un aliment'"
@@ -190,7 +202,7 @@ function foodDetail(food: Food): string {
       Aliment introuvable&nbsp;? Créer un aliment
     </NuxtLink>
     <p class="picker__source">
-      Valeurs nutritionnelles&nbsp;: Anses, table de composition Ciqual 2020 (Licence Ouverte).
+      Valeurs nutritionnelles&nbsp;: Anses, table de composition Ciqual 2020 (Licence Ouverte)&nbsp;; produits&nbsp;: Open Food Facts (ODbL).
     </p>
   </div>
 </template>

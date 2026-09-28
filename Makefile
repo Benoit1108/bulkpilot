@@ -108,6 +108,8 @@ schema-validate: ## Doctrine mapping ↔ migrations consistency
 phpunit: ## PHP tests (unit, integration, api) + coverage gate on Domain/Application (95%)
 	$(PHP) bin/console doctrine:database:create --if-not-exists --env=test -q
 	$(PHP) bin/console doctrine:migrations:migrate --no-interaction --env=test -q
+	@# API Platform keeps resource metadata in a cache pool that survives code changes.
+	$(PHP) bin/console cache:pool:clear --all --env=test -q
 	$(PHP) php -d pcov.enabled=1 vendor/bin/phpunit --coverage-clover var/coverage/clover.xml
 	$(PHP) php tests/coverage-gate.php var/coverage/clover.xml 95
 

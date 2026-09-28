@@ -6,6 +6,7 @@ namespace App\Tests\Integration\Nutrition;
 
 use App\Nutrition\Application\Builder\BuildMealHandler;
 use App\Nutrition\Application\Catalogue\ImportCatalogue;
+use App\Nutrition\Domain\Food\Barcode;
 use App\Nutrition\Domain\Food\Food;
 use App\Nutrition\Domain\Food\FoodId;
 use App\Nutrition\Domain\Food\FoodRepository;
@@ -32,6 +33,7 @@ use App\Nutrition\Domain\Target\Sex;
 use App\Nutrition\Domain\Target\TargetSource;
 use App\Shared\Application\Bus\Command\CommandBus;
 use App\Shared\Domain\Identifier\UserId;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -113,6 +115,34 @@ final class PersistenceTest extends KernelTestCase
         $loaded->delete($this->now);
         $this->entityManager->flush();
         self::assertSame(['Abricots secs'], array_map(static fn (Food $food): string => $food->name(), $this->foods->customFoodsOf($this->alex)));
+    }
+
+    public function testABarcodeFindsTheUsersOwnFoodFirstThenTheSharedProduct(): void
+    {
+        $barcode = new Barcode('3017620422003');
+        $this->foods->save(Food::fromScannedProduct(new FoodId('00000000-0000-7000-8000-0000000000c1'), $barcode, 'Pâte à tartiner', 'Nutella', null, new NutritionFacts(539, 6.3, 57.5, 30.9), []));
+        $mine = Food::createCustom(new FoodId('00000000-0000-7000-8000-0000000000c2'), $this->alex, 'Ma pâte', null, FoodState::NotApplicable, new NutritionFacts(500, 6, 57, 25), [], $barcode);
+        $this->foods->save($mine);
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        self::assertSame('Ma pâte', $this->foods->findByBarcode($this->alex, $barcode)?->name());
+        self::assertSame('Pâte à tartiner', $this->foods->findByBarcode($this->sam, $barcode)?->name(), 'someone else\'s food is never theirs');
+        self::assertSame('3017620422003', $this->foods->findByBarcode($this->sam, $barcode)->barcode()?->value);
+        self::assertNull($this->foods->findByBarcode($this->alex, new Barcode('5449000000996')));
+
+        $this->foods->getVisibleTo($mine->id(), $this->alex)->delete($this->now);
+        $this->entityManager->flush();
+        self::assertSame('Pâte à tartiner', $this->foods->findByBarcode($this->alex, $barcode)?->name(), 'a deleted own food no longer answers');
+        self::assertSame('00000000-0000-7000-8000-0000000000c1', $this->foods->findSharedByBarcode($barcode)?->id()->value);
+        self::assertNull($this->foods->findSharedByBarcode(new Barcode('5449000000996')));
+
+        // The database keeps one live own food per barcode, whatever races past the handlers.
+        $this->foods->save(Food::createCustom(new FoodId('00000000-0000-7000-8000-0000000000c3'), $this->alex, 'Ma pâte, bis', null, FoodState::NotApplicable, new NutritionFacts(500, 6, 57, 25), [], $barcode));
+        $this->entityManager->flush();
+        $this->foods->save(Food::createCustom(new FoodId('00000000-0000-7000-8000-0000000000c4'), $this->alex, 'Ma pâte, ter', null, FoodState::NotApplicable, new NutritionFacts(500, 6, 57, 25), [], $barcode));
+        $this->expectException(UniqueConstraintViolationException::class);
+        $this->entityManager->flush();
     }
 
     public function testJournalQueriesAreScopedToTheOwner(): void

@@ -58,24 +58,27 @@ final class FoodTest extends TestCase
     }
 
     /**
-     * @return iterable<string, array{float, float, float, float, ?float, ?float}>
+     * @return iterable<string, array{float, float, float, float, ?float, ?float, string}>
      */
     public static function impossibleFacts(): iterable
     {
-        yield 'negative energy' => [-1, 0, 0, 0, null, null];
-        yield 'energy above pure fat' => [951, 0, 0, 100, null, null];
-        yield 'more than 100 g of protein' => [400, 101, 0, 0, null, null];
-        yield 'macros above 105 g' => [500, 40, 40, 30, null, null];
-        yield 'sugars above carbohydrate' => [300, 0, 10, 0, 12, null];
-        yield 'saturated fat above fat' => [300, 0, 0, 10, null, 11];
+        yield 'negative energy' => [-1, 0, 0, 0, null, null, 'energyKcal'];
+        yield 'energy above pure fat' => [951, 0, 0, 100, null, null, 'energyKcal'];
+        yield 'more than 100 g of protein' => [400, 101, 0, 0, null, null, 'protein'];
+        yield 'macros above 105 g' => [500, 40, 40, 30, null, null, 'macros'];
+        yield 'sugars above carbohydrate' => [300, 0, 10, 0, 12, null, 'sugars'];
+        yield 'saturated fat above fat' => [300, 0, 0, 10, null, 11, 'saturatedFat'];
     }
 
     #[DataProvider('impossibleFacts')]
-    public function testImpossibleFactsAreRejected(float $kcal, float $protein, float $carbohydrate, float $fat, ?float $sugars, ?float $saturated): void
+    public function testImpossibleFactsAreRejectedNamingTheValueAtFault(float $kcal, float $protein, float $carbohydrate, float $fat, ?float $sugars, ?float $saturated, string $field): void
     {
-        $this->expectException(InvalidNutritionFacts::class);
-
-        new NutritionFacts($kcal, $protein, $carbohydrate, $fat, null, $sugars, $saturated);
+        try {
+            new NutritionFacts($kcal, $protein, $carbohydrate, $fat, null, $sugars, $saturated);
+            self::fail('impossible facts are rejected');
+        } catch (InvalidNutritionFacts $e) {
+            self::assertSame($field, $e->field);
+        }
     }
 
     public function testRoundingInPublishedTablesIsTolerated(): void
@@ -127,7 +130,7 @@ final class FoodTest extends TestCase
         self::assertSame('9100', $food->sourceReference());
 
         $this->expectException(InvalidFood::class);
-        $food->edit('Riz', null, FoodState::Raw, new NutritionFacts(1, 0, 0, 0), []);
+        $food->edit('Riz', null, FoodState::Raw, new NutritionFacts(1, 0, 0, 0), [], null);
     }
 
     public function testACatalogueRefreshUpdatesValuesAndName(): void
@@ -157,7 +160,7 @@ final class FoodTest extends TestCase
     {
         $food = $this->customFood();
 
-        $food->edit('Pâtes complètes', '  ', FoodState::Cooked, new NutritionFacts(150, 5.5, 29, 1.1), []);
+        $food->edit('Pâtes complètes', '  ', FoodState::Cooked, new NutritionFacts(150, 5.5, 29, 1.1), [], null);
         self::assertSame('Pâtes complètes', $food->name());
         self::assertNull($food->brand(), 'a blank brand is no brand');
         self::assertSame([], $food->portions());

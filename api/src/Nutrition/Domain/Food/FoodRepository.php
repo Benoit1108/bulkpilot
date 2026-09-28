@@ -54,6 +54,17 @@ interface FoodRepository
     public function composing(UserId $userId, array $ids): array;
 
     /**
+     * The food a scanned code stands for: the user's own first (they may have corrected a
+     * product), then the shared product.
+     */
+    public function findByBarcode(UserId $userId, Barcode $barcode): ?Food;
+
+    /**
+     * The product of the shared catalogue for this code, as confirmed from Open Food Facts.
+     */
+    public function findSharedByBarcode(Barcode $barcode): ?Food;
+
+    /**
      * @return list<Food> the user's custom foods, by name
      */
     public function customFoodsOf(UserId $userId): array;

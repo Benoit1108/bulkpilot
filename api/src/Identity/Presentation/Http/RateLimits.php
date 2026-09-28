@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Identity\Presentation\Http;
 
+use App\Shared\Presentation\Http\RateLimit;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 
 /**
@@ -69,10 +69,7 @@ final readonly class RateLimits
             default => throw new \InvalidArgumentException('Unknown rate limiter '.$limiter),
         };
 
-        $limit = $factory->create(hash('sha256', $limiter.'|'.$key))->consume();
-        if (!$limit->isAccepted()) {
-            throw new TooManyRequestsHttpException(max(1, $limit->getRetryAfter()->getTimestamp() - time()), 'Too many attempts, retry later.');
-        }
+        RateLimit::consume($factory, $limiter.'|'.$key);
     }
 
     private function clientIp(): string

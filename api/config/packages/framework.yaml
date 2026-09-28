@@ -49,6 +49,16 @@ framework:
             policy: sliding_window
             limit: '%env(int:RATE_LIMIT_EMAIL_LINKS)%'
             interval: '1 hour'
+        # Keyed by account: each scan may call Open Food Facts, which asks for < 100 reads a minute.
+        barcode_scan:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_BARCODE_SCAN)%'
+            interval: '1 minute'
+        # Global: Open Food Facts asks one application for < 100 product reads a minute.
+        open_food_facts:
+            policy: sliding_window
+            limit: 90
+            interval: '1 minute'
 
 when@test:
     framework:

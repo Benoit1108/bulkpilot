@@ -9,7 +9,7 @@ export default defineConfig({
       {
         resolve: { alias: { '~': fileURLToPath(new URL('./app', import.meta.url)) } },
         // Away from UTC: local-day logic is only tested for real in a time zone that differs.
-        test: { name: 'unit', include: ['test/unit/**/*.test.ts'], environment: 'node', env: { TZ: 'Pacific/Honolulu' } },
+        test: { name: 'unit', include: ['test/unit/**/*.test.ts'], environment: 'node', env: { TZ: 'Pacific/Honolulu' }, restoreMocks: true, unstubGlobals: true },
       },
       // Components, composables and plugins inside a Nuxt runtime.
       await defineVitestProject({
@@ -18,6 +18,9 @@ export default defineConfig({
           include: ['test/nuxt/**/*.test.ts'],
           environment: 'nuxt',
           environmentOptions: { nuxt: { domEnvironment: 'happy-dom' } },
+          // Spies and stubbed globals never leak from one test into the next.
+          restoreMocks: true,
+          unstubGlobals: true,
         },
       }),
     ],

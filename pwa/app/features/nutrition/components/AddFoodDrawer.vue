@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BarcodeFlow from '~/features/nutrition/components/BarcodeFlow.vue'
 import FoodPicker from '~/features/nutrition/components/FoodPicker.vue'
 import QuantityForm from '~/features/nutrition/components/QuantityForm.vue'
 import { NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
@@ -15,10 +16,14 @@ const props = defineProps<{
 const emit = defineEmits<{ done: [message: string, slot: MealSlot] }>()
 
 const picked = ref<Loggable | null>(null)
+const scanning = ref(false)
 const { pending, message, fields, run, clear } = useSubmission()
 
 watch(open, (value) => {
-  if (!value) picked.value = null
+  if (!value) {
+    picked.value = null
+    scanning.value = false
+  }
 })
 // An error belongs to the step that produced it.
 watch(picked, clear)
@@ -68,7 +73,16 @@ async function addFavorite(meal: FavoriteMeal): Promise<void> {
     v-model:open="open"
     :title="`Ajouter ${toSlot(mealSlot)}`"
   >
-    <template v-if="!quantity">
+    <template v-if="!quantity && scanning">
+      <BarcodeFlow @food="picked = { kind: 'food', food: $event }" />
+      <UiButton
+        variant="ghost"
+        @click="scanning = false"
+      >
+        Rechercher par le nom
+      </UiButton>
+    </template>
+    <template v-else-if="!quantity">
       <UiAlert
         v-if="message"
         tone="error"
@@ -77,8 +91,10 @@ async function addFavorite(meal: FavoriteMeal): Promise<void> {
       </UiAlert>
       <FoodPicker
         favorites
+        scan
         @pick="picked = $event"
         @favorite="addFavorite"
+        @scan="scanning = true"
       />
     </template>
     <QuantityForm
@@ -97,7 +113,7 @@ async function addFavorite(meal: FavoriteMeal): Promise<void> {
     >
       <UiButton
         variant="ghost"
-        @click="picked = null"
+        @click="picked = null; scanning = false"
       >
         Choisir autre chose
       </UiButton>

@@ -17,6 +17,8 @@ services:
       DEFAULT_URI: https://localhost
       MAILER_FROM: no-reply@localhost
       REGISTRATION_ENABLED: "true"
+      # Deterministic scans for `make e2e`; FOOD_DATABASE=openfoodfacts make up to scan real products.
+      FOOD_DATABASE: ${FOOD_DATABASE:-fake}
       XDEBUG_MODE: ${XDEBUG_MODE:-off}
     volumes:
       - ./api:/app

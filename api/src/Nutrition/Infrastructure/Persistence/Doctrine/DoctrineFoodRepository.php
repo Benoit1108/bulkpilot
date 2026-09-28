@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nutrition\Infrastructure\Persistence\Doctrine;
 
 use App\Nutrition\Domain\Exception\FoodNotFound;
+use App\Nutrition\Domain\Food\Barcode;
 use App\Nutrition\Domain\Food\Food;
 use App\Nutrition\Domain\Food\FoodId;
 use App\Nutrition\Domain\Food\FoodRepository;
@@ -140,6 +141,29 @@ final readonly class DoctrineFoodRepository implements FoodRepository
         }
 
         return $byId;
+    }
+
+    public function findByBarcode(UserId $userId, Barcode $barcode): ?Food
+    {
+        /** @var Food|null */
+        return $this->entityManager->createQueryBuilder()
+            ->select('f')
+            ->from(Food::class, 'f')
+            ->where('f.barcode = :barcode')
+            ->andWhere('f.deletedAt IS NULL')
+            ->andWhere('f.ownerId IS NULL OR f.ownerId = :owner')
+            // The user's own (corrected) product before the shared one.
+            ->orderBy('CASE WHEN f.ownerId IS NULL THEN 1 ELSE 0 END')
+            ->setParameter('barcode', $barcode, 'barcode')
+            ->setParameter('owner', $userId, 'user_id')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findSharedByBarcode(Barcode $barcode): ?Food
+    {
+        return $this->entityManager->getRepository(Food::class)->findOneBy(['source' => FoodSource::OpenFoodFacts, 'sourceReference' => $barcode->value]);
     }
 
     public function customFoodsOf(UserId $userId): array

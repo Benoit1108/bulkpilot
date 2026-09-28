@@ -31,6 +31,7 @@ final class FoodsTest extends NutritionApiTestCase
             'state' => 'cooked',
             'portions' => [],
             'editable' => false,
+            'barcode' => null,
         ], array_diff_key(self::array($found, '0'), ['id' => 1, 'per100g' => 1]));
         self::assertSame(30.1, self::at($found, '0.per100g.protein'));
 

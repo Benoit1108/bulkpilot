@@ -2,6 +2,13 @@ import AxeBuilder from '@axe-core/playwright'
 import type { Page } from '@playwright/test'
 import { expect, registerThroughApi, test, uniqueEmail } from './support/fixtures'
 
+/** A random valid EAN-13 in the in-store range (GS1 prefix 29). */
+function inStoreCode(): string {
+  const body = `29${String(Math.floor(Math.random() * 1e10)).padStart(10, '0')}`
+  const sum = [...body].reverse().reduce((total, digit, index) => total + Number(digit) * (index % 2 === 0 ? 3 : 1), 0)
+  return `${body}${(10 - (sum % 10)) % 10}`
+}
+
 /** WCAG 2.2 AA violations on the page as it is now (drawers included). */
 async function expectAccessible(page: Page): Promise<void> {
   const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze()
@@ -198,5 +205,52 @@ test.describe('nutrition', () => {
     await drawer.getByRole('button', { name: 'Ajouter', exact: true }).click()
     await expect(page.getByTestId('meal-dinner')).toContainText('Riz blanc, cru')
     await kiritimati.close()
+  })
+
+  test('a scanned product is confirmed, kept, then logged; an unknown one is typed in', async ({ page, account: _account }) => {
+    // FOOD_DATABASE=fake: any in-store code (prefix 29) is a product nobody confirmed yet, so each
+    // run scans a new one (confirmed products are shared). No camera in CI: the code is typed.
+    const code = inStoreCode()
+    const scanned = { code, name: `Produit test ${code}`, serving: '40', logged: `Produit test ${code} (Marque test)` }
+    await page.goto('/nutrition')
+    await page.getByRole('button', { name: 'Ajouter un aliment au petit-déjeuner' }).click()
+    const drawer = page.getByRole('dialog', { name: 'Ajouter au petit-déjeuner' })
+    await drawer.getByRole('button', { name: 'Scanner un code-barres' }).click()
+    await drawer.getByLabel('Code-barres').fill(scanned.code)
+    await drawer.getByRole('button', { name: 'Rechercher ce code' }).click()
+    await expect(drawer.getByRole('article')).toContainText(scanned.name)
+    await expect(drawer.getByRole('article')).toContainText('Open Food Facts (ODbL)')
+    await expect(drawer.getByRole('heading', { name: scanned.name })).toBeFocused()
+    await expectAccessible(page)
+    await drawer.getByRole('button', { name: 'Valeurs conformes à l’étiquette' }).click()
+    await expect(drawer.getByLabel('Quantité')).toHaveValue(scanned.serving)
+    await drawer.getByRole('button', { name: 'Ajouter', exact: true }).click()
+    await expect(page.getByTestId('meal-breakfast')).toContainText(scanned.logged)
+
+    await page.getByRole('button', { name: 'Ajouter un aliment au déjeuner' }).click()
+    const lunch = page.getByRole('dialog', { name: 'Ajouter au déjeuner' })
+    await lunch.getByRole('button', { name: 'Scanner un code-barres' }).click()
+    await lunch.getByLabel('Code-barres').fill('2000000000046')
+    await lunch.getByRole('button', { name: 'Rechercher ce code' }).click()
+    await expect(lunch.getByRole('heading', { name: 'Saisir le produit' })).toBeVisible()
+    await expect(lunch).toContainText('Produit inconnu d’Open Food Facts')
+    await lunch.getByLabel('Nom', { exact: true }).fill('Galettes de maïs')
+    await lunch.getByLabel('Énergie').fill('380')
+    await lunch.getByLabel('Protéines').fill('8')
+    await lunch.getByLabel('Glucides', { exact: true }).fill('80')
+    await lunch.getByLabel('Lipides', { exact: true }).fill('3,5')
+    await lunch.getByRole('button', { name: 'Enregistrer ce produit' }).click()
+    await lunch.getByLabel('Quantité').fill('30')
+    await lunch.getByRole('button', { name: 'Ajouter', exact: true }).click()
+    await expect(page.getByTestId('meal-lunch')).toContainText('Galettes de maïs')
+
+    // Scanned again, it is known: straight to the quantity.
+    await page.getByRole('button', { name: 'Ajouter un aliment au dîner' }).click()
+    const dinner = page.getByRole('dialog', { name: 'Ajouter au dîner' })
+    await dinner.getByRole('button', { name: 'Scanner un code-barres' }).click()
+    await dinner.getByLabel('Code-barres').fill('2000000000046')
+    await dinner.getByRole('button', { name: 'Rechercher ce code' }).click()
+    await expect(dinner.getByLabel('Quantité')).toBeVisible()
+    await expectAccessible(page)
   })
 })

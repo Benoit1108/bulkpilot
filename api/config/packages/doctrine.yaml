@@ -21,6 +21,7 @@ doctrine:
             favorite_meal_id: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\FavoriteMealIdType
             recipe_ingredients: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\IngredientsType
             favorite_items: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\FavoriteItemsType
+            barcode: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\BarcodeType
 
     orm:
         validate_xml_mapping: true

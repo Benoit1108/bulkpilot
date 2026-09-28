@@ -45,6 +45,9 @@ GitHub → CI (qa + e2e sur l'image) → registre d'images → staging → valid
 | `MAILER_DSN` | fournisseur email transactionnel — obligatoire (le conteneur refuse `null://`) |
 | `MAILER_FROM` | expéditeur, sur un domaine authentifié (SPF/DKIM) — obligatoire |
 | `DEFAULT_URI` | URL publique des liens envoyés par email — obligatoire (refus de `localhost`) |
+| `FOOD_DATABASE` | `openfoodfacts` (défaut) ; `fake` uniquement pour les tests : refusé au démarrage en production sauf `ALLOW_FAKE_PROVIDERS=1` (E2E sur l'image de prod) |
+| `OPEN_FOOD_FACTS_USER_AGENT` | `NomApp/Version (contact)` : Open Food Facts demande à être contacté en cas d'abus |
+| `RATE_LIMIT_BARCODE_SCAN` | scans et confirmations par minute et par compte (30) ; en plus, 90 lectures / min vers Open Food Facts pour toute l'instance |
 | `LOCK_DSN` | verrous (limiteurs de débit) : `flock` pour une instance, `postgresql+advisory://…` pour plusieurs |
 
 ## Premier démarrage
@@ -55,6 +58,9 @@ GitHub → CI (qa + e2e sur l'image) → registre d'images → staging → valid
    `docker compose exec php bin/console nutrition:catalogue:import`.
 
 ## Notes d'exploitation
+
+- Produits Open Food Facts : le cache (`cache.app`, 1 jour par produit) et le budget de 90 lectures / min sont **par instance** ; avec
+  plusieurs instances, partager le cache (Redis) et les limiteurs (`LOCK_DSN` + stockage partagé), sinon le budget est multiplié.
 
 - Chaque requête authentifiée ouvre sa propre connexion PostgreSQL pour la session (en plus de Doctrine) :
   prévoir ~2 × threads worker connexions, ou un pooler (PgBouncer) devant une base managée.

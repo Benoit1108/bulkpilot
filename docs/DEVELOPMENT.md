@@ -27,6 +27,7 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml exec pwa pnpm add
 
 make db-diff && make db-migrate              # après un changement de mapping
 make ciqual                                  # importe / rafraîchit la table CIQUAL (téléchargement Anses)
+FOOD_DATABASE=openfoodfacts make up          # scanner de vrais produits (défaut en dev : base factice)
 make openapi                                 # après un changement de ressource API
 make php-cs-fix                              # formatage PHP
 docker compose … exec pwa pnpm lint:fix      # formatage front

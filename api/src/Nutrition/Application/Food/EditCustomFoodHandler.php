@@ -9,7 +9,7 @@ use App\Shared\Application\Bus\Command\CommandHandler;
 
 final readonly class EditCustomFoodHandler implements CommandHandler
 {
-    public function __construct(private FoodRepository $foods)
+    public function __construct(private FoodRepository $foods, private OwnBarcodes $barcodes)
     {
     }
 
@@ -17,7 +17,9 @@ final readonly class EditCustomFoodHandler implements CommandHandler
     {
         $food = $this->foods->getVisibleTo($command->foodId, $command->userId);
         $details = $command->details;
-        $food->edit($details->name, $details->brand, $details->state, $details->facts(), $details->portions());
+        $barcode = $details->barcode();
+        $this->barcodes->assertFree($command->userId, $barcode, $food->id());
+        $food->edit($details->name, $details->brand, $details->state, $details->facts(), $details->portions(), $barcode);
         $this->foods->save($food);
     }
 }

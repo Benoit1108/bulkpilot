@@ -26,22 +26,22 @@ final readonly class NutritionFacts
         public ?float $salt = null,
     ) {
         if ($energyKcal < 0 || $energyKcal > self::MAX_ENERGY_KCAL) {
-            throw InvalidNutritionFacts::because(\sprintf('energy must be between 0 and %d kcal per 100 g', (int) self::MAX_ENERGY_KCAL));
+            throw InvalidNutritionFacts::because(\sprintf('energy must be between 0 and %d kcal per 100 g', (int) self::MAX_ENERGY_KCAL), 'energyKcal');
         }
         foreach (['protein' => $protein, 'carbohydrate' => $carbohydrate, 'fat' => $fat, 'fibre' => $fibre, 'sugars' => $sugars, 'saturatedFat' => $saturatedFat, 'salt' => $salt] as $name => $grams) {
             if (null !== $grams && ($grams < 0 || $grams > 100)) {
-                throw InvalidNutritionFacts::because(\sprintf('%s must be between 0 and 100 g per 100 g', $name));
+                throw InvalidNutritionFacts::because(\sprintf('%s must be between 0 and 100 g per 100 g', $name), $name);
             }
         }
         // Rounding in published tables can slightly exceed 100 g; 105 leaves room for it, not for typos.
         if ($protein + $carbohydrate + $fat > 105) {
-            throw InvalidNutritionFacts::because('protein, carbohydrate and fat cannot exceed 100 g per 100 g');
+            throw InvalidNutritionFacts::because('protein, carbohydrate and fat cannot exceed 100 g per 100 g', 'macros');
         }
         if (null !== $sugars && $sugars > $carbohydrate + 0.5) {
-            throw InvalidNutritionFacts::because('sugars cannot exceed carbohydrate');
+            throw InvalidNutritionFacts::because('sugars cannot exceed carbohydrate', 'sugars');
         }
         if (null !== $saturatedFat && $saturatedFat > $fat + 0.5) {
-            throw InvalidNutritionFacts::because('saturated fat cannot exceed fat');
+            throw InvalidNutritionFacts::because('saturated fat cannot exceed fat', 'saturatedFat');
         }
     }
 

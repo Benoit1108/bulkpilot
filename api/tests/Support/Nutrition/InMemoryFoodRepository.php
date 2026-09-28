@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Support\Nutrition;
 
 use App\Nutrition\Domain\Exception\FoodNotFound;
+use App\Nutrition\Domain\Food\Barcode;
 use App\Nutrition\Domain\Food\Food;
 use App\Nutrition\Domain\Food\FoodId;
 use App\Nutrition\Domain\Food\FoodRepository;
@@ -91,6 +92,26 @@ final class InMemoryFoodRepository implements FoodRepository
         }
 
         return $found;
+    }
+
+    public function findByBarcode(UserId $userId, Barcode $barcode): ?Food
+    {
+        $shared = null;
+        foreach ($this->foods as $food) {
+            if (null !== $food->barcode() && $food->barcode()->equals($barcode) && $food->isVisibleTo($userId)) {
+                if (null !== $food->ownerId()) {
+                    return $food;
+                }
+                $shared = $food;
+            }
+        }
+
+        return $shared;
+    }
+
+    public function findSharedByBarcode(Barcode $barcode): ?Food
+    {
+        return $this->catalogue(FoodSource::OpenFoodFacts)[$barcode->value] ?? null;
     }
 
     public function customFoodsOf(UserId $userId): array

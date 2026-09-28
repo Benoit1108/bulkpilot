@@ -26,6 +26,7 @@ final readonly class FoodView
         public NutritionFacts $per100Grams,
         public array $portions,
         public bool $editable,
+        public ?string $barcode = null,
     ) {
     }
 
@@ -41,6 +42,7 @@ final readonly class FoodView
             $food->facts(),
             $food->portions(),
             $food->isEditableBy($viewer),
+            $food->barcode()?->value,
         );
     }
 

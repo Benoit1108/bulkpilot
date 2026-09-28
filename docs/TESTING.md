@@ -54,6 +54,9 @@ Playwright tourne dans le service compose `e2e` (profil `e2e`) ; l'image suit la
 - `api/tests/Fixtures/ciqual` : 12 aliments extraits des vrais fichiers CIQUAL 2020 (windows-1252, CRLF, valeurs « < x » non échappées),
   conservés à l'octet près (`.gitattributes`). Utilisés par les tests d'intégration, d'API et l'E2E
   (`make e2e` / `make e2e-prod` les importent avant de lancer Playwright).
+- Base de produits factice (`FOOD_DATABASE=fake`, dev, tests et E2E) : `3017620422003` pâte à tartiner, `5449000000996` soda,
+  `2000000000015` incomplet, `2000000000022` invraisemblable, `2000000000039` panne (503), tout code EAN-13 en `29…` = produit généré
+  (l'E2E en tire un nouveau à chaque exécution : les produits confirmés sont partagés), tout autre code valide = inconnu.
 - Les jours du journal sont relatifs à aujourd'hui dans les tests d'API et E2E (le serveur refuse les jours trop éloignés).
 
 ## Temps

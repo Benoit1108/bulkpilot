@@ -10,13 +10,15 @@ use App\Shared\Application\Bus\Command\CommandHandler;
 
 final readonly class CreateCustomFoodHandler implements CommandHandler
 {
-    public function __construct(private FoodRepository $foods)
+    public function __construct(private FoodRepository $foods, private OwnBarcodes $barcodes)
     {
     }
 
     public function __invoke(CreateCustomFood $command): void
     {
         $details = $command->details;
+        $barcode = $details->barcode();
+        $this->barcodes->assertFree($command->userId, $barcode);
         $this->foods->save(Food::createCustom(
             $command->foodId,
             $command->userId,
@@ -25,6 +27,7 @@ final readonly class CreateCustomFoodHandler implements CommandHandler
             $details->state,
             $details->facts(),
             $details->portions(),
+            $barcode,
         ));
     }
 }

@@ -10,7 +10,7 @@ Format : contexte → décision → conséquences. Un ADR accepté n'est pas ré
 | [0004](0004-postgresql.md) | PostgreSQL | Accepté |
 | [0005](0005-nuxt-spa-pwa-same-origin.md) | Nuxt en SPA PWA servie sur la même origine | Accepté |
 | [0006](0006-ai-provider-abstraction.md) | Abstraction du provider IA | Accepté (implémentation phase 6) |
-| [0007](0007-food-provider-abstraction.md) | Abstraction de la base alimentaire | Accepté (implémentation phase 3) |
+| [0007](0007-food-provider-abstraction.md) | Abstraction de la base alimentaire | Accepté (implémenté, ADR-0022) |
 | [0008](0008-cookie-session-authentication.md) | Authentification par session cookie httpOnly | Accepté |
 | [0009](0009-doctrine-xml-mapping.md) | Mapping Doctrine XML hors du domaine | Accepté |
 | [0010](0010-uuid-v7-identifiers.md) | Identifiants UUID v7 | Accepté |
@@ -25,3 +25,4 @@ Format : contexte → décision → conséquences. Un ADR accepté n'est pas ré
 | [0019](0019-ciqual-food-catalogue.md) | Table CIQUAL comme base d'aliments génériques | Accepté |
 | [0020](0020-journal-snapshots-and-versioned-targets.md) | Journal en instantanés, objectifs versionnés, jour local | Accepté |
 | [0021](0021-deterministic-meal-builder.md) | Meal Builder déterministe | Accepté |
+| [0022](0022-barcode-scanning.md) | Scan de code-barres et produits Open Food Facts | Accepté |

@@ -11,8 +11,9 @@ use App\Shared\Domain\Identifier\UserId;
 /**
  * Something that can be eaten, with its composition per 100 g.
  *
- * Catalogue foods (CIQUAL) are shared and read-only; custom foods belong to one user and are
- * soft-deleted (journal entries keep their own snapshot, so history never changes).
+ * Catalogue foods (CIQUAL, Open Food Facts products) are shared and read-only; custom foods
+ * belong to one user and are soft-deleted (journal entries keep their own snapshot, so history
+ * never changes). A packaged food carries its barcode.
  */
 class Food extends AggregateRoot
 {
@@ -24,6 +25,7 @@ class Food extends AggregateRoot
     private int $version = 1;
     private string $searchKey;
     private ?\DateTimeImmutable $deletedAt = null;
+    private ?Barcode $barcode = null;
 
     /**
      * @param list<Portion> $portions
@@ -49,11 +51,46 @@ class Food extends AggregateRoot
     }
 
     /**
+     * A packaged product a user confirmed after scanning it (values from Open Food Facts, unchanged).
+     *
      * @param list<Portion> $portions
      */
-    public static function createCustom(FoodId $id, UserId $owner, string $name, ?string $brand, FoodState $state, NutritionFacts $facts, array $portions): self
+    public static function fromScannedProduct(FoodId $id, Barcode $barcode, string $name, ?string $brand, ?string $category, NutritionFacts $facts, array $portions): self
     {
-        return new self($id, FoodSource::Custom, null, $owner, self::validName($name), self::optionalText($brand), null, $state, $facts, self::validPortions($portions));
+        $food = new self($id, FoodSource::OpenFoodFacts, $barcode->value, null, self::validName($name), self::optionalText($brand), $category, FoodState::fromName($name), $facts, self::validPortions($portions));
+        $food->barcode = $barcode;
+
+        return $food;
+    }
+
+    /**
+     * @param list<Portion> $portions
+     */
+    public static function createCustom(FoodId $id, UserId $owner, string $name, ?string $brand, FoodState $state, NutritionFacts $facts, array $portions, ?Barcode $barcode = null): self
+    {
+        $food = new self($id, FoodSource::Custom, null, $owner, self::validName($name), self::optionalText($brand), null, $state, $facts, self::validPortions($portions));
+        $food->barcode = $barcode;
+
+        return $food;
+    }
+
+    /**
+     * A product scanned again: Open Food Facts values may have been improved since.
+     *
+     * @param list<Portion> $portions
+     */
+    public function refreshFromProduct(string $name, ?string $brand, ?string $category, NutritionFacts $facts, array $portions): void
+    {
+        if (FoodSource::OpenFoodFacts !== $this->source) {
+            throw InvalidFood::because('only scanned products are refreshed from Open Food Facts');
+        }
+        $this->name = self::validName($name);
+        $this->brand = self::optionalText($brand);
+        $this->category = $category;
+        $this->state = FoodState::fromName($this->name);
+        $this->facts = $facts;
+        $this->portions = self::validPortions($portions);
+        $this->searchKey = SearchKey::of($this->name, $this->brand ?? '');
     }
 
     /**
@@ -61,8 +98,8 @@ class Food extends AggregateRoot
      */
     public function refreshFromCatalogue(string $name, ?string $category, NutritionFacts $facts): void
     {
-        if (FoodSource::Custom === $this->source) {
-            throw InvalidFood::because('custom foods are not refreshed from a catalogue');
+        if (FoodSource::Ciqual !== $this->source) {
+            throw InvalidFood::because('only CIQUAL foods are refreshed from the CIQUAL table');
         }
         $this->name = self::validName($name);
         $this->category = $category;
@@ -74,9 +111,10 @@ class Food extends AggregateRoot
     /**
      * @param list<Portion> $portions
      */
-    public function edit(string $name, ?string $brand, FoodState $state, NutritionFacts $facts, array $portions): void
+    public function edit(string $name, ?string $brand, FoodState $state, NutritionFacts $facts, array $portions, ?Barcode $barcode): void
     {
         $this->assertCustom();
+        $this->barcode = $barcode;
         $this->name = self::validName($name);
         $this->brand = self::optionalText($brand);
         $this->state = $state;
@@ -155,6 +193,11 @@ class Food extends AggregateRoot
     public function portions(): array
     {
         return $this->portions;
+    }
+
+    public function barcode(): ?Barcode
+    {
+        return $this->barcode;
     }
 
     private function assertCustom(): void

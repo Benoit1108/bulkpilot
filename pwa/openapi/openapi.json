@@ -256,6 +256,93 @@
                 }
             }
         },
+        "/api/nutrition/barcode/scan": {
+            "post": {
+                "operationId": "barcode_scan",
+                "tags": [
+                    "BarcodeScan"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "BarcodeScan resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BarcodeScan.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BarcodeScan"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a BarcodeScan resource.",
+                "description": "Creates a BarcodeScan resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new BarcodeScan resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BarcodeScan.BarcodeInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BarcodeScan.BarcodeInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
         "/api/auth/email-verification": {
             "post": {
                 "operationId": "api_authemail-verification_post",
@@ -1158,6 +1245,93 @@
                         "explode": false
                     }
                 ]
+            }
+        },
+        "/api/nutrition/barcode/confirm": {
+            "post": {
+                "operationId": "barcode_confirm",
+                "tags": [
+                    "Food"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Food resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Food.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Food"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Food resource.",
+                "description": "Creates a Food resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Food resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Food.ConfirmProductInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Food.ConfirmProductInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
             }
         },
         "/api/health": {
@@ -3798,6 +3972,111 @@
                     }
                 }
             },
+            "BarcodeScan": {
+                "type": "object",
+                "description": "What a barcode stands for: a food already here (known), or what Open Food Facts proposes (found). 404 when nobody knows it, 503 when Open Food Facts cannot be reached.",
+                "required": [
+                    "barcode",
+                    "status",
+                    "food",
+                    "product"
+                ],
+                "properties": {
+                    "barcode": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "known",
+                            "found"
+                        ]
+                    },
+                    "food": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Food_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "product": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ScannedProduct"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                }
+            },
+            "BarcodeScan.BarcodeInput": {
+                "type": "object",
+                "description": "What a barcode stands for: a food already here (known), or what Open Food Facts proposes (found). 404 when nobody knows it, 503 when Open Food Facts cannot be reached.",
+                "required": [
+                    "barcode"
+                ],
+                "properties": {
+                    "barcode": {
+                        "pattern": "^([\\d\\s-]{8,20})$",
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "BarcodeScan.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "barcode",
+                            "status",
+                            "food",
+                            "product"
+                        ],
+                        "properties": {
+                            "barcode": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": [
+                                    "known",
+                                    "found"
+                                ]
+                            },
+                            "food": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Food.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "product": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/ScannedProduct.jsonld"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "What a barcode stands for: a food already here (known), or what Open Food Facts proposes (found). 404 when nobody knows it, 503 when Open Food Facts cannot be reached."
+            },
             "Composition": {
                 "type": "object",
                 "required": [
@@ -3850,6 +4129,108 @@
                 }
             },
             "Composition.jsonld": {
+                "type": "object",
+                "required": [
+                    "energyKcal",
+                    "protein",
+                    "carbohydrate",
+                    "fat",
+                    "fibre",
+                    "sugars",
+                    "saturatedFat",
+                    "salt"
+                ],
+                "properties": {
+                    "energyKcal": {
+                        "type": "number"
+                    },
+                    "protein": {
+                        "type": "number"
+                    },
+                    "carbohydrate": {
+                        "type": "number"
+                    },
+                    "fat": {
+                        "type": "number"
+                    },
+                    "fibre": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "sugars": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "saturatedFat": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "salt": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "Composition.jsonld_noid": {
+                "type": "object",
+                "required": [
+                    "energyKcal",
+                    "protein",
+                    "carbohydrate",
+                    "fat",
+                    "fibre",
+                    "sugars",
+                    "saturatedFat",
+                    "salt"
+                ],
+                "properties": {
+                    "energyKcal": {
+                        "type": "number"
+                    },
+                    "protein": {
+                        "type": "number"
+                    },
+                    "carbohydrate": {
+                        "type": "number"
+                    },
+                    "fat": {
+                        "type": "number"
+                    },
+                    "fibre": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "sugars": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "saturatedFat": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "salt": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "Composition_noid": {
                 "type": "object",
                 "required": [
                     "energyKcal",
@@ -4040,6 +4421,117 @@
                     }
                 ],
                 "description": "Unprocessable entity"
+            },
+            "CustomFoodInput": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "energyKcal",
+                    "protein",
+                    "carbohydrate",
+                    "fat"
+                ],
+                "properties": {
+                    "name": {
+                        "maxLength": 200,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "brand": {
+                        "maxLength": 100,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "state": {
+                        "enum": [
+                            "raw",
+                            "cooked",
+                            "not_applicable"
+                        ],
+                        "default": "not_applicable",
+                        "type": "string"
+                    },
+                    "energyKcal": {
+                        "minimum": 0,
+                        "maximum": 950,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "protein": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "carbohydrate": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "fat": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "fibre": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "sugars": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "saturatedFat": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "salt": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "barcode": {
+                        "pattern": "^([\\d\\s-]{8,20})$",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "portions": {
+                        "maxItems": 10,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PortionInput"
+                        }
+                    }
+                }
             },
             "EmailVerification": {
                 "type": "object",
@@ -4965,7 +5457,8 @@
                     "state",
                     "per100g",
                     "portions",
-                    "editable"
+                    "editable",
+                    "barcode"
                 ],
                 "properties": {
                     "id": {
@@ -4975,7 +5468,8 @@
                         "type": "string",
                         "enum": [
                             "ciqual",
-                            "custom"
+                            "custom",
+                            "off"
                         ]
                     },
                     "name": {
@@ -5012,6 +5506,36 @@
                     },
                     "editable": {
                         "type": "boolean"
+                    },
+                    "barcode": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "Food.ConfirmProductInput": {
+                "type": "object",
+                "description": "Keeps a scanned product: as Open Food Facts gives it (shared, values read again from the source), or corrected (the user's own food, with its barcode).",
+                "required": [
+                    "barcode"
+                ],
+                "properties": {
+                    "barcode": {
+                        "pattern": "^([\\d\\s-]{8,20})$",
+                        "default": "",
+                        "type": "string"
+                    },
+                    "corrections": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/CustomFoodInput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     }
                 }
             },
@@ -5111,6 +5635,13 @@
                             "null"
                         ]
                     },
+                    "barcode": {
+                        "pattern": "^([\\d\\s-]{8,20})$",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
                     "portions": {
                         "maxItems": 10,
                         "type": "array",
@@ -5136,7 +5667,8 @@
                             "state",
                             "per100g",
                             "portions",
-                            "editable"
+                            "editable",
+                            "barcode"
                         ],
                         "properties": {
                             "id": {
@@ -5146,7 +5678,8 @@
                                 "type": "string",
                                 "enum": [
                                     "ciqual",
-                                    "custom"
+                                    "custom",
+                                    "off"
                                 ]
                             },
                             "name": {
@@ -5183,11 +5716,94 @@
                             },
                             "editable": {
                                 "type": "boolean"
+                            },
+                            "barcode": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
                             }
                         }
                     }
                 ],
                 "description": "Searches the foods the user can log (CIQUAL and their own), best matches first."
+            },
+            "Food.jsonld_noid": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchemaWithoutId"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "source",
+                            "name",
+                            "brand",
+                            "category",
+                            "state",
+                            "per100g",
+                            "portions",
+                            "editable",
+                            "barcode"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "source": {
+                                "type": "string",
+                                "enum": [
+                                    "ciqual",
+                                    "custom",
+                                    "off"
+                                ]
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "brand": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "category": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "state": {
+                                "type": "string",
+                                "enum": [
+                                    "raw",
+                                    "cooked",
+                                    "not_applicable"
+                                ]
+                            },
+                            "per100g": {
+                                "$ref": "#/components/schemas/Composition.jsonld_noid"
+                            },
+                            "portions": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/FoodPortion.jsonld_noid"
+                                }
+                            },
+                            "editable": {
+                                "type": "boolean"
+                            },
+                            "barcode": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "A catalogue food, or one of the user's own."
             },
             "FoodPortion": {
                 "type": "object",
@@ -5216,6 +5832,105 @@
                     },
                     "grams": {
                         "type": "number"
+                    }
+                }
+            },
+            "FoodPortion.jsonld_noid": {
+                "type": "object",
+                "required": [
+                    "label",
+                    "grams"
+                ],
+                "properties": {
+                    "label": {
+                        "type": "string"
+                    },
+                    "grams": {
+                        "type": "number"
+                    }
+                }
+            },
+            "FoodPortion_noid": {
+                "type": "object",
+                "required": [
+                    "label",
+                    "grams"
+                ],
+                "properties": {
+                    "label": {
+                        "type": "string"
+                    },
+                    "grams": {
+                        "type": "number"
+                    }
+                }
+            },
+            "Food_noid": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "source",
+                    "name",
+                    "brand",
+                    "category",
+                    "state",
+                    "per100g",
+                    "portions",
+                    "editable",
+                    "barcode"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "source": {
+                        "type": "string",
+                        "enum": [
+                            "ciqual",
+                            "custom",
+                            "off"
+                        ]
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "brand": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "category": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "raw",
+                            "cooked",
+                            "not_applicable"
+                        ]
+                    },
+                    "per100g": {
+                        "$ref": "#/components/schemas/Composition_noid"
+                    },
+                    "portions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FoodPortion_noid"
+                        }
+                    },
+                    "editable": {
+                        "type": "boolean"
+                    },
+                    "barcode": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
                     }
                 }
             },
@@ -7065,6 +7780,262 @@
                 ],
                 "description": "Activates two-factor authentication with a first valid code; returns the recovery codes."
             },
+            "ScannedProduct": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "brand",
+                    "quantity",
+                    "energyKcal",
+                    "protein",
+                    "carbohydrate",
+                    "fat",
+                    "fibre",
+                    "sugars",
+                    "saturatedFat",
+                    "salt",
+                    "servingGrams",
+                    "missing",
+                    "suspect",
+                    "complete"
+                ],
+                "properties": {
+                    "name": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "brand": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "quantity": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "energyKcal": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "protein": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "carbohydrate": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "fat": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "fibre": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "sugars": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "saturatedFat": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "salt": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "servingGrams": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "missing": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "name",
+                                "energyKcal",
+                                "protein",
+                                "carbohydrate",
+                                "fat"
+                            ]
+                        }
+                    },
+                    "suspect": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "energyKcal",
+                            "protein",
+                            "carbohydrate",
+                            "fat",
+                            "fibre",
+                            "sugars",
+                            "saturatedFat",
+                            "salt",
+                            "macros",
+                            null
+                        ]
+                    },
+                    "complete": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ScannedProduct.jsonld": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "brand",
+                    "quantity",
+                    "energyKcal",
+                    "protein",
+                    "carbohydrate",
+                    "fat",
+                    "fibre",
+                    "sugars",
+                    "saturatedFat",
+                    "salt",
+                    "servingGrams",
+                    "missing",
+                    "suspect",
+                    "complete"
+                ],
+                "properties": {
+                    "name": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "brand": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "quantity": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "energyKcal": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "protein": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "carbohydrate": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "fat": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "fibre": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "sugars": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "saturatedFat": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "salt": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "servingGrams": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "missing": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "name",
+                                "energyKcal",
+                                "protein",
+                                "carbohydrate",
+                                "fat"
+                            ]
+                        }
+                    },
+                    "suspect": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "energyKcal",
+                            "protein",
+                            "carbohydrate",
+                            "fat",
+                            "fibre",
+                            "sugars",
+                            "saturatedFat",
+                            "salt",
+                            "macros",
+                            null
+                        ]
+                    },
+                    "complete": {
+                        "type": "boolean"
+                    }
+                }
+            },
             "Session": {
                 "type": "object",
                 "description": "Signed-in devices, most recently active first.",
@@ -7390,6 +8361,10 @@
         {
             "name": "TwoFactorSetup",
             "description": "Resource 'TwoFactorSetup' operations."
+        },
+        {
+            "name": "BarcodeScan",
+            "description": "Spec \u00a720: scan \u2192 Symfony \u2192 product database \u2192 normalised proposal \u2192 user confirmation. A scan\nsaves nothing; POST /nutrition/barcode/confirm does, once the user agreed."
         },
         {
             "name": "MealBuilder",

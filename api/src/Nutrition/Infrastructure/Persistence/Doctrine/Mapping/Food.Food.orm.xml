@@ -7,9 +7,17 @@
         <indexes>
             <index name="foods_search_key_trgm" columns="search_key"/>
             <index name="foods_owner_idx" columns="owner_id"/>
+            <index name="foods_barcode_idx" columns="barcode"/>
         </indexes>
         <unique-constraints>
             <unique-constraint name="foods_source_reference_unique" columns="source,source_reference"/>
+            <!-- One own food per barcode: a scan is never ambiguous, even when two requests race. The
+                 predicate is written as PostgreSQL prints it back, so that schema:validate matches. -->
+            <unique-constraint name="foods_owner_barcode_unique" columns="owner_id,barcode">
+                <options>
+                    <option name="where">((owner_id IS NOT NULL) AND (barcode IS NOT NULL) AND (deleted_at IS NULL))</option>
+                </options>
+            </unique-constraint>
         </unique-constraints>
 
         <id name="id" type="food_id"/>
@@ -24,6 +32,7 @@
         <embedded name="facts" class="App\Nutrition\Domain\Food\NutritionFacts" column-prefix="per100g_"/>
         <field name="portions" type="food_portions"/>
         <field name="searchKey" type="text"/>
+        <field name="barcode" type="barcode" length="14" nullable="true"/>
         <field name="deletedAt" type="datetimetz_immutable" nullable="true"/>
     </entity>
 </doctrine-mapping>

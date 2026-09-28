@@ -10,6 +10,7 @@ export const rice: Food = {
   per100g: { energyKcal: 352, protein: 7.4, carbohydrate: 78.6, fat: 0.7, fibre: 1.4, sugars: 0.3, saturatedFat: 0.2, salt: 0.01 },
   portions: [],
   editable: false,
+  barcode: null,
 }
 
 export const skyr: Food = {

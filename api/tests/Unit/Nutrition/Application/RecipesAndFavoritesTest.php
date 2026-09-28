@@ -18,6 +18,7 @@ use App\Nutrition\Application\Food\CreateCustomFoodHandler;
 use App\Nutrition\Application\Food\CustomFoodDetails;
 use App\Nutrition\Application\Food\DeleteCustomFood;
 use App\Nutrition\Application\Food\DeleteCustomFoodHandler;
+use App\Nutrition\Application\Food\OwnBarcodes;
 use App\Nutrition\Application\Journal\DayView;
 use App\Nutrition\Application\Journal\GetDay;
 use App\Nutrition\Application\Journal\GetDayHandler;
@@ -83,7 +84,7 @@ final class RecipesAndFavoritesTest extends NutritionTestCase
 
     public function testIngredientsMustBeFoodsTheUserCanUse(): void
     {
-        new CreateCustomFoodHandler($this->foods)(new CreateCustomFood(new FoodId(self::SKYR), $this->sam, new CustomFoodDetails('Skyr', null, FoodState::NotApplicable, 63, 11, 4, 0.2)));
+        new CreateCustomFoodHandler($this->foods, new OwnBarcodes($this->foods))(new CreateCustomFood(new FoodId(self::SKYR), $this->sam, new CustomFoodDetails('Skyr', null, FoodState::NotApplicable, 63, 11, 4, 0.2)));
 
         $this->expectException(FoodNotFound::class);
         new CreateRecipeHandler($this->recipes, $this->compositions, $this->clock)(new CreateRecipe(new RecipeId(self::RECIPE), $this->alex, new RecipeDetails('Volé', 1, null, [['foodId' => self::SKYR, 'grams' => 100.0]])));
@@ -118,7 +119,7 @@ final class RecipesAndFavoritesTest extends NutritionTestCase
 
     public function testADeletedCustomFoodCannotJoinARecipe(): void
     {
-        new CreateCustomFoodHandler($this->foods)(new CreateCustomFood(new FoodId(self::SKYR), $this->alex, new CustomFoodDetails('Skyr', null, FoodState::NotApplicable, 63, 11, 4, 0.2)));
+        new CreateCustomFoodHandler($this->foods, new OwnBarcodes($this->foods))(new CreateCustomFood(new FoodId(self::SKYR), $this->alex, new CustomFoodDetails('Skyr', null, FoodState::NotApplicable, 63, 11, 4, 0.2)));
         new DeleteCustomFoodHandler($this->foods, $this->clock)(new DeleteCustomFood(new FoodId(self::SKYR), $this->alex));
         $this->createRecipe(null);
 
@@ -134,7 +135,7 @@ final class RecipesAndFavoritesTest extends NutritionTestCase
 
     public function testADeletedCustomFoodStillCountsInItsRecipes(): void
     {
-        new CreateCustomFoodHandler($this->foods)(new CreateCustomFood(new FoodId(self::SKYR), $this->alex, new CustomFoodDetails('Skyr', null, FoodState::NotApplicable, 63, 11, 4, 0.2)));
+        new CreateCustomFoodHandler($this->foods, new OwnBarcodes($this->foods))(new CreateCustomFood(new FoodId(self::SKYR), $this->alex, new CustomFoodDetails('Skyr', null, FoodState::NotApplicable, 63, 11, 4, 0.2)));
         new CreateRecipeHandler($this->recipes, $this->compositions, $this->clock)(new CreateRecipe(new RecipeId(self::RECIPE), $this->alex, new RecipeDetails('Bol', 1, null, [['foodId' => self::SKYR, 'grams' => 200.0]])));
         new DeleteCustomFoodHandler($this->foods, $this->clock)(new DeleteCustomFood(new FoodId(self::SKYR), $this->alex));
 
@@ -188,7 +189,7 @@ final class RecipesAndFavoritesTest extends NutritionTestCase
 
     public function testAFavouriteKeepsWorkingWhenItsCustomFoodIsDeleted(): void
     {
-        new CreateCustomFoodHandler($this->foods)(new CreateCustomFood(new FoodId(self::SKYR), $this->alex, new CustomFoodDetails('Skyr', null, FoodState::NotApplicable, 63, 11, 4, 0.2)));
+        new CreateCustomFoodHandler($this->foods, new OwnBarcodes($this->foods))(new CreateCustomFood(new FoodId(self::SKYR), $this->alex, new CustomFoodDetails('Skyr', null, FoodState::NotApplicable, 63, 11, 4, 0.2)));
         new LogFoodHandler($this->foods, $this->writer())(new LogFood(new JournalEntryId($this->uuids->generate()), $this->alex, new FoodId(self::SKYR), $this->day(), MealSlot::Snack, 150));
         new SaveFavoriteMealHandler($this->entries, $this->favorites, $this->clock)(new SaveFavoriteMeal(new FavoriteMealId(self::FAVORITE), $this->alex, 'Collation', $this->day(), MealSlot::Snack));
         new DeleteCustomFoodHandler($this->foods, $this->clock)(new DeleteCustomFood(new FoodId(self::SKYR), $this->alex));

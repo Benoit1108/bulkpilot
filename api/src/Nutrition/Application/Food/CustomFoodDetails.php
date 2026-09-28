@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Nutrition\Application\Food;
 
+use App\Nutrition\Domain\Exception\InvalidBarcode;
+use App\Nutrition\Domain\Food\Barcode;
 use App\Nutrition\Domain\Food\FoodState;
 use App\Nutrition\Domain\Food\NutritionFacts;
 use App\Nutrition\Domain\Food\Portion;
@@ -29,7 +31,17 @@ final readonly class CustomFoodDetails
         public ?float $saturatedFat = null,
         public ?float $salt = null,
         public array $portions = [],
+        /** As printed under the bars, when the food is a packaged product. */
+        public ?string $barcode = null,
     ) {
+    }
+
+    /**
+     * @throws InvalidBarcode
+     */
+    public function barcode(): ?Barcode
+    {
+        return null === $this->barcode || '' === trim($this->barcode) ? null : new Barcode($this->barcode);
     }
 
     public function facts(): NutritionFacts

@@ -64,6 +64,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/nutrition/barcode/scan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a BarcodeScan resource.
+         * @description Creates a BarcodeScan resource.
+         */
+        post: operations["barcode_scan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/email-verification": {
         parameters: {
             query?: never;
@@ -255,6 +275,26 @@ export interface paths {
          * @description Removes the Food resource.
          */
         delete: operations["api_foods_id_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/barcode/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a Food resource.
+         * @description Creates a Food resource.
+         */
+        post: operations["barcode_confirm"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -864,6 +904,27 @@ export interface components {
             twoFactorEnabled: boolean;
             hasPassword: boolean;
         };
+        /** @description What a barcode stands for: a food already here (known), or what Open Food Facts proposes (found). 404 when nobody knows it, 503 when Open Food Facts cannot be reached. */
+        BarcodeScan: {
+            barcode: string;
+            /** @enum {string} */
+            status: "known" | "found";
+            food: components["schemas"]["Food_noid"] | null;
+            product: components["schemas"]["ScannedProduct"] | null;
+        };
+        /** @description What a barcode stands for: a food already here (known), or what Open Food Facts proposes (found). 404 when nobody knows it, 503 when Open Food Facts cannot be reached. */
+        "BarcodeScan.BarcodeInput": {
+            /** @default  */
+            barcode: string;
+        };
+        /** @description What a barcode stands for: a food already here (known), or what Open Food Facts proposes (found). 404 when nobody knows it, 503 when Open Food Facts cannot be reached. */
+        "BarcodeScan.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            barcode: string;
+            /** @enum {string} */
+            status: "known" | "found";
+            food: components["schemas"]["Food.jsonld_noid"] | null;
+            product: components["schemas"]["ScannedProduct.jsonld"] | null;
+        };
         Composition: {
             energyKcal: number;
             protein: number;
@@ -875,6 +936,26 @@ export interface components {
             salt: number | null;
         };
         "Composition.jsonld": {
+            energyKcal: number;
+            protein: number;
+            carbohydrate: number;
+            fat: number;
+            fibre: number | null;
+            sugars: number | null;
+            saturatedFat: number | null;
+            salt: number | null;
+        };
+        "Composition.jsonld_noid": {
+            energyKcal: number;
+            protein: number;
+            carbohydrate: number;
+            fat: number;
+            fibre: number | null;
+            sugars: number | null;
+            saturatedFat: number | null;
+            salt: number | null;
+        };
+        Composition_noid: {
             energyKcal: number;
             protein: number;
             carbohydrate: number;
@@ -930,6 +1011,26 @@ export interface components {
             readonly type?: string;
             readonly title?: string | null;
             readonly instance?: string | null;
+        };
+        CustomFoodInput: {
+            /** @default  */
+            name: string;
+            brand?: string | null;
+            /**
+             * @default not_applicable
+             * @enum {string}
+             */
+            state: "raw" | "cooked" | "not_applicable";
+            energyKcal: number | null;
+            protein: number | null;
+            carbohydrate: number | null;
+            fat: number | null;
+            fibre?: number | null;
+            sugars?: number | null;
+            saturatedFat?: number | null;
+            salt?: number | null;
+            barcode?: string | null;
+            portions?: components["schemas"]["PortionInput"][];
         };
         /** @description Redeems the link emailed at registration (works signed in or not). */
         EmailVerification: {
@@ -1183,7 +1284,7 @@ export interface components {
         Food: {
             id: string;
             /** @enum {string} */
-            source: "ciqual" | "custom";
+            source: "ciqual" | "custom" | "off";
             name: string;
             brand: string | null;
             category: string | null;
@@ -1192,6 +1293,13 @@ export interface components {
             per100g: components["schemas"]["Composition"];
             portions: components["schemas"]["FoodPortion"][];
             editable: boolean;
+            barcode: string | null;
+        };
+        /** @description Keeps a scanned product: as Open Food Facts gives it (shared, values read again from the source), or corrected (the user's own food, with its barcode). */
+        "Food.ConfirmProductInput": {
+            /** @default  */
+            barcode: string;
+            corrections?: components["schemas"]["CustomFoodInput"] | null;
         };
         /** @description Creates a custom food (a packaged product, a food missing from CIQUAL). */
         "Food.CustomFoodInput": {
@@ -1211,13 +1319,14 @@ export interface components {
             sugars?: number | null;
             saturatedFat?: number | null;
             salt?: number | null;
+            barcode?: string | null;
             portions?: components["schemas"]["PortionInput"][];
         };
         /** @description Searches the foods the user can log (CIQUAL and their own), best matches first. */
         "Food.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
             id: string;
             /** @enum {string} */
-            source: "ciqual" | "custom";
+            source: "ciqual" | "custom" | "off";
             name: string;
             brand: string | null;
             category: string | null;
@@ -1226,6 +1335,22 @@ export interface components {
             per100g: components["schemas"]["Composition.jsonld"];
             portions: components["schemas"]["FoodPortion.jsonld"][];
             editable: boolean;
+            barcode: string | null;
+        };
+        /** @description A catalogue food, or one of the user's own. */
+        "Food.jsonld_noid": components["schemas"]["HydraItemBaseSchemaWithoutId"] & {
+            id: string;
+            /** @enum {string} */
+            source: "ciqual" | "custom" | "off";
+            name: string;
+            brand: string | null;
+            category: string | null;
+            /** @enum {string} */
+            state: "raw" | "cooked" | "not_applicable";
+            per100g: components["schemas"]["Composition.jsonld_noid"];
+            portions: components["schemas"]["FoodPortion.jsonld_noid"][];
+            editable: boolean;
+            barcode: string | null;
         };
         FoodPortion: {
             label: string;
@@ -1234,6 +1359,28 @@ export interface components {
         "FoodPortion.jsonld": {
             label: string;
             grams: number;
+        };
+        "FoodPortion.jsonld_noid": {
+            label: string;
+            grams: number;
+        };
+        FoodPortion_noid: {
+            label: string;
+            grams: number;
+        };
+        Food_noid: {
+            id: string;
+            /** @enum {string} */
+            source: "ciqual" | "custom" | "off";
+            name: string;
+            brand: string | null;
+            category: string | null;
+            /** @enum {string} */
+            state: "raw" | "cooked" | "not_applicable";
+            per100g: components["schemas"]["Composition_noid"];
+            portions: components["schemas"]["FoodPortion_noid"][];
+            editable: boolean;
+            barcode: string | null;
         };
         /** @description Readiness of the API and its dependencies. Answers 503 with the same body when degraded. */
         Health: {
@@ -1690,6 +1837,42 @@ export interface components {
         "RecoveryCodes.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
             recoveryCodes: string[];
         };
+        ScannedProduct: {
+            name: string | null;
+            brand: string | null;
+            quantity: string | null;
+            energyKcal: number | null;
+            protein: number | null;
+            carbohydrate: number | null;
+            fat: number | null;
+            fibre: number | null;
+            sugars: number | null;
+            saturatedFat: number | null;
+            salt: number | null;
+            servingGrams: number | null;
+            missing: ("name" | "energyKcal" | "protein" | "carbohydrate" | "fat")[];
+            /** @enum {string|null} */
+            suspect: "energyKcal" | "protein" | "carbohydrate" | "fat" | "fibre" | "sugars" | "saturatedFat" | "salt" | "macros" | null;
+            complete: boolean;
+        };
+        "ScannedProduct.jsonld": {
+            name: string | null;
+            brand: string | null;
+            quantity: string | null;
+            energyKcal: number | null;
+            protein: number | null;
+            carbohydrate: number | null;
+            fat: number | null;
+            fibre: number | null;
+            sugars: number | null;
+            saturatedFat: number | null;
+            salt: number | null;
+            servingGrams: number | null;
+            missing: ("name" | "energyKcal" | "protein" | "carbohydrate" | "fat")[];
+            /** @enum {string|null} */
+            suspect: "energyKcal" | "protein" | "carbohydrate" | "fat" | "fibre" | "sugars" | "saturatedFat" | "salt" | "macros" | null;
+            complete: boolean;
+        };
         /** @description Signed-in devices, most recently active first. */
         Session: {
             id: string;
@@ -1888,6 +2071,55 @@ export interface operations {
             };
             /** @description Not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    barcode_scan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new BarcodeScan resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["BarcodeScan.BarcodeInput"];
+                "application/json": components["schemas"]["BarcodeScan.BarcodeInput"];
+            };
+        };
+        responses: {
+            /** @description BarcodeScan resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["BarcodeScan.jsonld"];
+                    "application/json": components["schemas"]["BarcodeScan"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2398,6 +2630,55 @@ export interface operations {
                     "application/ld+json": components["schemas"]["Error.jsonld"];
                     "application/problem+json": components["schemas"]["Error"];
                     "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    barcode_confirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new Food resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Food.ConfirmProductInput"];
+                "application/json": components["schemas"]["Food.ConfirmProductInput"];
+            };
+        };
+        responses: {
+            /** @description Food resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Food.jsonld"];
+                    "application/json": components["schemas"]["Food"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
                 };
             };
         };

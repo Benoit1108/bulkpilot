@@ -31,7 +31,7 @@ final class JournalEntryTest extends TestCase
         $food = Food::createCustom(new FoodId('00000000-0000-7000-8000-00000000f00d'), $this->owner, 'Pâtes', 'Barilla', FoodState::Cooked, new NutritionFacts(157, 5.8, 30.6, 0.9), []);
         $entry = $this->log(LoggedFood::snapshotOf($food), 200);
 
-        $food->edit('Pâtes', 'Barilla', FoodState::Cooked, new NutritionFacts(999 / 2, 1, 1, 1), []);
+        $food->edit('Pâtes', 'Barilla', FoodState::Cooked, new NutritionFacts(999 / 2, 1, 1, 1), [], null);
 
         self::assertSame('Pâtes (Barilla)', $entry->food()->name);
         self::assertSame(FoodState::Cooked, $entry->food()->state);
