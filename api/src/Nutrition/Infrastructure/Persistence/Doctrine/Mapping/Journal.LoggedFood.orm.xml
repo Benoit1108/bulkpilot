@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <embeddable name="App\Nutrition\Domain\Journal\LoggedFood">
+        <field name="foodId" column="id" type="food_id" nullable="true"/>
+        <field name="recipeId" column="recipe_id" type="recipe_id" nullable="true"/>
+        <field name="name" length="310"/>
+        <field name="state" length="20" enum-type="App\Nutrition\Domain\Food\FoodState"/>
+        <embedded name="per100Grams" class="App\Nutrition\Domain\Food\NutrientAmounts" column-prefix="per100g_"/>
+    </embeddable>
+</doctrine-mapping>

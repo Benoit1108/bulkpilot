@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Nutrition\Domain\Favorite\FavoriteMeal" table="favorite_meals">
+        <indexes>
+            <index name="favorite_meals_owner_idx" columns="owner_id"/>
+        </indexes>
+
+        <id name="id" type="favorite_meal_id"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="name" length="100"/>
+        <field name="items" type="favorite_items"/>
+        <field name="createdAt" type="datetimetz_immutable"/>
+    </entity>
+</doctrine-mapping>

@@ -7,6 +7,7 @@ api_platform:
         paths:
             - '%kernel.project_dir%/src/System/Presentation/Api'
             - '%kernel.project_dir%/src/Identity/Presentation/Api'
+            - '%kernel.project_dir%/src/Nutrition/Presentation/Api'
     formats:
         jsonld: ['application/ld+json']
         json: ['application/json']

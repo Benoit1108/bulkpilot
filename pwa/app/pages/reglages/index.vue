@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ChevronRight } from 'lucide-vue-next'
 import type { ThemePreference } from '~/features/shell/theme'
 import { useServiceHealth } from '~/features/system/health'
 
@@ -33,6 +32,13 @@ const securitySummary = computed(() => {
   return parts.join(' · ')
 })
 
+const sections = computed(() => account.value
+  ? [
+      { to: '/reglages/profil', title: 'Profil', summary: account.value.firstName },
+      { to: '/reglages/compte', title: 'Compte et sécurité', summary: securitySummary.value, summaryTestId: 'security-summary' },
+    ]
+  : [])
+
 async function leave(): Promise<void> {
   if (await run(() => signOut())) await navigateTo('/connexion')
 }
@@ -40,46 +46,11 @@ async function leave(): Promise<void> {
 
 <template>
   <div class="page">
-    <nav
+    <UiNavList
       v-if="account"
-      aria-label="Sections des réglages"
-    >
-      <ul class="rows">
-        <li>
-          <NuxtLink
-            to="/reglages/profil"
-            class="row"
-          >
-            <span class="row__text">
-              <span class="row__title">Profil</span>
-              <span class="row__summary">{{ account.firstName }}</span>
-            </span>
-            <ChevronRight
-              :size="20"
-              aria-hidden="true"
-            />
-          </NuxtLink>
-        </li>
-        <li>
-          <NuxtLink
-            to="/reglages/compte"
-            class="row"
-          >
-            <span class="row__text">
-              <span class="row__title">Compte et sécurité</span>
-              <span
-                class="row__summary"
-                data-testid="security-summary"
-              >{{ securitySummary }}</span>
-            </span>
-            <ChevronRight
-              :size="20"
-              aria-hidden="true"
-            />
-          </NuxtLink>
-        </li>
-      </ul>
-    </nav>
+      label="Sections des réglages"
+      :items="sections"
+    />
 
     <UiCard title="Apparence">
       <fieldset class="choice">
@@ -149,49 +120,6 @@ async function leave(): Promise<void> {
   flex-direction: column;
   gap: var(--space-4);
   max-width: var(--reading-max-width);
-}
-
-.rows {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-}
-
-.rows li + li {
-  border-top: 1px solid var(--color-border);
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: 3.5rem;
-  padding: var(--space-3) var(--space-4);
-  color: var(--color-text);
-  text-decoration: none;
-}
-
-.row:focus-visible {
-  outline-offset: -2px;
-  border-radius: var(--radius-lg);
-}
-
-.row__text {
-  display: flex;
-  flex-direction: column;
-}
-
-.row__title {
-  font-weight: 600;
-}
-
-.row__summary {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
 }
 
 .choice {

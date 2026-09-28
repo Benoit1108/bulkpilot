@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<TABLE>
+   <ALIM>
+      <alim_code> 1018 </alim_code>
+      <alim_nom_fr> Kir (au vin blanc) </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> Kir </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Kir (Cocktail of white wine with red fruit liqueur) </alim_nom_eng>
+      <alim_grp_code> 06 </alim_grp_code>
+      <alim_ssgrp_code> 0603 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 060304 </alim_ssssgrp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 9100 </alim_code>
+      <alim_nom_fr> Riz blanc, cru </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> Riz blanc, cru </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Rice, raw </alim_nom_eng>
+      <alim_grp_code> 03 </alim_grp_code>
+      <alim_ssgrp_code> 0301 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 030102 </alim_ssssgrp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 9104 </alim_code>
+      <alim_nom_fr> Riz blanc, cuit, non salé </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> Riz </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Rice, cooked, unsalted </alim_nom_eng>
+      <alim_grp_code> 03 </alim_grp_code>
+      <alim_ssgrp_code> 0301 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 030101 </alim_ssssgrp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 9811 </alim_code>
+      <alim_nom_fr> Pâtes sèches standard, cuites, non salées </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> Pâtes coquillette spaghetti </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Dried pasta, cooked, unsalted </alim_nom_eng>
+      <alim_grp_code> 03 </alim_grp_code>
+      <alim_ssgrp_code> 0301 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 030101 </alim_ssssgrp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 11092 </alim_code>
+      <alim_nom_fr> Estragon, frais </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> Estragon </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Tarragon, fresh </alim_nom_eng>
+      <alim_grp_code> 10 </alim_grp_code>
+      <alim_ssgrp_code> 1006 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 100601 </alim_ssssgrp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 13005 </alim_code>
+      <alim_nom_fr> Banane, pulpe, crue </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> Banane </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Banana, pulp, raw </alim_nom_eng>
+      <alim_grp_code> 02 </alim_grp_code>
+      <alim_ssgrp_code> 0204 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 020401 </alim_ssssgrp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 17440 </alim_code>
+      <alim_nom_fr> Huile de tournesol </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> Huile de tournesol </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Sunflower oil </alim_nom_eng>
+      <alim_grp_code> 09 </alim_grp_code>
+      <alim_ssgrp_code> 0902 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 000000 </alim_ssssgrp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 19041 </alim_code>
+      <alim_nom_fr> Lait demi-écrémé, UHT </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> Lait demi-écrémé </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Milk, semi-skimmed, UHT </alim_nom_eng>
+      <alim_grp_code> 05 </alim_grp_code>
+      <alim_ssgrp_code> 0501 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 050101 </alim_ssssgrp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 22000 </alim_code>
+      <alim_nom_fr> Oeuf, cru </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> œuf cru </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Egg, raw </alim_nom_eng>
+      <alim_grp_code> 04 </alim_grp_code>
+      <alim_ssgrp_code> 0410 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 041002 </alim_ssssgrp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 31067 </alim_code>
+      <alim_nom_fr> Mélasse de canne </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> Mélasse de canne </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Cane molasses </alim_nom_eng>
+      <alim_grp_code> 07 </alim_grp_code>
+      <alim_ssgrp_code> 0701 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 000000 </alim_ssssgrp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 36017 </alim_code>
+      <alim_nom_fr> Poulet, filet, sans peau, cru </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> Poulet cru </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Chicken, breast, without skin, raw </alim_nom_eng>
+      <alim_grp_code> 04 </alim_grp_code>
+      <alim_ssgrp_code> 0402 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 040203 </alim_ssssgrp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 36018 </alim_code>
+      <alim_nom_fr> Poulet, filet, sans peau, sauté/poêlé </alim_nom_fr>
+      <ALIM_NOM_INDEX_FR> Poulet </ALIM_NOM_INDEX_FR>
+      <alim_nom_eng> Chicken, breast, without skin, cooked </alim_nom_eng>
+      <alim_grp_code> 04 </alim_grp_code>
+      <alim_ssgrp_code> 0401 </alim_ssgrp_code>
+      <alim_ssssgrp_code> 040103 </alim_ssssgrp_code>
+   </ALIM>
+</TABLE>

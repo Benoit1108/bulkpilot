@@ -15,6 +15,8 @@ use App\Identity\Domain\Session\UserSession;
 use App\Identity\Domain\Session\UserSessionId;
 use App\Identity\Domain\User\User;
 use App\Shared\Domain\Identifier\UserId;
+use App\Tests\Support\Shared\SequentialUuidGenerator;
+use App\Tests\Support\Shared\SpyEventBus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 

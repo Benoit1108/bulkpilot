@@ -390,6 +390,776 @@
                 "parameters": []
             }
         },
+        "/api/nutrition/targets/estimate": {
+            "post": {
+                "operationId": "api_nutritiontargetsestimate_post",
+                "tags": [
+                    "EnergyEstimate"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EnergyEstimate resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EnergyEstimate.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EnergyEstimate"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a EnergyEstimate resource.",
+                "description": "Creates a EnergyEstimate resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new EnergyEstimate resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EnergyEstimate.EstimateInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EnergyEstimate.EstimateInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/nutrition/favorite-meals": {
+            "get": {
+                "operationId": "api_nutritionfavorite-meals_get_collection",
+                "tags": [
+                    "FavoriteMeal"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "FavoriteMeal collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "FavoriteMeal.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/FavoriteMeal.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/FavoriteMeal"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of FavoriteMeal resources.",
+                "description": "Retrieves the collection of FavoriteMeal resources.",
+                "parameters": []
+            },
+            "post": {
+                "operationId": "api_nutritionfavorite-meals_post",
+                "tags": [
+                    "FavoriteMeal"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "FavoriteMeal resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FavoriteMeal.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FavoriteMeal"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a FavoriteMeal resource.",
+                "description": "Creates a FavoriteMeal resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new FavoriteMeal resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FavoriteMeal.SaveFavoriteInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FavoriteMeal.SaveFavoriteInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/nutrition/favorite-meals/{id}": {
+            "delete": {
+                "operationId": "api_nutritionfavorite-meals_id_delete",
+                "tags": [
+                    "FavoriteMeal"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "FavoriteMeal resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the FavoriteMeal resource.",
+                "description": "Removes the FavoriteMeal resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "FavoriteMeal identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/foods": {
+            "get": {
+                "operationId": "foods_search",
+                "tags": [
+                    "Food"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Food collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Food.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Food.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Food"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Food resources.",
+                "description": "Retrieves the collection of Food resources.",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Words of the name, accents and case ignored (2 characters at least).",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "At most 30.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30,
+                            "default": 20
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "post": {
+                "operationId": "api_foods_post",
+                "tags": [
+                    "Food"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Food resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Food.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Food"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Food resource.",
+                "description": "Creates a Food resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Food resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Food.CustomFoodInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Food.CustomFoodInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/foods/custom": {
+            "get": {
+                "operationId": "foods_custom",
+                "tags": [
+                    "Food"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Food collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Food.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Food.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Food"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Food resources.",
+                "description": "Retrieves the collection of Food resources.",
+                "parameters": []
+            }
+        },
+        "/api/foods/recent": {
+            "get": {
+                "operationId": "foods_recent",
+                "tags": [
+                    "Food"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Food collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Food.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Food.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Food"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Food resources.",
+                "description": "Retrieves the collection of Food resources.",
+                "parameters": []
+            }
+        },
+        "/api/foods/{id}": {
+            "get": {
+                "operationId": "api_foods_id_get",
+                "tags": [
+                    "Food"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Food resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Food.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Food"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Food resource.",
+                "description": "Retrieves a Food resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Food identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "put": {
+                "operationId": "api_foods_id_put",
+                "tags": [
+                    "Food"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Food resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Food.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Food"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Replaces the Food resource.",
+                "description": "Replaces the Food resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Food identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Food resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Food.CustomFoodInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Food.CustomFoodInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "delete": {
+                "operationId": "api_foods_id_delete",
+                "tags": [
+                    "Food"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Food resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Food resource.",
+                "description": "Removes the Food resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Food identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
         "/api/health": {
             "get": {
                 "operationId": "api_health_get",
@@ -440,6 +1210,959 @@
                 "summary": "Retrieves a Health resource.",
                 "description": "Retrieves a Health resource.",
                 "parameters": []
+            }
+        },
+        "/api/nutrition/entries": {
+            "post": {
+                "operationId": "api_nutritionentries_post",
+                "tags": [
+                    "JournalEntry"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "JournalEntry resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JournalEntry.NutritionDay.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JournalEntry.NutritionDay"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a JournalEntry resource.",
+                "description": "Creates a JournalEntry resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new JournalEntry resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JournalEntry.LogFoodInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JournalEntry.LogFoodInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/nutrition/entries/batch": {
+            "post": {
+                "operationId": "journal_entries_batch",
+                "tags": [
+                    "JournalEntry"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "JournalEntry resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JournalEntry.NutritionDay.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JournalEntry.NutritionDay"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a JournalEntry resource.",
+                "description": "Creates a JournalEntry resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new JournalEntry resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JournalEntry.LogFoodsInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JournalEntry.LogFoodsInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/nutrition/entries/{id}": {
+            "put": {
+                "operationId": "api_nutritionentries_id_put",
+                "tags": [
+                    "JournalEntry"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "JournalEntry resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JournalEntry.NutritionDay.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JournalEntry.NutritionDay"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Replaces the JournalEntry resource.",
+                "description": "Replaces the JournalEntry resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "JournalEntry identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated JournalEntry resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JournalEntry.CorrectEntryInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JournalEntry.CorrectEntryInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "delete": {
+                "operationId": "api_nutritionentries_id_delete",
+                "tags": [
+                    "JournalEntry"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "JournalEntry resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the JournalEntry resource.",
+                "description": "Removes the JournalEntry resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "JournalEntry identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/nutrition/favorite-meals/{id}/log": {
+            "post": {
+                "operationId": "favorite_meal_log",
+                "tags": [
+                    "JournalEntry"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "JournalEntry resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JournalEntry.NutritionDay.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JournalEntry.NutritionDay"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a JournalEntry resource.",
+                "description": "Creates a JournalEntry resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "JournalEntry identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The new JournalEntry resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JournalEntry.LogFavoriteInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JournalEntry.LogFavoriteInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/nutrition/meal-builder": {
+            "get": {
+                "operationId": "api_nutritionmeal-builder_get",
+                "tags": [
+                    "MealBuilder"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "MealBuilder resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealBuilder.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealBuilder"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a MealBuilder resource.",
+                "description": "Retrieves a MealBuilder resource.",
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "query",
+                        "description": "YYYY-MM-DD, the user's local day.",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "slot",
+                        "in": "query",
+                        "description": "For this meal's share of the target; the rest of the day otherwise.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "breakfast",
+                                "lunch",
+                                "snack",
+                                "gainer",
+                                "dinner"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
+        "/api/nutrition/meal-split": {
+            "get": {
+                "operationId": "api_nutritionmeal-split_get",
+                "tags": [
+                    "MealSplit"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "MealSplit resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealSplit.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealSplit"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a MealSplit resource.",
+                "description": "Retrieves a MealSplit resource.",
+                "parameters": []
+            },
+            "put": {
+                "operationId": "api_nutritionmeal-split_put",
+                "tags": [
+                    "MealSplit"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "MealSplit resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealSplit.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealSplit"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Replaces the MealSplit resource.",
+                "description": "Replaces the MealSplit resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The updated MealSplit resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MealSplit"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MealSplit"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/nutrition/averages": {
+            "get": {
+                "operationId": "api_nutritionaverages_get",
+                "tags": [
+                    "NutritionAverages"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "NutritionAverages resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NutritionAverages.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NutritionAverages"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a NutritionAverages resource.",
+                "description": "Retrieves a NutritionAverages resource.",
+                "parameters": [
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "description": "7 or 30.",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "today",
+                        "in": "query",
+                        "description": "The user's local day, YYYY-MM-DD.",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
+        "/api/nutrition/days/{day}": {
+            "get": {
+                "operationId": "api_nutritiondays_day_get",
+                "tags": [
+                    "NutritionDay"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "NutritionDay resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NutritionDay.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NutritionDay"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a NutritionDay resource.",
+                "description": "Retrieves a NutritionDay resource.",
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "path",
+                        "description": "NutritionDay identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/nutrition/targets": {
+            "get": {
+                "operationId": "api_nutritiontargets_get_collection",
+                "tags": [
+                    "NutritionTarget"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "NutritionTarget collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "NutritionTarget.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/NutritionTarget.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/NutritionTarget"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of NutritionTarget resources.",
+                "description": "Retrieves the collection of NutritionTarget resources.",
+                "parameters": []
+            },
+            "post": {
+                "operationId": "api_nutritiontargets_post",
+                "tags": [
+                    "NutritionTarget"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "NutritionTarget resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NutritionTarget.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NutritionTarget"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a NutritionTarget resource.",
+                "description": "Creates a NutritionTarget resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new NutritionTarget resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NutritionTarget.TargetInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NutritionTarget.TargetInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
             }
         },
         "/api/me/password": {
@@ -665,6 +2388,371 @@
                     },
                     "required": true
                 }
+            }
+        },
+        "/api/recipes": {
+            "get": {
+                "operationId": "api_recipes_get_collection",
+                "tags": [
+                    "Recipe"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Recipe collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Recipe.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Recipe.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Recipe"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Recipe resources.",
+                "description": "Retrieves the collection of Recipe resources.",
+                "parameters": []
+            },
+            "post": {
+                "operationId": "api_recipes_post",
+                "tags": [
+                    "Recipe"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Recipe resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Recipe.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Recipe"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Recipe resource.",
+                "description": "Creates a Recipe resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Recipe resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Recipe.RecipeInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Recipe.RecipeInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/recipes/{id}": {
+            "get": {
+                "operationId": "api_recipes_id_get",
+                "tags": [
+                    "Recipe"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Recipe resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Recipe.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Recipe"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Recipe resource.",
+                "description": "Retrieves a Recipe resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Recipe identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "put": {
+                "operationId": "api_recipes_id_put",
+                "tags": [
+                    "Recipe"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Recipe resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Recipe.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Recipe"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Replaces the Recipe resource.",
+                "description": "Replaces the Recipe resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Recipe identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Recipe resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Recipe.RecipeInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Recipe.RecipeInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "delete": {
+                "operationId": "api_recipes_id_delete",
+                "tags": [
+                    "Recipe"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Recipe resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Recipe resource.",
+                "description": "Removes the Recipe resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Recipe identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
             }
         },
         "/api/me/two-factor/confirm": {
@@ -1710,6 +3798,108 @@
                     }
                 }
             },
+            "Composition": {
+                "type": "object",
+                "required": [
+                    "energyKcal",
+                    "protein",
+                    "carbohydrate",
+                    "fat",
+                    "fibre",
+                    "sugars",
+                    "saturatedFat",
+                    "salt"
+                ],
+                "properties": {
+                    "energyKcal": {
+                        "type": "number"
+                    },
+                    "protein": {
+                        "type": "number"
+                    },
+                    "carbohydrate": {
+                        "type": "number"
+                    },
+                    "fat": {
+                        "type": "number"
+                    },
+                    "fibre": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "sugars": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "saturatedFat": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "salt": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "Composition.jsonld": {
+                "type": "object",
+                "required": [
+                    "energyKcal",
+                    "protein",
+                    "carbohydrate",
+                    "fat",
+                    "fibre",
+                    "sugars",
+                    "saturatedFat",
+                    "salt"
+                ],
+                "properties": {
+                    "energyKcal": {
+                        "type": "number"
+                    },
+                    "protein": {
+                        "type": "number"
+                    },
+                    "carbohydrate": {
+                        "type": "number"
+                    },
+                    "fat": {
+                        "type": "number"
+                    },
+                    "fibre": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "sugars": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "saturatedFat": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "salt": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
             "ConstraintViolation": {
                 "type": "object",
                 "description": "Unprocessable entity",
@@ -1865,6 +4055,588 @@
                     }
                 }
             },
+            "EnergyEstimate": {
+                "type": "object",
+                "description": "Computes suggested daily targets (Mifflin-St Jeor); nothing is saved.",
+                "required": [
+                    "age",
+                    "sex",
+                    "heightCm",
+                    "weightKg",
+                    "lifestyle",
+                    "trainingSessionsPerWeek",
+                    "goal",
+                    "weeklyWeightChangeKg",
+                    "basalMetabolicRate",
+                    "activityLevel",
+                    "trainingAllowance",
+                    "totalExpenditure",
+                    "dailyAdjustment",
+                    "energyKcal",
+                    "proteinGrams",
+                    "carbohydrateGrams",
+                    "fatGrams"
+                ],
+                "properties": {
+                    "age": {
+                        "type": "integer"
+                    },
+                    "sex": {
+                        "type": "string",
+                        "enum": [
+                            "female",
+                            "male"
+                        ]
+                    },
+                    "heightCm": {
+                        "type": "integer"
+                    },
+                    "weightKg": {
+                        "type": "number"
+                    },
+                    "lifestyle": {
+                        "type": "string",
+                        "enum": [
+                            "sedentary",
+                            "light",
+                            "active",
+                            "very_active"
+                        ]
+                    },
+                    "trainingSessionsPerWeek": {
+                        "type": "integer"
+                    },
+                    "goal": {
+                        "type": "string",
+                        "enum": [
+                            "bulk",
+                            "maintain",
+                            "cut"
+                        ]
+                    },
+                    "weeklyWeightChangeKg": {
+                        "type": "number"
+                    },
+                    "basalMetabolicRate": {
+                        "type": "integer"
+                    },
+                    "activityLevel": {
+                        "type": "number"
+                    },
+                    "trainingAllowance": {
+                        "type": "number"
+                    },
+                    "totalExpenditure": {
+                        "type": "integer"
+                    },
+                    "dailyAdjustment": {
+                        "type": "integer"
+                    },
+                    "energyKcal": {
+                        "type": "integer"
+                    },
+                    "proteinGrams": {
+                        "type": "integer"
+                    },
+                    "carbohydrateGrams": {
+                        "type": "integer"
+                    },
+                    "fatGrams": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "EnergyEstimate.EstimateInput": {
+                "type": "object",
+                "description": "Computes suggested daily targets (Mifflin-St Jeor); nothing is saved.",
+                "properties": {
+                    "sex": {
+                        "enum": [
+                            "female",
+                            "male"
+                        ],
+                        "default": "male",
+                        "type": "string"
+                    },
+                    "birthDate": {
+                        "externalDocs": {
+                            "url": "https://schema.org/Date"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "heightCm": {
+                        "minimum": 100,
+                        "maximum": 250,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "weightKg": {
+                        "minimum": 25,
+                        "maximum": 350,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "lifestyle": {
+                        "enum": [
+                            "sedentary",
+                            "light",
+                            "active",
+                            "very_active"
+                        ],
+                        "default": "sedentary",
+                        "type": "string"
+                    },
+                    "trainingSessionsPerWeek": {
+                        "minimum": 0,
+                        "maximum": 14,
+                        "default": 0,
+                        "type": "integer"
+                    },
+                    "goal": {
+                        "enum": [
+                            "bulk",
+                            "maintain",
+                            "cut"
+                        ],
+                        "default": "maintain",
+                        "type": "string"
+                    },
+                    "weeklyWeightChangeKg": {
+                        "minimum": -1,
+                        "maximum": 1,
+                        "default": 0,
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "birthDate",
+                    "heightCm",
+                    "weightKg"
+                ]
+            },
+            "EnergyEstimate.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "age",
+                            "sex",
+                            "heightCm",
+                            "weightKg",
+                            "lifestyle",
+                            "trainingSessionsPerWeek",
+                            "goal",
+                            "weeklyWeightChangeKg",
+                            "basalMetabolicRate",
+                            "activityLevel",
+                            "trainingAllowance",
+                            "totalExpenditure",
+                            "dailyAdjustment",
+                            "energyKcal",
+                            "proteinGrams",
+                            "carbohydrateGrams",
+                            "fatGrams"
+                        ],
+                        "properties": {
+                            "age": {
+                                "type": "integer"
+                            },
+                            "sex": {
+                                "type": "string",
+                                "enum": [
+                                    "female",
+                                    "male"
+                                ]
+                            },
+                            "heightCm": {
+                                "type": "integer"
+                            },
+                            "weightKg": {
+                                "type": "number"
+                            },
+                            "lifestyle": {
+                                "type": "string",
+                                "enum": [
+                                    "sedentary",
+                                    "light",
+                                    "active",
+                                    "very_active"
+                                ]
+                            },
+                            "trainingSessionsPerWeek": {
+                                "type": "integer"
+                            },
+                            "goal": {
+                                "type": "string",
+                                "enum": [
+                                    "bulk",
+                                    "maintain",
+                                    "cut"
+                                ]
+                            },
+                            "weeklyWeightChangeKg": {
+                                "type": "number"
+                            },
+                            "basalMetabolicRate": {
+                                "type": "integer"
+                            },
+                            "activityLevel": {
+                                "type": "number"
+                            },
+                            "trainingAllowance": {
+                                "type": "number"
+                            },
+                            "totalExpenditure": {
+                                "type": "integer"
+                            },
+                            "dailyAdjustment": {
+                                "type": "integer"
+                            },
+                            "energyKcal": {
+                                "type": "integer"
+                            },
+                            "proteinGrams": {
+                                "type": "integer"
+                            },
+                            "carbohydrateGrams": {
+                                "type": "integer"
+                            },
+                            "fatGrams": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "description": "Computes suggested daily targets (Mifflin-St Jeor); nothing is saved."
+            },
+            "EnergyEstimate.jsonld_noid": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchemaWithoutId"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "age",
+                            "sex",
+                            "heightCm",
+                            "weightKg",
+                            "lifestyle",
+                            "trainingSessionsPerWeek",
+                            "goal",
+                            "weeklyWeightChangeKg",
+                            "basalMetabolicRate",
+                            "activityLevel",
+                            "trainingAllowance",
+                            "totalExpenditure",
+                            "dailyAdjustment",
+                            "energyKcal",
+                            "proteinGrams",
+                            "carbohydrateGrams",
+                            "fatGrams"
+                        ],
+                        "properties": {
+                            "age": {
+                                "type": "integer"
+                            },
+                            "sex": {
+                                "type": "string",
+                                "enum": [
+                                    "female",
+                                    "male"
+                                ]
+                            },
+                            "heightCm": {
+                                "type": "integer"
+                            },
+                            "weightKg": {
+                                "type": "number"
+                            },
+                            "lifestyle": {
+                                "type": "string",
+                                "enum": [
+                                    "sedentary",
+                                    "light",
+                                    "active",
+                                    "very_active"
+                                ]
+                            },
+                            "trainingSessionsPerWeek": {
+                                "type": "integer"
+                            },
+                            "goal": {
+                                "type": "string",
+                                "enum": [
+                                    "bulk",
+                                    "maintain",
+                                    "cut"
+                                ]
+                            },
+                            "weeklyWeightChangeKg": {
+                                "type": "number"
+                            },
+                            "basalMetabolicRate": {
+                                "type": "integer"
+                            },
+                            "activityLevel": {
+                                "type": "number"
+                            },
+                            "trainingAllowance": {
+                                "type": "number"
+                            },
+                            "totalExpenditure": {
+                                "type": "integer"
+                            },
+                            "dailyAdjustment": {
+                                "type": "integer"
+                            },
+                            "energyKcal": {
+                                "type": "integer"
+                            },
+                            "proteinGrams": {
+                                "type": "integer"
+                            },
+                            "carbohydrateGrams": {
+                                "type": "integer"
+                            },
+                            "fatGrams": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "description": "Computes suggested daily targets (Mifflin-St Jeor); nothing is saved."
+            },
+            "EnergyEstimate_noid": {
+                "type": "object",
+                "required": [
+                    "age",
+                    "sex",
+                    "heightCm",
+                    "weightKg",
+                    "lifestyle",
+                    "trainingSessionsPerWeek",
+                    "goal",
+                    "weeklyWeightChangeKg",
+                    "basalMetabolicRate",
+                    "activityLevel",
+                    "trainingAllowance",
+                    "totalExpenditure",
+                    "dailyAdjustment",
+                    "energyKcal",
+                    "proteinGrams",
+                    "carbohydrateGrams",
+                    "fatGrams"
+                ],
+                "properties": {
+                    "age": {
+                        "type": "integer"
+                    },
+                    "sex": {
+                        "type": "string",
+                        "enum": [
+                            "female",
+                            "male"
+                        ]
+                    },
+                    "heightCm": {
+                        "type": "integer"
+                    },
+                    "weightKg": {
+                        "type": "number"
+                    },
+                    "lifestyle": {
+                        "type": "string",
+                        "enum": [
+                            "sedentary",
+                            "light",
+                            "active",
+                            "very_active"
+                        ]
+                    },
+                    "trainingSessionsPerWeek": {
+                        "type": "integer"
+                    },
+                    "goal": {
+                        "type": "string",
+                        "enum": [
+                            "bulk",
+                            "maintain",
+                            "cut"
+                        ]
+                    },
+                    "weeklyWeightChangeKg": {
+                        "type": "number"
+                    },
+                    "basalMetabolicRate": {
+                        "type": "integer"
+                    },
+                    "activityLevel": {
+                        "type": "number"
+                    },
+                    "trainingAllowance": {
+                        "type": "number"
+                    },
+                    "totalExpenditure": {
+                        "type": "integer"
+                    },
+                    "dailyAdjustment": {
+                        "type": "integer"
+                    },
+                    "energyKcal": {
+                        "type": "integer"
+                    },
+                    "proteinGrams": {
+                        "type": "integer"
+                    },
+                    "carbohydrateGrams": {
+                        "type": "integer"
+                    },
+                    "fatGrams": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "Entry": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "slot",
+                    "foodId",
+                    "recipeId",
+                    "name",
+                    "state",
+                    "grams",
+                    "nutrients",
+                    "per100g",
+                    "loggedAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "slot": {
+                        "type": "string",
+                        "enum": [
+                            "breakfast",
+                            "lunch",
+                            "snack",
+                            "gainer",
+                            "dinner"
+                        ]
+                    },
+                    "foodId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "recipeId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "raw",
+                            "cooked",
+                            "not_applicable"
+                        ]
+                    },
+                    "grams": {
+                        "type": "number"
+                    },
+                    "nutrients": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    },
+                    "per100g": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    },
+                    "loggedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "Entry.jsonld": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "slot",
+                    "foodId",
+                    "recipeId",
+                    "name",
+                    "state",
+                    "grams",
+                    "nutrients",
+                    "per100g",
+                    "loggedAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "slot": {
+                        "type": "string",
+                        "enum": [
+                            "breakfast",
+                            "lunch",
+                            "snack",
+                            "gainer",
+                            "dinner"
+                        ]
+                    },
+                    "foodId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "recipeId": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "raw",
+                            "cooked",
+                            "not_applicable"
+                        ]
+                    },
+                    "grams": {
+                        "type": "number"
+                    },
+                    "nutrients": {
+                        "$ref": "#/components/schemas/Nutrients.jsonld"
+                    },
+                    "per100g": {
+                        "$ref": "#/components/schemas/Nutrients.jsonld"
+                    },
+                    "loggedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
             "Error": {
                 "type": "object",
                 "description": "A representation of common errors.",
@@ -1968,6 +4740,484 @@
                     }
                 ],
                 "description": "A representation of common errors."
+            },
+            "EstimateInput": {
+                "type": "object",
+                "properties": {
+                    "sex": {
+                        "enum": [
+                            "female",
+                            "male"
+                        ],
+                        "default": "male",
+                        "type": "string"
+                    },
+                    "birthDate": {
+                        "externalDocs": {
+                            "url": "https://schema.org/Date"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "heightCm": {
+                        "minimum": 100,
+                        "maximum": 250,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "weightKg": {
+                        "minimum": 25,
+                        "maximum": 350,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "lifestyle": {
+                        "enum": [
+                            "sedentary",
+                            "light",
+                            "active",
+                            "very_active"
+                        ],
+                        "default": "sedentary",
+                        "type": "string"
+                    },
+                    "trainingSessionsPerWeek": {
+                        "minimum": 0,
+                        "maximum": 14,
+                        "default": 0,
+                        "type": "integer"
+                    },
+                    "goal": {
+                        "enum": [
+                            "bulk",
+                            "maintain",
+                            "cut"
+                        ],
+                        "default": "maintain",
+                        "type": "string"
+                    },
+                    "weeklyWeightChangeKg": {
+                        "minimum": -1,
+                        "maximum": 1,
+                        "default": 0,
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "birthDate",
+                    "heightCm",
+                    "weightKg"
+                ]
+            },
+            "FavoriteMeal": {
+                "type": "object",
+                "description": "Favourite meals, by name, with their current values.",
+                "required": [
+                    "id",
+                    "name",
+                    "items",
+                    "totals"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FavoriteMealItem"
+                        }
+                    },
+                    "totals": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    }
+                }
+            },
+            "FavoriteMeal.SaveFavoriteInput": {
+                "type": "object",
+                "description": "Keeps what was logged in a meal of a day as a favourite.",
+                "required": [
+                    "name",
+                    "day"
+                ],
+                "properties": {
+                    "name": {
+                        "maxLength": 100,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "day": {
+                        "externalDocs": {
+                            "url": "https://schema.org/Date"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "slot": {
+                        "enum": [
+                            "breakfast",
+                            "lunch",
+                            "snack",
+                            "gainer",
+                            "dinner"
+                        ],
+                        "default": "breakfast",
+                        "type": "string"
+                    }
+                }
+            },
+            "FavoriteMeal.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "name",
+                            "items",
+                            "totals"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/FavoriteMealItem.jsonld"
+                                }
+                            },
+                            "totals": {
+                                "$ref": "#/components/schemas/Nutrients.jsonld"
+                            }
+                        }
+                    }
+                ],
+                "description": "Favourite meals, by name, with their current values."
+            },
+            "FavoriteMealItem": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "grams",
+                    "nutrients",
+                    "recipe"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "grams": {
+                        "type": "number"
+                    },
+                    "nutrients": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    },
+                    "recipe": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "FavoriteMealItem.jsonld": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "grams",
+                    "nutrients",
+                    "recipe"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "grams": {
+                        "type": "number"
+                    },
+                    "nutrients": {
+                        "$ref": "#/components/schemas/Nutrients.jsonld"
+                    },
+                    "recipe": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Food": {
+                "type": "object",
+                "description": "Searches the foods the user can log (CIQUAL and their own), best matches first.",
+                "required": [
+                    "id",
+                    "source",
+                    "name",
+                    "brand",
+                    "category",
+                    "state",
+                    "per100g",
+                    "portions",
+                    "editable"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "source": {
+                        "type": "string",
+                        "enum": [
+                            "ciqual",
+                            "custom"
+                        ]
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "brand": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "category": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "raw",
+                            "cooked",
+                            "not_applicable"
+                        ]
+                    },
+                    "per100g": {
+                        "$ref": "#/components/schemas/Composition"
+                    },
+                    "portions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FoodPortion"
+                        }
+                    },
+                    "editable": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Food.CustomFoodInput": {
+                "type": "object",
+                "description": "Creates a custom food (a packaged product, a food missing from CIQUAL).",
+                "required": [
+                    "name",
+                    "energyKcal",
+                    "protein",
+                    "carbohydrate",
+                    "fat"
+                ],
+                "properties": {
+                    "name": {
+                        "maxLength": 200,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "brand": {
+                        "maxLength": 100,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "state": {
+                        "enum": [
+                            "raw",
+                            "cooked",
+                            "not_applicable"
+                        ],
+                        "default": "not_applicable",
+                        "type": "string"
+                    },
+                    "energyKcal": {
+                        "minimum": 0,
+                        "maximum": 950,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "protein": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "carbohydrate": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "fat": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "fibre": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "sugars": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "saturatedFat": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "salt": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "portions": {
+                        "maxItems": 10,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PortionInput"
+                        }
+                    }
+                }
+            },
+            "Food.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "source",
+                            "name",
+                            "brand",
+                            "category",
+                            "state",
+                            "per100g",
+                            "portions",
+                            "editable"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "source": {
+                                "type": "string",
+                                "enum": [
+                                    "ciqual",
+                                    "custom"
+                                ]
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "brand": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "category": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "state": {
+                                "type": "string",
+                                "enum": [
+                                    "raw",
+                                    "cooked",
+                                    "not_applicable"
+                                ]
+                            },
+                            "per100g": {
+                                "$ref": "#/components/schemas/Composition.jsonld"
+                            },
+                            "portions": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/FoodPortion.jsonld"
+                                }
+                            },
+                            "editable": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                ],
+                "description": "Searches the foods the user can log (CIQUAL and their own), best matches first."
+            },
+            "FoodPortion": {
+                "type": "object",
+                "required": [
+                    "label",
+                    "grams"
+                ],
+                "properties": {
+                    "label": {
+                        "type": "string"
+                    },
+                    "grams": {
+                        "type": "number"
+                    }
+                }
+            },
+            "FoodPortion.jsonld": {
+                "type": "object",
+                "required": [
+                    "label",
+                    "grams"
+                ],
+                "properties": {
+                    "label": {
+                        "type": "string"
+                    },
+                    "grams": {
+                        "type": "number"
+                    }
+                }
             },
             "Health": {
                 "type": "object",
@@ -2217,6 +5467,1119 @@
                     "@type"
                 ]
             },
+            "IngredientInput": {
+                "type": "object",
+                "required": [
+                    "foodId",
+                    "grams"
+                ],
+                "properties": {
+                    "foodId": {
+                        "format": "uuid",
+                        "externalDocs": {
+                            "url": "https://schema.org/identifier"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "grams": {
+                        "minimum": 0,
+                        "exclusiveMinimum": 0,
+                        "maximum": 5000,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "JournalEntry": {
+                "type": "object",
+                "description": "Removes an entry.",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "JournalEntry.CorrectEntryInput": {
+                "type": "object",
+                "description": "Corrects the quantity, or moves the entry to another meal or day; answers with that day.",
+                "required": [
+                    "day",
+                    "grams"
+                ],
+                "properties": {
+                    "day": {
+                        "externalDocs": {
+                            "url": "https://schema.org/Date"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "slot": {
+                        "enum": [
+                            "breakfast",
+                            "lunch",
+                            "snack",
+                            "gainer",
+                            "dinner"
+                        ],
+                        "default": "breakfast",
+                        "type": "string"
+                    },
+                    "grams": {
+                        "minimum": 0,
+                        "exclusiveMinimum": 0,
+                        "maximum": 5000,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "JournalEntry.LogFavoriteInput": {
+                "type": "object",
+                "description": "Logs every item of a favourite meal in a meal of a day, in one go. Answers with the day.",
+                "required": [
+                    "day"
+                ],
+                "properties": {
+                    "day": {
+                        "externalDocs": {
+                            "url": "https://schema.org/Date"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "slot": {
+                        "enum": [
+                            "breakfast",
+                            "lunch",
+                            "snack",
+                            "gainer",
+                            "dinner"
+                        ],
+                        "default": "breakfast",
+                        "type": "string"
+                    }
+                }
+            },
+            "JournalEntry.LogFoodInput": {
+                "type": "object",
+                "description": "Logs a quantity of a food in a meal; the food's values are copied into the entry. Answers with the day.",
+                "properties": {
+                    "foodId": {
+                        "format": "uuid",
+                        "externalDocs": {
+                            "url": "https://schema.org/identifier"
+                        },
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "recipeId": {
+                        "format": "uuid",
+                        "externalDocs": {
+                            "url": "https://schema.org/identifier"
+                        },
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "day": {
+                        "externalDocs": {
+                            "url": "https://schema.org/Date"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "slot": {
+                        "enum": [
+                            "breakfast",
+                            "lunch",
+                            "snack",
+                            "gainer",
+                            "dinner"
+                        ],
+                        "default": "breakfast",
+                        "type": "string"
+                    },
+                    "grams": {
+                        "minimum": 0,
+                        "exclusiveMinimum": 0,
+                        "maximum": 5000,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                },
+                "required": [
+                    "day",
+                    "grams"
+                ]
+            },
+            "JournalEntry.LogFoodsInput": {
+                "type": "object",
+                "description": "Logs several foods in one meal at once, all or nothing (a Meal Builder proposal). Answers with the day.",
+                "required": [
+                    "day"
+                ],
+                "properties": {
+                    "day": {
+                        "externalDocs": {
+                            "url": "https://schema.org/Date"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "slot": {
+                        "enum": [
+                            "breakfast",
+                            "lunch",
+                            "snack",
+                            "gainer",
+                            "dinner"
+                        ],
+                        "default": "breakfast",
+                        "type": "string"
+                    },
+                    "items": {
+                        "minItems": 1,
+                        "maxItems": 10,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LogFoodsItemInput"
+                        }
+                    }
+                }
+            },
+            "JournalEntry.NutritionDay": {
+                "type": "object",
+                "description": "Logs a quantity of a food in a meal; the food's values are copied into the entry. Answers with the day.",
+                "required": [
+                    "day",
+                    "totals",
+                    "target",
+                    "meals"
+                ],
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "totals": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    },
+                    "target": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/NutritionTarget_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "meals": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Meal"
+                        }
+                    }
+                }
+            },
+            "JournalEntry.NutritionDay.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "day",
+                            "totals",
+                            "target",
+                            "meals"
+                        ],
+                        "properties": {
+                            "day": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "totals": {
+                                "$ref": "#/components/schemas/Nutrients.jsonld"
+                            },
+                            "target": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/NutritionTarget.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "meals": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Meal.jsonld"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "Logs a quantity of a food in a meal; the food's values are copied into the entry. Answers with the day."
+            },
+            "JournalEntry.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "description": "Removes an entry."
+            },
+            "LogFoodsItemInput": {
+                "type": "object",
+                "required": [
+                    "foodId",
+                    "grams"
+                ],
+                "properties": {
+                    "foodId": {
+                        "format": "uuid",
+                        "externalDocs": {
+                            "url": "https://schema.org/identifier"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "grams": {
+                        "minimum": 0,
+                        "exclusiveMinimum": 0,
+                        "maximum": 5000,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "Meal": {
+                "type": "object",
+                "required": [
+                    "slot",
+                    "share",
+                    "targetEnergyKcal",
+                    "totals",
+                    "entries"
+                ],
+                "properties": {
+                    "slot": {
+                        "type": "string",
+                        "enum": [
+                            "breakfast",
+                            "lunch",
+                            "snack",
+                            "gainer",
+                            "dinner"
+                        ]
+                    },
+                    "share": {
+                        "type": "integer"
+                    },
+                    "targetEnergyKcal": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "totals": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    },
+                    "entries": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Entry"
+                        }
+                    }
+                }
+            },
+            "Meal.jsonld": {
+                "type": "object",
+                "required": [
+                    "slot",
+                    "share",
+                    "targetEnergyKcal",
+                    "totals",
+                    "entries"
+                ],
+                "properties": {
+                    "slot": {
+                        "type": "string",
+                        "enum": [
+                            "breakfast",
+                            "lunch",
+                            "snack",
+                            "gainer",
+                            "dinner"
+                        ]
+                    },
+                    "share": {
+                        "type": "integer"
+                    },
+                    "targetEnergyKcal": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "totals": {
+                        "$ref": "#/components/schemas/Nutrients.jsonld"
+                    },
+                    "entries": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Entry.jsonld"
+                        }
+                    }
+                }
+            },
+            "MealBuilder": {
+                "type": "object",
+                "description": "Up to 3 meals, from the user's usual foods and a few staples, that fill what is left of the day (or of one meal, per the meal split).",
+                "required": [
+                    "day",
+                    "slot",
+                    "remaining",
+                    "proposals"
+                ],
+                "properties": {
+                    "day": {
+                        "type": "string"
+                    },
+                    "slot": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "breakfast",
+                            "lunch",
+                            "snack",
+                            "gainer",
+                            "dinner",
+                            null
+                        ]
+                    },
+                    "remaining": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Nutrients"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "proposals": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Proposal"
+                        }
+                    }
+                }
+            },
+            "MealBuilder.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "day",
+                            "slot",
+                            "remaining",
+                            "proposals"
+                        ],
+                        "properties": {
+                            "day": {
+                                "type": "string"
+                            },
+                            "slot": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "breakfast",
+                                    "lunch",
+                                    "snack",
+                                    "gainer",
+                                    "dinner",
+                                    null
+                                ]
+                            },
+                            "remaining": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Nutrients.jsonld"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "proposals": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Proposal.jsonld"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "Up to 3 meals, from the user's usual foods and a few staples, that fill what is left of the day (or of one meal, per the meal split)."
+            },
+            "MealSplit": {
+                "type": "object",
+                "description": "How the daily calories are spread over meals.",
+                "required": [
+                    "breakfast",
+                    "lunch",
+                    "snack",
+                    "gainer",
+                    "dinner"
+                ],
+                "properties": {
+                    "breakfast": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "default": 0,
+                        "type": "integer"
+                    },
+                    "lunch": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "default": 0,
+                        "type": "integer"
+                    },
+                    "snack": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "default": 0,
+                        "type": "integer"
+                    },
+                    "gainer": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "default": 0,
+                        "type": "integer"
+                    },
+                    "dinner": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "default": 0,
+                        "type": "integer"
+                    }
+                }
+            },
+            "MealSplit.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "breakfast",
+                            "lunch",
+                            "snack",
+                            "gainer",
+                            "dinner"
+                        ],
+                        "properties": {
+                            "breakfast": {
+                                "minimum": 0,
+                                "maximum": 100,
+                                "default": 0,
+                                "type": "integer"
+                            },
+                            "lunch": {
+                                "minimum": 0,
+                                "maximum": 100,
+                                "default": 0,
+                                "type": "integer"
+                            },
+                            "snack": {
+                                "minimum": 0,
+                                "maximum": 100,
+                                "default": 0,
+                                "type": "integer"
+                            },
+                            "gainer": {
+                                "minimum": 0,
+                                "maximum": 100,
+                                "default": 0,
+                                "type": "integer"
+                            },
+                            "dinner": {
+                                "minimum": 0,
+                                "maximum": 100,
+                                "default": 0,
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "description": "How the daily calories are spread over meals."
+            },
+            "Nutrients": {
+                "type": "object",
+                "required": [
+                    "energyKcal",
+                    "protein",
+                    "carbohydrate",
+                    "fat",
+                    "fibre"
+                ],
+                "properties": {
+                    "energyKcal": {
+                        "type": "number"
+                    },
+                    "protein": {
+                        "type": "number"
+                    },
+                    "carbohydrate": {
+                        "type": "number"
+                    },
+                    "fat": {
+                        "type": "number"
+                    },
+                    "fibre": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "Nutrients.jsonld": {
+                "type": "object",
+                "required": [
+                    "energyKcal",
+                    "protein",
+                    "carbohydrate",
+                    "fat",
+                    "fibre"
+                ],
+                "properties": {
+                    "energyKcal": {
+                        "type": "number"
+                    },
+                    "protein": {
+                        "type": "number"
+                    },
+                    "carbohydrate": {
+                        "type": "number"
+                    },
+                    "fat": {
+                        "type": "number"
+                    },
+                    "fibre": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "NutritionAverages": {
+                "type": "object",
+                "description": "Daily averages over the last 7 or 30 days (today included), over the days that were logged.",
+                "required": [
+                    "days",
+                    "loggedDays",
+                    "dailyAverage",
+                    "currentTarget"
+                ],
+                "properties": {
+                    "days": {
+                        "type": "integer"
+                    },
+                    "loggedDays": {
+                        "type": "integer"
+                    },
+                    "dailyAverage": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Nutrients"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "currentTarget": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/NutritionTarget_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                }
+            },
+            "NutritionAverages.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "days",
+                            "loggedDays",
+                            "dailyAverage",
+                            "currentTarget"
+                        ],
+                        "properties": {
+                            "days": {
+                                "type": "integer"
+                            },
+                            "loggedDays": {
+                                "type": "integer"
+                            },
+                            "dailyAverage": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Nutrients.jsonld"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "currentTarget": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/NutritionTarget.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "Daily averages over the last 7 or 30 days (today included), over the days that were logged."
+            },
+            "NutritionDay": {
+                "type": "object",
+                "description": "The journal of a calendar day (YYYY-MM-DD, the user's local day).",
+                "required": [
+                    "day",
+                    "totals",
+                    "target",
+                    "meals"
+                ],
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "totals": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    },
+                    "target": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/NutritionTarget_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "meals": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Meal"
+                        }
+                    }
+                }
+            },
+            "NutritionDay.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "day",
+                            "totals",
+                            "target",
+                            "meals"
+                        ],
+                        "properties": {
+                            "day": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "totals": {
+                                "$ref": "#/components/schemas/Nutrients.jsonld"
+                            },
+                            "target": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/NutritionTarget.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "meals": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Meal.jsonld"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "The journal of a calendar day (YYYY-MM-DD, the user's local day)."
+            },
+            "NutritionTarget": {
+                "type": "object",
+                "description": "Target history, most recent first (the first one effective on or before today is in force).",
+                "required": [
+                    "id",
+                    "effectiveFrom",
+                    "energyKcal",
+                    "proteinGrams",
+                    "carbohydrateGrams",
+                    "fatGrams",
+                    "source",
+                    "estimate",
+                    "setAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "effectiveFrom": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "energyKcal": {
+                        "type": "integer"
+                    },
+                    "proteinGrams": {
+                        "type": "integer"
+                    },
+                    "carbohydrateGrams": {
+                        "type": "integer"
+                    },
+                    "fatGrams": {
+                        "type": "integer"
+                    },
+                    "source": {
+                        "type": "string",
+                        "enum": [
+                            "estimate",
+                            "manual",
+                            "coach"
+                        ]
+                    },
+                    "estimate": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/EnergyEstimate_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "setAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "NutritionTarget.TargetInput": {
+                "type": "object",
+                "description": "Sets new daily targets from today (or tomorrow). With the estimate they came from, they are recorded as \"estimate\" when unchanged, \"manual\" otherwise.",
+                "required": [
+                    "effectiveFrom",
+                    "energyKcal",
+                    "proteinGrams",
+                    "carbohydrateGrams",
+                    "fatGrams"
+                ],
+                "properties": {
+                    "effectiveFrom": {
+                        "externalDocs": {
+                            "url": "https://schema.org/Date"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "energyKcal": {
+                        "minimum": 1000,
+                        "maximum": 7000,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "proteinGrams": {
+                        "minimum": 0,
+                        "maximum": 1000,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "carbohydrateGrams": {
+                        "minimum": 0,
+                        "maximum": 1500,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "fatGrams": {
+                        "minimum": 0,
+                        "maximum": 700,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "estimate": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/EstimateInput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                }
+            },
+            "NutritionTarget.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "effectiveFrom",
+                            "energyKcal",
+                            "proteinGrams",
+                            "carbohydrateGrams",
+                            "fatGrams",
+                            "source",
+                            "estimate",
+                            "setAt"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "effectiveFrom": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "energyKcal": {
+                                "type": "integer"
+                            },
+                            "proteinGrams": {
+                                "type": "integer"
+                            },
+                            "carbohydrateGrams": {
+                                "type": "integer"
+                            },
+                            "fatGrams": {
+                                "type": "integer"
+                            },
+                            "source": {
+                                "type": "string",
+                                "enum": [
+                                    "estimate",
+                                    "manual",
+                                    "coach"
+                                ]
+                            },
+                            "estimate": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/EnergyEstimate.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "setAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "Target history, most recent first (the first one effective on or before today is in force)."
+            },
+            "NutritionTarget.jsonld_noid": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchemaWithoutId"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "effectiveFrom",
+                            "energyKcal",
+                            "proteinGrams",
+                            "carbohydrateGrams",
+                            "fatGrams",
+                            "source",
+                            "estimate",
+                            "setAt"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "effectiveFrom": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "energyKcal": {
+                                "type": "integer"
+                            },
+                            "proteinGrams": {
+                                "type": "integer"
+                            },
+                            "carbohydrateGrams": {
+                                "type": "integer"
+                            },
+                            "fatGrams": {
+                                "type": "integer"
+                            },
+                            "source": {
+                                "type": "string",
+                                "enum": [
+                                    "estimate",
+                                    "manual",
+                                    "coach"
+                                ]
+                            },
+                            "estimate": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/EnergyEstimate.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "setAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "Daily targets from a day on. Never edited: each change is a new entry of the history."
+            },
+            "NutritionTarget_noid": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "effectiveFrom",
+                    "energyKcal",
+                    "proteinGrams",
+                    "carbohydrateGrams",
+                    "fatGrams",
+                    "source",
+                    "estimate",
+                    "setAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "effectiveFrom": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "energyKcal": {
+                        "type": "integer"
+                    },
+                    "proteinGrams": {
+                        "type": "integer"
+                    },
+                    "carbohydrateGrams": {
+                        "type": "integer"
+                    },
+                    "fatGrams": {
+                        "type": "integer"
+                    },
+                    "source": {
+                        "type": "string",
+                        "enum": [
+                            "estimate",
+                            "manual",
+                            "coach"
+                        ]
+                    },
+                    "estimate": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/EnergyEstimate_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "setAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
             "PasswordChange": {
                 "type": "object",
                 "description": "Changes the password; every other device is signed out.",
@@ -2270,6 +6633,366 @@
                         "maxLength": 254,
                         "default": "",
                         "type": "string"
+                    }
+                }
+            },
+            "PortionInput": {
+                "type": "object",
+                "required": [
+                    "label",
+                    "grams"
+                ],
+                "properties": {
+                    "label": {
+                        "maxLength": 40,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "grams": {
+                        "minimum": 0,
+                        "exclusiveMinimum": 0,
+                        "maximum": 5000,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "Proposal": {
+                "type": "object",
+                "required": [
+                    "items",
+                    "totals",
+                    "gapKcal"
+                ],
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProposalItem"
+                        }
+                    },
+                    "totals": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    },
+                    "gapKcal": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "Proposal.jsonld": {
+                "type": "object",
+                "required": [
+                    "items",
+                    "totals",
+                    "gapKcal"
+                ],
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProposalItem.jsonld"
+                        }
+                    },
+                    "totals": {
+                        "$ref": "#/components/schemas/Nutrients.jsonld"
+                    },
+                    "gapKcal": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "ProposalItem": {
+                "type": "object",
+                "required": [
+                    "foodId",
+                    "name",
+                    "role",
+                    "grams",
+                    "nutrients"
+                ],
+                "properties": {
+                    "foodId": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "protein",
+                            "carbohydrate",
+                            "fat",
+                            "side"
+                        ]
+                    },
+                    "grams": {
+                        "type": "number"
+                    },
+                    "nutrients": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    }
+                }
+            },
+            "ProposalItem.jsonld": {
+                "type": "object",
+                "required": [
+                    "foodId",
+                    "name",
+                    "role",
+                    "grams",
+                    "nutrients"
+                ],
+                "properties": {
+                    "foodId": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "protein",
+                            "carbohydrate",
+                            "fat",
+                            "side"
+                        ]
+                    },
+                    "grams": {
+                        "type": "number"
+                    },
+                    "nutrients": {
+                        "$ref": "#/components/schemas/Nutrients.jsonld"
+                    }
+                }
+            },
+            "Recipe": {
+                "type": "object",
+                "description": "The user's recipes, by name, with their composition.",
+                "required": [
+                    "id",
+                    "name",
+                    "servings",
+                    "cookedWeightGrams",
+                    "ingredients",
+                    "totalGrams",
+                    "servingGrams",
+                    "total",
+                    "perServing",
+                    "per100g"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "servings": {
+                        "type": "integer"
+                    },
+                    "cookedWeightGrams": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "ingredients": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RecipeIngredient"
+                        }
+                    },
+                    "totalGrams": {
+                        "type": "number"
+                    },
+                    "servingGrams": {
+                        "type": "number"
+                    },
+                    "total": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    },
+                    "perServing": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    },
+                    "per100g": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    }
+                }
+            },
+            "Recipe.RecipeInput": {
+                "type": "object",
+                "description": "Creates a recipe (1 to 50 ingredients, 1 to 50 servings).",
+                "required": [
+                    "name",
+                    "servings"
+                ],
+                "properties": {
+                    "name": {
+                        "maxLength": 200,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "servings": {
+                        "minimum": 1,
+                        "maximum": 50,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "cookedWeightGrams": {
+                        "minimum": 0,
+                        "exclusiveMinimum": 0,
+                        "maximum": 20000,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "ingredients": {
+                        "minItems": 1,
+                        "maxItems": 50,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/IngredientInput"
+                        }
+                    }
+                }
+            },
+            "Recipe.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "name",
+                            "servings",
+                            "cookedWeightGrams",
+                            "ingredients",
+                            "totalGrams",
+                            "servingGrams",
+                            "total",
+                            "perServing",
+                            "per100g"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "servings": {
+                                "type": "integer"
+                            },
+                            "cookedWeightGrams": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "ingredients": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/RecipeIngredient.jsonld"
+                                }
+                            },
+                            "totalGrams": {
+                                "type": "number"
+                            },
+                            "servingGrams": {
+                                "type": "number"
+                            },
+                            "total": {
+                                "$ref": "#/components/schemas/Nutrients.jsonld"
+                            },
+                            "perServing": {
+                                "$ref": "#/components/schemas/Nutrients.jsonld"
+                            },
+                            "per100g": {
+                                "$ref": "#/components/schemas/Nutrients.jsonld"
+                            }
+                        }
+                    }
+                ],
+                "description": "The user's recipes, by name, with their composition."
+            },
+            "RecipeIngredient": {
+                "type": "object",
+                "required": [
+                    "foodId",
+                    "name",
+                    "state",
+                    "grams",
+                    "nutrients",
+                    "available"
+                ],
+                "properties": {
+                    "foodId": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "raw",
+                            "cooked",
+                            "not_applicable"
+                        ]
+                    },
+                    "grams": {
+                        "type": "number"
+                    },
+                    "nutrients": {
+                        "$ref": "#/components/schemas/Nutrients"
+                    },
+                    "available": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "RecipeIngredient.jsonld": {
+                "type": "object",
+                "required": [
+                    "foodId",
+                    "name",
+                    "state",
+                    "grams",
+                    "nutrients",
+                    "available"
+                ],
+                "properties": {
+                    "foodId": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "raw",
+                            "cooked",
+                            "not_applicable"
+                        ]
+                    },
+                    "grams": {
+                        "type": "number"
+                    },
+                    "nutrients": {
+                        "$ref": "#/components/schemas/Nutrients.jsonld"
+                    },
+                    "available": {
+                        "type": "boolean"
                     }
                 }
             },
@@ -2667,6 +7390,46 @@
         {
             "name": "TwoFactorSetup",
             "description": "Resource 'TwoFactorSetup' operations."
+        },
+        {
+            "name": "MealBuilder",
+            "description": "Meal Builder (spec \u00a728): what is left, and meals that fill it. Add one with POST /nutrition/entries/batch."
+        },
+        {
+            "name": "FavoriteMeal",
+            "description": "A meal eaten often, logged again in one go (POST /nutrition/favorite-meals/{id}/log)."
+        },
+        {
+            "name": "Food",
+            "description": "Resource 'Food' operations."
+        },
+        {
+            "name": "JournalEntry",
+            "description": "Journal writes. Each answers with the NutritionDay it changed (read an entry through its day)."
+        },
+        {
+            "name": "NutritionAverages",
+            "description": "Daily averages over the logged days of the last 7 or 30 days: a day with nothing logged is\nleft out rather than counted as a day without eating."
+        },
+        {
+            "name": "NutritionDay",
+            "description": "A day of the food journal, meal by meal, against the target in force that day.\nJournal writes (JournalEntry) answer with the day they changed, so the screen is redrawn from one response."
+        },
+        {
+            "name": "Recipe",
+            "description": "A dish made of foods. Its values follow its foods; journal entries keep those of the day they were logged."
+        },
+        {
+            "name": "EnergyEstimate",
+            "description": "The calculation shown step by step: BMR \u2192 expenditure \u2192 surplus/deficit \u2192 targets."
+        },
+        {
+            "name": "MealSplit",
+            "description": "Percent of the day's calories planned per meal; the five shares add up to 100."
+        },
+        {
+            "name": "NutritionTarget",
+            "description": "Daily targets from a day on. Never edited: each change is a new entry of the history."
         },
         {
             "name": "Health",

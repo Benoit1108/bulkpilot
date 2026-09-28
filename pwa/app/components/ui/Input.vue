@@ -45,7 +45,11 @@ onMounted(() => {
 
 defineExpose({ focus: () => field.value?.focus() })
 const actualType = computed(() => (props.type === 'password' && revealed.value ? 'text' : props.type))
-const describedBy = computed(() => [props.hint && `${id}-hint`, props.error && `${id}-error`].filter(Boolean).join(' ') || undefined)
+const describedBy = computed(() => [props.suffix && `${id}-suffix`, props.hint && `${id}-hint`, props.error && `${id}-error`].filter(Boolean).join(' ') || undefined)
+// Numbers are typed as text with a numeric keyboard: a native number field drops "12,5" typed
+// with a French keyboard on some phones. parseAmount() reads both "12,5" and "12.5".
+const nativeType = computed(() => (props.type === 'number' ? 'text' : actualType.value))
+const keyboard = computed(() => props.inputmode ?? (props.type === 'number' ? 'decimal' : undefined))
 </script>
 
 <template>
@@ -63,12 +67,12 @@ const describedBy = computed(() => [props.hint && `${id}-hint`, props.error && `
         ref="field"
         v-model="model"
         class="ui-input__field"
-        :type="actualType"
+        :type="nativeType"
         :autocomplete="autocomplete"
-        :inputmode="inputmode"
+        :inputmode="keyboard"
         :required="required"
-        :min="min"
-        :max="max"
+        :min="type === 'number' ? undefined : min"
+        :max="type === 'number' ? undefined : max"
         :maxlength="maxlength"
         :pattern="pattern"
         :autocapitalize="literal ? 'off' : undefined"
@@ -78,8 +82,8 @@ const describedBy = computed(() => [props.hint && `${id}-hint`, props.error && `
       >
       <span
         v-if="suffix"
+        :id="`${id}-suffix`"
         class="ui-input__suffix"
-        aria-hidden="true"
       >{{ suffix }}</span>
       <button
         v-if="type === 'password'"

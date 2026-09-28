@@ -25,7 +25,7 @@ help: ## List available targets
 	@grep -hE '^[a-zA-Z_:-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[35m%-18s\033[0m %s\n", $$1, $$2}'
 
 ## —— Development ————————————————————————————————————————————————
-.PHONY: up down restart logs sh-php sh-pwa composer db-migrate db-diff cert
+.PHONY: up down restart logs sh-php sh-pwa composer db-migrate ciqual db-diff cert
 up: ## Build and start the dev stack (https://localhost)
 	$(DC_DEV) up $(UP_FLAGS) --wait
 
@@ -50,6 +50,9 @@ sh-pwa: ## Shell in the Nuxt container
 db-migrate: ## Run Doctrine migrations
 	$(PHP) bin/console doctrine:migrations:migrate --no-interaction
 
+ciqual: ## Import (or refresh) the CIQUAL food table from the official ANSES download
+	$(PHP) bin/console nutrition:catalogue:import --no-debug
+
 db-diff: ## Generate a migration from mapping changes
 	$(PHP) bin/console doctrine:migrations:diff
 
@@ -64,6 +67,8 @@ ERROR_CODES = grep -rhoE "return '[a-z_]+\.[a-z_.]+';" api/src | sed -E "s/retur
 	| python3 -c 'import json,sys; print(json.dumps([l.strip() for l in sys.stdin if l.strip()], indent=2))'
 
 openapi: ## Export the OpenAPI spec and error codes, regenerate the TypeScript API types
+	@# API Platform caches resource and property metadata: a changed DTO would be exported stale.
+	$(PHP) bin/console cache:clear -q
 	$(PHP) bin/console api:openapi:export > pwa/openapi/openapi.json
 	$(ERROR_CODES) > pwa/openapi/error-codes.json
 	$(PWA) pnpm api:types
@@ -118,11 +123,13 @@ vitest: ## Frontend unit & component tests, with coverage thresholds
 ## —— End-to-end ————————————————————————————————————————————————
 .PHONY: e2e e2e-prod
 e2e: ## Playwright against the running dev stack (quick feedback; Nuxt DevTools overlay is present)
+	$(DC_DEV) exec -T php bin/console nutrition:catalogue:import tests/Fixtures/ciqual --no-debug -q
 	$(DC_DEV) --profile e2e run --rm e2e
 
 e2e-prod: ## Build the production image and run Playwright against it on a throwaway stack
 	@trap '$(DC_TEST) down --volumes --remove-orphans' EXIT; \
 	$(DC_TEST) up $(UP_FLAGS) --wait php database mailer && \
+	$(DC_TEST) exec -T php bin/console nutrition:catalogue:import /fixtures/ciqual -q && \
 	CI=1 $(DC_TEST) --profile e2e run --rm e2e
 
 ## —— CI ————————————————————————————————————————————————————————
@@ -132,5 +139,6 @@ ci: ci-qa e2e-prod ## Full pipeline locally: QA on the dev image, then E2E on th
 
 ci-qa: ## `make qa` on an isolated dev stack (random host ports)
 	@trap '$(DC_CI) down --volumes --remove-orphans' EXIT; \
-	POSTGRES_PORT=0 MAILPIT_PORT=0 HTTP_PORT=0 HTTPS_PORT=0 HTTP3_PORT=0 $(DC_CI) up $(UP_FLAGS) --wait && \
+	POSTGRES_PORT=0 MAILPIT_PORT=0 HTTP_PORT=0 HTTPS_PORT=0 HTTP3_PORT=0 $(DC_CI) up $(UP_FLAGS) --wait \
+		|| { $(DC_CI) logs --tail=80 php; exit 1; } && \
 	$(MAKE) --no-print-directory qa DC='$(DC_CI)'

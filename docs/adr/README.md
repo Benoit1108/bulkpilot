@@ -22,3 +22,6 @@ Format : contexte → décision → conséquences. Un ADR accepté n'est pas ré
 | [0016](0016-external-identity-providers.md) | Fournisseurs d'identité externes (Google, Apple) | Accepté |
 | [0017](0017-two-factor-authentication.md) | Double authentification TOTP | Accepté |
 | [0018](0018-emails-after-response.md) | Emails envoyés après la réponse | Accepté |
+| [0019](0019-ciqual-food-catalogue.md) | Table CIQUAL comme base d'aliments génériques | Accepté |
+| [0020](0020-journal-snapshots-and-versioned-targets.md) | Journal en instantanés, objectifs versionnés, jour local | Accepté |
+| [0021](0021-deterministic-meal-builder.md) | Meal Builder déterministe | Accepté |

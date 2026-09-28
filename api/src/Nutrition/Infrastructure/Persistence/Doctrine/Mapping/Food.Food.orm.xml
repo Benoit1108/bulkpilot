@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Nutrition\Domain\Food\Food" table="foods">
+        <!-- search_key: a pg_trgm GIN index in the migration (the ORM cannot express the access method) -->
+        <indexes>
+            <index name="foods_search_key_trgm" columns="search_key"/>
+            <index name="foods_owner_idx" columns="owner_id"/>
+        </indexes>
+        <unique-constraints>
+            <unique-constraint name="foods_source_reference_unique" columns="source,source_reference"/>
+        </unique-constraints>
+
+        <id name="id" type="food_id"/>
+        <field name="version" type="integer" version="true"/>
+        <field name="source" length="10" enum-type="App\Nutrition\Domain\Food\FoodSource"/>
+        <field name="sourceReference" length="20" nullable="true"/>
+        <field name="ownerId" type="user_id" nullable="true"/>
+        <field name="name" length="200"/>
+        <field name="brand" length="100" nullable="true"/>
+        <field name="category" length="150" nullable="true"/>
+        <field name="state" length="20" enum-type="App\Nutrition\Domain\Food\FoodState"/>
+        <embedded name="facts" class="App\Nutrition\Domain\Food\NutritionFacts" column-prefix="per100g_"/>
+        <field name="portions" type="food_portions"/>
+        <field name="searchKey" type="text"/>
+        <field name="deletedAt" type="datetimetz_immutable" nullable="true"/>
+    </entity>
+</doctrine-mapping>

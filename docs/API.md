@@ -14,7 +14,7 @@
 | Ressources | Classes de `Presentation/Api`, jamais les entités du domaine. |
 | Écritures | Processor → `CommandBus` ; lectures : Provider → `QueryBus`. |
 | Erreurs | `application/problem+json` (RFC 9457) avec un `code` stable pour les erreurs métier ; jamais de stack trace hors dev. |
-| Validation | Contraintes sur les DTO d'entrée → `422` avec `violations[]`. |
+| Validation | Contraintes sur les DTO d'entrée → `422` avec `violations[]`. Un nombre obligatoire **omis** est refusé sur son champ (jamais lu comme 0) ; `null` explicite sur un champ obligatoire → `400`. |
 | Pagination | Hydra (`hydra:view`) ; taille par défaut 30. |
 | Identifiants | UUID dans les IRIs. |
 | Authentification | Cookie de session httpOnly, `SameSite=Lax`, même origine (phase 1, ADR-0008) — les opérations ne sont donc pas `stateless`. |
@@ -22,6 +22,7 @@
 | Erreurs métier | Les `DomainException` deviennent du problem+json avec leur `code` stable (`identity.invalid_token`…) ; statut selon la catégorie : `NotFound` 404, `Conflict` 409, `AuthenticationFailed` 401, autre règle 422. La PWA traduit le `code`. |
 | CSRF | Requête mutante refusée (403) si `Origin` ≠ l'hôte ou `Sec-Fetch-Site` indique un autre site. |
 | Limitation | 429 + `Retry-After` : connexion (5 / 15 min par IP+email, 30 / 15 min par IP, 50 / h par compte), inscription (5 / h par IP), liens email (10 / h par IP et par adresse), second facteur (5 / 15 min par compte), ressaisie du mot de passe (10 / 15 min par compte). Valeurs par variables `RATE_LIMIT_*`. |
+| Jours | Un jour calendaire est `YYYY-MM-DD` (jour **local** de l'utilisateur, envoyé par la PWA) ; accepté jusqu'à demain (fuseaux en avance) et sur 10 ans d'historique. |
 | Concurrence | 409 `shared.concurrent_update` quand deux requêtes modifient la même chose en même temps. |
 
 ## Endpoints
@@ -48,4 +49,31 @@
 | POST | `/api/me/two-factor/disable` | `{password}` → `204` | connecté |
 | GET | `/api/me/sessions` | Appareils connectés (`current` = celui-ci) | connecté |
 | DELETE | `/api/me/sessions/{id}` | Déconnecte un appareil (404 si inconnu ou à quelqu'un d'autre) → `204` | connecté |
+| GET | `/api/foods?q=&limit=` | Recherche (mots dans n'importe quel ordre, sans accents ni casse, 2 caractères min., 30 résultats max.) : aliments de l'utilisateur, puis noms qui commencent par la requête, puis les plus proches | connecté |
+| GET | `/api/foods/recent` | 20 derniers aliments saisis (encore visibles), le plus récent d'abord | connecté |
+| GET | `/api/foods/custom` | Aliments personnels, par nom | connecté |
+| GET | `/api/foods/{id}` | Un aliment CIQUAL ou personnel (404 si supprimé ou à quelqu'un d'autre) | connecté |
+| POST | `/api/foods` | Crée un aliment personnel (valeurs pour 100 g, portions) → `201 Food` | connecté |
+| PUT | `/api/foods/{id}` | Remplace un aliment personnel ; les entrées déjà saisies gardent leurs valeurs → `Food` | connecté |
+| DELETE | `/api/foods/{id}` | Supprime (soft delete) un aliment personnel ; CIQUAL → 422 `nutrition.invalid_food` | connecté |
+| GET | `/api/nutrition/days/{day}` | Journal du jour `YYYY-MM-DD` (jour local) : totaux, objectif en vigueur ce jour-là, les 5 repas avec leur part de l'objectif | connecté |
+| POST | `/api/nutrition/entries` | `{foodId \| recipeId, day, slot, grams}` (recette : grammes du plat) : copie les valeurs dans l'entrée → `201 NutritionDay` | connecté |
+| POST | `/api/nutrition/entries/batch` | `{day, slot, items: [{foodId, grams}]}` (1 à 10, sinon 422 `nutrition.invalid_batch`) : tout ou rien → `201 NutritionDay` | connecté |
+| GET | `/api/nutrition/meal-builder?day=&slot=` | Meal Builder : ce qui reste (du jour, ou de la part d'un repas) et jusqu'à 3 repas qui le remplissent → `MealBuilder` (`remaining: null` sans objectif) | connecté |
+| PUT | `/api/nutrition/entries/{id}` | `{day, slot, grams}` : corrige ou déplace → le `NutritionDay` d'arrivée | connecté |
+| DELETE | `/api/nutrition/entries/{id}` | → `204` | connecté |
+| GET | `/api/nutrition/averages?days=7\|30&today=` | Moyennes quotidiennes sur les jours **renseignés** des N jours précédant `today` (exclu), objectif en vigueur | connecté |
+| POST | `/api/nutrition/targets/estimate` | Estimation Mifflin-St Jeor détaillée, rien n'est enregistré → `EnergyEstimate` | connecté |
+| GET | `/api/nutrition/targets` | Historique des objectifs (50 derniers), le plus récent d'abord | connecté |
+| POST | `/api/nutrition/targets` | Nouveaux objectifs à partir d'aujourd'hui (ou demain), avec l'estimation d'origine éventuelle → `201 NutritionTarget` | connecté |
+| GET | `/api/recipes` | Recettes de l'utilisateur, avec composition (total, par portion, pour 100 g) | connecté |
+| GET | `/api/recipes/{id}` | Une recette, ingrédient par ingrédient (`available: false` si l'aliment a été supprimé depuis) | connecté |
+| POST | `/api/recipes` | `{name, servings, cookedWeightGrams?, ingredients: [{foodId, grams}]}` → `201 Recipe` | connecté |
+| PUT | `/api/recipes/{id}` | Remplace une recette ; les entrées déjà saisies gardent leurs valeurs → `Recipe` | connecté |
+| DELETE | `/api/recipes/{id}` | Supprime (soft delete) ; les repas favoris qui l'utilisent restent utilisables → `204` | connecté |
+| GET | `/api/nutrition/favorite-meals` | Repas favoris, avec leurs éléments et leurs valeurs actuelles | connecté |
+| POST | `/api/nutrition/favorite-meals` | `{name, day, slot}` : garde ce qui a été saisi dans ce repas → `201 FavoriteMeal` (422 si le repas est vide) | connecté |
+| POST | `/api/nutrition/favorite-meals/{id}/log` | `{day, slot}` : saisit tous ses éléments d'un coup → `201 NutritionDay` | connecté |
+| DELETE | `/api/nutrition/favorite-meals/{id}` | → `204` (le journal n'est pas touché) | connecté |
+| GET / PUT | `/api/nutrition/meal-split` | Répartition des calories par repas (entiers, total 100) | connecté |
 | GET | `/api/health` | État de l'API et de ses dépendances : `200` + `status: ok`, ou `503` + `status: degraded` et le détail `checks` | publique |

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Nutrition\Domain\Recipe\Recipe" table="recipes">
+        <indexes>
+            <index name="recipes_owner_idx" columns="owner_id"/>
+        </indexes>
+
+        <id name="id" type="recipe_id"/>
+        <field name="version" type="integer" version="true"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="name" length="200"/>
+        <field name="servings" type="smallint"/>
+        <field name="cookedWeightGrams" type="float" nullable="true"/>
+        <field name="ingredients" type="recipe_ingredients"/>
+        <field name="createdAt" type="datetimetz_immutable"/>
+        <field name="deletedAt" type="datetimetz_immutable" nullable="true"/>
+    </entity>
+</doctrine-mapping>

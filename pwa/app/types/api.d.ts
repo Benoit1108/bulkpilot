@@ -104,6 +104,162 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/nutrition/targets/estimate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a EnergyEstimate resource.
+         * @description Creates a EnergyEstimate resource.
+         */
+        post: operations["api_nutritiontargetsestimate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/favorite-meals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of FavoriteMeal resources.
+         * @description Retrieves the collection of FavoriteMeal resources.
+         */
+        get: operations["api_nutritionfavorite-meals_get_collection"];
+        put?: never;
+        /**
+         * Creates a FavoriteMeal resource.
+         * @description Creates a FavoriteMeal resource.
+         */
+        post: operations["api_nutritionfavorite-meals_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/favorite-meals/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Removes the FavoriteMeal resource.
+         * @description Removes the FavoriteMeal resource.
+         */
+        delete: operations["api_nutritionfavorite-meals_id_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/foods": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Food resources.
+         * @description Retrieves the collection of Food resources.
+         */
+        get: operations["foods_search"];
+        put?: never;
+        /**
+         * Creates a Food resource.
+         * @description Creates a Food resource.
+         */
+        post: operations["api_foods_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/foods/custom": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Food resources.
+         * @description Retrieves the collection of Food resources.
+         */
+        get: operations["foods_custom"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/foods/recent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Food resources.
+         * @description Retrieves the collection of Food resources.
+         */
+        get: operations["foods_recent"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/foods/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a Food resource.
+         * @description Retrieves a Food resource.
+         */
+        get: operations["api_foods_id_get"];
+        /**
+         * Replaces the Food resource.
+         * @description Replaces the Food resource.
+         */
+        put: operations["api_foods_id_put"];
+        post?: never;
+        /**
+         * Removes the Food resource.
+         * @description Removes the Food resource.
+         */
+        delete: operations["api_foods_id_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -118,6 +274,198 @@ export interface paths {
         get: operations["api_health_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/entries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a JournalEntry resource.
+         * @description Creates a JournalEntry resource.
+         */
+        post: operations["api_nutritionentries_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/entries/batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a JournalEntry resource.
+         * @description Creates a JournalEntry resource.
+         */
+        post: operations["journal_entries_batch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/entries/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replaces the JournalEntry resource.
+         * @description Replaces the JournalEntry resource.
+         */
+        put: operations["api_nutritionentries_id_put"];
+        post?: never;
+        /**
+         * Removes the JournalEntry resource.
+         * @description Removes the JournalEntry resource.
+         */
+        delete: operations["api_nutritionentries_id_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/favorite-meals/{id}/log": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a JournalEntry resource.
+         * @description Creates a JournalEntry resource.
+         */
+        post: operations["favorite_meal_log"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/meal-builder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a MealBuilder resource.
+         * @description Retrieves a MealBuilder resource.
+         */
+        get: operations["api_nutritionmeal-builder_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/meal-split": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a MealSplit resource.
+         * @description Retrieves a MealSplit resource.
+         */
+        get: operations["api_nutritionmeal-split_get"];
+        /**
+         * Replaces the MealSplit resource.
+         * @description Replaces the MealSplit resource.
+         */
+        put: operations["api_nutritionmeal-split_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/averages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a NutritionAverages resource.
+         * @description Retrieves a NutritionAverages resource.
+         */
+        get: operations["api_nutritionaverages_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/days/{day}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a NutritionDay resource.
+         * @description Retrieves a NutritionDay resource.
+         */
+        get: operations["api_nutritiondays_day_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/targets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of NutritionTarget resources.
+         * @description Retrieves the collection of NutritionTarget resources.
+         */
+        get: operations["api_nutritiontargets_get_collection"];
+        put?: never;
+        /**
+         * Creates a NutritionTarget resource.
+         * @description Creates a NutritionTarget resource.
+         */
+        post: operations["api_nutritiontargets_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -179,6 +527,58 @@ export interface paths {
          */
         post: operations["api_authpassword-reset-request_post"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Recipe resources.
+         * @description Retrieves the collection of Recipe resources.
+         */
+        get: operations["api_recipes_get_collection"];
+        put?: never;
+        /**
+         * Creates a Recipe resource.
+         * @description Creates a Recipe resource.
+         */
+        post: operations["api_recipes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a Recipe resource.
+         * @description Retrieves a Recipe resource.
+         */
+        get: operations["api_recipes_id_get"];
+        /**
+         * Replaces the Recipe resource.
+         * @description Replaces the Recipe resource.
+         */
+        put: operations["api_recipes_id_put"];
+        post?: never;
+        /**
+         * Removes the Recipe resource.
+         * @description Removes the Recipe resource.
+         */
+        delete: operations["api_recipes_id_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -464,6 +864,26 @@ export interface components {
             twoFactorEnabled: boolean;
             hasPassword: boolean;
         };
+        Composition: {
+            energyKcal: number;
+            protein: number;
+            carbohydrate: number;
+            fat: number;
+            fibre: number | null;
+            sugars: number | null;
+            saturatedFat: number | null;
+            salt: number | null;
+        };
+        "Composition.jsonld": {
+            energyKcal: number;
+            protein: number;
+            carbohydrate: number;
+            fat: number;
+            fibre: number | null;
+            sugars: number | null;
+            saturatedFat: number | null;
+            salt: number | null;
+        };
         /** @description Unprocessable entity */
         ConstraintViolation: {
             /** @default 422 */
@@ -516,6 +936,153 @@ export interface components {
             /** @default  */
             token: string;
         };
+        /** @description Computes suggested daily targets (Mifflin-St Jeor); nothing is saved. */
+        EnergyEstimate: {
+            age: number;
+            /** @enum {string} */
+            sex: "female" | "male";
+            heightCm: number;
+            weightKg: number;
+            /** @enum {string} */
+            lifestyle: "sedentary" | "light" | "active" | "very_active";
+            trainingSessionsPerWeek: number;
+            /** @enum {string} */
+            goal: "bulk" | "maintain" | "cut";
+            weeklyWeightChangeKg: number;
+            basalMetabolicRate: number;
+            activityLevel: number;
+            trainingAllowance: number;
+            totalExpenditure: number;
+            dailyAdjustment: number;
+            energyKcal: number;
+            proteinGrams: number;
+            carbohydrateGrams: number;
+            fatGrams: number;
+        };
+        /** @description Computes suggested daily targets (Mifflin-St Jeor); nothing is saved. */
+        "EnergyEstimate.EstimateInput": {
+            /**
+             * @default male
+             * @enum {string}
+             */
+            sex: "female" | "male";
+            /** @default  */
+            birthDate: string;
+            heightCm: number | null;
+            weightKg: number | null;
+            /**
+             * @default sedentary
+             * @enum {string}
+             */
+            lifestyle: "sedentary" | "light" | "active" | "very_active";
+            /** @default 0 */
+            trainingSessionsPerWeek: number;
+            /**
+             * @default maintain
+             * @enum {string}
+             */
+            goal: "bulk" | "maintain" | "cut";
+            /** @default 0 */
+            weeklyWeightChangeKg: number;
+        };
+        /** @description Computes suggested daily targets (Mifflin-St Jeor); nothing is saved. */
+        "EnergyEstimate.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            age: number;
+            /** @enum {string} */
+            sex: "female" | "male";
+            heightCm: number;
+            weightKg: number;
+            /** @enum {string} */
+            lifestyle: "sedentary" | "light" | "active" | "very_active";
+            trainingSessionsPerWeek: number;
+            /** @enum {string} */
+            goal: "bulk" | "maintain" | "cut";
+            weeklyWeightChangeKg: number;
+            basalMetabolicRate: number;
+            activityLevel: number;
+            trainingAllowance: number;
+            totalExpenditure: number;
+            dailyAdjustment: number;
+            energyKcal: number;
+            proteinGrams: number;
+            carbohydrateGrams: number;
+            fatGrams: number;
+        };
+        /** @description Computes suggested daily targets (Mifflin-St Jeor); nothing is saved. */
+        "EnergyEstimate.jsonld_noid": components["schemas"]["HydraItemBaseSchemaWithoutId"] & {
+            age: number;
+            /** @enum {string} */
+            sex: "female" | "male";
+            heightCm: number;
+            weightKg: number;
+            /** @enum {string} */
+            lifestyle: "sedentary" | "light" | "active" | "very_active";
+            trainingSessionsPerWeek: number;
+            /** @enum {string} */
+            goal: "bulk" | "maintain" | "cut";
+            weeklyWeightChangeKg: number;
+            basalMetabolicRate: number;
+            activityLevel: number;
+            trainingAllowance: number;
+            totalExpenditure: number;
+            dailyAdjustment: number;
+            energyKcal: number;
+            proteinGrams: number;
+            carbohydrateGrams: number;
+            fatGrams: number;
+        };
+        EnergyEstimate_noid: {
+            age: number;
+            /** @enum {string} */
+            sex: "female" | "male";
+            heightCm: number;
+            weightKg: number;
+            /** @enum {string} */
+            lifestyle: "sedentary" | "light" | "active" | "very_active";
+            trainingSessionsPerWeek: number;
+            /** @enum {string} */
+            goal: "bulk" | "maintain" | "cut";
+            weeklyWeightChangeKg: number;
+            basalMetabolicRate: number;
+            activityLevel: number;
+            trainingAllowance: number;
+            totalExpenditure: number;
+            dailyAdjustment: number;
+            energyKcal: number;
+            proteinGrams: number;
+            carbohydrateGrams: number;
+            fatGrams: number;
+        };
+        Entry: {
+            id: string;
+            /** @enum {string} */
+            slot: "breakfast" | "lunch" | "snack" | "gainer" | "dinner";
+            foodId: string | null;
+            recipeId: string | null;
+            name: string;
+            /** @enum {string} */
+            state: "raw" | "cooked" | "not_applicable";
+            grams: number;
+            nutrients: components["schemas"]["Nutrients"];
+            per100g: components["schemas"]["Nutrients"];
+            /** Format: date-time */
+            loggedAt: string;
+        };
+        "Entry.jsonld": {
+            id: string;
+            /** @enum {string} */
+            slot: "breakfast" | "lunch" | "snack" | "gainer" | "dinner";
+            foodId: string | null;
+            recipeId: string | null;
+            name: string;
+            /** @enum {string} */
+            state: "raw" | "cooked" | "not_applicable";
+            grams: number;
+            nutrients: components["schemas"]["Nutrients.jsonld"];
+            per100g: components["schemas"]["Nutrients.jsonld"];
+            /** Format: date-time */
+            loggedAt: string;
+        };
         /** @description A representation of common errors. */
         Error: {
             /** @description A short, human-readable summary of the problem. */
@@ -548,6 +1115,125 @@ export interface components {
             /** @description A URI reference that identifies the problem type */
             readonly type?: string;
             readonly description?: string | null;
+        };
+        EstimateInput: {
+            /**
+             * @default male
+             * @enum {string}
+             */
+            sex: "female" | "male";
+            /** @default  */
+            birthDate: string;
+            heightCm: number | null;
+            weightKg: number | null;
+            /**
+             * @default sedentary
+             * @enum {string}
+             */
+            lifestyle: "sedentary" | "light" | "active" | "very_active";
+            /** @default 0 */
+            trainingSessionsPerWeek: number;
+            /**
+             * @default maintain
+             * @enum {string}
+             */
+            goal: "bulk" | "maintain" | "cut";
+            /** @default 0 */
+            weeklyWeightChangeKg: number;
+        };
+        /** @description Favourite meals, by name, with their current values. */
+        FavoriteMeal: {
+            id: string;
+            name: string;
+            items: components["schemas"]["FavoriteMealItem"][];
+            totals: components["schemas"]["Nutrients"];
+        };
+        /** @description Keeps what was logged in a meal of a day as a favourite. */
+        "FavoriteMeal.SaveFavoriteInput": {
+            /** @default  */
+            name: string;
+            /** @default  */
+            day: string;
+            /**
+             * @default breakfast
+             * @enum {string}
+             */
+            slot: "breakfast" | "lunch" | "snack" | "gainer" | "dinner";
+        };
+        /** @description Favourite meals, by name, with their current values. */
+        "FavoriteMeal.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            name: string;
+            items: components["schemas"]["FavoriteMealItem.jsonld"][];
+            totals: components["schemas"]["Nutrients.jsonld"];
+        };
+        FavoriteMealItem: {
+            name: string;
+            grams: number;
+            nutrients: components["schemas"]["Nutrients"];
+            recipe: boolean;
+        };
+        "FavoriteMealItem.jsonld": {
+            name: string;
+            grams: number;
+            nutrients: components["schemas"]["Nutrients.jsonld"];
+            recipe: boolean;
+        };
+        /** @description Searches the foods the user can log (CIQUAL and their own), best matches first. */
+        Food: {
+            id: string;
+            /** @enum {string} */
+            source: "ciqual" | "custom";
+            name: string;
+            brand: string | null;
+            category: string | null;
+            /** @enum {string} */
+            state: "raw" | "cooked" | "not_applicable";
+            per100g: components["schemas"]["Composition"];
+            portions: components["schemas"]["FoodPortion"][];
+            editable: boolean;
+        };
+        /** @description Creates a custom food (a packaged product, a food missing from CIQUAL). */
+        "Food.CustomFoodInput": {
+            /** @default  */
+            name: string;
+            brand?: string | null;
+            /**
+             * @default not_applicable
+             * @enum {string}
+             */
+            state: "raw" | "cooked" | "not_applicable";
+            energyKcal: number | null;
+            protein: number | null;
+            carbohydrate: number | null;
+            fat: number | null;
+            fibre?: number | null;
+            sugars?: number | null;
+            saturatedFat?: number | null;
+            salt?: number | null;
+            portions?: components["schemas"]["PortionInput"][];
+        };
+        /** @description Searches the foods the user can log (CIQUAL and their own), best matches first. */
+        "Food.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            /** @enum {string} */
+            source: "ciqual" | "custom";
+            name: string;
+            brand: string | null;
+            category: string | null;
+            /** @enum {string} */
+            state: "raw" | "cooked" | "not_applicable";
+            per100g: components["schemas"]["Composition.jsonld"];
+            portions: components["schemas"]["FoodPortion.jsonld"][];
+            editable: boolean;
+        };
+        FoodPortion: {
+            label: string;
+            grams: number;
+        };
+        "FoodPortion.jsonld": {
+            label: string;
+            grams: number;
         };
         /** @description Readiness of the API and its dependencies. Answers 503 with the same body when degraded. */
         Health: {
@@ -626,6 +1312,264 @@ export interface components {
             "@id"?: string;
             "@type": string;
         };
+        IngredientInput: {
+            /**
+             * Format: uuid
+             * @default
+             */
+            foodId: string;
+            grams: number | null;
+        };
+        /** @description Removes an entry. */
+        JournalEntry: {
+            id: string;
+        };
+        /** @description Corrects the quantity, or moves the entry to another meal or day; answers with that day. */
+        "JournalEntry.CorrectEntryInput": {
+            /** @default  */
+            day: string;
+            /**
+             * @default breakfast
+             * @enum {string}
+             */
+            slot: "breakfast" | "lunch" | "snack" | "gainer" | "dinner";
+            grams: number | null;
+        };
+        /** @description Logs every item of a favourite meal in a meal of a day, in one go. Answers with the day. */
+        "JournalEntry.LogFavoriteInput": {
+            /** @default  */
+            day: string;
+            /**
+             * @default breakfast
+             * @enum {string}
+             */
+            slot: "breakfast" | "lunch" | "snack" | "gainer" | "dinner";
+        };
+        /** @description Logs a quantity of a food in a meal; the food's values are copied into the entry. Answers with the day. */
+        "JournalEntry.LogFoodInput": {
+            /** Format: uuid */
+            foodId?: string | null;
+            /** Format: uuid */
+            recipeId?: string | null;
+            /** @default  */
+            day: string;
+            /**
+             * @default breakfast
+             * @enum {string}
+             */
+            slot: "breakfast" | "lunch" | "snack" | "gainer" | "dinner";
+            grams: number | null;
+        };
+        /** @description Logs several foods in one meal at once, all or nothing (a Meal Builder proposal). Answers with the day. */
+        "JournalEntry.LogFoodsInput": {
+            /** @default  */
+            day: string;
+            /**
+             * @default breakfast
+             * @enum {string}
+             */
+            slot: "breakfast" | "lunch" | "snack" | "gainer" | "dinner";
+            items?: components["schemas"]["LogFoodsItemInput"][];
+        };
+        /** @description Logs a quantity of a food in a meal; the food's values are copied into the entry. Answers with the day. */
+        "JournalEntry.NutritionDay": {
+            /** Format: date */
+            day: string;
+            totals: components["schemas"]["Nutrients"];
+            target: components["schemas"]["NutritionTarget_noid"] | null;
+            meals: components["schemas"]["Meal"][];
+        };
+        /** @description Logs a quantity of a food in a meal; the food's values are copied into the entry. Answers with the day. */
+        "JournalEntry.NutritionDay.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** Format: date */
+            day: string;
+            totals: components["schemas"]["Nutrients.jsonld"];
+            target: components["schemas"]["NutritionTarget.jsonld_noid"] | null;
+            meals: components["schemas"]["Meal.jsonld"][];
+        };
+        /** @description Removes an entry. */
+        "JournalEntry.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+        };
+        LogFoodsItemInput: {
+            /**
+             * Format: uuid
+             * @default
+             */
+            foodId: string;
+            grams: number | null;
+        };
+        Meal: {
+            /** @enum {string} */
+            slot: "breakfast" | "lunch" | "snack" | "gainer" | "dinner";
+            share: number;
+            targetEnergyKcal: number | null;
+            totals: components["schemas"]["Nutrients"];
+            entries: components["schemas"]["Entry"][];
+        };
+        "Meal.jsonld": {
+            /** @enum {string} */
+            slot: "breakfast" | "lunch" | "snack" | "gainer" | "dinner";
+            share: number;
+            targetEnergyKcal: number | null;
+            totals: components["schemas"]["Nutrients.jsonld"];
+            entries: components["schemas"]["Entry.jsonld"][];
+        };
+        /** @description Up to 3 meals, from the user's usual foods and a few staples, that fill what is left of the day (or of one meal, per the meal split). */
+        MealBuilder: {
+            day: string;
+            /** @enum {string|null} */
+            slot: "breakfast" | "lunch" | "snack" | "gainer" | "dinner" | null;
+            remaining: components["schemas"]["Nutrients"] | null;
+            proposals: components["schemas"]["Proposal"][];
+        };
+        /** @description Up to 3 meals, from the user's usual foods and a few staples, that fill what is left of the day (or of one meal, per the meal split). */
+        "MealBuilder.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            day: string;
+            /** @enum {string|null} */
+            slot: "breakfast" | "lunch" | "snack" | "gainer" | "dinner" | null;
+            remaining: components["schemas"]["Nutrients.jsonld"] | null;
+            proposals: components["schemas"]["Proposal.jsonld"][];
+        };
+        /** @description How the daily calories are spread over meals. */
+        MealSplit: {
+            /** @default 0 */
+            breakfast: number;
+            /** @default 0 */
+            lunch: number;
+            /** @default 0 */
+            snack: number;
+            /** @default 0 */
+            gainer: number;
+            /** @default 0 */
+            dinner: number;
+        };
+        /** @description How the daily calories are spread over meals. */
+        "MealSplit.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** @default 0 */
+            breakfast: number;
+            /** @default 0 */
+            lunch: number;
+            /** @default 0 */
+            snack: number;
+            /** @default 0 */
+            gainer: number;
+            /** @default 0 */
+            dinner: number;
+        };
+        Nutrients: {
+            energyKcal: number;
+            protein: number;
+            carbohydrate: number;
+            fat: number;
+            fibre: number | null;
+        };
+        "Nutrients.jsonld": {
+            energyKcal: number;
+            protein: number;
+            carbohydrate: number;
+            fat: number;
+            fibre: number | null;
+        };
+        /** @description Daily averages over the last 7 or 30 days (today included), over the days that were logged. */
+        NutritionAverages: {
+            days: number;
+            loggedDays: number;
+            dailyAverage: components["schemas"]["Nutrients"] | null;
+            currentTarget: components["schemas"]["NutritionTarget_noid"] | null;
+        };
+        /** @description Daily averages over the last 7 or 30 days (today included), over the days that were logged. */
+        "NutritionAverages.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            days: number;
+            loggedDays: number;
+            dailyAverage: components["schemas"]["Nutrients.jsonld"] | null;
+            currentTarget: components["schemas"]["NutritionTarget.jsonld_noid"] | null;
+        };
+        /** @description The journal of a calendar day (YYYY-MM-DD, the user's local day). */
+        NutritionDay: {
+            /** Format: date */
+            day: string;
+            totals: components["schemas"]["Nutrients"];
+            target: components["schemas"]["NutritionTarget_noid"] | null;
+            meals: components["schemas"]["Meal"][];
+        };
+        /** @description The journal of a calendar day (YYYY-MM-DD, the user's local day). */
+        "NutritionDay.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** Format: date */
+            day: string;
+            totals: components["schemas"]["Nutrients.jsonld"];
+            target: components["schemas"]["NutritionTarget.jsonld_noid"] | null;
+            meals: components["schemas"]["Meal.jsonld"][];
+        };
+        /** @description Target history, most recent first (the first one effective on or before today is in force). */
+        NutritionTarget: {
+            id: string;
+            /** Format: date */
+            effectiveFrom: string;
+            energyKcal: number;
+            proteinGrams: number;
+            carbohydrateGrams: number;
+            fatGrams: number;
+            /** @enum {string} */
+            source: "estimate" | "manual" | "coach";
+            estimate: components["schemas"]["EnergyEstimate_noid"] | null;
+            /** Format: date-time */
+            setAt: string;
+        };
+        /** @description Sets new daily targets from today (or tomorrow). With the estimate they came from, they are recorded as "estimate" when unchanged, "manual" otherwise. */
+        "NutritionTarget.TargetInput": {
+            /** @default  */
+            effectiveFrom: string;
+            energyKcal: number | null;
+            proteinGrams: number | null;
+            carbohydrateGrams: number | null;
+            fatGrams: number | null;
+            estimate?: components["schemas"]["EstimateInput"] | null;
+        };
+        /** @description Target history, most recent first (the first one effective on or before today is in force). */
+        "NutritionTarget.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            /** Format: date */
+            effectiveFrom: string;
+            energyKcal: number;
+            proteinGrams: number;
+            carbohydrateGrams: number;
+            fatGrams: number;
+            /** @enum {string} */
+            source: "estimate" | "manual" | "coach";
+            estimate: components["schemas"]["EnergyEstimate.jsonld_noid"] | null;
+            /** Format: date-time */
+            setAt: string;
+        };
+        /** @description Daily targets from a day on. Never edited: each change is a new entry of the history. */
+        "NutritionTarget.jsonld_noid": components["schemas"]["HydraItemBaseSchemaWithoutId"] & {
+            id: string;
+            /** Format: date */
+            effectiveFrom: string;
+            energyKcal: number;
+            proteinGrams: number;
+            carbohydrateGrams: number;
+            fatGrams: number;
+            /** @enum {string} */
+            source: "estimate" | "manual" | "coach";
+            estimate: components["schemas"]["EnergyEstimate.jsonld_noid"] | null;
+            /** Format: date-time */
+            setAt: string;
+        };
+        NutritionTarget_noid: {
+            id: string;
+            /** Format: date */
+            effectiveFrom: string;
+            energyKcal: number;
+            proteinGrams: number;
+            carbohydrateGrams: number;
+            fatGrams: number;
+            /** @enum {string} */
+            source: "estimate" | "manual" | "coach";
+            estimate: components["schemas"]["EnergyEstimate_noid"] | null;
+            /** Format: date-time */
+            setAt: string;
+        };
         /** @description Changes the password; every other device is signed out. */
         PasswordChange: {
             /** @default  */
@@ -644,6 +1588,89 @@ export interface components {
         PasswordResetRequest: {
             /** @default  */
             email: string;
+        };
+        PortionInput: {
+            /** @default  */
+            label: string;
+            grams: number | null;
+        };
+        Proposal: {
+            items: components["schemas"]["ProposalItem"][];
+            totals: components["schemas"]["Nutrients"];
+            gapKcal: number;
+        };
+        "Proposal.jsonld": {
+            items: components["schemas"]["ProposalItem.jsonld"][];
+            totals: components["schemas"]["Nutrients.jsonld"];
+            gapKcal: number;
+        };
+        ProposalItem: {
+            foodId: string;
+            name: string;
+            /** @enum {string} */
+            role: "protein" | "carbohydrate" | "fat" | "side";
+            grams: number;
+            nutrients: components["schemas"]["Nutrients"];
+        };
+        "ProposalItem.jsonld": {
+            foodId: string;
+            name: string;
+            /** @enum {string} */
+            role: "protein" | "carbohydrate" | "fat" | "side";
+            grams: number;
+            nutrients: components["schemas"]["Nutrients.jsonld"];
+        };
+        /** @description The user's recipes, by name, with their composition. */
+        Recipe: {
+            id: string;
+            name: string;
+            servings: number;
+            cookedWeightGrams: number | null;
+            ingredients: components["schemas"]["RecipeIngredient"][];
+            totalGrams: number;
+            servingGrams: number;
+            total: components["schemas"]["Nutrients"];
+            perServing: components["schemas"]["Nutrients"];
+            per100g: components["schemas"]["Nutrients"];
+        };
+        /** @description Creates a recipe (1 to 50 ingredients, 1 to 50 servings). */
+        "Recipe.RecipeInput": {
+            /** @default  */
+            name: string;
+            servings: number | null;
+            cookedWeightGrams?: number | null;
+            ingredients?: components["schemas"]["IngredientInput"][];
+        };
+        /** @description The user's recipes, by name, with their composition. */
+        "Recipe.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            name: string;
+            servings: number;
+            cookedWeightGrams: number | null;
+            ingredients: components["schemas"]["RecipeIngredient.jsonld"][];
+            totalGrams: number;
+            servingGrams: number;
+            total: components["schemas"]["Nutrients.jsonld"];
+            perServing: components["schemas"]["Nutrients.jsonld"];
+            per100g: components["schemas"]["Nutrients.jsonld"];
+        };
+        RecipeIngredient: {
+            foodId: string;
+            name: string;
+            /** @enum {string} */
+            state: "raw" | "cooked" | "not_applicable";
+            grams: number;
+            nutrients: components["schemas"]["Nutrients"];
+            available: boolean;
+        };
+        "RecipeIngredient.jsonld": {
+            foodId: string;
+            name: string;
+            /** @enum {string} */
+            state: "raw" | "cooked" | "not_applicable";
+            grams: number;
+            nutrients: components["schemas"]["Nutrients.jsonld"];
+            available: boolean;
         };
         /** @description Activates two-factor authentication with a first valid code; returns the recovery codes. */
         RecoveryCodes: {
@@ -969,6 +1996,412 @@ export interface operations {
             };
         };
     };
+    api_nutritiontargetsestimate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new EnergyEstimate resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["EnergyEstimate.EstimateInput"];
+                "application/json": components["schemas"]["EnergyEstimate.EstimateInput"];
+            };
+        };
+        responses: {
+            /** @description EnergyEstimate resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["EnergyEstimate.jsonld"];
+                    "application/json": components["schemas"]["EnergyEstimate"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_nutritionfavorite-meals_get_collection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description FavoriteMeal collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["FavoriteMeal.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["FavoriteMeal"][];
+                };
+            };
+        };
+    };
+    "api_nutritionfavorite-meals_post": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new FavoriteMeal resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["FavoriteMeal.SaveFavoriteInput"];
+                "application/json": components["schemas"]["FavoriteMeal.SaveFavoriteInput"];
+            };
+        };
+        responses: {
+            /** @description FavoriteMeal resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["FavoriteMeal.jsonld"];
+                    "application/json": components["schemas"]["FavoriteMeal"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_nutritionfavorite-meals_id_delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description FavoriteMeal identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description FavoriteMeal resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    foods_search: {
+        parameters: {
+            query: {
+                /** @description Words of the name, accents and case ignored (2 characters at least). */
+                q: string;
+                /** @description At most 30. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Food collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Food.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Food"][];
+                };
+            };
+        };
+    };
+    api_foods_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new Food resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Food.CustomFoodInput"];
+                "application/json": components["schemas"]["Food.CustomFoodInput"];
+            };
+        };
+        responses: {
+            /** @description Food resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Food.jsonld"];
+                    "application/json": components["schemas"]["Food"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    foods_custom: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Food collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Food.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Food"][];
+                };
+            };
+        };
+    };
+    foods_recent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Food collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Food.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Food"][];
+                };
+            };
+        };
+    };
+    api_foods_id_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Food identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Food resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Food.jsonld"];
+                    "application/json": components["schemas"]["Food"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_foods_id_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Food identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated Food resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Food.CustomFoodInput"];
+                "application/json": components["schemas"]["Food.CustomFoodInput"];
+            };
+        };
+        responses: {
+            /** @description Food resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Food.jsonld"];
+                    "application/json": components["schemas"]["Food"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_foods_id_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Food identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Food resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     api_health_get: {
         parameters: {
             query?: never;
@@ -1005,6 +2438,524 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    api_nutritionentries_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new JournalEntry resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["JournalEntry.LogFoodInput"];
+                "application/json": components["schemas"]["JournalEntry.LogFoodInput"];
+            };
+        };
+        responses: {
+            /** @description JournalEntry resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["JournalEntry.NutritionDay.jsonld"];
+                    "application/json": components["schemas"]["JournalEntry.NutritionDay"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    journal_entries_batch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new JournalEntry resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["JournalEntry.LogFoodsInput"];
+                "application/json": components["schemas"]["JournalEntry.LogFoodsInput"];
+            };
+        };
+        responses: {
+            /** @description JournalEntry resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["JournalEntry.NutritionDay.jsonld"];
+                    "application/json": components["schemas"]["JournalEntry.NutritionDay"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_nutritionentries_id_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description JournalEntry identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated JournalEntry resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["JournalEntry.CorrectEntryInput"];
+                "application/json": components["schemas"]["JournalEntry.CorrectEntryInput"];
+            };
+        };
+        responses: {
+            /** @description JournalEntry resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["JournalEntry.NutritionDay.jsonld"];
+                    "application/json": components["schemas"]["JournalEntry.NutritionDay"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_nutritionentries_id_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description JournalEntry identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description JournalEntry resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    favorite_meal_log: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description JournalEntry identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The new JournalEntry resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["JournalEntry.LogFavoriteInput"];
+                "application/json": components["schemas"]["JournalEntry.LogFavoriteInput"];
+            };
+        };
+        responses: {
+            /** @description JournalEntry resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["JournalEntry.NutritionDay.jsonld"];
+                    "application/json": components["schemas"]["JournalEntry.NutritionDay"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_nutritionmeal-builder_get": {
+        parameters: {
+            query: {
+                /** @description YYYY-MM-DD, the user's local day. */
+                day: string;
+                /** @description For this meal's share of the target; the rest of the day otherwise. */
+                slot?: "breakfast" | "lunch" | "snack" | "gainer" | "dinner";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MealBuilder resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["MealBuilder.jsonld"];
+                    "application/json": components["schemas"]["MealBuilder"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "api_nutritionmeal-split_get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MealSplit resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["MealSplit.jsonld"];
+                    "application/json": components["schemas"]["MealSplit"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "api_nutritionmeal-split_put": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The updated MealSplit resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["MealSplit"];
+                "application/json": components["schemas"]["MealSplit"];
+            };
+        };
+        responses: {
+            /** @description MealSplit resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["MealSplit.jsonld"];
+                    "application/json": components["schemas"]["MealSplit"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_nutritionaverages_get: {
+        parameters: {
+            query: {
+                /** @description 7 or 30. */
+                days: number;
+                /** @description The user's local day, YYYY-MM-DD. */
+                today: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NutritionAverages resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["NutritionAverages.jsonld"];
+                    "application/json": components["schemas"]["NutritionAverages"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_nutritiondays_day_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description NutritionDay identifier */
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NutritionDay resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["NutritionDay.jsonld"];
+                    "application/json": components["schemas"]["NutritionDay"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_nutritiontargets_get_collection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NutritionTarget collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["NutritionTarget.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["NutritionTarget"][];
+                };
+            };
+        };
+    };
+    api_nutritiontargets_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new NutritionTarget resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["NutritionTarget.TargetInput"];
+                "application/json": components["schemas"]["NutritionTarget.TargetInput"];
+            };
+        };
+        responses: {
+            /** @description NutritionTarget resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["NutritionTarget.jsonld"];
+                    "application/json": components["schemas"]["NutritionTarget"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
             };
         };
     };
@@ -1142,6 +3093,208 @@ export interface operations {
                     "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
                     "application/problem+json": components["schemas"]["ConstraintViolation"];
                     "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_recipes_get_collection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recipe collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Recipe.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Recipe"][];
+                };
+            };
+        };
+    };
+    api_recipes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new Recipe resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Recipe.RecipeInput"];
+                "application/json": components["schemas"]["Recipe.RecipeInput"];
+            };
+        };
+        responses: {
+            /** @description Recipe resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Recipe.jsonld"];
+                    "application/json": components["schemas"]["Recipe"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_recipes_id_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Recipe identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recipe resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Recipe.jsonld"];
+                    "application/json": components["schemas"]["Recipe"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_recipes_id_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Recipe identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated Recipe resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Recipe.RecipeInput"];
+                "application/json": components["schemas"]["Recipe.RecipeInput"];
+            };
+        };
+        responses: {
+            /** @description Recipe resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Recipe.jsonld"];
+                    "application/json": components["schemas"]["Recipe"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_recipes_id_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Recipe identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recipe resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };

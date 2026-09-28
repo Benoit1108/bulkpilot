@@ -6,9 +6,12 @@ withDefaults(defineProps<{
   options: ReadonlyArray<{ value: T, label: string }>
   placeholder?: string
   error?: string
+  /** False for a required choice: no empty option. */
+  nullable?: boolean
 }>(), {
   placeholder: 'Non renseigné',
   error: undefined,
+  nullable: true,
 })
 
 const id = useId()
@@ -27,7 +30,10 @@ const id = useId()
       :aria-invalid="error ? 'true' : undefined"
       :aria-describedby="error ? `${id}-error` : undefined"
     >
-      <option :value="null">
+      <option
+        v-if="nullable"
+        :value="null"
+      >
         {{ placeholder }}
       </option>
       <option

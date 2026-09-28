@@ -8,7 +8,8 @@ export default defineConfig({
       // Plain TypeScript: no Nuxt runtime, fast.
       {
         resolve: { alias: { '~': fileURLToPath(new URL('./app', import.meta.url)) } },
-        test: { name: 'unit', include: ['test/unit/**/*.test.ts'], environment: 'node' },
+        // Away from UTC: local-day logic is only tested for real in a time zone that differs.
+        test: { name: 'unit', include: ['test/unit/**/*.test.ts'], environment: 'node', env: { TZ: 'Pacific/Honolulu' } },
       },
       // Components, composables and plugins inside a Nuxt runtime.
       await defineVitestProject({

@@ -26,6 +26,7 @@ make composer ARGS="require vendor/pkg" && make restart   # exécuté avec ton u
 docker compose -f docker-compose.yml -f docker-compose.dev.yml exec pwa pnpm add pkg
 
 make db-diff && make db-migrate              # après un changement de mapping
+make ciqual                                  # importe / rafraîchit la table CIQUAL (téléchargement Anses)
 make openapi                                 # après un changement de ressource API
 make php-cs-fix                              # formatage PHP
 docker compose … exec pwa pnpm lint:fix      # formatage front
@@ -38,7 +39,8 @@ docker compose … exec pwa pnpm lint:fix      # formatage front
    (ou query `GetFoo` + `GetFooHandler implements QueryHandler`). Pas de suffixe `Command`/`Query`.
 3. `Infrastructure` : adapter Doctrine + mapping XML ; déclarer le mapping du contexte dans `config/packages/doctrine.yaml`.
 4. `Presentation` : ressource API Platform + processor/provider qui appelle le bus ; ajouter le dossier
-   `<Context>/Presentation/Api` à `api_platform.mapping.paths`.
+   `<Context>/Presentation/Api` à `api_platform.mapping.paths`. Les listes se typent en PHPDoc (`@param list<Meal>`) :
+   le schéma OpenAPI (et donc les types TypeScript) en dépend.
 5. Tests : unitaires sur le domaine/handler, API sur l'endpoint, puis `make qa`.
 
 ## Débogage

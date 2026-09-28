@@ -51,6 +51,8 @@ GitHub → CI (qa + e2e sur l'image) → registre d'images → staging → valid
 
 1. Déployer avec `REGISTRATION_ENABLED=true`, créer le compte du propriétaire depuis la PWA, confirmer son email.
 2. Repasser `REGISTRATION_ENABLED=false` et redémarrer.
+3. Importer la table CIQUAL (téléchargée depuis le site de l'Anses, ~3 Mo, idempotent — à relancer à chaque nouvelle version) :
+   `docker compose exec php bin/console nutrition:catalogue:import`.
 
 ## Notes d'exploitation
 

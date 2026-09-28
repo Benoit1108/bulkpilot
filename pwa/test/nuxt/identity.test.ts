@@ -193,7 +193,7 @@ describe('settings sections', () => {
     fake.on('PUT /api/me/profile', body => ({ ...alex, ...(body as object) }))
     const wrapper = await mountSuspended(ProfileForm, { props: { account: alex } })
 
-    await wrapper.get('input[type="number"]').setValue('178')
+    await wrapper.get('input[inputmode="numeric"]').setValue('178')
     await wrapper.get('select').setValue('male')
     await submit(wrapper)
 

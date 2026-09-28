@@ -49,6 +49,13 @@ Playwright tourne dans le service compose `e2e` (profil `e2e`) ; l'image suit la
 - E2E sur l'image de prod : trois utilisateurs alternés sur les workers FrankenPHP, et un login échoué au milieu.
 - Isolation : les appareils d'un autre utilisateur sont invisibles et non révocables (404).
 
+## Données de référence
+
+- `api/tests/Fixtures/ciqual` : 12 aliments extraits des vrais fichiers CIQUAL 2020 (windows-1252, CRLF, valeurs « < x » non échappées),
+  conservés à l'octet près (`.gitattributes`). Utilisés par les tests d'intégration, d'API et l'E2E
+  (`make e2e` / `make e2e-prod` les importent avant de lancer Playwright).
+- Les jours du journal sont relatifs à aujourd'hui dans les tests d'API et E2E (le serveur refuse les jours trop éloignés).
+
 ## Temps
 
 Les tests d'API qui dépendent du temps (expiration d'une connexion en attente, d'un lien, d'un appareil inactif,

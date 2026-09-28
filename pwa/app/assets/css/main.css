@@ -122,3 +122,34 @@ textarea {
   flex-wrap: wrap;
   gap: var(--space-2);
 }
+
+/* The page behind an open drawer does not scroll. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* Settings-like sub pages: one column, reading width. */
+.subpage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: var(--reading-max-width);
+}
+
+/* A link that leads to a creation form, styled as the primary button. */
+.link-button {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  background: var(--color-accent-fill);
+  color: var(--color-accent-contrast);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link-button:hover {
+  background: var(--color-accent-fill-hover);
+}

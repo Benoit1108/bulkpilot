@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Nutrition\Presentation\Api\Journal;
+
+use App\Nutrition\Domain\Journal\JournalEntry;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
+/**
+ * A food or a recipe (exactly one): for a recipe, grams of the (cooked) dish.
+ */
+final class LogFoodInput
+{
+    #[Assert\Uuid]
+    public ?string $foodId = null;
+
+    #[Assert\Uuid]
+    public ?string $recipeId = null;
+
+    /** The user's local calendar day, YYYY-MM-DD. */
+    #[Assert\NotBlank]
+    #[Assert\Date]
+    public string $day = '';
+
+    #[Assert\Choice(choices: MealSlots::VALUES)]
+    public string $slot = 'breakfast';
+
+    #[Assert\NotNull]
+    #[Assert\Positive]
+    #[Assert\LessThanOrEqual(JournalEntry::MAX_GRAMS)]
+    public ?float $grams = null;
+
+    #[Assert\Callback]
+    public function validateSource(ExecutionContextInterface $context): void
+    {
+        if ((null === $this->foodId) === (null === $this->recipeId)) {
+            $context->buildViolation('Indique un aliment ou une recette.')->atPath('foodId')->addViolation();
+        }
+    }
+}

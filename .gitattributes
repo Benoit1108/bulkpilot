@@ -1,0 +1,2 @@
+# CIQUAL excerpt kept byte-for-byte as published (windows-1252, CRLF).
+api/tests/Fixtures/ciqual/*.xml -text -diff

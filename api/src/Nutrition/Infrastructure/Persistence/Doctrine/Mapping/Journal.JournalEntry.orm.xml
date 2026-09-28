@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Nutrition\Domain\Journal\JournalEntry" table="journal_entries">
+        <indexes>
+            <index name="journal_entries_owner_day_idx" columns="owner_id,day"/>
+            <index name="journal_entries_owner_logged_idx" columns="owner_id,logged_at"/>
+        </indexes>
+
+        <id name="id" type="journal_entry_id"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="day" type="date_immutable"/>
+        <field name="slot" length="10" enum-type="App\Nutrition\Domain\Journal\MealSlot"/>
+        <embedded name="food" class="App\Nutrition\Domain\Journal\LoggedFood" column-prefix="food_"/>
+        <field name="grams" type="float"/>
+        <field name="loggedAt" type="datetimetz_immutable"/>
+    </entity>
+</doctrine-mapping>

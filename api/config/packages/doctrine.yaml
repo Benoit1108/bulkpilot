@@ -12,6 +12,15 @@ doctrine:
             hashed_password: App\Identity\Infrastructure\Persistence\Doctrine\Type\HashedPasswordType
             external_identity_id: App\Identity\Infrastructure\Persistence\Doctrine\Type\ExternalIdentityIdType
             encrypted_secret: App\Identity\Infrastructure\Persistence\Doctrine\Type\EncryptedSecretType
+            food_id: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\FoodIdType
+            journal_entry_id: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\JournalEntryIdType
+            nutrition_target_id: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\NutritionTargetIdType
+            food_portions: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\PortionsType
+            energy_estimate: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\EnergyEstimateType
+            recipe_id: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\RecipeIdType
+            favorite_meal_id: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\FavoriteMealIdType
+            recipe_ingredients: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\IngredientsType
+            favorite_items: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\FavoriteItemsType
 
     orm:
         validate_xml_mapping: true
@@ -27,6 +36,11 @@ doctrine:
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Identity/Infrastructure/Persistence/Doctrine/Mapping'
                 prefix: 'App\Identity\Domain'
+            Nutrition:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Nutrition/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Nutrition\Domain'
 
 when@test:
     doctrine:
