@@ -1,0 +1,45 @@
+{
+  "name": "app-pwa",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt dev --host 0.0.0.0",
+    "generate": "nuxt generate",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "nuxt typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "api:types": "openapi-typescript openapi/openapi.json -o app/types/api.d.ts",
+    "pwa:icons": "pwa-assets-generator && pwa-assets-generator --config pwa-assets.maskable.config.ts"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@vite-pwa/nuxt": "^1.1.1",
+    "lucide-vue-next": "^1.0.0",
+    "nuxt": "^4.5.2",
+    "ofetch": "^1.5.1",
+    "vue": "^3.5.43",
+    "vue-router": "^5.3.1"
+  },
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.17.0",
+    "@nuxt/test-utils": "^4.3.2",
+    "@playwright/test": "1.63.0",
+    "@vite-pwa/assets-generator": "^2.0.0",
+    "@vitest/coverage-v8": "^5.0.2",
+    "@vue/test-utils": "^2.5.1",
+    "eslint": "^10.11.0",
+    "happy-dom": "^20.14.5",
+    "openapi-typescript": "^7.13.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.2",
+    "vue-tsc": "^3.3.11"
+  }
+}

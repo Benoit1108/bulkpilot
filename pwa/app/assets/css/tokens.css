@@ -1,0 +1,86 @@
+/*
+ * Design tokens. Components only consume these variables, never raw colours,
+ * so both themes stay consistent. Dark is the default theme.
+ */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg: #0d0b14;
+  --color-surface: #16131f;
+  --color-surface-raised: #1e1a2a;
+  --color-border: #2c2640;
+  --color-text: #f4f2f8;
+  --color-text-muted: #a8a3b8;
+
+  /* Accent for rings, icons and strokes. */
+  --color-accent: #8b5cf6;
+  /* Filled surfaces carrying white text: >= 4.5:1 contrast (WCAG AA). */
+  --color-accent-fill: #7c3aed;
+  --color-accent-fill-hover: #6d28d9;
+  --color-accent-contrast: #ffffff;
+  --color-accent-soft: rgb(139 92 246 / 0.16);
+  --color-accent-text: #c4b5fd;
+
+  --color-success: #34d399;
+  --color-danger: #f87171;
+
+  --shadow-raised: 0 8px 24px rgb(0 0 0 / 0.35);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --color-bg: #f7f6fb;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f0edf7;
+  --color-border: #e2ddec;
+  --color-text: #17141f;
+  --color-text-muted: #5c566d;
+
+  --color-accent: #7c3aed;
+  --color-accent-fill: #7c3aed;
+  --color-accent-fill-hover: #6d28d9;
+  --color-accent-contrast: #ffffff;
+  --color-accent-soft: rgb(124 58 237 / 0.1);
+  --color-accent-text: #6d28d9;
+
+  --color-success: #047857;
+  --color-danger: #b91c1c;
+
+  --shadow-raised: 0 8px 24px rgb(23 20 31 / 0.08);
+}
+
+:root {
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-2xl: 1.75rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-full: 999px;
+
+  /* WCAG 2.2 target size: every interactive element is at least this tall. */
+  --tap-target: 2.75rem;
+
+  /* Navigation: bottom bar on phones, rail from 48rem, sidebar from 75rem (see ShellNav). */
+  --bottom-nav-height: 4rem;
+  --nav-rail-width: 5.5rem;
+  --nav-sidebar-width: 15rem;
+  --content-max-width: 72rem;
+  --reading-max-width: 40rem;
+
+  --transition-fast: 120ms ease-out;
+}

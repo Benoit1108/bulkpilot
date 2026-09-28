@@ -1,0 +1,27 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.php]
+indent_size = 4
+
+[{Makefile,*.mk}]
+indent_style = tab
+
+[{Caddyfile,*.Caddyfile}]
+indent_style = tab
+
+[*.md]
+trim_trailing_whitespace = false
+
+[api/**.{yaml,yml,xml,neon}]
+indent_size = 4
+
+[{compose,docker-compose}*.{yaml,yml}]
+indent_size = 2

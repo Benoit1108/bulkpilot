@@ -1,0 +1,16 @@
+# Test-only services: probes exercising the real bus wiring.
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Tests\Integration\Shared\Infrastructure\Bus\Fixture\:
+        resource: '../tests/Integration/Shared/Infrastructure/Bus/Fixture/'
+
+    App\Tests\Integration\Shared\Infrastructure\Bus\Fixture\Journal:
+        public: true
+
+    # Not injected anywhere yet, so it would be removed from the compiled container.
+    App\Shared\Application\Bus\Command\CommandBus:
+        alias: App\Shared\Infrastructure\Bus\MessengerCommandBus
+        public: true

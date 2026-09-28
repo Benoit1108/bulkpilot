@@ -1,0 +1,31 @@
+# Bounded contexts never reach into each other's internals: they share only the
+# Shared kernel and communicate through commands, queries and domain events.
+# An allowed dependency between two contexts requires an ADR and an explicit rule here.
+deptrac:
+    paths:
+        - ./src
+    exclude_files:
+        - '#.*/Kernel\.php$#'
+    layers:
+        - { name: Shared, collectors: [{ type: classNameRegex, value: '#^App\\Shared\\#' }] }
+        - { name: Identity, collectors: [{ type: classNameRegex, value: '#^App\\Identity\\#' }] }
+        - { name: Nutrition, collectors: [{ type: classNameRegex, value: '#^App\\Nutrition\\#' }] }
+        - { name: Training, collectors: [{ type: classNameRegex, value: '#^App\\Training\\#' }] }
+        - { name: Progression, collectors: [{ type: classNameRegex, value: '#^App\\Progression\\#' }] }
+        - { name: Coach, collectors: [{ type: classNameRegex, value: '#^App\\Coach\\#' }] }
+        - { name: Notification, collectors: [{ type: classNameRegex, value: '#^App\\Notification\\#' }] }
+        - { name: Media, collectors: [{ type: classNameRegex, value: '#^App\\Media\\#' }] }
+        - { name: Export, collectors: [{ type: classNameRegex, value: '#^App\\Export\\#' }] }
+        # Operational concerns (health checks), not a business context.
+        - { name: System, collectors: [{ type: classNameRegex, value: '#^App\\System\\#' }] }
+    ruleset:
+        Shared: ~
+        Identity: [Shared]
+        Nutrition: [Shared]
+        Training: [Shared]
+        Progression: [Shared]
+        Coach: [Shared]
+        Notification: [Shared]
+        Media: [Shared]
+        Export: [Shared]
+        System: [Shared]

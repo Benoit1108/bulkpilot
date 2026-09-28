@@ -1,0 +1,52 @@
+# Layer rules (hexagonal architecture), applied to every bounded context including Shared.
+# Cross-context isolation is checked separately by deptrac.contexts.yaml.
+# Run with --fail-on-uncovered: any class that falls in no layer is an error.
+deptrac:
+    paths:
+        - ./src
+    exclude_files:
+        - '#.*/Kernel\.php$#'
+    layers:
+        - name: Domain
+          collectors:
+              - { type: classNameRegex, value: '#^App\\[A-Za-z]+\\Domain\\#' }
+        - name: Application
+          collectors:
+              - { type: classNameRegex, value: '#^App\\[A-Za-z]+\\Application\\#' }
+        - name: Infrastructure
+          collectors:
+              - { type: classNameRegex, value: '#^App\\[A-Za-z]+\\Infrastructure\\#' }
+        - name: Presentation
+          collectors:
+              - { type: classNameRegex, value: '#^App\\[A-Za-z]+\\Presentation\\#' }
+        # The only third-party contracts inner layers may use.
+        - name: PsrClock
+          collectors:
+              - { type: classNameRegex, value: '#^Psr\\Clock\\#' }
+        - name: PsrLog
+          collectors:
+              - { type: classNameRegex, value: '#^Psr\\Log\\#' }
+        # Every other namespaced class: frameworks, SDKs, libraries (catch-all, so a new
+        # vendor used from the Domain is a violation rather than an uncovered dependency).
+        - name: Vendor
+          collectors:
+              - { type: classNameRegex, value: '#^(?!App\\|Psr\\Clock\\|Psr\\Log\\)[A-Za-z_][A-Za-z0-9_]*\\#' }
+    ruleset:
+        Domain:
+            - PsrClock
+        Application:
+            - Domain
+            - PsrClock
+            - PsrLog
+        Infrastructure:
+            - Domain
+            - Application
+            - PsrClock
+            - PsrLog
+            - Vendor
+        Presentation:
+            - Application
+            - Domain
+            - PsrClock
+            - PsrLog
+            - Vendor

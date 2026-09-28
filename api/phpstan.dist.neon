@@ -1,0 +1,25 @@
+parameters:
+    level: max
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    excludePaths:
+        - config/reference.php
+    tmpDir: var/phpstan
+    checkBenevolentUnionTypes: true
+    reportUnmatchedIgnoredErrors: true
+    symfony:
+        containerXmlPath: var/cache/test/App_KernelTestDebugContainer.xml
+    doctrine:
+        objectManagerLoader: tests/object-manager.php
+    ignoreErrors:
+        # Called by Symfony's MicroKernelTrait through method_exists(): invisible to static analysis.
+        - identifier: method.unused
+          path: src/Kernel.php
+          count: 1
+
+includes:
+    - phar://phpstan.phar/conf/bleedingEdge.neon

@@ -1,0 +1,85 @@
+# Base stack shared by every environment; always combined with an override through `make`:
+#   dev:  make up        (docker-compose.dev.yml)
+#   e2e:  make e2e-prod  (docker-compose.test.yml: production image, throwaway data)
+# Used alone it runs the production image locally (APP_SECRET must then be provided).
+name: ${COMPOSE_PROJECT_NAME:-bulkpilot}
+
+services:
+  php:
+    image: ${IMAGES_PREFIX:-}bulkpilot-php:${IMAGE_TAG:-latest}
+    build:
+      context: ./api
+      target: frankenphp_prod
+      additional_contexts:
+        pwa: ./pwa
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: ${SERVER_NAME:-localhost}
+      APP_SECRET: ${APP_SECRET:-}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-app}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-18}&charset=utf8
+      FRANKENPHP_CONFIG: ${FRANKENPHP_CONFIG:-}
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      - target: 80
+        published: ${HTTP_PORT:-80}
+        protocol: tcp
+      - target: 443
+        published: ${HTTPS_PORT:-443}
+        protocol: tcp
+      - target: 443
+        published: ${HTTP3_PORT:-443}
+        protocol: udp
+
+  database:
+    image: postgres:${POSTGRES_VERSION:-18}-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-app}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+      start_interval: 1s
+    volumes:
+      - database_data:/var/lib/postgresql
+
+  # Playwright, run on demand against the stack it is attached to (`make e2e` / `make e2e-prod`).
+  # The image tag follows the exact @playwright/test version pinned in pwa/package.json.
+  e2e:
+    profiles: [e2e]
+    image: mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION:-unset}-noble
+    working_dir: /work
+    ipc: host
+    environment:
+      CI: ${CI:-}
+      E2E_BASE_URL: https://php
+      PLAYWRIGHT_ARGS: ${PLAYWRIGHT_ARGS:-}
+      HOST_UID: ${HOST_UID:-1000}
+      HOST_GID: ${HOST_GID:-1000}
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: 0
+    volumes:
+      - ./pwa:/work
+      - e2e_node_modules:/work/node_modules
+    command:
+      - sh
+      - -c
+      - |
+        corepack pnpm install --frozen-lockfile --ignore-scripts --reporter=silent || exit 1
+        corepack pnpm exec playwright test $$PLAYWRIGHT_ARGS; status=$$?
+        chown -R "$$HOST_UID:$$HOST_GID" test-results playwright-report 2>/dev/null
+        exit $$status
+
+volumes:
+  caddy_data:
+  caddy_config:
+  database_data:
+  e2e_node_modules:

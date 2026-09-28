@@ -1,0 +1,46 @@
+framework:
+    messenger:
+        default_bus: command.bus
+
+        # Input validation happens on Presentation DTOs (API Platform → 422 with violations),
+        # so the buses carry no validation middleware: Application messages stay framework-free.
+        buses:
+            # Writes: one handler per command, wrapped in a DB transaction.
+            command.bus:
+                middleware:
+                    - doctrine_ping_connection
+                    - doctrine_close_connection
+                    - doctrine_transaction
+            # Reads: one handler per query, no transaction.
+            query.bus: ~
+            # Domain events: zero or many subscribers, delivered after the current command
+            # committed; each delivery runs in its own transaction so subscribers' writes are flushed.
+            event.bus:
+                default_middleware:
+                    enabled: true
+                    allow_no_handlers: true
+                middleware:
+                    - doctrine_ping_connection
+                    - doctrine_close_connection
+                    - doctrine_transaction
+
+        failure_transport: failed
+
+        transports:
+            # Heavy or deferrable work (reports, exports, photo processing, AI calls, notifications)
+            # and event reactions that must survive a failure. Nothing is routed here yet: add a
+            # routing entry and a `worker` compose service when the first async message appears.
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 3
+                    multiplier: 2
+            failed: 'doctrine://default?queue_name=failed'
+
+        routing:
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                async: 'in-memory://'

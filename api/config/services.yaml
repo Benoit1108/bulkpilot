@@ -1,0 +1,15 @@
+# Handlers are bound to their Messenger bus by marker interface in Kernel::build(),
+# so Application code needs no framework attribute (see docs/ARCHITECTURE.md).
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
+
+    App\System\Application\Health\GetHealthHandler:
+        arguments:
+            $checks: !tagged_iterator app.health_check

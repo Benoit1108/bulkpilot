@@ -1,0 +1,66 @@
+# Development: sources bind-mounted, Nuxt dev server with HMR behind Caddy, Mailpit.
+# Published ports listen on 127.0.0.1 only (except the app itself).
+services:
+  php:
+    image: ${IMAGES_PREFIX:-}bulkpilot-php-dev
+    build:
+      target: frankenphp_dev
+    environment:
+      # "https://php" lets containers (e.g. Playwright) reach the app over TLS on the internal network.
+      SERVER_NAME: ${SERVER_NAME:-localhost, https://php}
+      CADDY_SERVER_EXTRA_DIRECTIVES: tls internal
+      APP_SECRET: dev-only-not-a-secret
+      PWA_MODE: pwa_dev
+      PWA_UPSTREAM: pwa:3000
+      MAILER_DSN: smtp://mailer:1025
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
+    volumes:
+      - ./api:/app
+      - /app/var
+      - ./api/frankenphp/Caddyfile:/etc/frankenphp/Caddyfile:ro
+      - ./api/frankenphp/conf.d/20-app.dev.ini:/usr/local/etc/php/app.conf.d/20-app.dev.ini:ro
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    tty: true
+
+  pwa:
+    build:
+      context: ./pwa
+      target: pwa_dev
+    image: ${IMAGES_PREFIX:-}bulkpilot-pwa-dev
+    # Same uid as the owner of the checkout, so the bind-mounted sources stay writable.
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    environment:
+      HOME: /tmp
+      NUXT_PUBLIC_APP_NAME: ${APP_DISPLAY_NAME:-BulkPilot}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 180s
+      start_interval: 2s
+    volumes:
+      - ./pwa:/app
+      - pwa_node_modules:/app/node_modules
+
+  database:
+    ports:
+      - target: 5432
+        published: ${POSTGRES_PORT:-5432}
+        host_ip: 127.0.0.1
+        protocol: tcp
+
+  mailer:
+    image: axllent/mailpit:v1
+    ports:
+      - target: 8025
+        published: ${MAILPIT_PORT:-8025}
+        host_ip: 127.0.0.1
+        protocol: tcp
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+volumes:
+  pwa_node_modules:

@@ -1,0 +1,11 @@
+# Local overrides and secrets
+/.env
+/.env.local
+*.local
+caddy-root.crt
+
+# Editors / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store

@@ -1,0 +1,16 @@
+# E2E / acceptance: runs the *production* image (static SPA, FrankenPHP worker, prod kernel)
+# with throwaway data, exactly as it will be deployed. Use `make e2e-prod` (or `make ci`).
+name: bulkpilot-test
+
+services:
+  php:
+    environment:
+      APP_SECRET: test-only-not-a-secret-4f1c2b9e8d7a6f5e
+      SERVER_NAME: localhost, https://php
+      CADDY_SERVER_EXTRA_DIRECTIVES: tls internal
+    ports: !reset []
+
+  database:
+    volumes: !reset []
+    tmpfs:
+      - /var/lib/postgresql

@@ -1,0 +1,142 @@
+import { expect, test } from '@playwright/test'
+
+const sections = ['Accueil', 'Nutrition', 'Training', 'Progression', 'Coach'] as const
+
+test.describe('app shell', () => {
+  test('bottom navigation or rail reaches every section, with a matching document title', async ({ page }) => {
+    await page.goto('/')
+    const nav = page.getByRole('navigation', { name: 'Navigation principale' })
+
+    for (const section of [...sections.slice(1), 'Accueil']) {
+      await nav.getByRole('link', { name: section }).click()
+      await expect(page.getByRole('heading', { level: 1, name: section })).toBeVisible()
+      await expect(nav.getByRole('link', { name: section })).toHaveAttribute('aria-current', 'page')
+      await expect(page).toHaveTitle(`${section} · BulkPilot`)
+    }
+  })
+
+  test('deep links are served by the SPA fallback', async ({ page }) => {
+    await page.goto('/training')
+
+    await expect(page.getByRole('heading', { level: 1, name: 'Training' })).toBeVisible()
+  })
+
+  test('unknown pages show a French error page with a way back', async ({ page }) => {
+    await page.goto('/nope')
+
+    await expect(page.getByRole('heading', { name: 'Cette page n’existe pas.' })).toBeVisible()
+    await page.getByRole('button', { name: 'Retour à l’accueil' }).click()
+    await expect(page.getByRole('heading', { level: 1, name: 'Accueil' })).toBeVisible()
+  })
+})
+
+test.describe('settings', () => {
+  test('are reachable from every screen size and report the server status', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('link', { name: 'Réglages' }).click()
+
+    await expect(page.getByRole('heading', { level: 1, name: 'Réglages' })).toBeVisible()
+    await expect(page.getByTestId('service-status')).toHaveText('Connecté')
+  })
+
+  test('theme defaults to dark and the chosen theme survives a reload', async ({ page }) => {
+    await page.goto('/reglages')
+    const html = page.locator('html')
+    await expect(html).toHaveAttribute('data-theme', 'dark')
+
+    await page.getByRole('radio', { name: 'Clair' }).check()
+    await expect(html).toHaveAttribute('data-theme', 'light')
+
+    await page.reload()
+    await expect(html).toHaveAttribute('data-theme', 'light')
+    await expect(page.getByRole('radio', { name: 'Clair' })).toBeChecked()
+  })
+
+  test('the stored theme is applied before the app bundle runs', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('theme', 'light'))
+    await page.route('**/_nuxt/**', route => route.abort())
+
+    await page.goto('/')
+
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#f7f6fb')
+  })
+})
+
+test.describe('large screens', () => {
+  test('use a side navigation instead of the bottom bar', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'desktop layout only')
+    await page.goto('/')
+
+    const box = await page.getByRole('navigation', { name: 'Navigation principale' }).boundingBox()
+    const viewport = page.viewportSize()!
+    expect(box).not.toBeNull()
+    expect(box!.x).toBe(0)
+    expect(box!.height).toBe(viewport.height)
+    expect(box!.width).toBeLessThan(viewport.width / 4)
+    await expect(page.getByRole('navigation', { name: 'Navigation principale' }).getByRole('link', { name: 'Réglages' })).toBeInViewport()
+  })
+})
+
+test.describe('production serving', () => {
+  test('security headers and a request id are set on the app and the API', async ({ request }) => {
+    for (const path of ['/', '/api/health']) {
+      const response = await request.get(path)
+      const headers = response.headers()
+
+      expect(headers['x-content-type-options'], path).toBe('nosniff')
+      expect(headers['x-frame-options'], path).toBe('DENY')
+      expect(headers['cross-origin-opener-policy'], path).toBe('same-origin')
+      expect(headers['referrer-policy'], path).toBe('strict-origin-when-cross-origin')
+      expect(headers.server, path).toBeUndefined()
+      expect(headers['x-request-id'], path).toMatch(/^[0-9a-f-]{36}$/)
+    }
+  })
+
+  test('hashed assets are immutable, the shell always revalidates, missing chunks are plain 404s', async ({ page, request }) => {
+    await page.goto('/')
+    const script = await page.locator('script[type="module"][src^="/_nuxt/"]').first().getAttribute('src')
+    expect(script).toBeTruthy()
+
+    expect((await request.get(script!)).headers()['cache-control']).toBe('public, max-age=31536000, immutable')
+    expect((await request.get('/')).headers()['cache-control']).toBe('no-cache')
+    expect((await request.get('/sw.js')).headers()['cache-control']).toBe('no-cache')
+
+    const missing = await request.get('/_nuxt/does-not-exist.js')
+    expect(missing.status()).toBe(404)
+    expect(missing.headers()['cache-control']).toBeUndefined()
+  })
+
+  test('unknown API routes answer JSON, never the SPA', async ({ request }) => {
+    const response = await request.get('/api/does-not-exist', { headers: { Accept: 'application/json' } })
+
+    expect(response.status()).toBe(404)
+    expect(response.headers()['content-type']).toContain('json')
+  })
+
+  test('health answers 200 with every dependency up', async ({ request }) => {
+    const response = await request.get('/api/health', { headers: { Accept: 'application/json' } })
+
+    expect(response.status()).toBe(200)
+    expect(await response.json()).toEqual({ status: 'ok', checks: { database: 'up' } })
+  })
+
+  test('web app manifest is installable', async ({ request }) => {
+    const response = await request.get('/manifest.webmanifest')
+    expect(response.ok()).toBeTruthy()
+
+    const manifest = await response.json() as { id: string, display: string, lang: string, icons: Array<{ purpose?: string }> }
+    expect(manifest).toMatchObject({ id: '/', display: 'standalone', lang: 'fr' })
+    expect(manifest.icons.some(icon => icon.purpose === 'maskable')).toBe(true)
+  })
+
+  test('the service worker installs so the shell works offline', async ({ page, context }) => {
+    await page.goto('/')
+    await page.evaluate(() => navigator.serviceWorker.ready)
+
+    await context.setOffline(true)
+    await page.reload()
+    await expect(page.getByRole('heading', { level: 1, name: 'Accueil' })).toBeVisible()
+    await context.setOffline(false)
+  })
+})

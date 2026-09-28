@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: composer
+    directory: /api
+    schedule: { interval: weekly }
+    groups:
+      symfony: { patterns: ['symfony/*'] }
+      api-platform: { patterns: ['api-platform/*'] }
+      dev-tools: { dependency-type: development }
+  - package-ecosystem: npm
+    directory: /pwa
+    schedule: { interval: weekly }
+    groups:
+      nuxt: { patterns: ['nuxt', '@nuxt/*', 'vue', 'vue-router'] }
+      # Also bumps the Playwright image: its tag is read from the exact version in package.json.
+      playwright: { patterns: ['@playwright/*'] }
+      dev-tools: { dependency-type: development }
+  - package-ecosystem: docker
+    directories: [/api, /pwa]
+    schedule: { interval: weekly }
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule: { interval: weekly }
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
