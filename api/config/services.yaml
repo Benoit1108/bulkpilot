@@ -20,6 +20,14 @@ services:
         factory: ['@App\Media\Infrastructure\Storage\MediaStorageFactory', 'create']
         arguments: ['%env(MEDIA_STORAGE)%']
 
+    # The Coach reads the other contexts, and changes a calorie target, through shared ports (ADR-0028).
+    App\Shared\Application\Coaching\NutritionReadings: '@App\Nutrition\Application\Coaching\JournalReadings'
+    App\Shared\Application\Coaching\CalorieTargets: '@App\Nutrition\Application\Coaching\CoachCalorieTargets'
+    App\Shared\Application\Coaching\BodyWeight: '@App\Progression\Application\Coaching\WeighInReadings'
+    App\Shared\Application\Coaching\TrainingReadings: '@App\Training\Application\Coaching\WorkoutReadings'
+    # Only the template provider for now (spec §73): a real one is chosen here, behind the same port.
+    App\Coach\Application\Port\AiProvider: '@App\Coach\Infrastructure\Ai\FakeAiProvider'
+
     App\System\Application\Health\GetHealthHandler:
         arguments:
             $checks: !tagged_iterator app.health_check

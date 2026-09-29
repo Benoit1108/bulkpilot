@@ -50,6 +50,7 @@ GitHub → CI (qa + e2e sur l'image) → registre d'images → staging → valid
 | `RATE_LIMIT_BARCODE_SCAN` | scans et confirmations par minute et par compte (30) ; en plus, 90 lectures / min vers Open Food Facts pour toute l'instance |
 | `RATE_LIMIT_TRAINING_WRITES` | écritures Training (séances, séries, programmes, exercices) par minute et par compte (600) : une séance hors ligne se vide d'un coup au retour du réseau |
 | `RATE_LIMIT_PROGRESSION_WRITES` | pesées, mensurations, objectifs et photos par minute et par compte (120) |
+| `RATE_LIMIT_COACH_WRITES` | analyses relancées, décisions et réglages du Coach par minute et par compte (30) |
 | `MEDIA_STORAGE` | `s3` en production (le conteneur refuse autre chose) ; `local` en développement |
 | `S3_ENDPOINT` / `S3_REGION` / `S3_BUCKET` / `S3_ACCESS_KEY` / `S3_SECRET_KEY` | bucket S3-compatible **privé** des photos (ADR-0027) — bucket, clés obligatoires ; endpoint vide = Amazon S3 |
 | `S3_PUBLIC_ENDPOINT` / `S3_PATH_STYLE` | l'adresse que le navigateur atteint pour les liens présignés si elle diffère de celle du serveur ; adressage par chemin (`true` pour la plupart des fournisseurs non-Amazon) |

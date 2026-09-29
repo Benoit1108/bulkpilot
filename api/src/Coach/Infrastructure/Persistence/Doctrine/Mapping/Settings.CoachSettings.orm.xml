@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Coach\Domain\Settings\CoachSettings" table="coach_settings">
+        <id name="ownerId" type="user_id"/>
+        <field name="version" type="integer" version="true"/>
+        <field name="personality" length="20" enum-type="App\Coach\Domain\Settings\Personality"/>
+        <field name="paceKgPerWeek" type="float" nullable="true"/>
+        <field name="analysedOn" type="date_immutable" nullable="true"/>
+        <field name="adherence" type="json" nullable="true"/>
+        <field name="updatedAt" type="datetimetz_immutable"/>
+    </entity>
+</doctrine-mapping>

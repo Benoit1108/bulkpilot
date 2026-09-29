@@ -1,4 +1,9 @@
 [
+  "coach.invalid_settings",
+  "coach.recommendation_closed",
+  "coach.recommendation_not_found",
+  "coach.target_changed",
+  "coach.target_unreachable",
   "identity.email_already_used",
   "identity.email_already_verified",
   "identity.email_not_verified",

@@ -18,3 +18,8 @@ export const NUTRITION_KEYS = {
 export function isJournalDerived(key: string): boolean {
   return key.startsWith('nutrition-day-') || key.startsWith('nutrition-averages-')
 }
+
+/** Everything that shows the target: its history, and the days and averages judged against it. */
+export function isTargetDerived(key: string): boolean {
+  return key === NUTRITION_KEYS.targets || isJournalDerived(key)
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Coach\Domain\Report\WeeklyReport" table="coach_weekly_reports">
+        <unique-constraints>
+            <!-- One report a week. -->
+            <unique-constraint name="coach_weekly_reports_owner_week" columns="owner_id,week_start"/>
+        </unique-constraints>
+
+        <id name="id" type="weekly_report_id"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="weekStart" type="date_immutable"/>
+        <field name="figures" type="json"/>
+        <field name="adherence" type="json"/>
+        <field name="verdict" length="10" enum-type="App\Coach\Domain\Analysis\Pace"/>
+        <field name="action" length="300" nullable="true"/>
+        <field name="createdAt" type="datetimetz_immutable"/>
+    </entity>
+</doctrine-mapping>

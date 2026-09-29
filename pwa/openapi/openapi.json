@@ -343,6 +343,796 @@
                 }
             }
         },
+        "/api/coach": {
+            "get": {
+                "operationId": "api_coach_get",
+                "tags": [
+                    "Coach"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Coach resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Coach.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Coach"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Coach resource.",
+                "description": "Retrieves a Coach resource.",
+                "parameters": [
+                    {
+                        "name": "today",
+                        "in": "query",
+                        "description": "The device's today (YYYY-MM-DD).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
+        "/api/coach/analysis": {
+            "post": {
+                "operationId": "api_coachanalysis_post",
+                "tags": [
+                    "Coach"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Coach resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Coach.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Coach"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Creates a Coach resource.",
+                "description": "Creates a Coach resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Coach resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Coach.AnalysisInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Coach.AnalysisInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/coach/recommendations": {
+            "get": {
+                "operationId": "api_coachrecommendations_get_collection",
+                "tags": [
+                    "CoachRecommendation"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CoachRecommendation collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "CoachRecommendation.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/CoachRecommendation.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CoachRecommendation"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of CoachRecommendation resources.",
+                "description": "Retrieves the collection of CoachRecommendation resources.",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "At most 50.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 50,
+                            "default": 20
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "The next page: the createdAt of the last one received\u2026",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "beforeId",
+                        "in": "query",
+                        "description": "\u2026and its id (those of one analysis share their time).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
+        "/api/coach/recommendations/{id}": {
+            "get": {
+                "operationId": "api_coachrecommendations_id_get",
+                "tags": [
+                    "CoachRecommendation"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CoachRecommendation resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CoachRecommendation.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CoachRecommendation"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found, or not the user's.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves a CoachRecommendation resource.",
+                "description": "Retrieves a CoachRecommendation resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "CoachRecommendation identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/coach/recommendations/{id}/decision": {
+            "post": {
+                "operationId": "coach_recommendation_decision",
+                "tags": [
+                    "CoachRecommendation"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CoachRecommendation resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CoachRecommendation.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CoachRecommendation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found, or not the user's.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "No longer offered (`coach.recommendation_closed`), the target changed since (`coach.target_changed`), or: Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "The change would make an invalid target (`coach.target_unreachable`: calories out of bounds, or too few left for the protein and fat).",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Creates a CoachRecommendation resource.",
+                "description": "Creates a CoachRecommendation resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "CoachRecommendation identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The new CoachRecommendation resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CoachRecommendation.DecisionInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CoachRecommendation.DecisionInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/coach/settings": {
+            "get": {
+                "operationId": "api_coachsettings_get",
+                "tags": [
+                    "CoachSettings"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CoachSettings resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CoachSettings.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CoachSettings"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a CoachSettings resource.",
+                "description": "Retrieves a CoachSettings resource.",
+                "parameters": []
+            },
+            "put": {
+                "operationId": "api_coachsettings_put",
+                "tags": [
+                    "CoachSettings"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CoachSettings resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CoachSettings.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CoachSettings"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Replaces the CoachSettings resource.",
+                "description": "Replaces the CoachSettings resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The updated CoachSettings resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CoachSettings.CoachSettingsInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CoachSettings.CoachSettingsInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/coach/reports": {
+            "get": {
+                "operationId": "api_coachreports_get_collection",
+                "tags": [
+                    "CoachWeeklyReport"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CoachWeeklyReport collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "CoachWeeklyReport.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/CoachWeeklyReport.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CoachWeeklyReport"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of CoachWeeklyReport resources.",
+                "description": "Retrieves the collection of CoachWeeklyReport resources.",
+                "parameters": []
+            }
+        },
         "/api/auth/email-verification": {
             "post": {
                 "operationId": "api_authemail-verification_post",
@@ -8713,6 +9503,112 @@
                     }
                 }
             },
+            "AdherenceOutput.jsonld_noid": {
+                "type": "object",
+                "required": [
+                    "score",
+                    "parts"
+                ],
+                "properties": {
+                    "score": {
+                        "description": "The mean of the parts, 0 to 100; null when nothing was recorded (no day logged, no weigh-in, no session).",
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "parts": {
+                        "description": "Calories: days within 10 % of the target. Protein: days at 90 % of it or more. Training: sessions of those planned. Weigh-ins: days weighed of 3.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AdherencePartOutput.jsonld_noid"
+                        }
+                    }
+                }
+            },
+            "AdherenceOutput_noid": {
+                "type": "object",
+                "required": [
+                    "score",
+                    "parts"
+                ],
+                "properties": {
+                    "score": {
+                        "description": "The mean of the parts, 0 to 100; null when nothing was recorded (no day logged, no weigh-in, no session).",
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "parts": {
+                        "description": "Calories: days within 10 % of the target. Protein: days at 90 % of it or more. Training: sessions of those planned. Weigh-ins: days weighed of 3.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AdherencePartOutput_noid"
+                        }
+                    }
+                }
+            },
+            "AdherencePartOutput.jsonld_noid": {
+                "type": "object",
+                "required": [
+                    "part",
+                    "done",
+                    "expected",
+                    "score"
+                ],
+                "properties": {
+                    "part": {
+                        "type": "string",
+                        "enum": [
+                            "calories",
+                            "protein",
+                            "training",
+                            "weigh_ins"
+                        ]
+                    },
+                    "done": {
+                        "type": "integer"
+                    },
+                    "expected": {
+                        "type": "integer"
+                    },
+                    "score": {
+                        "description": "0 to 100.",
+                        "type": "integer"
+                    }
+                }
+            },
+            "AdherencePartOutput_noid": {
+                "type": "object",
+                "required": [
+                    "part",
+                    "done",
+                    "expected",
+                    "score"
+                ],
+                "properties": {
+                    "part": {
+                        "type": "string",
+                        "enum": [
+                            "calories",
+                            "protein",
+                            "training",
+                            "weigh_ins"
+                        ]
+                    },
+                    "done": {
+                        "type": "integer"
+                    },
+                    "expected": {
+                        "type": "integer"
+                    },
+                    "score": {
+                        "description": "0 to 100.",
+                        "type": "integer"
+                    }
+                }
+            },
             "BarcodeScan": {
                 "type": "object",
                 "description": "What a barcode stands for: a food already here (known), or what Open Food Facts proposes (found). 404 when nobody knows it, 503 when Open Food Facts cannot be reached.",
@@ -8828,6 +9724,1236 @@
                         "items": {
                             "$ref": "#/components/schemas/PlannedExerciseInput"
                         }
+                    }
+                }
+            },
+            "Coach": {
+                "type": "object",
+                "description": "What the Coach offers now, as of its last analysis.",
+                "required": [
+                    "today",
+                    "analysedOn",
+                    "personality",
+                    "recommendations",
+                    "adherence",
+                    "report"
+                ],
+                "properties": {
+                    "today": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "analysedOn": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    },
+                    "personality": {
+                        "type": "string",
+                        "enum": [
+                            "direct",
+                            "encouraging",
+                            "neutral"
+                        ]
+                    },
+                    "recommendations": {
+                        "description": "Shown now, the most important first (postponed ones aside); 3 at most.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CoachRecommendation_noid"
+                        }
+                    },
+                    "adherence": {
+                        "description": "Over the 7 days before the last analysis (its day aside); null before the first one.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AdherenceOutput_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "report": {
+                        "description": "The last weekly report, if any.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/CoachWeeklyReport_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                }
+            },
+            "Coach.AnalysisInput": {
+                "type": "object",
+                "description": "Runs the analysis if it has not run today (or again when asked), then answers the Coach.",
+                "properties": {
+                    "today": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "again": {
+                        "default": false,
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Coach.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "today",
+                            "analysedOn",
+                            "personality",
+                            "recommendations",
+                            "adherence",
+                            "report"
+                        ],
+                        "properties": {
+                            "today": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "analysedOn": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date"
+                            },
+                            "personality": {
+                                "type": "string",
+                                "enum": [
+                                    "direct",
+                                    "encouraging",
+                                    "neutral"
+                                ]
+                            },
+                            "recommendations": {
+                                "description": "Shown now, the most important first (postponed ones aside); 3 at most.",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/CoachRecommendation.jsonld_noid"
+                                }
+                            },
+                            "adherence": {
+                                "description": "Over the 7 days before the last analysis (its day aside); null before the first one.",
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/AdherenceOutput.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "report": {
+                                "description": "The last weekly report, if any.",
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/CoachWeeklyReport.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "What the Coach offers now, as of its last analysis."
+            },
+            "CoachRecommendation": {
+                "type": "object",
+                "description": "The Coach's history, the latest first.",
+                "required": [
+                    "id",
+                    "kind",
+                    "level",
+                    "title",
+                    "body",
+                    "why",
+                    "proposal",
+                    "figures",
+                    "status",
+                    "provider",
+                    "createdAt",
+                    "expiresAt",
+                    "postponedUntil",
+                    "decidedAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "kind": {
+                        "type": "string",
+                        "enum": [
+                            "calories.no_target",
+                            "calories.no_pace",
+                            "calories.increase",
+                            "calories.decrease",
+                            "calories.reach_target_first",
+                            "calories.back_to_target",
+                            "protein.low",
+                            "journal.incomplete",
+                            "weigh_ins.few",
+                            "training.missed_sessions",
+                            "training.stall",
+                            "training.records"
+                        ]
+                    },
+                    "level": {
+                        "type": "string",
+                        "enum": [
+                            "priority",
+                            "watch",
+                            "info"
+                        ]
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "why": {
+                        "description": "The reasons, one per line (spec \u00a769).",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "proposal": {
+                        "description": "What accepting changes; null for advice.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ProposalOutput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "figures": {
+                        "type": "object",
+                        "additionalProperties": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "accepted",
+                            "rejected",
+                            "postponed",
+                            "expired"
+                        ]
+                    },
+                    "provider": {
+                        "description": "Who phrased it (spec \u00a7122).",
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "expiresAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "postponedUntil": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "decidedAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    }
+                }
+            },
+            "CoachRecommendation.DecisionInput": {
+                "type": "object",
+                "description": "Accepts, rejects or postpones it. Accepting a calorie proposal sets a new target from tomorrow (source: coach).",
+                "required": [
+                    "decision"
+                ],
+                "properties": {
+                    "decision": {
+                        "enum": [
+                            "accept",
+                            "reject",
+                            "postpone"
+                        ],
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "today": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "CoachRecommendation.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "kind",
+                            "level",
+                            "title",
+                            "body",
+                            "why",
+                            "proposal",
+                            "figures",
+                            "status",
+                            "provider",
+                            "createdAt",
+                            "expiresAt",
+                            "postponedUntil",
+                            "decidedAt"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "kind": {
+                                "type": "string",
+                                "enum": [
+                                    "calories.no_target",
+                                    "calories.no_pace",
+                                    "calories.increase",
+                                    "calories.decrease",
+                                    "calories.reach_target_first",
+                                    "calories.back_to_target",
+                                    "protein.low",
+                                    "journal.incomplete",
+                                    "weigh_ins.few",
+                                    "training.missed_sessions",
+                                    "training.stall",
+                                    "training.records"
+                                ]
+                            },
+                            "level": {
+                                "type": "string",
+                                "enum": [
+                                    "priority",
+                                    "watch",
+                                    "info"
+                                ]
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "body": {
+                                "type": "string"
+                            },
+                            "why": {
+                                "description": "The reasons, one per line (spec \u00a769).",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "proposal": {
+                                "description": "What accepting changes; null for advice.",
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/ProposalOutput.jsonld"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "figures": {
+                                "type": "object",
+                                "additionalProperties": true
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": [
+                                    "pending",
+                                    "accepted",
+                                    "rejected",
+                                    "postponed",
+                                    "expired"
+                                ]
+                            },
+                            "provider": {
+                                "description": "Who phrased it (spec \u00a7122).",
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "expiresAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "postponedUntil": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            },
+                            "decidedAt": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "The Coach's history, the latest first."
+            },
+            "CoachRecommendation.jsonld_noid": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchemaWithoutId"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "kind",
+                            "level",
+                            "title",
+                            "body",
+                            "why",
+                            "proposal",
+                            "figures",
+                            "status",
+                            "provider",
+                            "createdAt",
+                            "expiresAt",
+                            "postponedUntil",
+                            "decidedAt"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "kind": {
+                                "type": "string",
+                                "enum": [
+                                    "calories.no_target",
+                                    "calories.no_pace",
+                                    "calories.increase",
+                                    "calories.decrease",
+                                    "calories.reach_target_first",
+                                    "calories.back_to_target",
+                                    "protein.low",
+                                    "journal.incomplete",
+                                    "weigh_ins.few",
+                                    "training.missed_sessions",
+                                    "training.stall",
+                                    "training.records"
+                                ]
+                            },
+                            "level": {
+                                "type": "string",
+                                "enum": [
+                                    "priority",
+                                    "watch",
+                                    "info"
+                                ]
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "body": {
+                                "type": "string"
+                            },
+                            "why": {
+                                "description": "The reasons, one per line (spec \u00a769).",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "proposal": {
+                                "description": "What accepting changes; null for advice.",
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/ProposalOutput.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "figures": {
+                                "type": "object",
+                                "additionalProperties": true
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": [
+                                    "pending",
+                                    "accepted",
+                                    "rejected",
+                                    "postponed",
+                                    "expired"
+                                ]
+                            },
+                            "provider": {
+                                "description": "Who phrased it (spec \u00a7122).",
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "expiresAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "postponedUntil": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            },
+                            "decidedAt": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "A recommendation of the Coach (spec \u00a768\u201370), with its \"why\", the figures it was made on and\nwhat the user decided."
+            },
+            "CoachRecommendation_noid": {
+                "type": "object",
+                "description": "A recommendation of the Coach (spec \u00a768\u201370), with its \"why\", the figures it was made on and\nwhat the user decided.",
+                "required": [
+                    "id",
+                    "kind",
+                    "level",
+                    "title",
+                    "body",
+                    "why",
+                    "proposal",
+                    "figures",
+                    "status",
+                    "provider",
+                    "createdAt",
+                    "expiresAt",
+                    "postponedUntil",
+                    "decidedAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "kind": {
+                        "type": "string",
+                        "enum": [
+                            "calories.no_target",
+                            "calories.no_pace",
+                            "calories.increase",
+                            "calories.decrease",
+                            "calories.reach_target_first",
+                            "calories.back_to_target",
+                            "protein.low",
+                            "journal.incomplete",
+                            "weigh_ins.few",
+                            "training.missed_sessions",
+                            "training.stall",
+                            "training.records"
+                        ]
+                    },
+                    "level": {
+                        "type": "string",
+                        "enum": [
+                            "priority",
+                            "watch",
+                            "info"
+                        ]
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "why": {
+                        "description": "The reasons, one per line (spec \u00a769).",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "proposal": {
+                        "description": "What accepting changes; null for advice.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ProposalOutput_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "figures": {
+                        "type": "object",
+                        "additionalProperties": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "accepted",
+                            "rejected",
+                            "postponed",
+                            "expired"
+                        ]
+                    },
+                    "provider": {
+                        "description": "Who phrased it (spec \u00a7122).",
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "expiresAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "postponedUntil": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "decidedAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    }
+                }
+            },
+            "CoachSettings": {
+                "type": "object",
+                "description": "How the Coach speaks (spec \u00a7131) and the pace it judges the weight against.",
+                "required": [
+                    "personality",
+                    "paceKgPerWeek"
+                ],
+                "properties": {
+                    "personality": {
+                        "type": "string",
+                        "enum": [
+                            "direct",
+                            "encouraging",
+                            "neutral"
+                        ]
+                    },
+                    "paceKgPerWeek": {
+                        "description": "Kg a week, signed; null to follow the one the nutrition target was estimated for.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "CoachSettings.CoachSettingsInput": {
+                "type": "object",
+                "description": "Applies from the next analysis; what was already said keeps its wording.",
+                "required": [
+                    "personality"
+                ],
+                "properties": {
+                    "personality": {
+                        "enum": [
+                            "direct",
+                            "encouraging",
+                            "neutral"
+                        ],
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "paceKgPerWeek": {
+                        "minimum": -1,
+                        "maximum": 1,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "CoachSettings.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "personality",
+                            "paceKgPerWeek"
+                        ],
+                        "properties": {
+                            "personality": {
+                                "type": "string",
+                                "enum": [
+                                    "direct",
+                                    "encouraging",
+                                    "neutral"
+                                ]
+                            },
+                            "paceKgPerWeek": {
+                                "description": "Kg a week, signed; null to follow the one the nutrition target was estimated for.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "How the Coach speaks (spec \u00a7131) and the pace it judges the weight against."
+            },
+            "CoachWeeklyReport": {
+                "type": "object",
+                "description": "The reports of the last 52 weeks, the latest first.",
+                "required": [
+                    "weekStart",
+                    "startKg",
+                    "endKg",
+                    "changeKg",
+                    "kgPerWeek",
+                    "paceKgPerWeek",
+                    "averageKcal",
+                    "averageProtein",
+                    "loggedDays",
+                    "targetKcal",
+                    "targetProtein",
+                    "sessions",
+                    "plannedSessions",
+                    "records",
+                    "adherence",
+                    "verdict",
+                    "action"
+                ],
+                "properties": {
+                    "weekStart": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "startKg": {
+                        "description": "The 7-day mean weight at the end of the week before.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "endKg": {
+                        "description": "The 7-day mean weight at the end of the week.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "changeKg": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "kgPerWeek": {
+                        "description": "Speed over the 4 weeks ending with it.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "paceKgPerWeek": {
+                        "description": "The pace aimed at.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "averageKcal": {
+                        "description": "Mean of the days logged.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "averageProtein": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "loggedDays": {
+                        "type": "integer"
+                    },
+                    "targetKcal": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "targetProtein": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "sessions": {
+                        "type": "integer"
+                    },
+                    "plannedSessions": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "records": {
+                        "type": "integer"
+                    },
+                    "adherence": {
+                        "$ref": "#/components/schemas/AdherenceOutput_noid"
+                    },
+                    "verdict": {
+                        "type": "string",
+                        "enum": [
+                            "on_track",
+                            "below",
+                            "above",
+                            "unknown"
+                        ]
+                    },
+                    "action": {
+                        "description": "What the Coach asked for most, in the imperative; null to carry on with the plan.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "CoachWeeklyReport.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "weekStart",
+                            "startKg",
+                            "endKg",
+                            "changeKg",
+                            "kgPerWeek",
+                            "paceKgPerWeek",
+                            "averageKcal",
+                            "averageProtein",
+                            "loggedDays",
+                            "targetKcal",
+                            "targetProtein",
+                            "sessions",
+                            "plannedSessions",
+                            "records",
+                            "adherence",
+                            "verdict",
+                            "action"
+                        ],
+                        "properties": {
+                            "weekStart": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "startKg": {
+                                "description": "The 7-day mean weight at the end of the week before.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "endKg": {
+                                "description": "The 7-day mean weight at the end of the week.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "changeKg": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "kgPerWeek": {
+                                "description": "Speed over the 4 weeks ending with it.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "paceKgPerWeek": {
+                                "description": "The pace aimed at.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "averageKcal": {
+                                "description": "Mean of the days logged.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "averageProtein": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "loggedDays": {
+                                "type": "integer"
+                            },
+                            "targetKcal": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            },
+                            "targetProtein": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            },
+                            "sessions": {
+                                "type": "integer"
+                            },
+                            "plannedSessions": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            },
+                            "records": {
+                                "type": "integer"
+                            },
+                            "adherence": {
+                                "$ref": "#/components/schemas/AdherenceOutput.jsonld_noid"
+                            },
+                            "verdict": {
+                                "type": "string",
+                                "enum": [
+                                    "on_track",
+                                    "below",
+                                    "above",
+                                    "unknown"
+                                ]
+                            },
+                            "action": {
+                                "description": "What the Coach asked for most, in the imperative; null to carry on with the plan.",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "The reports of the last 52 weeks, the latest first."
+            },
+            "CoachWeeklyReport.jsonld_noid": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchemaWithoutId"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "weekStart",
+                            "startKg",
+                            "endKg",
+                            "changeKg",
+                            "kgPerWeek",
+                            "paceKgPerWeek",
+                            "averageKcal",
+                            "averageProtein",
+                            "loggedDays",
+                            "targetKcal",
+                            "targetProtein",
+                            "sessions",
+                            "plannedSessions",
+                            "records",
+                            "adherence",
+                            "verdict",
+                            "action"
+                        ],
+                        "properties": {
+                            "weekStart": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "startKg": {
+                                "description": "The 7-day mean weight at the end of the week before.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "endKg": {
+                                "description": "The 7-day mean weight at the end of the week.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "changeKg": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "kgPerWeek": {
+                                "description": "Speed over the 4 weeks ending with it.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "paceKgPerWeek": {
+                                "description": "The pace aimed at.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "averageKcal": {
+                                "description": "Mean of the days logged.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "averageProtein": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "loggedDays": {
+                                "type": "integer"
+                            },
+                            "targetKcal": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            },
+                            "targetProtein": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            },
+                            "sessions": {
+                                "type": "integer"
+                            },
+                            "plannedSessions": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            },
+                            "records": {
+                                "type": "integer"
+                            },
+                            "adherence": {
+                                "$ref": "#/components/schemas/AdherenceOutput.jsonld_noid"
+                            },
+                            "verdict": {
+                                "type": "string",
+                                "enum": [
+                                    "on_track",
+                                    "below",
+                                    "above",
+                                    "unknown"
+                                ]
+                            },
+                            "action": {
+                                "description": "What the Coach asked for most, in the imperative; null to carry on with the plan.",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "The report of a finished week (spec \u00a759), as drawn when the week ended."
+            },
+            "CoachWeeklyReport_noid": {
+                "type": "object",
+                "description": "The report of a finished week (spec \u00a759), as drawn when the week ended.",
+                "required": [
+                    "weekStart",
+                    "startKg",
+                    "endKg",
+                    "changeKg",
+                    "kgPerWeek",
+                    "paceKgPerWeek",
+                    "averageKcal",
+                    "averageProtein",
+                    "loggedDays",
+                    "targetKcal",
+                    "targetProtein",
+                    "sessions",
+                    "plannedSessions",
+                    "records",
+                    "adherence",
+                    "verdict",
+                    "action"
+                ],
+                "properties": {
+                    "weekStart": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "startKg": {
+                        "description": "The 7-day mean weight at the end of the week before.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "endKg": {
+                        "description": "The 7-day mean weight at the end of the week.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "changeKg": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "kgPerWeek": {
+                        "description": "Speed over the 4 weeks ending with it.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "paceKgPerWeek": {
+                        "description": "The pace aimed at.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "averageKcal": {
+                        "description": "Mean of the days logged.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "averageProtein": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "loggedDays": {
+                        "type": "integer"
+                    },
+                    "targetKcal": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "targetProtein": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "sessions": {
+                        "type": "integer"
+                    },
+                    "plannedSessions": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "records": {
+                        "type": "integer"
+                    },
+                    "adherence": {
+                        "$ref": "#/components/schemas/AdherenceOutput_noid"
+                    },
+                    "verdict": {
+                        "type": "string",
+                        "enum": [
+                            "on_track",
+                            "below",
+                            "above",
+                            "unknown"
+                        ]
+                    },
+                    "action": {
+                        "description": "What the Coach asked for most, in the imperative; null to carry on with the plan.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
                     }
                 }
             },
@@ -14594,6 +16720,110 @@
                     }
                 }
             },
+            "ProposalOutput": {
+                "type": "object",
+                "required": [
+                    "fromKcal",
+                    "byKcal",
+                    "toKcal",
+                    "carbohydrateChangeGrams"
+                ],
+                "properties": {
+                    "fromKcal": {
+                        "description": "The target it was made against.",
+                        "type": "integer"
+                    },
+                    "byKcal": {
+                        "description": "Signed change.",
+                        "type": "integer"
+                    },
+                    "toKcal": {
+                        "type": "integer"
+                    },
+                    "carbohydrateChangeGrams": {
+                        "description": "About how many grams of carbohydrates a day it changes (protein and fat are kept; the exact figure is set when accepted).",
+                        "type": "integer"
+                    }
+                }
+            },
+            "ProposalOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "fromKcal",
+                    "byKcal",
+                    "toKcal",
+                    "carbohydrateChangeGrams"
+                ],
+                "properties": {
+                    "fromKcal": {
+                        "description": "The target it was made against.",
+                        "type": "integer"
+                    },
+                    "byKcal": {
+                        "description": "Signed change.",
+                        "type": "integer"
+                    },
+                    "toKcal": {
+                        "type": "integer"
+                    },
+                    "carbohydrateChangeGrams": {
+                        "description": "About how many grams of carbohydrates a day it changes (protein and fat are kept; the exact figure is set when accepted).",
+                        "type": "integer"
+                    }
+                }
+            },
+            "ProposalOutput.jsonld_noid": {
+                "type": "object",
+                "required": [
+                    "fromKcal",
+                    "byKcal",
+                    "toKcal",
+                    "carbohydrateChangeGrams"
+                ],
+                "properties": {
+                    "fromKcal": {
+                        "description": "The target it was made against.",
+                        "type": "integer"
+                    },
+                    "byKcal": {
+                        "description": "Signed change.",
+                        "type": "integer"
+                    },
+                    "toKcal": {
+                        "type": "integer"
+                    },
+                    "carbohydrateChangeGrams": {
+                        "description": "About how many grams of carbohydrates a day it changes (protein and fat are kept; the exact figure is set when accepted).",
+                        "type": "integer"
+                    }
+                }
+            },
+            "ProposalOutput_noid": {
+                "type": "object",
+                "required": [
+                    "fromKcal",
+                    "byKcal",
+                    "toKcal",
+                    "carbohydrateChangeGrams"
+                ],
+                "properties": {
+                    "fromKcal": {
+                        "description": "The target it was made against.",
+                        "type": "integer"
+                    },
+                    "byKcal": {
+                        "description": "Signed change.",
+                        "type": "integer"
+                    },
+                    "toKcal": {
+                        "type": "integer"
+                    },
+                    "carbohydrateChangeGrams": {
+                        "description": "About how many grams of carbohydrates a day it changes (protein and fat are kept; the exact figure is set when accepted).",
+                        "type": "integer"
+                    }
+                }
+            },
             "Recipe": {
                 "type": "object",
                 "description": "The user's recipes, by name, with their composition.",
@@ -17525,6 +19755,22 @@
     },
     "security": [],
     "tags": [
+        {
+            "name": "Coach",
+            "description": "The Coach (spec \u00a762\u201370): at most three recommendations, the week's adherence, the last weekly\nreport. It never changes anything by itself."
+        },
+        {
+            "name": "CoachSettings",
+            "description": "How the Coach speaks (spec \u00a7131) and the pace it judges the weight against."
+        },
+        {
+            "name": "CoachRecommendation",
+            "description": "A recommendation of the Coach (spec \u00a768\u201370), with its \"why\", the figures it was made on and\nwhat the user decided."
+        },
+        {
+            "name": "CoachWeeklyReport",
+            "description": "The report of a finished week (spec \u00a759), as drawn when the week ended."
+        },
         {
             "name": "Account",
             "description": "Resource 'Account' operations."

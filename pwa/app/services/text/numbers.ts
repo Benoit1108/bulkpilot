@@ -2,12 +2,13 @@
 export type Amount = number | string | null
 
 /**
- * Reads a number typed by the user: "12,5", "12.5", " 150 ". Null when blank or not a number,
- * so that an empty field is never sent as 0.
+ * Reads a number typed by the user: "12,5", "12.5", " 150 ", "−0,3" (the typographic minus a
+ * French keyboard or a copy may give). Null when blank or not a number, so that an empty field is
+ * never sent as 0.
  */
 export function parseAmount(value: string | number | null | undefined): number | null {
   if (typeof value === 'number') return Number.isFinite(value) ? value : null
-  const text = (value ?? '').trim().replace(/\s/g, '').replace(',', '.')
+  const text = (value ?? '').trim().replace(/\s/g, '').replace(/\u2212/g, '-').replace(',', '.')
   if (text === '') return null
   const amount = Number(text)
   return Number.isFinite(amount) ? amount : null
@@ -36,3 +37,9 @@ export function formatNumber(value: number, maximumFractionDigits = 1): string {
 
 /** A number put back in a field the French way (« 51,2 »): the field then reads as the user types it. */
 export const amountText = (value: number): string => String(value).replace('.', ',')
+
+/** A signed number put back in a field (« +0,5 », « −0,3 », « 0 »), with the minus a French text uses. */
+export function signedAmountText(value: number): string {
+  if (value === 0) return '0'
+  return `${value > 0 ? '+' : '\u2212'}${amountText(Math.abs(value))}`
+}

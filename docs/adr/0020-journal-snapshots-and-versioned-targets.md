@@ -10,7 +10,8 @@ modifier ce qui a été mangé ni la façon dont un jour passé est jugé. Le se
 - Un `NutritionTarget` s'applique à partir d'un jour et n'est jamais modifié ; l'objectif d'un jour = le **dernier fixé** parmi ceux
   effectifs ce jour-là (une décision plus récente l'emporte sur une plus ancienne, même prévue pour plus tard ; les UUID v7 départagent
   deux objectifs fixés dans la même seconde). Un nouvel objectif commence aujourd'hui ou demain, jamais dans le passé — la règle est portée
-  par l'agrégat, avec un jour de marge avant le « aujourd'hui » du serveur pour les fuseaux en retard sur lui.
+  par l'agrégat, avec un jour de marge avant le « aujourd'hui » du serveur pour les fuseaux en retard sur lui, et un
+  après son « demain » pour ceux en avance (le lendemain d'un appareil déjà passé à minuit, ADR-0028).
 - Les valeurs stockées en JSON (estimation, portions, ingrédients, éléments de favoris) sont **reconstituées sans revalidation** :
   durcir une règle plus tard ne rend pas l'historique illisible.
 - Les jours sont des dates **locales** `YYYY-MM-DD` choisies par la PWA ; le serveur vérifie seulement leur plausibilité

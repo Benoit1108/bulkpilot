@@ -17,11 +17,12 @@ use App\Shared\Domain\Identifier\UserId;
 class NutritionTarget extends AggregateRoot
 {
     /**
-     * A target starts today or tomorrow, never in the past. "Today" is the user's: one day of
-     * slack before the server's today covers time zones behind it.
+     * A target starts today or tomorrow, never in the past. "Today" is the user's, within a day of
+     * the server's: one day of slack either way covers time zones behind and ahead of it (the
+     * user's tomorrow may be the server's day after).
      */
     public const int EARLIEST_START_DAYS_AGO = 1;
-    public const int LATEST_START_DAYS_AHEAD = 1;
+    public const int LATEST_START_DAYS_AHEAD = 2;
 
     private function __construct(
         private readonly NutritionTargetId $id,

@@ -84,6 +84,150 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/coach": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a Coach resource.
+         * @description Retrieves a Coach resource.
+         */
+        get: operations["api_coach_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/coach/analysis": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a Coach resource.
+         * @description Creates a Coach resource.
+         */
+        post: operations["api_coachanalysis_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/coach/recommendations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of CoachRecommendation resources.
+         * @description Retrieves the collection of CoachRecommendation resources.
+         */
+        get: operations["api_coachrecommendations_get_collection"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/coach/recommendations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a CoachRecommendation resource.
+         * @description Retrieves a CoachRecommendation resource.
+         */
+        get: operations["api_coachrecommendations_id_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/coach/recommendations/{id}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a CoachRecommendation resource.
+         * @description Creates a CoachRecommendation resource.
+         */
+        post: operations["coach_recommendation_decision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/coach/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a CoachSettings resource.
+         * @description Retrieves a CoachSettings resource.
+         */
+        get: operations["api_coachsettings_get"];
+        /**
+         * Replaces the CoachSettings resource.
+         * @description Replaces the CoachSettings resource.
+         */
+        put: operations["api_coachsettings_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/coach/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of CoachWeeklyReport resources.
+         * @description Retrieves the collection of CoachWeeklyReport resources.
+         */
+        get: operations["api_coachreports_get_collection"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/email-verification": {
         parameters: {
             query?: never;
@@ -1536,6 +1680,34 @@ export interface components {
             twoFactorEnabled: boolean;
             hasPassword: boolean;
         };
+        "AdherenceOutput.jsonld_noid": {
+            /** @description The mean of the parts, 0 to 100; null when nothing was recorded (no day logged, no weigh-in, no session). */
+            score: number | null;
+            /** @description Calories: days within 10 % of the target. Protein: days at 90 % of it or more. Training: sessions of those planned. Weigh-ins: days weighed of 3. */
+            parts: components["schemas"]["AdherencePartOutput.jsonld_noid"][];
+        };
+        AdherenceOutput_noid: {
+            /** @description The mean of the parts, 0 to 100; null when nothing was recorded (no day logged, no weigh-in, no session). */
+            score: number | null;
+            /** @description Calories: days within 10 % of the target. Protein: days at 90 % of it or more. Training: sessions of those planned. Weigh-ins: days weighed of 3. */
+            parts: components["schemas"]["AdherencePartOutput_noid"][];
+        };
+        "AdherencePartOutput.jsonld_noid": {
+            /** @enum {string} */
+            part: "calories" | "protein" | "training" | "weigh_ins";
+            done: number;
+            expected: number;
+            /** @description 0 to 100. */
+            score: number;
+        };
+        AdherencePartOutput_noid: {
+            /** @enum {string} */
+            part: "calories" | "protein" | "training" | "weigh_ins";
+            done: number;
+            expected: number;
+            /** @description 0 to 100. */
+            score: number;
+        };
         /** @description What a barcode stands for: a food already here (known), or what Open Food Facts proposes (found). 404 when nobody knows it, 503 when Open Food Facts cannot be reached. */
         BarcodeScan: {
             barcode: string;
@@ -1559,6 +1731,302 @@ export interface components {
         };
         BlockInput: {
             exercises?: components["schemas"]["PlannedExerciseInput"][];
+        };
+        /** @description What the Coach offers now, as of its last analysis. */
+        Coach: {
+            /** Format: date */
+            today: string;
+            /** Format: date */
+            analysedOn: string | null;
+            /** @enum {string} */
+            personality: "direct" | "encouraging" | "neutral";
+            /** @description Shown now, the most important first (postponed ones aside); 3 at most. */
+            recommendations: components["schemas"]["CoachRecommendation_noid"][];
+            /** @description Over the 7 days before the last analysis (its day aside); null before the first one. */
+            adherence: components["schemas"]["AdherenceOutput_noid"] | null;
+            /** @description The last weekly report, if any. */
+            report: components["schemas"]["CoachWeeklyReport_noid"] | null;
+        };
+        /** @description Runs the analysis if it has not run today (or again when asked), then answers the Coach. */
+        "Coach.AnalysisInput": {
+            today?: string | null;
+            /** @default false */
+            again: boolean;
+        };
+        /** @description What the Coach offers now, as of its last analysis. */
+        "Coach.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** Format: date */
+            today: string;
+            /** Format: date */
+            analysedOn: string | null;
+            /** @enum {string} */
+            personality: "direct" | "encouraging" | "neutral";
+            /** @description Shown now, the most important first (postponed ones aside); 3 at most. */
+            recommendations: components["schemas"]["CoachRecommendation.jsonld_noid"][];
+            /** @description Over the 7 days before the last analysis (its day aside); null before the first one. */
+            adherence: components["schemas"]["AdherenceOutput.jsonld_noid"] | null;
+            /** @description The last weekly report, if any. */
+            report: components["schemas"]["CoachWeeklyReport.jsonld_noid"] | null;
+        };
+        /** @description The Coach's history, the latest first. */
+        CoachRecommendation: {
+            id: string;
+            /** @enum {string} */
+            kind: "calories.no_target" | "calories.no_pace" | "calories.increase" | "calories.decrease" | "calories.reach_target_first" | "calories.back_to_target" | "protein.low" | "journal.incomplete" | "weigh_ins.few" | "training.missed_sessions" | "training.stall" | "training.records";
+            /** @enum {string} */
+            level: "priority" | "watch" | "info";
+            title: string;
+            body: string;
+            /** @description The reasons, one per line (spec §69). */
+            why: string[];
+            /** @description What accepting changes; null for advice. */
+            proposal: components["schemas"]["ProposalOutput"] | null;
+            figures: {
+                [key: string]: unknown;
+            };
+            /** @enum {string} */
+            status: "pending" | "accepted" | "rejected" | "postponed" | "expired";
+            /** @description Who phrased it (spec §122). */
+            provider: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /** Format: date-time */
+            postponedUntil: string | null;
+            /** Format: date-time */
+            decidedAt: string | null;
+        };
+        /** @description Accepts, rejects or postpones it. Accepting a calorie proposal sets a new target from tomorrow (source: coach). */
+        "CoachRecommendation.DecisionInput": {
+            /** @enum {string|null} */
+            decision: "accept" | "reject" | "postpone" | null;
+            today?: string | null;
+        };
+        /** @description The Coach's history, the latest first. */
+        "CoachRecommendation.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            /** @enum {string} */
+            kind: "calories.no_target" | "calories.no_pace" | "calories.increase" | "calories.decrease" | "calories.reach_target_first" | "calories.back_to_target" | "protein.low" | "journal.incomplete" | "weigh_ins.few" | "training.missed_sessions" | "training.stall" | "training.records";
+            /** @enum {string} */
+            level: "priority" | "watch" | "info";
+            title: string;
+            body: string;
+            /** @description The reasons, one per line (spec §69). */
+            why: string[];
+            /** @description What accepting changes; null for advice. */
+            proposal: components["schemas"]["ProposalOutput.jsonld"] | null;
+            figures: {
+                [key: string]: unknown;
+            };
+            /** @enum {string} */
+            status: "pending" | "accepted" | "rejected" | "postponed" | "expired";
+            /** @description Who phrased it (spec §122). */
+            provider: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /** Format: date-time */
+            postponedUntil: string | null;
+            /** Format: date-time */
+            decidedAt: string | null;
+        };
+        /**
+         * @description A recommendation of the Coach (spec §68–70), with its "why", the figures it was made on and
+         *     what the user decided.
+         */
+        "CoachRecommendation.jsonld_noid": components["schemas"]["HydraItemBaseSchemaWithoutId"] & {
+            id: string;
+            /** @enum {string} */
+            kind: "calories.no_target" | "calories.no_pace" | "calories.increase" | "calories.decrease" | "calories.reach_target_first" | "calories.back_to_target" | "protein.low" | "journal.incomplete" | "weigh_ins.few" | "training.missed_sessions" | "training.stall" | "training.records";
+            /** @enum {string} */
+            level: "priority" | "watch" | "info";
+            title: string;
+            body: string;
+            /** @description The reasons, one per line (spec §69). */
+            why: string[];
+            /** @description What accepting changes; null for advice. */
+            proposal: components["schemas"]["ProposalOutput.jsonld_noid"] | null;
+            figures: {
+                [key: string]: unknown;
+            };
+            /** @enum {string} */
+            status: "pending" | "accepted" | "rejected" | "postponed" | "expired";
+            /** @description Who phrased it (spec §122). */
+            provider: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /** Format: date-time */
+            postponedUntil: string | null;
+            /** Format: date-time */
+            decidedAt: string | null;
+        };
+        /**
+         * @description A recommendation of the Coach (spec §68–70), with its "why", the figures it was made on and
+         *     what the user decided.
+         */
+        CoachRecommendation_noid: {
+            id: string;
+            /** @enum {string} */
+            kind: "calories.no_target" | "calories.no_pace" | "calories.increase" | "calories.decrease" | "calories.reach_target_first" | "calories.back_to_target" | "protein.low" | "journal.incomplete" | "weigh_ins.few" | "training.missed_sessions" | "training.stall" | "training.records";
+            /** @enum {string} */
+            level: "priority" | "watch" | "info";
+            title: string;
+            body: string;
+            /** @description The reasons, one per line (spec §69). */
+            why: string[];
+            /** @description What accepting changes; null for advice. */
+            proposal: components["schemas"]["ProposalOutput_noid"] | null;
+            figures: {
+                [key: string]: unknown;
+            };
+            /** @enum {string} */
+            status: "pending" | "accepted" | "rejected" | "postponed" | "expired";
+            /** @description Who phrased it (spec §122). */
+            provider: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /** Format: date-time */
+            postponedUntil: string | null;
+            /** Format: date-time */
+            decidedAt: string | null;
+        };
+        /** @description How the Coach speaks (spec §131) and the pace it judges the weight against. */
+        CoachSettings: {
+            /** @enum {string} */
+            personality: "direct" | "encouraging" | "neutral";
+            /** @description Kg a week, signed; null to follow the one the nutrition target was estimated for. */
+            paceKgPerWeek: number | null;
+        };
+        /** @description Applies from the next analysis; what was already said keeps its wording. */
+        "CoachSettings.CoachSettingsInput": {
+            /** @enum {string|null} */
+            personality: "direct" | "encouraging" | "neutral" | null;
+            paceKgPerWeek?: number | null;
+        };
+        /** @description How the Coach speaks (spec §131) and the pace it judges the weight against. */
+        "CoachSettings.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** @enum {string} */
+            personality: "direct" | "encouraging" | "neutral";
+            /** @description Kg a week, signed; null to follow the one the nutrition target was estimated for. */
+            paceKgPerWeek: number | null;
+        };
+        /** @description The reports of the last 52 weeks, the latest first. */
+        CoachWeeklyReport: {
+            /** Format: date */
+            weekStart: string;
+            /** @description The 7-day mean weight at the end of the week before. */
+            startKg: number | null;
+            /** @description The 7-day mean weight at the end of the week. */
+            endKg: number | null;
+            changeKg: number | null;
+            /** @description Speed over the 4 weeks ending with it. */
+            kgPerWeek: number | null;
+            /** @description The pace aimed at. */
+            paceKgPerWeek: number | null;
+            /** @description Mean of the days logged. */
+            averageKcal: number | null;
+            averageProtein: number | null;
+            loggedDays: number;
+            targetKcal: number | null;
+            targetProtein: number | null;
+            sessions: number;
+            plannedSessions: number | null;
+            records: number;
+            adherence: components["schemas"]["AdherenceOutput_noid"];
+            /** @enum {string} */
+            verdict: "on_track" | "below" | "above" | "unknown";
+            /** @description What the Coach asked for most, in the imperative; null to carry on with the plan. */
+            action: string | null;
+        };
+        /** @description The reports of the last 52 weeks, the latest first. */
+        "CoachWeeklyReport.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** Format: date */
+            weekStart: string;
+            /** @description The 7-day mean weight at the end of the week before. */
+            startKg: number | null;
+            /** @description The 7-day mean weight at the end of the week. */
+            endKg: number | null;
+            changeKg: number | null;
+            /** @description Speed over the 4 weeks ending with it. */
+            kgPerWeek: number | null;
+            /** @description The pace aimed at. */
+            paceKgPerWeek: number | null;
+            /** @description Mean of the days logged. */
+            averageKcal: number | null;
+            averageProtein: number | null;
+            loggedDays: number;
+            targetKcal: number | null;
+            targetProtein: number | null;
+            sessions: number;
+            plannedSessions: number | null;
+            records: number;
+            adherence: components["schemas"]["AdherenceOutput.jsonld_noid"];
+            /** @enum {string} */
+            verdict: "on_track" | "below" | "above" | "unknown";
+            /** @description What the Coach asked for most, in the imperative; null to carry on with the plan. */
+            action: string | null;
+        };
+        /** @description The report of a finished week (spec §59), as drawn when the week ended. */
+        "CoachWeeklyReport.jsonld_noid": components["schemas"]["HydraItemBaseSchemaWithoutId"] & {
+            /** Format: date */
+            weekStart: string;
+            /** @description The 7-day mean weight at the end of the week before. */
+            startKg: number | null;
+            /** @description The 7-day mean weight at the end of the week. */
+            endKg: number | null;
+            changeKg: number | null;
+            /** @description Speed over the 4 weeks ending with it. */
+            kgPerWeek: number | null;
+            /** @description The pace aimed at. */
+            paceKgPerWeek: number | null;
+            /** @description Mean of the days logged. */
+            averageKcal: number | null;
+            averageProtein: number | null;
+            loggedDays: number;
+            targetKcal: number | null;
+            targetProtein: number | null;
+            sessions: number;
+            plannedSessions: number | null;
+            records: number;
+            adherence: components["schemas"]["AdherenceOutput.jsonld_noid"];
+            /** @enum {string} */
+            verdict: "on_track" | "below" | "above" | "unknown";
+            /** @description What the Coach asked for most, in the imperative; null to carry on with the plan. */
+            action: string | null;
+        };
+        /** @description The report of a finished week (spec §59), as drawn when the week ended. */
+        CoachWeeklyReport_noid: {
+            /** Format: date */
+            weekStart: string;
+            /** @description The 7-day mean weight at the end of the week before. */
+            startKg: number | null;
+            /** @description The 7-day mean weight at the end of the week. */
+            endKg: number | null;
+            changeKg: number | null;
+            /** @description Speed over the 4 weeks ending with it. */
+            kgPerWeek: number | null;
+            /** @description The pace aimed at. */
+            paceKgPerWeek: number | null;
+            /** @description Mean of the days logged. */
+            averageKcal: number | null;
+            averageProtein: number | null;
+            loggedDays: number;
+            targetKcal: number | null;
+            targetProtein: number | null;
+            sessions: number;
+            plannedSessions: number | null;
+            records: number;
+            adherence: components["schemas"]["AdherenceOutput_noid"];
+            /** @enum {string} */
+            verdict: "on_track" | "below" | "above" | "unknown";
+            /** @description What the Coach asked for most, in the imperative; null to carry on with the plan. */
+            action: string | null;
         };
         Composition: {
             energyKcal: number;
@@ -2988,6 +3456,42 @@ export interface components {
             grams: number;
             nutrients: components["schemas"]["Nutrients.jsonld"];
         };
+        ProposalOutput: {
+            /** @description The target it was made against. */
+            fromKcal: number;
+            /** @description Signed change. */
+            byKcal: number;
+            toKcal: number;
+            /** @description About how many grams of carbohydrates a day it changes (protein and fat are kept; the exact figure is set when accepted). */
+            carbohydrateChangeGrams: number;
+        };
+        "ProposalOutput.jsonld": {
+            /** @description The target it was made against. */
+            fromKcal: number;
+            /** @description Signed change. */
+            byKcal: number;
+            toKcal: number;
+            /** @description About how many grams of carbohydrates a day it changes (protein and fat are kept; the exact figure is set when accepted). */
+            carbohydrateChangeGrams: number;
+        };
+        "ProposalOutput.jsonld_noid": {
+            /** @description The target it was made against. */
+            fromKcal: number;
+            /** @description Signed change. */
+            byKcal: number;
+            toKcal: number;
+            /** @description About how many grams of carbohydrates a day it changes (protein and fat are kept; the exact figure is set when accepted). */
+            carbohydrateChangeGrams: number;
+        };
+        ProposalOutput_noid: {
+            /** @description The target it was made against. */
+            fromKcal: number;
+            /** @description Signed change. */
+            byKcal: number;
+            toKcal: number;
+            /** @description About how many grams of carbohydrates a day it changes (protein and fat are kept; the exact figure is set when accepted). */
+            carbohydrateChangeGrams: number;
+        };
         /** @description The user's recipes, by name, with their composition. */
         Recipe: {
             id: string;
@@ -3849,6 +4353,421 @@ export interface operations {
                     "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
                     "application/problem+json": components["schemas"]["ConstraintViolation"];
                     "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_coach_get: {
+        parameters: {
+            query?: {
+                /** @description The device's today (YYYY-MM-DD). */
+                today?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Coach resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Coach.jsonld"];
+                    "application/json": components["schemas"]["Coach"];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_coachanalysis_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new Coach resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Coach.AnalysisInput"];
+                "application/json": components["schemas"]["Coach.AnalysisInput"];
+            };
+        };
+        responses: {
+            /** @description Coach resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Coach.jsonld"];
+                    "application/json": components["schemas"]["Coach"];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_coachrecommendations_get_collection: {
+        parameters: {
+            query?: {
+                /** @description At most 50. */
+                limit?: number;
+                /** @description The next page: the createdAt of the last one received… */
+                before?: string;
+                /** @description …and its id (those of one analysis share their time). */
+                beforeId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description CoachRecommendation collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["CoachRecommendation.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["CoachRecommendation"][];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_coachrecommendations_id_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description CoachRecommendation identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description CoachRecommendation resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["CoachRecommendation.jsonld"];
+                    "application/json": components["schemas"]["CoachRecommendation"];
+                };
+            };
+            /** @description Not found, or not the user's. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    coach_recommendation_decision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description CoachRecommendation identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The new CoachRecommendation resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["CoachRecommendation.DecisionInput"];
+                "application/json": components["schemas"]["CoachRecommendation.DecisionInput"];
+            };
+        };
+        responses: {
+            /** @description CoachRecommendation resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["CoachRecommendation.jsonld"];
+                    "application/json": components["schemas"]["CoachRecommendation"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found, or not the user's. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description No longer offered (`coach.recommendation_closed`), the target changed since (`coach.target_changed`), or: Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description The change would make an invalid target (`coach.target_unreachable`: calories out of bounds, or too few left for the protein and fat). */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_coachsettings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description CoachSettings resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["CoachSettings.jsonld"];
+                    "application/json": components["schemas"]["CoachSettings"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_coachsettings_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The updated CoachSettings resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["CoachSettings.CoachSettingsInput"];
+                "application/json": components["schemas"]["CoachSettings.CoachSettingsInput"];
+            };
+        };
+        responses: {
+            /** @description CoachSettings resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["CoachSettings.jsonld"];
+                    "application/json": components["schemas"]["CoachSettings"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_coachreports_get_collection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description CoachWeeklyReport collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["CoachWeeklyReport.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["CoachWeeklyReport"][];
                 };
             };
         };

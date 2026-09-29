@@ -24,6 +24,7 @@ Langage commun et règles structurantes. Chaque contexte complètera sa section 
 | `DomainException` | Violation d'une règle métier, avec un **code d'erreur stable** (`nutrition.invalid_recipe`) traduit côté présentation. |
 | `Period`, `Days` | Les périodes des graphiques (7 j, 30 j, 3 mois, 6 mois, 1 an, tout) se terminant le jour de l'utilisateur, et le calcul des jours et semaines (lundi). |
 | `MediaId`, port `Photos` | Une photo que Media garde pour un autre contexte (ADR-0027) : `store`, `links`, `delete`, Media vérifiant le propriétaire. |
+| Ports `Coaching` | Ce que le Coach lit des autres contextes (ADR-0028) : `NutritionReadings` (jours saisis, objectif d'un jour), `BodyWeight`, `TrainingReadings` (des chiffres seulement), et `CalorieTargets`, sa seule écriture, sur acceptation (`TargetChanged`, `TargetUnreachable`). |
 
 ## Contextes
 
@@ -75,7 +76,7 @@ Règles transverses :
 | `FoodState` | Déduit du nom CIQUAL (« cuit », « sauté/poêlé », « œuf dur »… avant « cru » ; « blé dur » n'est pas une cuisson) ; un aliment cru et son équivalent cuit sont deux aliments distincts. |
 | `JournalEntry` (agrégat) | Une quantité (0–5000 g) d'un aliment, dans un repas d'un jour. **Instantané** : nom, état et valeurs pour 100 g sont copiés à la saisie ; modifier ou supprimer l'aliment (ou un nouvel import CIQUAL) ne réécrit jamais le passé. |
 | `MealSlot` | Petit-déjeuner, déjeuner, collation, gainer, dîner (ordre chronologique). |
-| `NutritionTarget` (agrégat) | Objectifs quotidiens **à partir d'un jour** (aujourd'hui ou demain), jamais modifiés : un changement = un nouvel objectif. Chaque jour est comparé à l'objectif en vigueur ce jour-là : le dernier fixé parmi ceux déjà effectifs. Source : estimation, saisie manuelle, coach (phase 6). |
+| `NutritionTarget` (agrégat) | Objectifs quotidiens **à partir d'un jour** (aujourd'hui ou demain, pour l'utilisateur : jusqu'à deux jours après celui du serveur pour un fuseau en avance), jamais modifiés : un changement = un nouvel objectif. Chaque jour est comparé à l'objectif en vigueur ce jour-là : le dernier fixé parmi ceux déjà effectifs. Source : estimation, saisie manuelle, coach (phase 6). |
 | `MacroTargets` | 1000–7000 kcal ; les macros (4 / 4 / 9 kcal/g) doivent faire les calories à ±5 %. |
 | `EnergyCalculator` | Mifflin-St Jeor : `10·kg + 6,25·cm − 5·âge + 5 (homme) / −161 (femme)`, × (mode de vie 1,2 / 1,35 / 1,5 / 1,7 + 0,05 par séance hebdo, max. +0,3), + variation visée × 7700 ÷ 7, arrondi à 10 kcal, entre 1200 et 7000. Lipides 25 % des calories, au moins 0,6 g/kg (au plus 50 % des calories) ; protéines 1,8 (masse) / 1,6 (maintien) / 2,2 (sèche) g/kg, plafonnées à ce que les calories permettent (grande sèche d'une personne lourde) ; glucides : le reste. |
 | `MealSplit` | Part des calories par repas, entiers dont la somme fait 100 ; défaut 25 / 30 / 0 / 15 / 30. |
@@ -164,7 +165,7 @@ Règles transverses :
 
 Limites connues (reportées volontairement) :
 
-- Adhérence (§58) et rapport hebdomadaire (§59) : phases 6–7, avec le Coach et le tableau de bord.
+- Adhérence (§58) et rapport hebdomadaire (§59) : faits par le Coach (phase 6) ; le tableau de bord (phase 7) les reprendra.
 - Les pesées et mensurations ne se saisissent pas hors ligne (contrairement aux séances).
 - Une photo ne se corrige pas (jour, pose) : la supprimer et la reprendre.
 - Analyses d'entraînement (`GET /api/training/analytics`) : calculées sur les 300 dernières séances au plus
@@ -175,6 +176,42 @@ Limites connues (reportées volontairement) :
 - La semaine en cours et la première semaine d'une période sont souvent incomplètes : la PWA marque la semaine en cours,
   l'écarte de la comparaison calories / poids et montre le nombre de jours saisis et de pesées de chaque semaine.
 
+## Coach (phase 6)
+
+| Élément | Règles |
+| --- | --- |
+| `Facts` | Ce que les règles jugent, calculé par Symfony (§74) à partir des ports : objectif en vigueur aujourd'hui, rythme visé (réglages du Coach, sinon l'estimation de l'objectif), tendance du poids (pesée du matin comprise), alimentation des 14 et des 7 derniers jours et entraînement des 7 derniers jours, **aujourd'hui exclu** (la journée n'est pas finie). |
+| `Pace` | Le poids contre le rythme visé : dans une bande de la moitié du rythme (au moins 0,2 kg/semaine) → conforme, sinon en dessous ou au-dessus ; inconnu sans rythme ou sans tendance. |
+| `RuleEngine` et règles | Déterministes (§64). **Calories** : rien les 14 premiers jours d'un objectif, avec moins de 10 jours saisis sur 14 ou moins de 8 pesées sur 28 ; en dessous du rythme, +150 kcal vers l'objectif (+100 en sens inverse) si 95 % de la cible au moins est mangée, sinon « atteins d'abord » (🔴 sous 85 %) ; au-dessus, −100 kcal (−150 vers l'objectif d'une sèche) si la cible n'est pas dépassée de plus de 5 %, sinon « reviens à ta cible » ; jamais hors de 1 000–7 000 kcal ; la part mangée est arrondie vers le bas. **Protéines** sous 90 % de la cible sur la semaine (4 jours saisis au moins). **Journal** : moins de 10 jours saisis sur 14. **Pesées** : moins de 3 sur 7 jours. **Séances** : moins que le programme actif n'en prévoit. **Stagnation** (règle de Training, `StallDetector`) : jusqu'à 3 exercices, avec la part de la cible calorique mangée (la nutrition d'abord, jamais plus de volume). **Records** de la semaine. Triées par niveau (🔴 prioritaire, 🟠 à surveiller, 🟢 information), puis dans cet ordre ; **3 au plus** (§68). |
+| `Recommendation` (agrégat) | Un constat, ses chiffres (§70), son texte (titre, message, « Pourquoi ? ») et son fournisseur ; `pending` → `accepted` / `rejected` / `postponed` (2 jours de côté) ; `expired` après 7 jours ou quand l'analyse ne la justifie plus. Gardée telle quelle tant que les données la justifient ; un type décidé ne revient pas avant 7 jours. Versionnée (deux décisions à la fois : la seconde en 409). Annonce `RecommendationMade` (fournisseur) et `RecommendationDecided` (audit). |
+| Acceptation | Seule une proposition calorique change quelque chose : un nouvel objectif à partir du lendemain de l'utilisateur, source « coach », protéines et lipides gardés, les glucides faisant exactement les nouvelles kcal (`MacroTargets::withEnergy`) ; refusée si l'objectif a changé depuis (409 `coach.target_changed`) ou serait invalide (422 `coach.target_unreachable`). |
+| `Adherence` | Sur 7 jours : moyenne des parts expliquées — jours à ± 10 % des kcal, jours à 90 % des protéines, séances faites sur prévues, pesées sur 3 ; une part sans attente est omise ; pas de score si rien n'a été saisi, pesé ni fait. Calculée par l'analyse et gardée avec les réglages. |
+| `WeeklyReport` (agrégat) | Une semaine finie (lundi–dimanche), tirée à la première analyse qui suit et gardée telle quelle : poids (moyennes 7 jours de fin de semaine), kcal et protéines moyennes, séances, records, verdict du rythme, adhérence, action (la consigne à l'impératif de la recommandation la plus importante, sinon « Continuer le plan actuel ») ; pas de rapport d'une semaine vide. |
+| `CoachSettings` (agrégat) | Personnalité (directe par défaut, encourageante, neutre : le ton seulement, §131), rythme visé facultatif (±1 kg/semaine), dernier jour analysé et son adhérence ; versionné (deux analyses à la fois : la seconde en 409). |
+| `AiProvider` | Formule un constat (`CoachAnalysis` : le type, ses chiffres, la personnalité ; rien qui identifie l'utilisateur, les noms d'exercices passant en repères `{exercise1}`) en titre, texte, « Pourquoi ? » et consigne ; `FakeAiProvider` (gabarits français déterministes) est le seul pour l'instant et le repli sans IA ; le fournisseur est journalisé (§122). |
+
+Règles transverses :
+
+- L'analyse tourne à l'ouverture du Coach, une fois par jour, ou à nouveau sur demande ; jamais pour un jour antérieur
+  au dernier analysé. Chaque analyse qui tourne compte dans la limite (30 / min par compte, `RATE_LIMIT_COACH_WRITES`,
+  comme les décisions et les réglages).
+- Les recommandations déjà faites gardent leur texte : changer de personnalité ne s'applique qu'aux suivantes.
+
+Limites connues (reportées volontairement) :
+
+- Pas d'analyse planifiée ni de notification : phase 7.
+- Un seul fournisseur IA (gabarits) ; Claude / OpenAI se brancheront sur `AiProvider`.
+- Le rapport d'une semaine n'est tiré que si le Coach est ouvert après elle ; une semaine sans ouverture n'a pas de rapport.
+- L'action du rapport est celle de l'analyse qui le tire (le lundi suivant, en général), pas celle du dimanche.
+- Une recommandation mise de côté (« Plus tard ») garde sa place parmi les 3 : pendant 2 jours, 2 seulement peuvent
+  être montrées.
+- L'adhérence et le rapport jugent les jours contre l'objectif en vigueur au moment du calcul (aujourd'hui, ou le
+  dimanche de la semaine), pas contre celui de chaque jour : juste après un changement d'objectif, les jours d'avant
+  sont comparés au nouveau.
+- Les séances comptent dans les fenêtres d'après leur heure de début en UTC (comme les analyses d'entraînement).
+- Le fournisseur est appelé dans la transaction de l'analyse (sans conséquence avec les gabarits ; un vrai
+  fournisseur formulera après la validation, ADR-0028).
+
 ## Media (phase 5)
 
 | Élément | Règles |
@@ -184,5 +221,5 @@ Limites connues (reportées volontairement) :
 
 ## Événements de domaine prévus
 
-`WeighInRecorded` (émis en phase 5) · `DailyNutritionTargetReached` · `WorkoutCompleted` · `GoalChanged` ·
-`RecommendationCreated` · `RecommendationAccepted` · `RecommendationRejected`
+`WeighInRecorded` (émis en phase 5) · `RecommendationDecided` (phase 6) · `DailyNutritionTargetReached` ·
+`WorkoutCompleted` · `GoalChanged`

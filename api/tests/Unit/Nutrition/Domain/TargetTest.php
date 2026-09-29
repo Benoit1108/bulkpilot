@@ -78,8 +78,9 @@ final class TargetTest extends TestCase
         yield 'tomorrow' => ['2026-09-29', true];
         yield 'today' => ['2026-09-28', true];
         yield 'yesterday: time zones behind the server' => ['2026-09-27', true];
+        yield 'in two days: the tomorrow of a device already past midnight, ahead of the server' => ['2026-09-30', true];
         yield 'two days ago' => ['2026-09-26', false];
-        yield 'in two days' => ['2026-09-30', false];
+        yield 'in three days' => ['2026-10-01', false];
     }
 
     #[DataProvider('starts')]
@@ -219,5 +220,31 @@ final class TargetTest extends TestCase
         $this->expectException(InvalidMealSplit::class);
 
         MealSplit::of(new UserId('00000000-0000-7000-8000-000000000001'), $shares);
+    }
+
+    public function testOtherCaloriesKeepTheProteinAndFatAndMakeUpTheRestInCarbohydrates(): void
+    {
+        $targets = new MacroTargets(2800, 150, 360, 80);
+
+        $more = $targets->withEnergy(2950);
+        $less = $targets->withEnergy(1320);
+
+        self::assertSame([2950, 150, 408, 80], [$more->energyKcal, $more->proteinGrams, $more->carbohydrateGrams, $more->fatGrams]);
+        self::assertSame(2952, MacroTargets::energyOf($more->proteinGrams, $more->carbohydrateGrams, $more->fatGrams), 'to the nearest gram');
+        self::assertSame([1320, 150, 0, 80], [$less->energyKcal, $less->proteinGrams, $less->carbohydrateGrams, $less->fatGrams], 'the protein and fat make it all');
+    }
+
+    public function testOtherCaloriesBelowTheProteinAndFatAreRefused(): void
+    {
+        $this->expectException(InconsistentTarget::class);
+
+        new MacroTargets(2800, 150, 360, 80)->withEnergy(1300);
+    }
+
+    public function testOtherCaloriesOutOfBoundsAreRefused(): void
+    {
+        $this->expectException(InconsistentTarget::class);
+
+        new MacroTargets(7000, 150, 1420, 80)->withEnergy(7100);
     }
 }

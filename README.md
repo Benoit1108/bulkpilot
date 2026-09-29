@@ -63,4 +63,5 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 | 4 | Training : bibliothèque d’exercices et exercices perso, programmes versionnés (supersets, drop sets, tempo, RIR), séances, minuteur, progression, PR | ✅ |
 | 4.5 | Socle front : Tailwind CSS sur nos tokens, composants de 250 lignes au plus, garde « quitter sans enregistrer », erreurs dans l’OpenAPI, budget de taille, ADR graphiques et photos | ✅ |
 | 5 | Progression : pesées (moyennes 7/30 j, tendance), objectif et jalons avec estimation, mensurations et mesures perso, photos privées (sessions, comparaison), graphiques, calories face au poids, statistiques d’entraînement | ✅ |
-| 6–10 | Coach, Dashboard, Export/Sécurité, Qualité, Production | — |
+| 6 | Coach : règles déterministes (calories, protéines, journal, pesées, séances, stagnation, records), 3 recommandations expliquées à valider, historique, adhérence, rapport hebdomadaire, personnalité, fournisseur IA abstrait (gabarits) | ✅ |
+| 7–10 | Dashboard, Export/Sécurité, Qualité, Production | — |

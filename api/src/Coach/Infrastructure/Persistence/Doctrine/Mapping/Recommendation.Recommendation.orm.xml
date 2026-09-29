@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Coach\Domain\Recommendation\Recommendation" table="coach_recommendations">
+        <indexes>
+            <index name="coach_recommendations_owner_created" columns="owner_id,created_at"/>
+        </indexes>
+
+        <id name="id" type="recommendation_id"/>
+        <field name="version" type="integer" version="true"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="kind" length="40" enum-type="App\Coach\Domain\Rule\Kind"/>
+        <field name="level" length="10" enum-type="App\Coach\Domain\Rule\Level"/>
+        <field name="figures" type="json"/>
+        <field name="proposalFromKcal" type="integer" nullable="true"/>
+        <field name="proposalByKcal" type="integer" nullable="true"/>
+        <field name="title" length="200"/>
+        <field name="body" type="text"/>
+        <field name="why" type="json"/>
+        <field name="action" length="300"/>
+        <field name="provider" length="40"/>
+        <field name="status" length="10" enum-type="App\Coach\Domain\Recommendation\Status"/>
+        <field name="createdAt" type="datetimetz_immutable"/>
+        <field name="expiresAt" type="datetimetz_immutable"/>
+        <field name="postponedUntil" type="datetimetz_immutable" nullable="true"/>
+        <field name="decidedAt" type="datetimetz_immutable" nullable="true"/>
+    </entity>
+</doctrine-mapping>

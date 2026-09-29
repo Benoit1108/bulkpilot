@@ -44,6 +44,22 @@ final readonly class MacroTargets
             && $this->fatGrams === $other->fatGrams;
     }
 
+    /**
+     * The same protein and fat at other calories, the carbohydrates making up the rest (an accepted
+     * Coach proposal, ADR-0028).
+     *
+     * @throws InconsistentTarget the calories are out of bounds, or below what the protein and fat already give
+     */
+    public function withEnergy(int $energyKcal): self
+    {
+        $left = $energyKcal - NutrientAmounts::KCAL_PER_GRAM_PROTEIN * $this->proteinGrams - NutrientAmounts::KCAL_PER_GRAM_FAT * $this->fatGrams;
+        if ($left < 0) {
+            throw InconsistentTarget::because(\sprintf('the protein and fat alone give more than %d kcal', $energyKcal));
+        }
+
+        return new self($energyKcal, $this->proteinGrams, (int) round($left / NutrientAmounts::KCAL_PER_GRAM_CARBOHYDRATE), $this->fatGrams);
+    }
+
     public static function energyOf(int $protein, int $carbohydrate, int $fat): int
     {
         return (int) NutrientAmounts::energyOfMacros($protein, $carbohydrate, $fat);

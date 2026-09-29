@@ -30,7 +30,7 @@ defineProps<{ estimate: EnergyEstimate }>()
     <li class="grid grid-cols-[1fr_auto] gap-x-3 py-2">
       <span class="font-semibold">Objectif estimé</span>
       <span class="font-bold text-accent-ink tabular-nums">{{ formatKcal(estimate.energyKcal) }}</span>
-      <span class="col-span-full text-sm text-muted">Arrondi à 10&nbsp;kcal. Un point de départ&nbsp;: le coach l’ajustera avec ta courbe de poids.</span>
+      <span class="col-span-full text-sm text-muted">Arrondi à 10&nbsp;kcal. Un point de départ&nbsp;: le Coach l’ajustera avec ta courbe de poids.</span>
     </li>
   </ol>
 </template>

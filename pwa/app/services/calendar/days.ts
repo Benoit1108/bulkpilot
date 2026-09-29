@@ -50,3 +50,10 @@ export function formatShortDay(day: string): string {
 export function formatFullDay(day: string): string {
   return fullDay.format(parseDay(day))
 }
+
+const dayMonth = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long' })
+
+/** « 21 septembre », with the year when it is not the one of `today` (« 21 septembre 2025 »). */
+export function formatDayMonth(day: string, today: string): string {
+  return (day.slice(0, 4) === today.slice(0, 4) ? dayMonth : fullDay).format(parseDay(day))
+}

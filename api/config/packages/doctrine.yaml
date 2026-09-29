@@ -39,6 +39,8 @@ doctrine:
             measurement_day_id: App\Progression\Infrastructure\Persistence\Doctrine\Type\MeasurementDayIdType
             media_id: App\Shared\Infrastructure\Persistence\Doctrine\MediaIdType
             progress_photo_id: App\Progression\Infrastructure\Persistence\Doctrine\Type\ProgressPhotoIdType
+            recommendation_id: App\Coach\Infrastructure\Persistence\Doctrine\Type\RecommendationIdType
+            weekly_report_id: App\Coach\Infrastructure\Persistence\Doctrine\Type\WeeklyReportIdType
 
     orm:
         validate_xml_mapping: true
@@ -74,6 +76,11 @@ doctrine:
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Media/Infrastructure/Persistence/Doctrine/Mapping'
                 prefix: 'App\Media\Domain'
+            Coach:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Coach/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Coach\Domain'
 
 when@test:
     doctrine:
