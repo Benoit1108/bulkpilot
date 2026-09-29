@@ -21,12 +21,23 @@ services:
       RATE_LIMIT_SIGN_IN_IP: "1000"
       RATE_LIMIT_REGISTRATION: "1000"
       RATE_LIMIT_EMAIL_LINKS: "1000"
+      # Photos in an S3-compatible bucket, as in production: written by the server over the
+      # internal network, read by the browser through presigned links over TLS (ADR-0027).
+      MEDIA_STORAGE: s3
+      S3_ENDPOINT: http://s3:7070
+      S3_PUBLIC_ENDPOINT: https://s3-tls
+      S3_BUCKET: bulkpilot-photos
+      S3_ACCESS_KEY: e2e-access-key
+      S3_SECRET_KEY: e2e-only-not-a-secret # gitleaks:allow (readable non-secret key)
+      S3_PATH_STYLE: "true"
     ports: !reset []
     # The CIQUAL excerpt the E2E tests search (tests/ is not in the production image).
     volumes:
       - ./api/tests/Fixtures/ciqual:/fixtures/ciqual:ro
     depends_on:
       mailer:
+        condition: service_healthy
+      s3:
         condition: service_healthy
 
   database:
@@ -39,3 +50,25 @@ services:
     environment:
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+  # S3-compatible gateway: checks SigV4 signatures, presigned
+  # links included. The bucket is a directory of its posix backend, created before it starts.
+  s3:
+    image: versity/versitygw:v1.8.0
+    entrypoint: ["sh", "-c", "mkdir -p /data/bulkpilot-photos && exec versitygw --access e2e-access-key --secret e2e-only-not-a-secret posix /data"] # gitleaks:allow
+    tmpfs:
+      - /data
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 7070"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+
+  # The bucket over TLS, as a provider serves it: the browser loads photos from an https page.
+  # The Host header is kept, so the presigned signature (made for s3-tls) still matches.
+  s3-tls:
+    image: caddy:2.11.4-alpine
+    command: ["caddy", "reverse-proxy", "--from", "https://s3-tls", "--to", "s3:7070", "--internal-certs"]
+    depends_on:
+      s3:
+        condition: service_healthy

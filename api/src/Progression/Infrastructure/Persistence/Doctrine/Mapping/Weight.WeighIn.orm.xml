@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Progression\Domain\Weight\WeighIn" table="progression_weigh_ins">
+        <unique-constraints>
+            <!-- One weigh-in a day: weighing again replaces it. -->
+            <unique-constraint name="progression_weigh_ins_owner_day_key" columns="owner_id,day"/>
+        </unique-constraints>
+
+        <id name="id" type="weigh_in_id"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="day" type="date_immutable"/>
+        <embedded name="weight" class="App\Progression\Domain\Weight\Weight" column-prefix="weight_"/>
+        <field name="recordedAt" type="datetimetz_immutable"/>
+        <field name="updatedAt" type="datetimetz_immutable"/>
+    </entity>
+</doctrine-mapping>

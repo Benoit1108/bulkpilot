@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { parseDay } from '~/features/nutrition/days'
+import { parseDay } from '~/services/calendar/days'
 import MacroLine from '~/features/nutrition/components/MacroLine.vue'
 import { formatKcal } from '~/features/nutrition/format'
 import { TARGET_SOURCES, type NutritionTarget } from '~/features/nutrition/nutrition'

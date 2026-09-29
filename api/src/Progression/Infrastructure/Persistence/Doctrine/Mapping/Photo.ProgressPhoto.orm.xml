@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Progression\Domain\Photo\ProgressPhoto" table="progression_photos">
+        <indexes>
+            <index name="progression_photos_owner_day_idx" columns="owner_id,day"/>
+        </indexes>
+        <unique-constraints>
+            <unique-constraint name="progression_photos_media_key" columns="media_id"/>
+        </unique-constraints>
+
+        <id name="id" type="progress_photo_id"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="mediaId" type="media_id"/>
+        <field name="day" type="date_immutable"/>
+        <field name="pose" length="10" enum-type="App\Progression\Domain\Photo\Pose"/>
+        <field name="width" type="integer"/>
+        <field name="height" type="integer"/>
+        <field name="addedAt" type="datetimetz_immutable"/>
+    </entity>
+</doctrine-mapping>

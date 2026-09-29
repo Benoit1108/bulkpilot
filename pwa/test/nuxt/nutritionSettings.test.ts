@@ -61,11 +61,11 @@ describe('targets page', () => {
     const request = { sex: 'male', birthDate: '1996-01-15', heightCm: 180, weightKg: 80, lifestyle: 'active', trainingSessionsPerWeek: 4, goal: 'bulk', weeklyWeightChangeKg: 0.25 }
     expect(fake.calls.find(call => call.route === 'POST /api/nutrition/targets/estimate')?.body).toEqual(request)
     const steps = wrapper.get('[aria-label="Détail du calcul"]').text()
-    expect(steps).toContain('1 780 kcal')
+    expect(steps).toContain('1\u202F780\u00A0kcal')
     expect(steps).toContain('Activité × 1,7')
-    expect(steps).toContain('+275 kcal')
+    expect(steps).toContain('+275\u00A0kcal')
     expect((field(wrapper, 'Calories').element as HTMLInputElement).value).toBe('3300')
-    expect(wrapper.get('[data-testid="macro-energy"]').text()).toBe('Les macros font 3 300 kcal.')
+    expect(wrapper.get('[data-testid="macro-energy"]').text()).toBe('Les macros font 3\u202F300\u00A0kcal.')
 
     await wrapper.findAll('form')[1]!.trigger('submit')
     await flushPromises()
@@ -106,7 +106,7 @@ describe('targets page', () => {
     })
     const wrapper = await mountSuspended(TargetsPage, { route: '/nutrition/objectifs' })
     await flushPromises()
-    expect(wrapper.text()).toContain('3 000 kcal')
+    expect(wrapper.text()).toContain('3\u202F000\u00A0kcal')
     expect(wrapper.text()).toContain('depuis le 1 septembre 2026 · Estimation')
 
     await wrapper.findAll('form')[0]!.trigger('submit')
@@ -133,7 +133,7 @@ describe('meal split page', () => {
     fake.on('PUT /api/nutrition/meal-split', body => body)
     const wrapper = await mountSuspended(SplitPage, { route: '/nutrition/repartition' })
     await flushPromises()
-    expect(wrapper.get('[role="status"]').text()).toBe('Total : 100 %')
+    expect(wrapper.get('[role="status"]').text()).toBe('Total\u00A0: 100\u00A0%')
 
     await field(wrapper, 'Collation').setValue('10')
     expect(wrapper.get('[data-testid="split-total"]').text()).toBe('Total\u00A0: 110\u00A0% (10\u00A0% de trop)')

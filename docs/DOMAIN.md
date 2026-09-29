@@ -20,8 +20,10 @@ Langage commun et règles structurantes. Chaque contexte complètera sa section 
 | `Uuid` | Value object de base de tous les identifiants (UUID RFC 9562, forme canonique minuscule). |
 | `UuidGenerator` | Port de génération ; implémentation UUID v7 en infrastructure. |
 | `AggregateRoot` | Enregistre les événements de domaine ; le handler les publie (`publish(...$aggregate->pullDomainEvents())`), livrés après le commit (ADR-0014). |
-| `DomainEvent` | Fait passé (`WorkoutCompleted`, `WeightMeasurementRecorded`…), moyen privilégié de communication entre contextes. |
+| `DomainEvent` | Fait passé (`WorkoutCompleted`, `WeighInRecorded`…), moyen privilégié de communication entre contextes. |
 | `DomainException` | Violation d'une règle métier, avec un **code d'erreur stable** (`nutrition.invalid_recipe`) traduit côté présentation. |
+| `Period`, `Days` | Les périodes des graphiques (7 j, 30 j, 3 mois, 6 mois, 1 an, tout) se terminant le jour de l'utilisateur, et le calcul des jours et semaines (lundi). |
+| `MediaId`, port `Photos` | Une photo que Media garde pour un autre contexte (ADR-0027) : `store`, `links`, `delete`, Media vérifiant le propriétaire. |
 
 ## Contextes
 
@@ -136,7 +138,51 @@ Limites connues (reportées volontairement) :
 - Records recalculés à la lecture (pas de table de projection) : borné par les 300 dernières séances.
 - Séance en cours sur un autre appareil : proposée « Reprendre / Terminer », sans écran dédié pour résoudre un conflit (409).
 
+Analyses (phase 5) : `GET /api/training/analytics` — séances terminées de la période, fréquence par semaine, séries de
+travail, reps, tonnage, records battus (chacun jugé contre les séances d'avant, sur les 300 dernières), par semaine.
+
+## Progression (phase 5)
+
+| Élément | Règles |
+| --- | --- |
+| `WeighIn` (agrégat) | Le poids d'un jour de l'utilisateur (20–400 kg, au dixième) : une pesée par jour, la renvoyer la remplace ; un jour déjà venu (jusqu'à demain pour un fuseau en avance), depuis 2000. Annonce `WeighInRecorded` (pour le Coach). |
+| `WeightTrend` (service) | Moyennes 7 et 30 jours des pesées des jours se terminant aujourd'hui (pas de pesée = pas de moyenne) ; vitesse en kg/semaine par moindres carrés sur 4 semaines (4 pesées au moins, sur 7 jours ou plus) ; stable sous 50 g/semaine ; points du graphique avec les moyennes du jour. |
+| `WeightGoal` (agrégat) | Une cible et jusqu'à 10 jalons entre le poids de départ (la dernière pesée) et la cible, triés dans le sens du poids ; au moins 0,5 kg d'écart. Un seul suivi : en fixer un autre termine le précédent (gardé). Indépendant du but Nutrition. |
+| `GoalProgress`, `Estimate` | Chaque étape atteinte le jour de la première pesée qui la franchit depuis le départ ; part du chemin (0–100 %) ; écart depuis la dernière étape atteinte (« depuis l'objectif précédent ») ; semaines restantes au rythme actuel, arrondies au-dessus, **présentées comme une estimation**, sinon pourquoi pas (pas assez de pesées, poids stable, dans l'autre sens). |
+| `CustomMeasure` (agrégat) | Une mesure perso en cm (1–40 caractères) : 20 actives au plus et 60 créées en tout (archivées comprises) ; noms distincts sans la casse, **archivées comprises** (on la rétablit plutôt que d'en créer une homonyme) ; archivée plutôt que supprimée : ses valeurs restent. |
+| `MeasurementDay` (agrégat) | Les mensurations d'un jour : une valeur (1–300 cm, au millimètre) par mesure prise, parmi les 10 parties du corps et les mesures perso non archivées ; une fois par jour, remplacées en entier ; les valeurs d'une mesure archivée depuis sont gardées au remplacement. |
+| `ProgressPhoto` (agrégat) | Un jour, une pose (face, profil, dos, autre), la taille, et le `MediaId` du fichier que Media garde ; 500 au plus. Une **session** est l'ensemble des photos d'un jour, avec le poids et les mensurations du jour ou les plus récents d'avant (§61). |
+
+Règles transverses :
+
+- Les jours sont ceux de l'utilisateur (envoyés par l'appareil, `?today=` pour les lectures, à un jour près du serveur).
+- Aucune de ces valeurs n'est modifiée par l'application : la PWA préremplit le poids de l'estimation Nutrition avec la dernière
+  pesée, que l'utilisateur garde ou change.
+- **Calories face au poids** (§56) : Nutrition donne ses moyennes par semaine (`GET /api/nutrition/history`), Progression les
+  siennes ; la PWA les pose sur les mêmes semaines, en deux graphiques (ADR-0026). Aucun contexte ne lit l'autre.
+- Écritures limitées à 120 / min par compte (`RATE_LIMIT_PROGRESSION_WRITES`).
+
+Limites connues (reportées volontairement) :
+
+- Adhérence (§58) et rapport hebdomadaire (§59) : phases 6–7, avec le Coach et le tableau de bord.
+- Les pesées et mensurations ne se saisissent pas hors ligne (contrairement aux séances).
+- Une photo ne se corrige pas (jour, pose) : la supprimer et la reprendre.
+- Analyses d'entraînement (`GET /api/training/analytics`) : calculées sur les 300 dernières séances au plus
+  (`WorkoutRepository::HISTORY_LIMIT`) ; au-delà, « Tout » et « 1 an » ne comptent que celles-là.
+- Les séances sont rangées dans leur semaine d'après leur heure de début en UTC : une séance commencée juste après minuit
+  heure locale, un lundi, peut tomber dans la semaine précédente (les pesées et les repas, eux, suivent le jour de
+  l'utilisateur).
+- La semaine en cours et la première semaine d'une période sont souvent incomplètes : la PWA marque la semaine en cours,
+  l'écarte de la comparaison calories / poids et montre le nombre de jours saisis et de pesées de chaque semaine.
+
+## Media (phase 5)
+
+| Élément | Règles |
+| --- | --- |
+| `MediaFile` (agrégat) | Un fichier gardé pour son propriétaire : l'image réencodée (WebP, 2 048 px au plus) et sa miniature (480 px), sous des clés opaques (l'identifiant, ni le nom d'origine ni l'utilisateur). |
+| `PhotoLibrary` | Implémente le port `Photos` : vérifie le type réel, la taille et les pixels avant de décoder, refuse les animations, réencode (GD) sans métadonnées, écrit, signe des liens de 5 minutes, supprime pour de bon. |
+
 ## Événements de domaine prévus
 
-`WeightMeasurementRecorded` · `DailyNutritionTargetReached` · `WorkoutCompleted` · `GoalChanged` ·
+`WeighInRecorded` (émis en phase 5) · `DailyNutritionTargetReached` · `WorkoutCompleted` · `GoalChanged` ·
 `RecommendationCreated` · `RecommendationAccepted` · `RecommendationRejected`

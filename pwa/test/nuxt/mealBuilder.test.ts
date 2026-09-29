@@ -30,7 +30,7 @@ beforeEach(() => {
 async function openBuilder() {
   const wrapper = await mountSuspended(NutritionPage, { route: '/nutrition' })
   await flushPromises()
-  await button(wrapper, 'Que manger ? Composer un repas').trigger('click')
+  await button(wrapper, 'Que manger\u202F? Composer un repas').trigger('click')
   await flushPromises()
   return wrapper
 }
@@ -52,11 +52,11 @@ describe('meal builder', () => {
     const wrapper = await openBuilder()
 
     expect(fake.client.get).toHaveBeenCalledWith('/api/nutrition/meal-builder', { query: { day: TODAY, slot: undefined } })
-    expect(wrapper.get('[data-testid="remaining"]').text()).toContain('820 kcal')
+    expect(wrapper.get('[data-testid="remaining"]').text()).toContain('820\u00A0kcal')
     const dialog = wrapper.get('dialog[open]')
     expect(dialog.get('h3').text()).toBe('Proposition 1')
-    expect(dialog.text()).toContain('Poulet, filet, sauté/poêlé · 140 g')
-    expect(dialog.text()).toContain('826 kcal · Prot. 51 g')
+    expect(dialog.text()).toContain('Poulet, filet, sauté/poêlé · 140\u00A0g')
+    expect(dialog.text()).toContain('826\u00A0kcal · Prot.\u00A051\u00A0g')
 
     await button(wrapper, 'Ajouter au dîner').trigger('click')
     await flushPromises()
@@ -99,7 +99,7 @@ describe('meal builder', () => {
     await button(wrapper, 'Fermer', 'dialog[open]').trigger('click')
     await flushPromises()
 
-    await button(wrapper, 'Que manger ? Composer un repas').trigger('click')
+    await button(wrapper, 'Que manger\u202F? Composer un repas').trigger('click')
     await flushPromises()
 
     expect(builderCalls()).toHaveLength(2)

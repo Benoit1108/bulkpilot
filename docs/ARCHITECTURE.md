@@ -22,14 +22,14 @@ Symfony calcule, décide, valide et orchestre. L'IA (phase 6) reformule des anal
 
 ```text
 api/src/
-├── Shared/          noyau partagé minimal (identifiants, événements, bus, santé)
+├── Shared/          noyau partagé minimal (identifiants, événements, bus, périodes, port `Photos`)
 ├── Identity/        comptes, profils, sessions, 2FA
 ├── Nutrition/       aliments, recettes, repas, journal, objectifs
 ├── Training/        exercices, programmes versionnés, séances, séries, PR
 ├── Progression/     pesées, mensurations, photos, objectifs de poids
 ├── Coach/           moteur de règles, analyses, recommandations
 ├── Notification/    préférences, envoi, horaires silencieux
-├── Media/           stockage de fichiers privés
+├── Media/           photos privées : réencodage (GD), stockage local ou S3, liens signés (port Shared `Photos`, ADR-0027)
 ├── Export/          exports et suppression de compte
 └── System/          préoccupations opérationnelles (santé du service) — pas un contexte métier (ADR-0013)
 ```
@@ -139,10 +139,12 @@ pwa/app/
 ├── components/
 │   ├── ui/         design system (UiButton, UiLinkButton, UiCard, UiInput, UiSelect, UiAlert, UiEmptyState…), classes.ts
 │   └── shell/      ShellNav, ShellConnectivityBanner, ShellUpdatePrompt, ShellBackLink
-├── features/       code par fonctionnalité : identity/, nutrition/, training/ (séance, file d'envoi, plans gardés), shell/, system/
+├── features/       code par fonctionnalité : identity/, nutrition/, training/ (séance, file d'envoi, plans gardés), progression/ (poids, mensurations, photos, analyses), shell/, system/
 ├── composables/    useApi, useAccount, useSubmission, useUnsavedChanges, useWakeLock, useTheme, usePwaUpdate, useEventListener
 ├── services/api/   contrat typé (contract.ts), client unique (client.ts), erreurs et messages par code
 ├── services/offline/ IndexedDB (store.ts, mémoire en repli) et compte propriétaire de l'appareil (owner.ts)
+├── services/calendar/ jours locaux de l'utilisateur et leurs formats
+├── services/media/ réduction d'une photo avant l'envoi
 ├── services/text/  recherche sans accents, nombres à la française
 ├── plugins/        api (client + gestion du 401), messages (enregistrement par fonctionnalité), theme
 ├── error.vue       page d'erreur en français, sans détail technique
@@ -178,6 +180,8 @@ pwa/app/
   - pas de classe « crochet » pour les tests : rôle et nom accessibles d'abord, `data-testid` sinon ;
   - pas de `>` dans un attribut de template (le garde-fou typographique lit le template) : sortir l'expression dans le script ;
   - ESLint (`better-tailwindcss`) refuse une classe inconnue ou en conflit et impose l'ordre des classes (`make pwa-lint-fix`).
+- **Graphiques** (ADR-0026) : `UiLineChart` (SVG, géométrie pure dans `components/ui/chart.ts`) — titre, résumé en une phrase,
+  lecture au pointeur et aux flèches (annoncée), tableau des valeurs, lignes distinguées par leur tracé ; `xDomain` aligne deux graphiques.
 - **Formulaires** : un formulaire d'édition appelle `useUnsavedChanges(body)` ; quitter la page (ou l'application) après
   une modification non enregistrée demande confirmation.
 - **Taille des composants** : 250 lignes au plus par fichier `.vue` (ESLint `max-lines`, lignes vides et commentaires exclus) ;

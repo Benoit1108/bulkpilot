@@ -51,11 +51,11 @@ describe('logging a recipe or a favourite meal', () => {
     fake.on('POST /api/nutrition/entries', () => day(TODAY))
     const wrapper = await openPicker('au déjeuner')
 
-    expect(wrapper.get('dialog[open]').text()).toContain('327 kcal / portion')
+    expect(wrapper.get('dialog[open]').text()).toContain('327\u00A0kcal / portion')
     await buttonStartingWith(wrapper, 'Riz au poulet', 'dialog[open]').trigger('click')
     expect((field(wrapper, 'Quantité').element as HTMLInputElement).value).toBe('275')
-    expect(wrapper.get('dialog[open] [data-testid="quantity-hint"]').text()).toBe('Une portion pèse 275 g.')
-    await button(wrapper, '2 portions (550 g)').trigger('click')
+    expect(wrapper.get('dialog[open] [data-testid="quantity-hint"]').text()).toBe('Une portion pèse 275\u00A0g.')
+    await button(wrapper, '2 portions (550\u00A0g)').trigger('click')
     await wrapper.get('dialog[open] form').trigger('submit')
     await flushPromises()
 
@@ -137,7 +137,7 @@ describe('recipes', () => {
   it('lists recipes with their value per serving, explains them, or offers a retry', async () => {
     const listed = await mountSuspended(RecipesPage, { route: '/nutrition/recettes' })
     await flushPromises()
-    expect(listed.get(`a[href="/nutrition/recettes/${recipe.id}"]`).text()).toContain('4 portions · 327 kcal / portion')
+    expect(listed.get(`a[href="/nutrition/recettes/${recipe.id}"]`).text()).toContain('4 portions · 327\u00A0kcal / portion')
 
     fake.on('GET /api/recipes', () => [])
     clearNuxtData()
@@ -204,7 +204,7 @@ describe('recipes', () => {
 
     const composition = wrapper.get('table').text()
     expect(composition).toContain('Par portion')
-    expect(composition).toContain('327 kcal')
+    expect(composition).toContain('327\u00A0kcal')
     expect(composition).toContain('plat cuit')
     expect(wrapper.text()).toContain('Skyr nature (aliment supprimé)')
 
@@ -260,8 +260,8 @@ describe('favourite meals page', () => {
     })
     const wrapper = await mountSuspended(FavoritesPage, { route: '/nutrition/favoris' })
     await flushPromises()
-    expect(wrapper.text()).toContain('Skyr nature · 150 g')
-    expect(wrapper.text()).toContain('422 kcal')
+    expect(wrapper.text()).toContain('Skyr nature · 150\u00A0g')
+    expect(wrapper.text()).toContain('422\u00A0kcal')
 
     await confirm(wrapper, 'Supprimer')
     await flushPromises()

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { formatKcal, formatNumber, formatSignedKcal } from '~/features/nutrition/format'
+import { formatKcal, formatSignedKcal } from '~/features/nutrition/format'
+import { formatNumber } from '~/services/text/numbers'
 import type { EnergyEstimate } from '~/features/nutrition/nutrition'
 
 /** Spec §24: every step of the calculation is shown, nothing is a black box. */

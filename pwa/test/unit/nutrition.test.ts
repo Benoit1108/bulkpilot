@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { dayLabel, isDay, localDay, parseDay, shiftDay } from '~/features/nutrition/days'
-import { formatGrams, formatKcal, formatMacro, formatNumber, formatSignedKcal } from '~/features/nutrition/format'
-import { parseAmount } from '~/services/text/numbers'
+import { dayLabel, isDay, localDay, parseDay, shiftDay } from '~/services/calendar/days'
+import { formatGrams, formatKcal, formatMacro, formatSignedKcal } from '~/features/nutrition/format'
+import { formatNumber, parseAmount } from '~/services/text/numbers'
 import { MEAL_SLOTS, slotAt, slotLabel, toSlot } from '~/features/nutrition/nutrition'
 import { matches, searchKey } from '~/services/text/search'
 import { energyOfMacros } from '~/features/nutrition/rules'
 
-const NBSP = ' '
-const NNBSP = ' '
+const NBSP = '\u00A0'
+const NNBSP = '\u202F'
 
 describe('calendar days', () => {
   it('runs in a time zone away from UTC, so that the next test means something', () => {

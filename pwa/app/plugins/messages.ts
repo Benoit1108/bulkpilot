@@ -2,5 +2,6 @@
 import '~/features/identity/messages'
 import '~/features/nutrition/messages'
 import '~/features/training/messages'
+import '~/features/progression/messages'
 
 export default defineNuxtPlugin(() => {})

@@ -540,6 +540,102 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/progression/measures": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Measure resources.
+         * @description Retrieves the collection of Measure resources.
+         */
+        get: operations["api_progressionmeasures_get_collection"];
+        put?: never;
+        /**
+         * Creates a Measure resource.
+         * @description Creates a Measure resource.
+         */
+        post: operations["api_progressionmeasures_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/progression/measures/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replaces the Measure resource.
+         * @description Replaces the Measure resource.
+         */
+        put: operations["api_progressionmeasures_key_put"];
+        post?: never;
+        /**
+         * Removes the Measure resource.
+         * @description Removes the Measure resource.
+         */
+        delete: operations["api_progressionmeasures_key_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/progression/measurements/{day}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a Measurements resource.
+         * @description Retrieves a Measurements resource.
+         */
+        get: operations["api_progressionmeasurements_day_get"];
+        /**
+         * Replaces the Measurements resource.
+         * @description Replaces the Measurements resource.
+         */
+        put: operations["api_progressionmeasurements_day_put"];
+        post?: never;
+        /**
+         * Removes the Measurements resource.
+         * @description Removes the Measurements resource.
+         */
+        delete: operations["api_progressionmeasurements_day_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/progression/measurements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a MeasurementsSummary resource.
+         * @description Retrieves a MeasurementsSummary resource.
+         */
+        get: operations["api_progressionmeasurements_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/nutrition/averages": {
         parameters: {
             query?: never;
@@ -572,6 +668,26 @@ export interface paths {
          * @description Retrieves a NutritionDay resource.
          */
         get: operations["api_nutritiondays_day_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutrition/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a NutritionHistory resource.
+         * @description Retrieves a NutritionHistory resource.
+         */
+        get: operations["api_nutritionhistory_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -658,6 +774,26 @@ export interface paths {
          * @description Creates a PasswordResetRequest resource.
          */
         post: operations["api_authpassword-reset-request_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/progression/photo-sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of PhotoSession resources.
+         * @description Retrieves the collection of PhotoSession resources.
+         */
+        get: operations["api_progressionphoto-sessions_get_collection"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -751,6 +887,50 @@ export interface paths {
          */
         post: operations["program_deactivate"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/progression/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a ProgressPhoto resource.
+         * @description Creates a ProgressPhoto resource.
+         */
+        post: operations["api_progressionphotos_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/progression/photos/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a ProgressPhoto resource.
+         * @description Retrieves a ProgressPhoto resource.
+         */
+        get: operations["api_progressionphotos_id_get"];
+        put?: never;
+        post?: never;
+        /**
+         * Removes the ProgressPhoto resource.
+         * @description Removes the ProgressPhoto resource.
+         */
+        delete: operations["api_progressionphotos_id_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -968,6 +1148,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/training/analytics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a TrainingAnalytics resource.
+         * @description Retrieves a TrainingAnalytics resource.
+         */
+        get: operations["api_traininganalytics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/me/two-factor/disable": {
         parameters: {
             query?: never;
@@ -1002,6 +1202,102 @@ export interface paths {
          * @description Creates a TwoFactorSetup resource.
          */
         post: operations["api_metwo-factorsetup_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/progression/weigh-ins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of WeighIn resources.
+         * @description Retrieves the collection of WeighIn resources.
+         */
+        get: operations["api_progressionweigh-ins_get_collection"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/progression/weigh-ins/{day}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a WeighIn resource.
+         * @description Retrieves a WeighIn resource.
+         */
+        get: operations["api_progressionweigh-ins_day_get"];
+        /**
+         * Replaces the WeighIn resource.
+         * @description Replaces the WeighIn resource.
+         */
+        put: operations["api_progressionweigh-ins_day_put"];
+        post?: never;
+        /**
+         * Removes the WeighIn resource.
+         * @description Removes the WeighIn resource.
+         */
+        delete: operations["api_progressionweigh-ins_day_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/progression/weight-goal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a WeightGoal resource.
+         * @description Retrieves a WeightGoal resource.
+         */
+        get: operations["api_progressionweight-goal_get"];
+        /**
+         * Replaces the WeightGoal resource.
+         * @description Replaces the WeightGoal resource.
+         */
+        put: operations["api_progressionweight-goal_put"];
+        post?: never;
+        /**
+         * Removes the WeightGoal resource.
+         * @description Removes the WeightGoal resource.
+         */
+        delete: operations["api_progressionweight-goal_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/progression/weight": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a WeightSummary resource.
+         * @description Retrieves a WeightSummary resource.
+         */
+        get: operations["api_progressionweight_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1376,6 +1672,16 @@ export interface components {
             name: string;
             blocks?: components["schemas"]["BlockInput"][];
         };
+        DayWeightOutput: {
+            /** Format: date */
+            day: string;
+            weightKg: number;
+        };
+        "DayWeightOutput.jsonld": {
+            /** Format: date */
+            day: string;
+            weightKg: number;
+        };
         /** @description Redeems the link emailed at registration (works signed in or not). */
         EmailVerification: {
             /** @default  */
@@ -1585,6 +1891,30 @@ export interface components {
             goal: "bulk" | "maintain" | "cut";
             /** @default 0 */
             weeklyWeightChangeKg: number;
+        };
+        EstimateOutput: {
+            /** @enum {string} */
+            status: "estimated" | "reached" | "not_enough_weigh_ins" | "not_moving" | "moving_away";
+            /** @description Weeks left, rounded up (when estimated). */
+            weeks: number | null;
+        };
+        "EstimateOutput.jsonld": {
+            /** @enum {string} */
+            status: "estimated" | "reached" | "not_enough_weigh_ins" | "not_moving" | "moving_away";
+            /** @description Weeks left, rounded up (when estimated). */
+            weeks: number | null;
+        };
+        "EstimateOutput.jsonld_noid": {
+            /** @enum {string} */
+            status: "estimated" | "reached" | "not_enough_weigh_ins" | "not_moving" | "moving_away";
+            /** @description Weeks left, rounded up (when estimated). */
+            weeks: number | null;
+        };
+        EstimateOutput_noid: {
+            /** @enum {string} */
+            status: "estimated" | "reached" | "not_enough_weigh_ins" | "not_moving" | "moving_away";
+            /** @description Weeks left, rounded up (when estimated). */
+            weeks: number | null;
         };
         /** @description The exercises the user can use (library and their own, their own first), filtered by name and muscle. */
         Exercise: {
@@ -1827,6 +2157,34 @@ export interface components {
             editable: boolean;
             barcode: string | null;
         };
+        GoalStepOutput: {
+            weightKg: number;
+            /** @description The final target (the others are milestones). */
+            target: boolean;
+            /** Format: date */
+            reachedOn: string | null;
+        };
+        "GoalStepOutput.jsonld": {
+            weightKg: number;
+            /** @description The final target (the others are milestones). */
+            target: boolean;
+            /** Format: date */
+            reachedOn: string | null;
+        };
+        "GoalStepOutput.jsonld_noid": {
+            weightKg: number;
+            /** @description The final target (the others are milestones). */
+            target: boolean;
+            /** Format: date */
+            reachedOn: string | null;
+        };
+        GoalStepOutput_noid: {
+            weightKg: number;
+            /** @description The final target (the others are milestones). */
+            target: boolean;
+            /** Format: date */
+            reachedOn: string | null;
+        };
         /** @description Readiness of the API and its dependencies. Answers 503 with the same body when degraded. */
         Health: {
             /** @enum {string} */
@@ -2049,6 +2407,125 @@ export interface components {
             /** @default 0 */
             dinner: number;
         };
+        /** @description The body parts, then the user's own measures (not archived). */
+        Measure: {
+            /** @description A body part (neck, shoulders, chest, left_arm…), or the id of one of the user's own. */
+            key: string;
+            /** @description The user's name for their own measure; null for a body part. */
+            name: string | null;
+            custom: boolean;
+            archived: boolean;
+        };
+        /** @description Adds a measure of the user's own (in centimetres, 20 at most). */
+        "Measure.MeasureInput": {
+            /** @default  */
+            name: string;
+        };
+        /** @description The body parts, then the user's own measures (not archived). */
+        "Measure.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** @description A body part (neck, shoulders, chest, left_arm…), or the id of one of the user's own. */
+            key: string;
+            /** @description The user's name for their own measure; null for a body part. */
+            name: string | null;
+            custom: boolean;
+            archived: boolean;
+        };
+        MeasureSeriesOutput: {
+            key: string;
+            /** @description Null for a body part (the app names it). */
+            name: string | null;
+            custom: boolean;
+            /** @description An archived measure of one's own is listed while it has values. */
+            archived: boolean;
+            latest: {
+                /** Format: date */
+                day: string;
+                cm: number;
+            } | null;
+            /** @description Latest minus the first value of the period. */
+            changeCm: number | null;
+            points: {
+                /** Format: date */
+                day: string;
+                cm: number;
+            }[];
+        };
+        "MeasureSeriesOutput.jsonld": {
+            key: string;
+            /** @description Null for a body part (the app names it). */
+            name: string | null;
+            custom: boolean;
+            /** @description An archived measure of one's own is listed while it has values. */
+            archived: boolean;
+            latest: {
+                /** Format: date */
+                day: string;
+                cm: number;
+            } | null;
+            /** @description Latest minus the first value of the period. */
+            changeCm: number | null;
+            points: {
+                /** Format: date */
+                day: string;
+                cm: number;
+            }[];
+        };
+        /** @description The measurements of a day. */
+        Measurements: {
+            /** Format: date */
+            day: string;
+            centimetres: {
+                [key: string]: number;
+            };
+            /** Format: date-time */
+            recordedAt: string;
+        };
+        /** @description Records the measurements of a day, or replaces them (one set a day; a measure left out is not kept). */
+        "Measurements.MeasurementsInput": {
+            centimetres?: {
+                [key: string]: number;
+            };
+        };
+        /** @description The measurements of a day. */
+        "Measurements.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** Format: date */
+            day: string;
+            centimetres: {
+                [key: string]: number;
+            };
+            /** Format: date-time */
+            recordedAt: string;
+        };
+        /** @description Each measure over a period: its values, its latest value, its change. */
+        MeasurementsSummary: {
+            /** @enum {string} */
+            period: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+            /** @description The body parts then the user's own measures. */
+            measures: components["schemas"]["MeasureSeriesOutput"][];
+        };
+        /** @description Each measure over a period: its values, its latest value, its change. */
+        "MeasurementsSummary.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** @enum {string} */
+            period: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+            /** @description The body parts then the user's own measures. */
+            measures: components["schemas"]["MeasureSeriesOutput.jsonld"][];
+        };
+        "NextStepOutput.jsonld_noid": {
+            weightKg: number;
+            /** @description The final target (not a milestone). */
+            target: boolean;
+            /** @description Kilograms left, signed the way the weight goes. */
+            remainingKg: number;
+            estimate: components["schemas"]["EstimateOutput.jsonld_noid"];
+        };
+        NextStepOutput_noid: {
+            weightKg: number;
+            /** @description The final target (not a milestone). */
+            target: boolean;
+            /** @description Kilograms left, signed the way the weight goes. */
+            remainingKg: number;
+            estimate: components["schemas"]["EstimateOutput_noid"];
+        };
         Nutrients: {
             energyKcal: number;
             protein: number;
@@ -2092,6 +2569,54 @@ export interface components {
             totals: components["schemas"]["Nutrients.jsonld"];
             target: components["schemas"]["NutritionTarget.jsonld_noid"] | null;
             meals: components["schemas"]["Meal.jsonld"][];
+        };
+        /** @description Day and week totals of the days logged over a period (today excluded: it is under way). */
+        NutritionHistory: {
+            /** @enum {string} */
+            period: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+            days: {
+                /** Format: date */
+                day: string;
+                energyKcal: number;
+                proteinGrams: number;
+            }[];
+            weeks: {
+                /** Format: date */
+                week: string;
+                averageEnergyKcal: number;
+                averageProteinGrams: number;
+                days: number;
+            }[];
+            averageEnergyKcal: number | null;
+            averageProteinGrams: number | null;
+            target: {
+                energyKcal: number;
+                proteinGrams: number;
+            } | null;
+        };
+        /** @description Day and week totals of the days logged over a period (today excluded: it is under way). */
+        "NutritionHistory.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** @enum {string} */
+            period: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+            days: {
+                /** Format: date */
+                day: string;
+                energyKcal: number;
+                proteinGrams: number;
+            }[];
+            weeks: {
+                /** Format: date */
+                week: string;
+                averageEnergyKcal: number;
+                averageProteinGrams: number;
+                days: number;
+            }[];
+            averageEnergyKcal: number | null;
+            averageProteinGrams: number | null;
+            target: {
+                energyKcal: number;
+                proteinGrams: number;
+            } | null;
         };
         /** @description Target history, most recent first (the first one effective on or before today is in force). */
         NutritionTarget: {
@@ -2180,6 +2705,46 @@ export interface components {
         PasswordResetRequest: {
             /** @default  */
             email: string;
+        };
+        /** @description The photo sessions, the most recent first; links valid a few minutes. */
+        PhotoSession: {
+            /** Format: date */
+            day: string;
+            weight: {
+                /** Format: date */
+                day: string;
+                weightKg: number;
+            } | null;
+            measurements: {
+                /** Format: date */
+                day: string;
+                values: {
+                    key: string;
+                    name: string | null;
+                    cm: number;
+                }[];
+            } | null;
+            photos: components["schemas"]["ProgressPhoto_noid"][];
+        };
+        /** @description The photo sessions, the most recent first; links valid a few minutes. */
+        "PhotoSession.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** Format: date */
+            day: string;
+            weight: {
+                /** Format: date */
+                day: string;
+                weightKg: number;
+            } | null;
+            measurements: {
+                /** Format: date */
+                day: string;
+                values: {
+                    key: string;
+                    name: string | null;
+                    cm: number;
+                }[];
+            } | null;
+            photos: components["schemas"]["ProgressPhoto.jsonld_noid"][];
         };
         PlannedExerciseInput: {
             /**
@@ -2313,6 +2878,89 @@ export interface components {
             number: number;
             /** Format: date-time */
             createdAt: string;
+        };
+        /** @description A photo, with fresh links. */
+        ProgressPhoto: {
+            id: string;
+            /** Format: date */
+            day: string;
+            /** @enum {string} */
+            pose: "front" | "side" | "back" | "other";
+            width: number;
+            height: number;
+            /** @description The photo (2048 px a side at most). */
+            url: string;
+            /** @description A small version (480 px), for lists. */
+            thumbnailUrl: string;
+            /** @description The photo as a download, under a neutral name. */
+            downloadUrl: string;
+            /**
+             * Format: date-time
+             * @description When the links stop working.
+             */
+            expiresAt: string;
+        };
+        /** @description A photo, with fresh links. */
+        "ProgressPhoto.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            /** Format: date */
+            day: string;
+            /** @enum {string} */
+            pose: "front" | "side" | "back" | "other";
+            width: number;
+            height: number;
+            /** @description The photo (2048 px a side at most). */
+            url: string;
+            /** @description A small version (480 px), for lists. */
+            thumbnailUrl: string;
+            /** @description The photo as a download, under a neutral name. */
+            downloadUrl: string;
+            /**
+             * Format: date-time
+             * @description When the links stop working.
+             */
+            expiresAt: string;
+        };
+        /** @description A photo, with fresh links. */
+        "ProgressPhoto.jsonld_noid": components["schemas"]["HydraItemBaseSchemaWithoutId"] & {
+            id: string;
+            /** Format: date */
+            day: string;
+            /** @enum {string} */
+            pose: "front" | "side" | "back" | "other";
+            width: number;
+            height: number;
+            /** @description The photo (2048 px a side at most). */
+            url: string;
+            /** @description A small version (480 px), for lists. */
+            thumbnailUrl: string;
+            /** @description The photo as a download, under a neutral name. */
+            downloadUrl: string;
+            /**
+             * Format: date-time
+             * @description When the links stop working.
+             */
+            expiresAt: string;
+        };
+        ProgressPhoto_noid: {
+            id: string;
+            /** Format: date */
+            day: string;
+            /** @enum {string} */
+            pose: "front" | "side" | "back" | "other";
+            width: number;
+            height: number;
+            /** @description The photo (2048 px a side at most). */
+            url: string;
+            /** @description A small version (480 px), for lists. */
+            thumbnailUrl: string;
+            /** @description The photo as a download, under a neutral name. */
+            downloadUrl: string;
+            /**
+             * Format: date-time
+             * @description When the links stop working.
+             */
+            expiresAt: string;
         };
         Proposal: {
             items: components["schemas"]["ProposalItem"][];
@@ -2550,6 +3198,72 @@ export interface components {
             reps: number | null;
             seconds: number | null;
         };
+        /** @description Totals of the finished workouts of a period, and of each of its weeks (Monday first). */
+        TrainingAnalytics: {
+            /** @enum {string} */
+            period: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+            totals: {
+                sessions: number;
+                workingSets: number;
+                reps: number;
+                tonnageKg: number;
+                records: number;
+            };
+            weeks: ({
+                sessions: number;
+                workingSets: number;
+                reps: number;
+                tonnageKg: number;
+                records: number;
+            } & {
+                /** Format: date */
+                week: string;
+            })[];
+            /** @description Sessions a week on average over the period. */
+            sessionsPerWeek: number | null;
+        };
+        /** @description Totals of the finished workouts of a period, and of each of its weeks (Monday first). */
+        "TrainingAnalytics.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** @enum {string} */
+            period: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+            totals: {
+                sessions: number;
+                workingSets: number;
+                reps: number;
+                tonnageKg: number;
+                records: number;
+            };
+            weeks: ({
+                sessions: number;
+                workingSets: number;
+                reps: number;
+                tonnageKg: number;
+                records: number;
+            } & {
+                /** Format: date */
+                week: string;
+            })[];
+            /** @description Sessions a week on average over the period. */
+            sessionsPerWeek: number | null;
+        };
+        TrendPointOutput: {
+            /** Format: date */
+            day: string;
+            weightKg: number;
+            /** @description Mean of the weigh-ins of the 7 days ending that day. */
+            average7Kg: number;
+            /** @description Mean of the weigh-ins of the 30 days ending that day. */
+            average30Kg: number;
+        };
+        "TrendPointOutput.jsonld": {
+            /** Format: date */
+            day: string;
+            weightKg: number;
+            /** @description Mean of the weigh-ins of the 7 days ending that day. */
+            average7Kg: number;
+            /** @description Mean of the weigh-ins of the 30 days ending that day. */
+            average30Kg: number;
+        };
         /** @description Turns two-factor authentication off (password required). */
         "TwoFactorDisabling.PasswordConfirmation": {
             /** @default  */
@@ -2569,6 +3283,176 @@ export interface components {
         "TwoFactorSetup.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
             secret: string;
             otpauthUri: string;
+        };
+        WeekAverageOutput: {
+            /** Format: date */
+            week: string;
+            averageKg: number;
+            weighIns: number;
+        };
+        "WeekAverageOutput.jsonld": {
+            /** Format: date */
+            week: string;
+            averageKg: number;
+            weighIns: number;
+        };
+        /** @description The weigh-ins, the most recent first. */
+        WeighIn: {
+            /** Format: date */
+            day: string;
+            weightKg: number;
+            /** Format: date-time */
+            recordedAt: string;
+        };
+        /** @description Records the weight of a day, or replaces it (one a day; sending it again changes nothing). */
+        "WeighIn.WeighInInput": {
+            weightKg: number | null;
+        };
+        /** @description The weigh-ins, the most recent first. */
+        "WeighIn.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** Format: date */
+            day: string;
+            weightKg: number;
+            /** Format: date-time */
+            recordedAt: string;
+        };
+        /** @description The goal followed and the progress on it; 404 without one. */
+        WeightGoal: {
+            id: string;
+            /** Format: date */
+            startDay: string;
+            startWeightKg: number;
+            targetKg: number;
+            /** @enum {string} */
+            direction: "gaining" | "losing";
+            /** @description The milestones then the target, in the order they come. */
+            steps: components["schemas"]["GoalStepOutput"][];
+            /** @description Share of the way from the start to the target, 0 to 100. */
+            percent: number;
+            /** @description Change since the last step reached (or the start). */
+            sinceLastStepKg: number;
+            /** @description The next step to reach, what is left to it and the estimate; null once the target is reached. */
+            next: components["schemas"]["NextStepOutput_noid"] | null;
+            toTargetKg: number;
+            toTarget: components["schemas"]["EstimateOutput"];
+            /** Format: date-time */
+            setAt: string;
+        };
+        /** @description Sets the goal to follow, from the latest weigh-in; the previous goal ends (it is kept). */
+        "WeightGoal.WeightGoalInput": {
+            targetKg: number | null;
+            milestonesKg?: number[];
+        };
+        /** @description The goal followed and the progress on it; 404 without one. */
+        "WeightGoal.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            /** Format: date */
+            startDay: string;
+            startWeightKg: number;
+            targetKg: number;
+            /** @enum {string} */
+            direction: "gaining" | "losing";
+            /** @description The milestones then the target, in the order they come. */
+            steps: components["schemas"]["GoalStepOutput.jsonld"][];
+            /** @description Share of the way from the start to the target, 0 to 100. */
+            percent: number;
+            /** @description Change since the last step reached (or the start). */
+            sinceLastStepKg: number;
+            /** @description The next step to reach, what is left to it and the estimate; null once the target is reached. */
+            next: components["schemas"]["NextStepOutput.jsonld_noid"] | null;
+            toTargetKg: number;
+            toTarget: components["schemas"]["EstimateOutput.jsonld"];
+            /** Format: date-time */
+            setAt: string;
+        };
+        /** @description The goal followed and the progress on it; 404 without one. */
+        "WeightGoal.jsonld_noid": components["schemas"]["HydraItemBaseSchemaWithoutId"] & {
+            id: string;
+            /** Format: date */
+            startDay: string;
+            startWeightKg: number;
+            targetKg: number;
+            /** @enum {string} */
+            direction: "gaining" | "losing";
+            /** @description The milestones then the target, in the order they come. */
+            steps: components["schemas"]["GoalStepOutput.jsonld_noid"][];
+            /** @description Share of the way from the start to the target, 0 to 100. */
+            percent: number;
+            /** @description Change since the last step reached (or the start). */
+            sinceLastStepKg: number;
+            /** @description The next step to reach, what is left to it and the estimate; null once the target is reached. */
+            next: components["schemas"]["NextStepOutput.jsonld_noid"] | null;
+            toTargetKg: number;
+            toTarget: components["schemas"]["EstimateOutput.jsonld_noid"];
+            /** Format: date-time */
+            setAt: string;
+        };
+        WeightGoal_noid: {
+            id: string;
+            /** Format: date */
+            startDay: string;
+            startWeightKg: number;
+            targetKg: number;
+            /** @enum {string} */
+            direction: "gaining" | "losing";
+            /** @description The milestones then the target, in the order they come. */
+            steps: components["schemas"]["GoalStepOutput_noid"][];
+            /** @description Share of the way from the start to the target, 0 to 100. */
+            percent: number;
+            /** @description Change since the last step reached (or the start). */
+            sinceLastStepKg: number;
+            /** @description The next step to reach, what is left to it and the estimate; null once the target is reached. */
+            next: components["schemas"]["NextStepOutput_noid"] | null;
+            toTargetKg: number;
+            toTarget: components["schemas"]["EstimateOutput_noid"];
+            /** Format: date-time */
+            setAt: string;
+        };
+        /** @description Where the weight stands and its chart over a period. */
+        WeightSummary: {
+            /** @enum {string} */
+            period: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+            latest: components["schemas"]["DayWeightOutput"] | null;
+            /** @description The first weigh-in ever: where the user started from. */
+            first: components["schemas"]["DayWeightOutput"] | null;
+            /** @description Mean of the weigh-ins of the last 7 days (today included). */
+            average7Kg: number | null;
+            /** @description Mean of the weigh-ins of the last 30 days. */
+            average30Kg: number | null;
+            /** @description Speed over the last 4 weeks (least squares); null with too few weigh-ins. */
+            kgPerWeek: number | null;
+            /** @enum {string|null} */
+            direction: "gaining" | "losing" | "stable" | null;
+            /** @description Latest minus first weigh-in. */
+            sinceStartKg: number | null;
+            goal: components["schemas"]["WeightGoal_noid"] | null;
+            /** @description Each weigh-in of the period, with the averages ending that day. */
+            points: components["schemas"]["TrendPointOutput"][];
+            /** @description Mean weight of each week of the period (Monday first). */
+            weeks: components["schemas"]["WeekAverageOutput"][];
+        };
+        /** @description Where the weight stands and its chart over a period. */
+        "WeightSummary.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** @enum {string} */
+            period: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+            latest: components["schemas"]["DayWeightOutput.jsonld"] | null;
+            /** @description The first weigh-in ever: where the user started from. */
+            first: components["schemas"]["DayWeightOutput.jsonld"] | null;
+            /** @description Mean of the weigh-ins of the last 7 days (today included). */
+            average7Kg: number | null;
+            /** @description Mean of the weigh-ins of the last 30 days. */
+            average30Kg: number | null;
+            /** @description Speed over the last 4 weeks (least squares); null with too few weigh-ins. */
+            kgPerWeek: number | null;
+            /** @enum {string|null} */
+            direction: "gaining" | "losing" | "stable" | null;
+            /** @description Latest minus first weigh-in. */
+            sinceStartKg: number | null;
+            goal: components["schemas"]["WeightGoal.jsonld_noid"] | null;
+            /** @description Each weigh-in of the period, with the averages ending that day. */
+            points: components["schemas"]["TrendPointOutput.jsonld"][];
+            /** @description Mean weight of each week of the period (Monday first). */
+            weeks: components["schemas"]["WeekAverageOutput.jsonld"][];
         };
         /** @description The workout in progress, if any (to resume it after an interruption or on another device). */
         Workout: {
@@ -4308,6 +5192,439 @@ export interface operations {
             };
         };
     };
+    api_progressionmeasures_get_collection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Measure collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Measure.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Measure"][];
+                };
+            };
+        };
+    };
+    api_progressionmeasures_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new Measure resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Measure.MeasureInput"];
+                "application/json": components["schemas"]["Measure.MeasureInput"];
+            };
+        };
+        responses: {
+            /** @description Measure resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Measure.jsonld"];
+                    "application/json": components["schemas"]["Measure"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_progressionmeasures_key_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Measure identifier */
+                key: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated Measure resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Measure.MeasureInput"];
+                "application/json": components["schemas"]["Measure.MeasureInput"];
+            };
+        };
+        responses: {
+            /** @description Measure resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Measure.jsonld"];
+                    "application/json": components["schemas"]["Measure"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_progressionmeasures_key_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Measure identifier */
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Measure resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_progressionmeasurements_day_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Measurements identifier */
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Measurements resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Measurements.jsonld"];
+                    "application/json": components["schemas"]["Measurements"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_progressionmeasurements_day_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Measurements identifier */
+                day: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated Measurements resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Measurements.MeasurementsInput"];
+                "application/json": components["schemas"]["Measurements.MeasurementsInput"];
+            };
+        };
+        responses: {
+            /** @description Measurements resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Measurements.jsonld"];
+                    "application/json": components["schemas"]["Measurements"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_progressionmeasurements_day_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Measurements identifier */
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Measurements resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_progressionmeasurements_get: {
+        parameters: {
+            query?: {
+                /** @description MeasurementsSummary period */
+                period?: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+                /** @description The device's today (YYYY-MM-DD). */
+                today?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MeasurementsSummary resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["MeasurementsSummary.jsonld"];
+                    "application/json": components["schemas"]["MeasurementsSummary"];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     api_nutritionaverages_get: {
         parameters: {
             query: {
@@ -4365,6 +5682,54 @@ export interface operations {
                 content: {
                     "application/ld+json": components["schemas"]["NutritionDay.jsonld"];
                     "application/json": components["schemas"]["NutritionDay"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_nutritionhistory_get: {
+        parameters: {
+            query?: {
+                /** @description NutritionHistory period */
+                period?: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+                /** @description The device's today (YYYY-MM-DD). */
+                today?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NutritionHistory resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["NutritionHistory.jsonld"];
+                    "application/json": components["schemas"]["NutritionHistory"];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
                 };
             };
             /** @description Not found */
@@ -4586,6 +5951,29 @@ export interface operations {
                     "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
                     "application/problem+json": components["schemas"]["ConstraintViolation"];
                     "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_progressionphoto-sessions_get_collection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description PhotoSession collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["PhotoSession.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["PhotoSession"][];
                 };
             };
         };
@@ -4993,6 +6381,161 @@ export interface operations {
                     "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
                     "application/problem+json": components["schemas"]["ConstraintViolation"];
                     "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_progressionphotos_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new ProgressPhoto resource */
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                    /** Format: date */
+                    day: string;
+                    /** @enum {string} */
+                    pose: "front" | "side" | "back" | "other";
+                };
+            };
+        };
+        responses: {
+            /** @description ProgressPhoto resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ProgressPhoto.jsonld"];
+                    "application/json": components["schemas"]["ProgressPhoto"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_progressionphotos_id_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description ProgressPhoto identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ProgressPhoto resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ProgressPhoto.jsonld"];
+                    "application/json": components["schemas"]["ProgressPhoto"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_progressionphotos_id_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description ProgressPhoto identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ProgressPhoto resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
                 };
             };
             /** @description Too many writes: send it again after `Retry-After` seconds. */
@@ -5533,6 +7076,54 @@ export interface operations {
             };
         };
     };
+    api_traininganalytics_get: {
+        parameters: {
+            query?: {
+                /** @description TrainingAnalytics period */
+                period?: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+                /** @description The device's today (YYYY-MM-DD). */
+                today?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description TrainingAnalytics resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["TrainingAnalytics.jsonld"];
+                    "application/json": components["schemas"]["TrainingAnalytics"];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     "api_metwo-factordisable_post": {
         parameters: {
             query?: never;
@@ -5624,6 +7215,424 @@ export interface operations {
                     "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
                     "application/problem+json": components["schemas"]["ConstraintViolation"];
                     "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_progressionweigh-ins_get_collection": {
+        parameters: {
+            query?: {
+                /** @description How many (at most 100). */
+                limit?: number;
+                /** @description Only the days before this one (the next page). */
+                before?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WeighIn collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["WeighIn.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["WeighIn"][];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "api_progressionweigh-ins_day_get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description WeighIn identifier */
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WeighIn resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["WeighIn.jsonld"];
+                    "application/json": components["schemas"]["WeighIn"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "api_progressionweigh-ins_day_put": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description WeighIn identifier */
+                day: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated WeighIn resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["WeighIn.WeighInInput"];
+                "application/json": components["schemas"]["WeighIn.WeighInInput"];
+            };
+        };
+        responses: {
+            /** @description WeighIn resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["WeighIn.jsonld"];
+                    "application/json": components["schemas"]["WeighIn"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "api_progressionweigh-ins_day_delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description WeighIn identifier */
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WeighIn resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "api_progressionweight-goal_get": {
+        parameters: {
+            query?: {
+                /** @description The device's today (YYYY-MM-DD). */
+                today?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WeightGoal resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["WeightGoal.jsonld"];
+                    "application/json": components["schemas"]["WeightGoal"];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "api_progressionweight-goal_put": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The updated WeightGoal resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["WeightGoal.WeightGoalInput"];
+                "application/json": components["schemas"]["WeightGoal.WeightGoalInput"];
+            };
+        };
+        responses: {
+            /** @description WeightGoal resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["WeightGoal.jsonld"];
+                    "application/json": components["schemas"]["WeightGoal"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "api_progressionweight-goal_delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WeightGoal resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_progressionweight_get: {
+        parameters: {
+            query?: {
+                /** @description The span of the chart. */
+                period?: "7d" | "30d" | "3m" | "6m" | "1y" | "all";
+                /** @description The device's today (YYYY-MM-DD): the averages end on it. */
+                today?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WeightSummary resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["WeightSummary.jsonld"];
+                    "application/json": components["schemas"]["WeightSummary"];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };

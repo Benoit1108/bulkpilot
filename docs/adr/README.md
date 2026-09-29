@@ -29,5 +29,5 @@ Format : contexte → décision → conséquences. Un ADR accepté n'est pas ré
 | [0023](0023-exercise-library-and-versioned-programs.md) | Bibliothèque d'exercices et programmes versionnés | Accepté |
 | [0024](0024-offline-workouts.md) | Séances hors ligne, écritures idempotentes, progression et records côté serveur | Accepté |
 | [0025](0025-tailwind-and-own-components.md) | Tailwind CSS, composants maison et garde-fous du front | Accepté |
-| [0026](0026-charts.md) | Graphiques en SVG maison | Accepté (implémentation phase 5) |
-| [0027](0027-progress-photos-storage.md) | Photos de progression : stockage privé, métadonnées retirées, liens signés | Accepté (implémentation phase 5) |
+| [0026](0026-charts.md) | Graphiques en SVG maison | Accepté |
+| [0027](0027-progress-photos-storage.md) | Photos de progression : stockage privé, métadonnées retirées, liens signés | Accepté |

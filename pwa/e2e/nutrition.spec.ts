@@ -22,7 +22,7 @@ test.describe('nutrition', () => {
 
     const steps = page.getByRole('list', { name: 'Détail du calcul' })
     await expect(steps).toContainText('Métabolisme de base')
-    await expect(steps).toContainText('+275 kcal')
+    await expect(steps).toContainText('+275\u00A0kcal')
     await expect(page.getByTestId('macro-energy')).toContainText('Les macros font')
     await page.getByRole('button', { name: 'Enregistrer mes objectifs' }).click()
     await expect(page.getByText('Objectifs enregistrés.')).toBeVisible()
@@ -41,7 +41,7 @@ test.describe('nutrition', () => {
 
     const lunch = page.getByTestId('meal-lunch')
     await expect(lunch).toContainText('Poulet, filet, sans peau, sauté/poêlé')
-    await expect(lunch).toContainText('150 g')
+    await expect(lunch).toContainText('150\u00A0g')
     await expect(page.getByTestId('energy-gap')).toContainText('Encore')
 
     await page.reload()
@@ -64,7 +64,7 @@ test.describe('nutrition', () => {
     await editing.getByLabel('Repas').selectOption('snack')
     await editing.getByRole('button', { name: 'Enregistrer' }).click()
     await expect(editing).toBeHidden()
-    await expect(page.getByTestId('meal-snack')).toContainText('60 g')
+    await expect(page.getByTestId('meal-snack')).toContainText('60\u00A0g')
     await expect(page.getByTestId('meal-breakfast')).not.toContainText('Oeuf')
 
     await page.getByRole('button', { name: /Modifier Oeuf, cru/ }).click()

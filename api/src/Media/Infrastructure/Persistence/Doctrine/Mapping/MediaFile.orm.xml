@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Media\Domain\MediaFile" table="media_files">
+        <indexes>
+            <index name="media_files_owner_idx" columns="owner_id"/>
+        </indexes>
+
+        <id name="id" type="media_id"/>
+        <field name="ownerId" type="user_id"/>
+        <!-- Opaque storage keys: the id, never the uploaded file name nor the owner. -->
+        <field name="key" column="storage_key" length="64"/>
+        <field name="thumbnailKey" length="64"/>
+        <field name="contentType" length="32"/>
+        <field name="width" type="integer"/>
+        <field name="height" type="integer"/>
+        <field name="bytes" type="integer"/>
+        <field name="storedAt" type="datetimetz_immutable"/>
+    </entity>
+</doctrine-mapping>

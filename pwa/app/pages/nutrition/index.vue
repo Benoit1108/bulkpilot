@@ -7,7 +7,7 @@ import EntryDrawer from '~/features/nutrition/components/EntryDrawer.vue'
 import MealBuilderDrawer from '~/features/nutrition/components/MealBuilderDrawer.vue'
 import MealSection from '~/features/nutrition/components/MealSection.vue'
 import SaveFavoriteDrawer from '~/features/nutrition/components/SaveFavoriteDrawer.vue'
-import { dayLabel, isDay, localDay, shiftDay } from '~/features/nutrition/days'
+import { dayLabel, isDay, localDay, shiftDay } from '~/services/calendar/days'
 import type { Entry, MealSlot } from '~/features/nutrition/nutrition'
 
 definePageMeta({ title: 'Nutrition' })

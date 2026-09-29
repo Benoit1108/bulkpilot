@@ -19,6 +19,8 @@ services:
       REGISTRATION_ENABLED: "true"
       # Deterministic scans for `make e2e`; FOOD_DATABASE=openfoodfacts make up to scan real products.
       FOOD_DATABASE: ${FOOD_DATABASE:-fake}
+      # Photos on the local disk (var/media), served through signed links.
+      MEDIA_STORAGE: local
       XDEBUG_MODE: ${XDEBUG_MODE:-off}
     volumes:
       - ./api:/app

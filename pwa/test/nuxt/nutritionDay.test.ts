@@ -2,7 +2,7 @@ import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import DaySummary from '~/features/nutrition/components/DaySummary.vue'
-import { shiftDay } from '~/features/nutrition/days'
+import { shiftDay } from '~/services/calendar/days'
 import NutritionPage from '~/pages/nutrition/index.vue'
 import { freezeToday, TODAY } from '../support/clock'
 import { button, buttonStartingWith, field } from '../support/dom'
@@ -37,11 +37,11 @@ async function openPage(route = '/nutrition') {
 describe('day summary', () => {
   it('shows what is left, then a neutral overflow', async () => {
     const left = await mountSuspended(DaySummary, { props: { day: day(TODAY, [entry('lunch', 500)]) } })
-    expect(left.get('[data-testid="energy-gap"]').text()).toBe('Encore 1 240 kcal')
-    expect(left.get('[role="progressbar"]').attributes('aria-valuetext')).toBe('1 760 kcal sur 3 000 kcal')
+    expect(left.get('[data-testid="energy-gap"]').text()).toBe('Encore 1\u202F240\u00A0kcal')
+    expect(left.get('[role="progressbar"]').attributes('aria-valuetext')).toBe('1\u202F760\u00A0kcal sur 3\u202F000\u00A0kcal')
 
     const over = await mountSuspended(DaySummary, { props: { day: day(TODAY, [entry('lunch', 1000)]) } })
-    expect(over.get('[data-testid="energy-gap"]').text()).toBe('+520 kcal au-delà de l’objectif')
+    expect(over.get('[data-testid="energy-gap"]').text()).toBe('+520\u00A0kcal au-delà de l’objectif')
     expect(over.get('[aria-label="Calories"]').attributes('aria-valuenow'), 'never above its maximum').toBe('3000')
 
     const exact = await mountSuspended(DaySummary, { props: { day: { ...day(TODAY), totals: { energyKcal: 3000, protein: 0, carbohydrate: 0, fat: 0, fibre: null } } } })
@@ -66,7 +66,7 @@ describe('nutrition page', () => {
     expect(wrapper.get('[data-testid="day-label"]').text()).toBe('Aujourd’hui')
     const lunch = wrapper.get('[data-testid="meal-lunch"]')
     expect(lunch.text()).toContain('Riz blanc, cru')
-    expect(lunch.text()).toContain('/ 900 kcal')
+    expect(lunch.text()).toContain('/ 900\u00A0kcal')
     expect(button(wrapper, 'Jour suivant').attributes('aria-disabled'), 'stays focusable').toBe('true')
     expect(wrapper.findAll('button').some(b => b.text() === 'Aujourd’hui')).toBe(false)
   })
@@ -146,8 +146,8 @@ describe('nutrition page', () => {
     expect(wrapper.text()).toContain('Récents')
     await buttonStartingWith(wrapper, 'Skyr nature', 'dialog[open]').trigger('click')
     expect((field(wrapper, 'Quantité').element as HTMLInputElement).value).toBe('150')
-    expect(wrapper.get('dialog[open] [aria-pressed="true"]').text()).toBe('1 pot (150 g)')
-    expect(wrapper.get('dialog[open] [data-testid="quantity-preview"]').text()).toContain('95 kcal')
+    expect(wrapper.get('dialog[open] [aria-pressed="true"]').text()).toBe('1 pot (150\u00A0g)')
+    expect(wrapper.get('dialog[open] [data-testid="quantity-preview"]').text()).toContain('95\u00A0kcal')
 
     await wrapper.get('dialog[open] form').trigger('submit')
     await flushPromises()
@@ -215,7 +215,7 @@ describe('nutrition page', () => {
     const dialog = wrapper.get('dialog[open]')
     expect(dialog.text()).toContain('Riz blanc, cuit')
     expect(dialog.text()).not.toContain('Riz blanc, cru')
-    expect(dialog.get('[role="status"]').text()).toBe('1 résultat')
+    expect(dialog.get('[role="status"]').text()).toBe('1\u00A0résultat')
     vi.useRealTimers()
   })
 
@@ -231,7 +231,7 @@ describe('nutrition page', () => {
     await search.setValue('introuvable')
     await vi.advanceTimersByTimeAsync(300)
     await flushPromises()
-    expect(wrapper.get('dialog[open] [role="status"]').text()).toBe('Aucun résultat pour « introuvable ».')
+    expect(wrapper.get('dialog[open] [role="status"]').text()).toBe('Aucun résultat pour «\u00A0introuvable\u00A0».')
 
     fake.on('GET /api/foods', () => {
       throw apiError(503, null)
@@ -285,13 +285,13 @@ describe('nutrition page', () => {
     await wrapper.get('[data-testid="meal-lunch"] li button').trigger('click')
     await flushPromises()
     expect(wrapper.get('dialog[open] h2').text()).toBe('Modifier l’entrée')
-    expect(wrapper.get('dialog[open] [data-testid="quantity-preview"]').text()).toContain('352 kcal')
+    expect(wrapper.get('dialog[open] [data-testid="quantity-preview"]').text()).toContain('352\u00A0kcal')
     await field(wrapper, 'Quantité').setValue('200')
     await wrapper.get('dialog[open] select').setValue('dinner')
     await wrapper.get('dialog[open] form').trigger('submit')
     await flushPromises()
     expect(fake.calls.find(call => call.route === 'PUT /api/nutrition/entries/{id}')).toMatchObject({ body: { day: TODAY, slot: 'dinner', grams: 200 }, params: { path: { id: logged.id } } })
-    expect(wrapper.get('[data-testid="meal-dinner"]').text()).toContain('200 g')
+    expect(wrapper.get('[data-testid="meal-dinner"]').text()).toContain('200\u00A0g')
 
     await wrapper.get('[data-testid="meal-dinner"] li button').trigger('click')
     await flushPromises()
@@ -326,18 +326,18 @@ describe('nutrition page', () => {
     fake.on('GET /api/nutrition/averages', () => ({ days: 30, loggedDays: 12, dailyAverage: { energyKcal: 2800, protein: 140, carbohydrate: 350, fat: 90, fibre: null }, currentTarget: target }))
     const wrapper = await openPage()
 
-    await button(wrapper, '30 jours').trigger('click')
+    await button(wrapper, '30\u00A0jours').trigger('click')
     await flushPromises()
 
     expect(fake.client.get).toHaveBeenCalledWith('/api/nutrition/averages', { query: { days: 30, today: TODAY } })
-    expect(wrapper.text()).toContain('Moyenne par jour des 12 jours renseignés sur les 30 derniers (aujourd’hui non compris).')
-    expect(wrapper.text()).toContain('2 800 kcal / 3 000 kcal')
+    expect(wrapper.text()).toContain('Moyenne par jour des 12\u00A0jours renseignés sur les 30\u00A0derniers (aujourd’hui non compris).')
+    expect(wrapper.text()).toContain('2\u202F800\u00A0kcal / 3\u202F000\u00A0kcal')
   })
 
   it('says when nothing was logged over the period, and when averages fail', async () => {
     fake.on('GET /api/nutrition/days/{day}', (_, params) => day(params!.path!.day!))
     const wrapper = await openPage()
-    expect(wrapper.text()).toContain('Rien de renseigné sur les 7 derniers jours.')
+    expect(wrapper.text()).toContain('Rien de renseigné sur les 7\u00A0derniers jours.')
 
     clearNuxtData()
     fake.on('GET /api/nutrition/averages', () => {

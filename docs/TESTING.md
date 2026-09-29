@@ -10,7 +10,7 @@
 | Unitaire front | Vitest, projet `unit` | `pwa/test/unit` | Node, sans runtime Nuxt |
 | Composants / composables | Vitest, projet `nuxt` + `@nuxt/test-utils` | `pwa/test/nuxt` | happy-dom, runtime Nuxt |
 | Types front | vue-tsc strict | — | — |
-| E2E | Playwright (mobile Pixel 7 + desktop Chrome) | `pwa/e2e` | **image de production** complète : navigation, réglages, thème avant chargement, en-têtes de sécurité, cache, 404, manifest, hors ligne |
+| E2E | Playwright (mobile Pixel 7 + desktop Chrome) | `pwa/e2e` | **image de production** complète : navigation, réglages, thème avant chargement, en-têtes de sécurité, cache, 404, manifest, hors ligne ; photos par une passerelle S3 compatible (`versitygw`) derrière TLS, liens présignés compris |
 
 ## Seuils de couverture
 

@@ -28,8 +28,8 @@ describe('a superset line', () => {
   const all = [a1, b1, b2]
 
   it('names what comes next without rest, then the rest after the round', () => {
-    expect(supersetLine(b1, all)).toBe('Superset B · 1/2 — ensuite : Gainage (sans repos)')
-    expect(supersetLine(b2, all)).toBe('Superset B · 2/2 — puis repos : 1 min 30')
+    expect(supersetLine(b1, all)).toBe('Superset B · 1/2\u00A0— ensuite\u00A0: Gainage (sans repos)')
+    expect(supersetLine(b2, all)).toBe('Superset B · 2/2\u00A0— puis repos\u00A0: 1\u00A0min\u00A030')
   })
 
   it('says nothing for an exercise on its own', () => {

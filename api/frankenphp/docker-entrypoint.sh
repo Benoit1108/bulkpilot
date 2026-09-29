@@ -17,6 +17,19 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 			echo 'FOOD_DATABASE=fake is for tests: set it to openfoodfacts in production.' >&2
 			exit 1
 		fi
+		# Photos live in a private bucket: a container's disk is neither private enough nor lasting.
+		if [ "$MEDIA_STORAGE" != 's3' ]; then
+			echo 'MEDIA_STORAGE must be s3 in production (ADR-0027).' >&2
+			exit 1
+		fi
+		for required in S3_BUCKET S3_ACCESS_KEY S3_SECRET_KEY; do
+			if [ -z "$(printenv "$required")" ]; then
+				echo "$required must be provided in production." >&2
+				exit 1
+			fi
+		done
+		# Presigned links are bearer links to private photos: only over TLS.
+		case "${S3_PUBLIC_ENDPOINT:-$S3_ENDPOINT}" in http://*) echo 'The S3 endpoint the browser reaches must be https:// in production.' >&2; exit 1 ;; esac
 	fi
 
 	if [ -z "$(ls -A 'vendor/' 2>/dev/null)" ]; then

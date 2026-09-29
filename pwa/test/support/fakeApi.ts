@@ -29,6 +29,7 @@ export function createFakeApi() {
     get: vi.fn((path: string, params?: { path?: Record<string, string> }) => dispatch('GET', path, undefined, params)),
     post: vi.fn((path: string, body?: unknown, params?: { path?: Record<string, string> }) => dispatch('POST', path, body, params)),
     put: vi.fn((path: string, body?: unknown, params?: { path?: Record<string, string> }) => dispatch('PUT', path, body, params)),
+    upload: vi.fn((path: string, form: FormData, params?: { path?: Record<string, string> }) => dispatch('POST', path, form, params)),
     delete: vi.fn((path: string, params?: { path?: Record<string, string> }) => dispatch('DELETE', path, undefined, params)),
   } as unknown as ApiClient
 

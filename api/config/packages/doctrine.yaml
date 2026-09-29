@@ -33,6 +33,12 @@ doctrine:
             program_day: App\Training\Infrastructure\Persistence\Doctrine\Type\ProgramDayRefType
             workout_exercises: App\Training\Infrastructure\Persistence\Doctrine\Type\WorkoutExercisesType
             workout_sets: App\Training\Infrastructure\Persistence\Doctrine\Type\WorkoutSetsType
+            weigh_in_id: App\Progression\Infrastructure\Persistence\Doctrine\Type\WeighInIdType
+            weight_goal_id: App\Progression\Infrastructure\Persistence\Doctrine\Type\WeightGoalIdType
+            custom_measure_id: App\Progression\Infrastructure\Persistence\Doctrine\Type\CustomMeasureIdType
+            measurement_day_id: App\Progression\Infrastructure\Persistence\Doctrine\Type\MeasurementDayIdType
+            media_id: App\Shared\Infrastructure\Persistence\Doctrine\MediaIdType
+            progress_photo_id: App\Progression\Infrastructure\Persistence\Doctrine\Type\ProgressPhotoIdType
 
     orm:
         validate_xml_mapping: true
@@ -58,6 +64,16 @@ doctrine:
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Training/Infrastructure/Persistence/Doctrine/Mapping'
                 prefix: 'App\Training\Domain'
+            Progression:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Progression/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Progression\Domain'
+            Media:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Media/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Media\Domain'
 
 when@test:
     doctrine:

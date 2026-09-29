@@ -21,7 +21,7 @@
 | Traçabilité | Chaque réponse porte `X-Request-Id` (posé par Caddy), repris dans les erreurs côté PWA. |
 | Erreurs métier | Les `DomainException` deviennent du problem+json avec leur `code` stable (`identity.invalid_token`…) ; statut selon la catégorie : `NotFound` 404, `Conflict` 409, `AuthenticationFailed` 401, `Unavailable` 503 (service externe injoignable), autre règle 422. La PWA traduit le `code`. Les routes Training déclarent dans l'OpenAPI les erreurs qu'elles peuvent renvoyer (404, 409, 429…), avec ce corps (`ProblemResponses`) ; Identity et Nutrition le feront (limite connue). |
 | CSRF | Requête mutante refusée (403) si `Origin` ≠ l'hôte ou `Sec-Fetch-Site` indique un autre site. |
-| Limitation | 429 + `Retry-After` : connexion (5 / 15 min par IP+email, 30 / 15 min par IP, 50 / h par compte), inscription (5 / h par IP), liens email (10 / h par IP et par adresse), second facteur (5 / 15 min par compte), ressaisie du mot de passe (10 / 15 min par compte), écritures Training (600 / min par compte). Valeurs par variables `RATE_LIMIT_*`. |
+| Limitation | 429 + `Retry-After` : connexion (5 / 15 min par IP+email, 30 / 15 min par IP, 50 / h par compte), inscription (5 / h par IP), liens email (10 / h par IP et par adresse), second facteur (5 / 15 min par compte), ressaisie du mot de passe (10 / 15 min par compte), écritures Training (600 / min par compte), écritures Progression (120 / min par compte). Valeurs par variables `RATE_LIMIT_*`. |
 | Jours | Un jour calendaire est `YYYY-MM-DD` (jour **local** de l'utilisateur, envoyé par la PWA) ; accepté jusqu'à demain (fuseaux en avance) et sur 10 ans d'historique. |
 | Concurrence | 409 `shared.concurrent_update` quand deux requêtes modifient la même chose en même temps. |
 
@@ -100,4 +100,18 @@
 | POST | `/api/nutrition/favorite-meals/{id}/log` | `{day, slot}` : saisit tous ses éléments d'un coup → `201 NutritionDay` | connecté |
 | DELETE | `/api/nutrition/favorite-meals/{id}` | → `204` (le journal n'est pas touché) | connecté |
 | GET / PUT | `/api/nutrition/meal-split` | Répartition des calories par repas (entiers, total 100) | connecté |
+| GET | `/api/nutrition/history?period=&today=` | Calories et protéines des jours **renseignés** et complets de la période (aujourd'hui exclu), la moyenne de chaque semaine et de la période, l'objectif en vigueur | connecté |
+| GET | `/api/training/analytics?period=&today=` | Séances terminées de la période : séances, fréquence par semaine, séries de travail, reps, tonnage, records battus, au total et par semaine (semaines vides comprises) | connecté |
+| GET | `/api/progression/weight?period=&today=` | Dernière pesée, moyennes 7 / 30 jours et vitesse sur 4 semaines se terminant `today`, écart depuis la première pesée, objectif suivi, points de la période (pesée et moyennes du jour), moyenne de chaque semaine | connecté |
+| GET | `/api/progression/weigh-ins?limit=&before=` | Pesées, la plus récente d'abord (100 au plus par page) ; `before` invalide → 400 | connecté |
+| GET · PUT · DELETE | `/api/progression/weigh-ins/{day}` | `{weightKg}` (20–400, au dixième) : une pesée par jour, la renvoyer la remplace ; retirer deux fois ne change rien | connecté |
+| GET · PUT · DELETE | `/api/progression/weight-goal?today=` | Objectif suivi et progression (jalons atteints, part du chemin, estimations) ; `{targetKg, milestonesKg}` le remplace, à partir de la dernière pesée (422 sans pesée) ; supprimer n'en suit plus | connecté |
+| GET · POST | `/api/progression/measures` | Parties du corps puis mesures perso ; `{name}` en ajoute une (20 au plus, noms distincts) | connecté |
+| PUT · DELETE | `/api/progression/measures/{key}` | Renomme ; archive (ses valeurs restent) | connecté |
+| GET | `/api/progression/measurements?period=&today=` | Chaque mesure : dernière valeur, écart sur la période, points | connecté |
+| GET · PUT · DELETE | `/api/progression/measurements/{day}` | `{centimetres: {clé: cm}}` : les mensurations d'un jour, remplacées en entier ; clé inconnue → 404 `progression.measure_not_found` | connecté |
+| POST | `/api/progression/photos` | multipart `file` (JPEG, PNG, WebP, 15 Mo), `day`, `pose` (`front`, `side`, `back`, `other`) : réencodée en WebP sans métadonnées → `201 ProgressPhoto` (liens signés 5 min) | connecté |
+| GET · DELETE | `/api/progression/photos/{id}` | Une photo avec des liens neufs ; la supprimer efface son fichier | connecté |
+| GET | `/api/progression/photo-sessions` | Photos groupées par jour, avec le poids et les mensurations du jour (ou les plus récents d'avant) | connecté |
+| GET | `/api/media/{clé}?expires=&signature=&download=` | Stockage local uniquement (dev, tests) : sert un fichier par lien signé, `Cache-Control: private, no-store` ; absent en production (S3 présigné) | connecté + lien signé |
 | GET | `/api/health` | État de l'API et de ses dépendances : `200` + `status: ok`, ou `503` + `status: degraded` et le détail `checks` | publique |

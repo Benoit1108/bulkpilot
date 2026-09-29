@@ -17,6 +17,8 @@ export interface ApiClient {
   get<P extends PathWith<'get'>>(path: P, options?: Params<P, 'get'> & { query?: QueryParams }): Promise<ResponseOf<P, 'get'>>
   post<P extends PathWith<'post'>>(path: P, body?: RequestBodyOf<P, 'post'>, options?: Params<P, 'post'>): Promise<ResponseOf<P, 'post'>>
   put<P extends PathWith<'put'>>(path: P, body: RequestBodyOf<P, 'put'>, options?: Params<P, 'put'>): Promise<ResponseOf<P, 'put'>>
+  /** A file sent as multipart/form-data (a photo): the browser sets the boundary. */
+  upload<P extends PathWith<'post'>>(path: P, form: FormData, options?: Params<P, 'post'>): Promise<ResponseOf<P, 'post'>>
   delete<P extends PathWith<'delete'>>(path: P, options?: Params<P, 'delete'>): Promise<void>
 }
 
@@ -67,6 +69,9 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
     },
     put<P extends PathWith<'put'>>(path: P, body: RequestBodyOf<P, 'put'>, params?: Params<P, 'put'>) {
       return send(() => http<ResponseOf<P, 'put'>>(url(path, params), { method: 'PUT', body: json(body) }))
+    },
+    upload<P extends PathWith<'post'>>(path: P, form: FormData, params?: Params<P, 'post'>) {
+      return send(() => http<ResponseOf<P, 'post'>>(url(path, params), { method: 'POST', body: form }))
     },
     delete<P extends PathWith<'delete'>>(path: P, params?: Params<P, 'delete'>) {
       return send(async () => {

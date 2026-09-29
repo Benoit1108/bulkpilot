@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Progression\Domain\Measurement\CustomMeasure" table="progression_custom_measures">
+        <indexes>
+            <index name="progression_custom_measures_owner_idx" columns="owner_id,created_at"/>
+        </indexes>
+
+        <id name="id" type="custom_measure_id"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="name" length="40"/>
+        <field name="createdAt" type="datetimetz_immutable"/>
+        <field name="archivedAt" type="datetimetz_immutable" nullable="true"/>
+    </entity>
+</doctrine-mapping>

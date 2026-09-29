@@ -14,6 +14,12 @@ services:
         arguments:
             $providers: !tagged_iterator app.identity_provider
 
+    # Contexts keep photos through the shared port; Media implements it (ADR-0027).
+    App\Shared\Application\Media\Photos: '@App\Media\Application\PhotoLibrary'
+    App\Media\Application\MediaStorage:
+        factory: ['@App\Media\Infrastructure\Storage\MediaStorageFactory', 'create']
+        arguments: ['%env(MEDIA_STORAGE)%']
+
     App\System\Application\Health\GetHealthHandler:
         arguments:
             $checks: !tagged_iterator app.health_check

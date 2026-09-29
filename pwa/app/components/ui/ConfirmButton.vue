@@ -5,10 +5,12 @@
  */
 const props = withDefaults(defineProps<{
   label: string
+  /** The full name when the visible label is short (« Retirer » → « Retirer la pesée du 3 mai »). */
+  accessibleLabel?: string
   confirmLabel?: string
   loading?: boolean
   variant?: 'secondary' | 'ghost'
-}>(), { confirmLabel: 'Confirmer la suppression', loading: false, variant: 'secondary' })
+}>(), { accessibleLabel: undefined, confirmLabel: 'Confirmer la suppression', loading: false, variant: 'secondary' })
 
 const emit = defineEmits<{ confirm: [] }>()
 const armed = ref(false)
@@ -28,6 +30,7 @@ function click(): void {
   <UiButton
     :variant="armed ? 'danger' : variant"
     :loading="loading"
+    :aria-label="armed ? undefined : accessibleLabel"
     @click="click"
     @blur="armed = false"
     @keydown.esc="armed = false"

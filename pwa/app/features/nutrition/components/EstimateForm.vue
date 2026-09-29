@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { formatFullDay } from '~/services/calendar/days'
 import type { Account } from '~/features/identity/account'
 import { HEIGHT_CM } from '~/features/identity/rules'
-import { optionalAmount, type Amount } from '~/services/text/numbers'
+import { amountText, optionalAmount, type Amount } from '~/services/text/numbers'
 import { formatKcal } from '~/features/nutrition/format'
 import { GOALS, LIFESTYLES, type EnergyEstimate, type EstimateInput, type Goal, type Lifestyle } from '~/features/nutrition/nutrition'
 import { SESSIONS_PER_WEEK, WEEKLY_CHANGE_KG, WEIGHT_KG } from '~/features/nutrition/rules'
@@ -17,6 +18,25 @@ const sex = ref<'female' | 'male' | null>(props.account?.sex ?? null)
 const birthDate = ref(props.account?.birthDate ?? '')
 const heightCm = ref<Amount>(props.account?.heightCm ?? '')
 const weightKg = ref<Amount>('')
+// The weight is Progression's: the latest weigh-in fills the field, which stays editable. The
+// hint names it only while the field still holds it.
+const latestWeighIn = ref<{ day: string, text: string } | null>(null)
+const weightHint = computed(() => (latestWeighIn.value && weightKg.value === latestWeighIn.value.text
+  ? `Ta dernière pesée (${formatFullDay(latestWeighIn.value.day)}).`
+  : `Entre ${WEIGHT_KG.min} et ${WEIGHT_KG.max} kg.`))
+onMounted(async () => {
+  try {
+    const [latest] = await api.get('/api/progression/weigh-ins', { query: { limit: 1 } })
+    if (latest && weightKg.value === '') {
+      const text = amountText(latest.weightKg)
+      weightKg.value = text
+      latestWeighIn.value = { day: latest.day, text }
+    }
+  }
+  catch {
+    // Offline or refused: the weight is typed.
+  }
+})
 const lifestyle = ref<Lifestyle | null>('light')
 const sessions = ref<Amount>(3)
 const goal = ref<Goal | null>('bulk')
@@ -72,7 +92,7 @@ async function calculate(): Promise<void> {
     >
       {{ message }}
     </UiAlert>
-    <div class="grid gap-3 sm:grid-cols-2">
+    <div class="grid gap-3 *:min-w-0 sm:grid-cols-2">
       <UiSelect
         v-model="sex"
         label="Sexe"
@@ -99,7 +119,7 @@ async function calculate(): Promise<void> {
         label="Poids actuel"
         type="number"
         suffix="kg"
-        :hint="`Entre ${WEIGHT_KG.min} et ${WEIGHT_KG.max} kg.`"
+        :hint="weightHint"
         :error="fields.weightKg"
       />
       <UiSelect

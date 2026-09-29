@@ -50,6 +50,39 @@ final class RecordBook
         ));
     }
 
+    /**
+     * The records each workout beat, in one pass over them (the same rule as `beatenBy`: better than
+     * every earlier one; the first time is no record).
+     *
+     * @param list<Workout> $workouts the oldest first
+     *
+     * @return array<string, int> by workout id, those with the exercise only
+     */
+    public static function beatenInOrder(array $workouts, ExerciseId $exerciseId): array
+    {
+        $bests = [];
+        $beaten = [];
+        foreach ($workouts as $workout) {
+            $performances = self::performances($workout, $exerciseId);
+            if ([] === $performances) {
+                continue;
+            }
+            $count = 0;
+            foreach ($performances as $record) {
+                $best = $bests[$record->key()] ?? null;
+                if (null !== $best && $record->value > $best->value) {
+                    ++$count;
+                }
+                if (null === $best || $record->value > $best->value) {
+                    $bests[$record->key()] = $record;
+                }
+            }
+            $beaten[$workout->id()->value] = $count;
+        }
+
+        return $beaten;
+    }
+
     public static function estimatedOneRepMax(float $loadKg, int $reps): ?float
     {
         if ($reps < 1 || $reps > self::MAX_REPS_FOR_ESTIMATE || $loadKg <= 0) {

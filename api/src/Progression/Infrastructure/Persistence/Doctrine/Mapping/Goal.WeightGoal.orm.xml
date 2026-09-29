@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Progression\Domain\Goal\WeightGoal" table="progression_weight_goals">
+        <unique-constraints>
+            <!-- One goal followed at a time. Written as PostgreSQL prints it back, so that schema:validate matches. -->
+            <unique-constraint name="progression_weight_goals_one_current" columns="owner_id">
+                <options>
+                    <option name="where">(ended_at IS NULL)</option>
+                </options>
+            </unique-constraint>
+        </unique-constraints>
+
+        <id name="id" type="weight_goal_id"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="startDay" type="date_immutable"/>
+        <field name="startKg" type="float"/>
+        <field name="targetKg" type="float"/>
+        <field name="milestones" type="json"/>
+        <field name="setAt" type="datetimetz_immutable"/>
+        <field name="endedAt" type="datetimetz_immutable" nullable="true"/>
+    </entity>
+</doctrine-mapping>

@@ -4,7 +4,7 @@
  */
 const whole = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 })
 const oneDecimal = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1 })
-const NBSP = ' '
+const NBSP = '\u00A0'
 
 export function formatKcal(kcal: number): string {
   return `${whole.format(Math.round(kcal))}${NBSP}kcal`
@@ -17,17 +17,6 @@ export function formatGrams(grams: number): string {
 /** Macros are read at a glance: whole grams. */
 export function formatMacro(grams: number): string {
   return `${whole.format(Math.round(grams))}${NBSP}g`
-}
-
-const numberFormats = new Map<number, Intl.NumberFormat>()
-
-export function formatNumber(value: number, maximumFractionDigits = 1): string {
-  let format = numberFormats.get(maximumFractionDigits)
-  if (!format) {
-    format = new Intl.NumberFormat('fr-FR', { maximumFractionDigits })
-    numberFormats.set(maximumFractionDigits, format)
-  }
-  return format.format(value)
 }
 
 /** « +250 kcal », « −300 kcal » (true minus sign). */

@@ -2,6 +2,7 @@
 import type { components } from '~/types/api'
 import type { Measurement } from '~/features/training/training'
 import { formatRecord } from '~/features/training/workout'
+import StrengthChart from './StrengthChart.vue'
 
 /** An exercise's records, then its last sessions (spec §47). */
 const props = defineProps<{ progress: components['schemas']['ExerciseProgress'], measurement: Measurement }>()
@@ -39,6 +40,10 @@ const ROW = 'flex flex-wrap justify-between gap-x-3 gap-y-1 border-t border-line
           <span class="text-sm text-muted">{{ dateFormat.format(new Date(record.date)) }}</span>
         </li>
       </ul>
+      <StrengthChart
+        :progress="progress"
+        :measurement="measurement"
+      />
       <h3 class="mt-3 font-bold">
         Dernières séances
       </h3>

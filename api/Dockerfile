@@ -16,6 +16,8 @@ RUN set -eux; \
 	install-php-extensions \
 		@composer \
 		apcu \
+		exif \
+		gd \
 		intl \
 		opcache \
 		pdo_pgsql \

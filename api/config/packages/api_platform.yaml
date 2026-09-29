@@ -9,6 +9,7 @@ api_platform:
             - '%kernel.project_dir%/src/Identity/Presentation/Api'
             - '%kernel.project_dir%/src/Nutrition/Presentation/Api'
             - '%kernel.project_dir%/src/Training/Presentation/Api'
+            - '%kernel.project_dir%/src/Progression/Presentation/Api'
     formats:
         jsonld: ['application/ld+json']
         json: ['application/json']

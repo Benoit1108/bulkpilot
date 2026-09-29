@@ -89,6 +89,19 @@ describe('api client', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 
+  it('sends a file as multipart, letting the browser set the boundary', async () => {
+    const { client, fetchMock } = clientReturning(jsonResponse(201, { id: 'photo' }))
+    const form = new FormData()
+    form.append('day', '2026-09-29')
+
+    await expect(client.upload('/api/progression/photos', form)).resolves.toEqual({ id: 'photo' })
+
+    const [, init] = fetchMock.mock.calls[0]!
+    expect(init?.method).toBe('POST')
+    expect(init?.body).toBe(form)
+    expect(new Headers(init?.headers).get('Content-Type')).toBeNull()
+  })
+
   it('never retries writes', async () => {
     const { client, fetchMock } = clientReturning(jsonResponse(503, {}), jsonResponse(201, {}))
 

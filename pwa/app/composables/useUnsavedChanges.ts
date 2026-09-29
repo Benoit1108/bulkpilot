@@ -1,7 +1,7 @@
 import { ACCOUNT_STATE_KEY } from '~/composables/useAccount'
 import type { AccountState } from '~/features/identity/account'
 
-export const LEAVE_WITHOUT_SAVING = 'Quitter sans enregistrer ? Les changements seront perdus.'
+export const LEAVE_WITHOUT_SAVING = 'Quitter sans enregistrer\u202F? Les changements seront perdus.'
 
 /**
  * Asks before leaving a form whose content changed since it was loaded or last saved: another page

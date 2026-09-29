@@ -2812,6 +2812,804 @@
                 }
             }
         },
+        "/api/progression/measures": {
+            "get": {
+                "operationId": "api_progressionmeasures_get_collection",
+                "tags": [
+                    "Measure"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Measure collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Measure.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Measure.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Measure"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Measure resources.",
+                "description": "Retrieves the collection of Measure resources.",
+                "parameters": []
+            },
+            "post": {
+                "operationId": "api_progressionmeasures_post",
+                "tags": [
+                    "Measure"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Measure resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Measure.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Measure"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Creates a Measure resource.",
+                "description": "Creates a Measure resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Measure resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Measure.MeasureInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Measure.MeasureInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/progression/measures/{key}": {
+            "put": {
+                "operationId": "api_progressionmeasures_key_put",
+                "tags": [
+                    "Measure"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Measure resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Measure.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Measure"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Replaces the Measure resource.",
+                "description": "Replaces the Measure resource.",
+                "parameters": [
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "description": "Measure identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Measure resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Measure.MeasureInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Measure.MeasureInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "delete": {
+                "operationId": "api_progressionmeasures_key_delete",
+                "tags": [
+                    "Measure"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Measure resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Removes the Measure resource.",
+                "description": "Removes the Measure resource.",
+                "parameters": [
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "description": "Measure identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/progression/measurements/{day}": {
+            "get": {
+                "operationId": "api_progressionmeasurements_day_get",
+                "tags": [
+                    "Measurements"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Measurements resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Measurements.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Measurements"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Measurements resource.",
+                "description": "Retrieves a Measurements resource.",
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "path",
+                        "description": "Measurements identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "put": {
+                "operationId": "api_progressionmeasurements_day_put",
+                "tags": [
+                    "Measurements"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Measurements resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Measurements.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Measurements"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Replaces the Measurements resource.",
+                "description": "Replaces the Measurements resource.",
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "path",
+                        "description": "Measurements identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Measurements resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Measurements.MeasurementsInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Measurements.MeasurementsInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "delete": {
+                "operationId": "api_progressionmeasurements_day_delete",
+                "tags": [
+                    "Measurements"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Measurements resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Removes the Measurements resource.",
+                "description": "Removes the Measurements resource.",
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "path",
+                        "description": "Measurements identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/progression/measurements": {
+            "get": {
+                "operationId": "api_progressionmeasurements_get",
+                "tags": [
+                    "MeasurementsSummary"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "MeasurementsSummary resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MeasurementsSummary.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MeasurementsSummary"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a MeasurementsSummary resource.",
+                "description": "Retrieves a MeasurementsSummary resource.",
+                "parameters": [
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "description": "MeasurementsSummary period",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "30d",
+                                "3m",
+                                "6m",
+                                "1y",
+                                "all"
+                            ],
+                            "default": "3m"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "today",
+                        "in": "query",
+                        "description": "The device's today (YYYY-MM-DD).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
         "/api/nutrition/averages": {
             "get": {
                 "operationId": "api_nutritionaverages_get",
@@ -2945,6 +3743,110 @@
                         },
                         "style": "simple",
                         "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/nutrition/history": {
+            "get": {
+                "operationId": "api_nutritionhistory_get",
+                "tags": [
+                    "NutritionHistory"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "NutritionHistory resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NutritionHistory.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NutritionHistory"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a NutritionHistory resource.",
+                "description": "Retrieves a NutritionHistory resource.",
+                "parameters": [
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "description": "NutritionHistory period",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "30d",
+                                "3m",
+                                "6m",
+                                "1y",
+                                "all"
+                            ],
+                            "default": "3m"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "today",
+                        "in": "query",
+                        "description": "The device's today (YYYY-MM-DD).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
                     }
                 ]
             }
@@ -3308,6 +4210,57 @@
                     },
                     "required": true
                 }
+            }
+        },
+        "/api/progression/photo-sessions": {
+            "get": {
+                "operationId": "api_progressionphoto-sessions_get_collection",
+                "tags": [
+                    "PhotoSession"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "PhotoSession collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "PhotoSession.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/PhotoSession.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PhotoSession"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of PhotoSession resources.",
+                "description": "Retrieves the collection of PhotoSession resources.",
+                "parameters": []
             }
         },
         "/api/programs": {
@@ -4065,6 +5018,282 @@
                         "name": "id",
                         "in": "path",
                         "description": "Program identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/progression/photos": {
+            "post": {
+                "operationId": "api_progressionphotos_post",
+                "tags": [
+                    "ProgressPhoto"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "ProgressPhoto resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProgressPhoto.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProgressPhoto"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Creates a ProgressPhoto resource.",
+                "description": "Creates a ProgressPhoto resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new ProgressPhoto resource",
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "file",
+                                    "day",
+                                    "pose"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "day": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "pose": {
+                                        "type": "string",
+                                        "enum": [
+                                            "front",
+                                            "side",
+                                            "back",
+                                            "other"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": false
+                }
+            }
+        },
+        "/api/progression/photos/{id}": {
+            "get": {
+                "operationId": "api_progressionphotos_id_get",
+                "tags": [
+                    "ProgressPhoto"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProgressPhoto resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProgressPhoto.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProgressPhoto"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a ProgressPhoto resource.",
+                "description": "Retrieves a ProgressPhoto resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ProgressPhoto identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "delete": {
+                "operationId": "api_progressionphotos_id_delete",
+                "tags": [
+                    "ProgressPhoto"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "ProgressPhoto resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Removes the ProgressPhoto resource.",
+                "description": "Removes the ProgressPhoto resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ProgressPhoto identifier",
                         "required": true,
                         "deprecated": false,
                         "schema": {
@@ -4998,6 +6227,110 @@
                 "parameters": []
             }
         },
+        "/api/training/analytics": {
+            "get": {
+                "operationId": "api_traininganalytics_get",
+                "tags": [
+                    "TrainingAnalytics"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TrainingAnalytics resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrainingAnalytics.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrainingAnalytics"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a TrainingAnalytics resource.",
+                "description": "Retrieves a TrainingAnalytics resource.",
+                "parameters": [
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "description": "TrainingAnalytics period",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "30d",
+                                "3m",
+                                "6m",
+                                "1y",
+                                "all"
+                            ],
+                            "default": "3m"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "today",
+                        "in": "query",
+                        "description": "The device's today (YYYY-MM-DD).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
         "/api/me/two-factor/disable": {
             "post": {
                 "operationId": "api_metwo-factordisable_post",
@@ -5158,6 +6491,783 @@
                     },
                     "required": true
                 }
+            }
+        },
+        "/api/progression/weigh-ins": {
+            "get": {
+                "operationId": "api_progressionweigh-ins_get_collection",
+                "tags": [
+                    "WeighIn"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "WeighIn collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "WeighIn.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/WeighIn.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WeighIn"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of WeighIn resources.",
+                "description": "Retrieves the collection of WeighIn resources.",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "How many (at most 100).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 30
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "Only the days before this one (the next page).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
+        "/api/progression/weigh-ins/{day}": {
+            "get": {
+                "operationId": "api_progressionweigh-ins_day_get",
+                "tags": [
+                    "WeighIn"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "WeighIn resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeighIn.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeighIn"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a WeighIn resource.",
+                "description": "Retrieves a WeighIn resource.",
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "path",
+                        "description": "WeighIn identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "put": {
+                "operationId": "api_progressionweigh-ins_day_put",
+                "tags": [
+                    "WeighIn"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "WeighIn resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeighIn.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeighIn"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Replaces the WeighIn resource.",
+                "description": "Replaces the WeighIn resource.",
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "path",
+                        "description": "WeighIn identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated WeighIn resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WeighIn.WeighInInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WeighIn.WeighInInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "delete": {
+                "operationId": "api_progressionweigh-ins_day_delete",
+                "tags": [
+                    "WeighIn"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "WeighIn resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Removes the WeighIn resource.",
+                "description": "Removes the WeighIn resource.",
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "path",
+                        "description": "WeighIn identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/progression/weight-goal": {
+            "get": {
+                "operationId": "api_progressionweight-goal_get",
+                "tags": [
+                    "WeightGoal"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "WeightGoal resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeightGoal.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeightGoal"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a WeightGoal resource.",
+                "description": "Retrieves a WeightGoal resource.",
+                "parameters": [
+                    {
+                        "name": "today",
+                        "in": "query",
+                        "description": "The device's today (YYYY-MM-DD).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "put": {
+                "operationId": "api_progressionweight-goal_put",
+                "tags": [
+                    "WeightGoal"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "WeightGoal resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeightGoal.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeightGoal"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Replaces the WeightGoal resource.",
+                "description": "Replaces the WeightGoal resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The updated WeightGoal resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WeightGoal.WeightGoalInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WeightGoal.WeightGoalInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "delete": {
+                "operationId": "api_progressionweight-goal_delete",
+                "tags": [
+                    "WeightGoal"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "WeightGoal resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Removes the WeightGoal resource.",
+                "description": "Removes the WeightGoal resource.",
+                "parameters": []
+            }
+        },
+        "/api/progression/weight": {
+            "get": {
+                "operationId": "api_progressionweight_get",
+                "tags": [
+                    "WeightSummary"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "WeightSummary resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeightSummary.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WeightSummary"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a WeightSummary resource.",
+                "description": "Retrieves a WeightSummary resource.",
+                "parameters": [
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "description": "The span of the chart.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "30d",
+                                "3m",
+                                "6m",
+                                "1y",
+                                "all"
+                            ],
+                            "default": "3m"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "today",
+                        "in": "query",
+                        "description": "The device's today (YYYY-MM-DD): the averages end on it.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
             }
         },
         "/api/workouts": {
@@ -7198,6 +9308,38 @@
                     }
                 }
             },
+            "DayWeightOutput": {
+                "type": "object",
+                "required": [
+                    "day",
+                    "weightKg"
+                ],
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "weightKg": {
+                        "type": "number"
+                    }
+                }
+            },
+            "DayWeightOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "day",
+                    "weightKg"
+                ],
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "weightKg": {
+                        "type": "number"
+                    }
+                }
+            },
             "EmailVerification": {
                 "type": "object",
                 "description": "Redeems the link emailed at registration (works signed in or not).",
@@ -7969,6 +10111,110 @@
                     "heightCm",
                     "weightKg"
                 ]
+            },
+            "EstimateOutput": {
+                "type": "object",
+                "required": [
+                    "status",
+                    "weeks"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "estimated",
+                            "reached",
+                            "not_enough_weigh_ins",
+                            "not_moving",
+                            "moving_away"
+                        ]
+                    },
+                    "weeks": {
+                        "description": "Weeks left, rounded up (when estimated).",
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "EstimateOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "status",
+                    "weeks"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "estimated",
+                            "reached",
+                            "not_enough_weigh_ins",
+                            "not_moving",
+                            "moving_away"
+                        ]
+                    },
+                    "weeks": {
+                        "description": "Weeks left, rounded up (when estimated).",
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "EstimateOutput.jsonld_noid": {
+                "type": "object",
+                "required": [
+                    "status",
+                    "weeks"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "estimated",
+                            "reached",
+                            "not_enough_weigh_ins",
+                            "not_moving",
+                            "moving_away"
+                        ]
+                    },
+                    "weeks": {
+                        "description": "Weeks left, rounded up (when estimated).",
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "EstimateOutput_noid": {
+                "type": "object",
+                "required": [
+                    "status",
+                    "weeks"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "estimated",
+                            "reached",
+                            "not_enough_weigh_ins",
+                            "not_moving",
+                            "moving_away"
+                        ]
+                    },
+                    "weeks": {
+                        "description": "Weeks left, rounded up (when estimated).",
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
             },
             "Exercise": {
                 "type": "object",
@@ -9132,6 +11378,102 @@
                     }
                 }
             },
+            "GoalStepOutput": {
+                "type": "object",
+                "required": [
+                    "weightKg",
+                    "target",
+                    "reachedOn"
+                ],
+                "properties": {
+                    "weightKg": {
+                        "type": "number"
+                    },
+                    "target": {
+                        "description": "The final target (the others are milestones).",
+                        "type": "boolean"
+                    },
+                    "reachedOn": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    }
+                }
+            },
+            "GoalStepOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "weightKg",
+                    "target",
+                    "reachedOn"
+                ],
+                "properties": {
+                    "weightKg": {
+                        "type": "number"
+                    },
+                    "target": {
+                        "description": "The final target (the others are milestones).",
+                        "type": "boolean"
+                    },
+                    "reachedOn": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    }
+                }
+            },
+            "GoalStepOutput.jsonld_noid": {
+                "type": "object",
+                "required": [
+                    "weightKg",
+                    "target",
+                    "reachedOn"
+                ],
+                "properties": {
+                    "weightKg": {
+                        "type": "number"
+                    },
+                    "target": {
+                        "description": "The final target (the others are milestones).",
+                        "type": "boolean"
+                    },
+                    "reachedOn": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    }
+                }
+            },
+            "GoalStepOutput_noid": {
+                "type": "object",
+                "required": [
+                    "weightKg",
+                    "target",
+                    "reachedOn"
+                ],
+                "properties": {
+                    "weightKg": {
+                        "type": "number"
+                    },
+                    "target": {
+                        "description": "The final target (the others are milestones).",
+                        "type": "boolean"
+                    },
+                    "reachedOn": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    }
+                }
+            },
             "Health": {
                 "type": "object",
                 "description": "Readiness of the API and its dependencies. Answers 503 with the same body when degraded.",
@@ -9966,6 +12308,420 @@
                 ],
                 "description": "How the daily calories are spread over meals."
             },
+            "Measure": {
+                "type": "object",
+                "description": "The body parts, then the user's own measures (not archived).",
+                "required": [
+                    "key",
+                    "name",
+                    "custom",
+                    "archived"
+                ],
+                "properties": {
+                    "key": {
+                        "description": "A body part (neck, shoulders, chest, left_arm\u2026), or the id of one of the user's own.",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The user's name for their own measure; null for a body part.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "custom": {
+                        "type": "boolean"
+                    },
+                    "archived": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Measure.MeasureInput": {
+                "type": "object",
+                "description": "Adds a measure of the user's own (in centimetres, 20 at most).",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "maxLength": 40,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "Measure.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "key",
+                            "name",
+                            "custom",
+                            "archived"
+                        ],
+                        "properties": {
+                            "key": {
+                                "description": "A body part (neck, shoulders, chest, left_arm\u2026), or the id of one of the user's own.",
+                                "type": "string"
+                            },
+                            "name": {
+                                "description": "The user's name for their own measure; null for a body part.",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "custom": {
+                                "type": "boolean"
+                            },
+                            "archived": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                ],
+                "description": "The body parts, then the user's own measures (not archived)."
+            },
+            "MeasureSeriesOutput": {
+                "type": "object",
+                "required": [
+                    "key",
+                    "name",
+                    "custom",
+                    "archived",
+                    "latest",
+                    "changeCm",
+                    "points"
+                ],
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Null for a body part (the app names it).",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "custom": {
+                        "type": "boolean"
+                    },
+                    "archived": {
+                        "description": "An archived measure of one's own is listed while it has values.",
+                        "type": "boolean"
+                    },
+                    "latest": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "properties": {
+                            "day": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "cm": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "day",
+                            "cm"
+                        ]
+                    },
+                    "changeCm": {
+                        "description": "Latest minus the first value of the period.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "points": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "day": {
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "cm": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "day",
+                                "cm"
+                            ]
+                        }
+                    }
+                }
+            },
+            "MeasureSeriesOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "key",
+                    "name",
+                    "custom",
+                    "archived",
+                    "latest",
+                    "changeCm",
+                    "points"
+                ],
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Null for a body part (the app names it).",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "custom": {
+                        "type": "boolean"
+                    },
+                    "archived": {
+                        "description": "An archived measure of one's own is listed while it has values.",
+                        "type": "boolean"
+                    },
+                    "latest": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "properties": {
+                            "day": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "cm": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "day",
+                            "cm"
+                        ]
+                    },
+                    "changeCm": {
+                        "description": "Latest minus the first value of the period.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "points": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "day": {
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "cm": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "day",
+                                "cm"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Measurements": {
+                "type": "object",
+                "description": "The measurements of a day.",
+                "required": [
+                    "day",
+                    "centimetres",
+                    "recordedAt"
+                ],
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "centimetres": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "number"
+                        }
+                    },
+                    "recordedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "Measurements.MeasurementsInput": {
+                "type": "object",
+                "description": "Records the measurements of a day, or replaces them (one set a day; a measure left out is not kept).",
+                "properties": {
+                    "centimetres": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "number"
+                        },
+                        "minProperties": 1
+                    }
+                }
+            },
+            "Measurements.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "day",
+                            "centimetres",
+                            "recordedAt"
+                        ],
+                        "properties": {
+                            "day": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "centimetres": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "number"
+                                }
+                            },
+                            "recordedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "The measurements of a day."
+            },
+            "MeasurementsSummary": {
+                "type": "object",
+                "description": "Each measure over a period: its values, its latest value, its change.",
+                "required": [
+                    "period",
+                    "measures"
+                ],
+                "properties": {
+                    "period": {
+                        "type": "string",
+                        "enum": [
+                            "7d",
+                            "30d",
+                            "3m",
+                            "6m",
+                            "1y",
+                            "all"
+                        ]
+                    },
+                    "measures": {
+                        "description": "The body parts then the user's own measures.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MeasureSeriesOutput"
+                        }
+                    }
+                }
+            },
+            "MeasurementsSummary.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "period",
+                            "measures"
+                        ],
+                        "properties": {
+                            "period": {
+                                "type": "string",
+                                "enum": [
+                                    "7d",
+                                    "30d",
+                                    "3m",
+                                    "6m",
+                                    "1y",
+                                    "all"
+                                ]
+                            },
+                            "measures": {
+                                "description": "The body parts then the user's own measures.",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/MeasureSeriesOutput.jsonld"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "Each measure over a period: its values, its latest value, its change."
+            },
+            "NextStepOutput.jsonld_noid": {
+                "type": "object",
+                "required": [
+                    "weightKg",
+                    "target",
+                    "remainingKg",
+                    "estimate"
+                ],
+                "properties": {
+                    "weightKg": {
+                        "type": "number"
+                    },
+                    "target": {
+                        "description": "The final target (not a milestone).",
+                        "type": "boolean"
+                    },
+                    "remainingKg": {
+                        "description": "Kilograms left, signed the way the weight goes.",
+                        "type": "number"
+                    },
+                    "estimate": {
+                        "$ref": "#/components/schemas/EstimateOutput.jsonld_noid"
+                    }
+                }
+            },
+            "NextStepOutput_noid": {
+                "type": "object",
+                "required": [
+                    "weightKg",
+                    "target",
+                    "remainingKg",
+                    "estimate"
+                ],
+                "properties": {
+                    "weightKg": {
+                        "type": "number"
+                    },
+                    "target": {
+                        "description": "The final target (not a milestone).",
+                        "type": "boolean"
+                    },
+                    "remainingKg": {
+                        "description": "Kilograms left, signed the way the weight goes.",
+                        "type": "number"
+                    },
+                    "estimate": {
+                        "$ref": "#/components/schemas/EstimateOutput_noid"
+                    }
+                }
+            },
             "Nutrients": {
                 "type": "object",
                 "required": [
@@ -10185,6 +12941,223 @@
                     }
                 ],
                 "description": "The journal of a calendar day (YYYY-MM-DD, the user's local day)."
+            },
+            "NutritionHistory": {
+                "type": "object",
+                "description": "Day and week totals of the days logged over a period (today excluded: it is under way).",
+                "required": [
+                    "period",
+                    "days",
+                    "weeks",
+                    "averageEnergyKcal",
+                    "averageProteinGrams",
+                    "target"
+                ],
+                "properties": {
+                    "period": {
+                        "type": "string",
+                        "enum": [
+                            "7d",
+                            "30d",
+                            "3m",
+                            "6m",
+                            "1y",
+                            "all"
+                        ]
+                    },
+                    "days": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "day": {
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "energyKcal": {
+                                    "type": "number"
+                                },
+                                "proteinGrams": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "day",
+                                "energyKcal",
+                                "proteinGrams"
+                            ]
+                        }
+                    },
+                    "weeks": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "week": {
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "averageEnergyKcal": {
+                                    "type": "number"
+                                },
+                                "averageProteinGrams": {
+                                    "type": "number"
+                                },
+                                "days": {
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "week",
+                                "averageEnergyKcal",
+                                "averageProteinGrams",
+                                "days"
+                            ]
+                        }
+                    },
+                    "averageEnergyKcal": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "averageProteinGrams": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "target": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "properties": {
+                            "energyKcal": {
+                                "type": "integer"
+                            },
+                            "proteinGrams": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "energyKcal",
+                            "proteinGrams"
+                        ]
+                    }
+                }
+            },
+            "NutritionHistory.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "period",
+                            "days",
+                            "weeks",
+                            "averageEnergyKcal",
+                            "averageProteinGrams",
+                            "target"
+                        ],
+                        "properties": {
+                            "period": {
+                                "type": "string",
+                                "enum": [
+                                    "7d",
+                                    "30d",
+                                    "3m",
+                                    "6m",
+                                    "1y",
+                                    "all"
+                                ]
+                            },
+                            "days": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "day": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "energyKcal": {
+                                            "type": "number"
+                                        },
+                                        "proteinGrams": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "day",
+                                        "energyKcal",
+                                        "proteinGrams"
+                                    ]
+                                }
+                            },
+                            "weeks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "week": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "averageEnergyKcal": {
+                                            "type": "number"
+                                        },
+                                        "averageProteinGrams": {
+                                            "type": "number"
+                                        },
+                                        "days": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "week",
+                                        "averageEnergyKcal",
+                                        "averageProteinGrams",
+                                        "days"
+                                    ]
+                                }
+                            },
+                            "averageEnergyKcal": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "averageProteinGrams": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "target": {
+                                "type": [
+                                    "object",
+                                    "null"
+                                ],
+                                "properties": {
+                                    "energyKcal": {
+                                        "type": "integer"
+                                    },
+                                    "proteinGrams": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "energyKcal",
+                                    "proteinGrams"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "Day and week totals of the days logged over a period (today excluded: it is under way)."
             },
             "NutritionTarget": {
                 "type": "object",
@@ -10548,6 +13521,177 @@
                         "type": "string"
                     }
                 }
+            },
+            "PhotoSession": {
+                "type": "object",
+                "description": "The photo sessions, the most recent first; links valid a few minutes.",
+                "required": [
+                    "day",
+                    "weight",
+                    "measurements",
+                    "photos"
+                ],
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "weight": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "properties": {
+                            "day": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "weightKg": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "day",
+                            "weightKg"
+                        ]
+                    },
+                    "measurements": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "properties": {
+                            "day": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "values": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "cm": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "key",
+                                        "name",
+                                        "cm"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "day",
+                            "values"
+                        ]
+                    },
+                    "photos": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProgressPhoto_noid"
+                        }
+                    }
+                }
+            },
+            "PhotoSession.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "day",
+                            "weight",
+                            "measurements",
+                            "photos"
+                        ],
+                        "properties": {
+                            "day": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "weight": {
+                                "type": [
+                                    "object",
+                                    "null"
+                                ],
+                                "properties": {
+                                    "day": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "weightKg": {
+                                        "type": "number"
+                                    }
+                                },
+                                "required": [
+                                    "day",
+                                    "weightKg"
+                                ]
+                            },
+                            "measurements": {
+                                "type": [
+                                    "object",
+                                    "null"
+                                ],
+                                "properties": {
+                                    "day": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "values": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "key": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "cm": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "required": [
+                                                "key",
+                                                "name",
+                                                "cm"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "day",
+                                    "values"
+                                ]
+                            },
+                            "photos": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ProgressPhoto.jsonld_noid"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "The photo sessions, the most recent first; links valid a few minutes."
             },
             "PlannedExerciseInput": {
                 "type": "object",
@@ -11098,6 +14242,243 @@
                         "type": "integer"
                     },
                     "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "ProgressPhoto": {
+                "type": "object",
+                "description": "A photo, with fresh links.",
+                "required": [
+                    "id",
+                    "day",
+                    "pose",
+                    "width",
+                    "height",
+                    "url",
+                    "thumbnailUrl",
+                    "downloadUrl",
+                    "expiresAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "day": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "pose": {
+                        "type": "string",
+                        "enum": [
+                            "front",
+                            "side",
+                            "back",
+                            "other"
+                        ]
+                    },
+                    "width": {
+                        "type": "integer"
+                    },
+                    "height": {
+                        "type": "integer"
+                    },
+                    "url": {
+                        "description": "The photo (2048 px a side at most).",
+                        "type": "string"
+                    },
+                    "thumbnailUrl": {
+                        "description": "A small version (480 px), for lists.",
+                        "type": "string"
+                    },
+                    "downloadUrl": {
+                        "description": "The photo as a download, under a neutral name.",
+                        "type": "string"
+                    },
+                    "expiresAt": {
+                        "description": "When the links stop working.",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "ProgressPhoto.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "day",
+                            "pose",
+                            "width",
+                            "height",
+                            "url",
+                            "thumbnailUrl",
+                            "downloadUrl",
+                            "expiresAt"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "day": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "pose": {
+                                "type": "string",
+                                "enum": [
+                                    "front",
+                                    "side",
+                                    "back",
+                                    "other"
+                                ]
+                            },
+                            "width": {
+                                "type": "integer"
+                            },
+                            "height": {
+                                "type": "integer"
+                            },
+                            "url": {
+                                "description": "The photo (2048 px a side at most).",
+                                "type": "string"
+                            },
+                            "thumbnailUrl": {
+                                "description": "A small version (480 px), for lists.",
+                                "type": "string"
+                            },
+                            "downloadUrl": {
+                                "description": "The photo as a download, under a neutral name.",
+                                "type": "string"
+                            },
+                            "expiresAt": {
+                                "description": "When the links stop working.",
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "A photo, with fresh links."
+            },
+            "ProgressPhoto.jsonld_noid": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchemaWithoutId"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "day",
+                            "pose",
+                            "width",
+                            "height",
+                            "url",
+                            "thumbnailUrl",
+                            "downloadUrl",
+                            "expiresAt"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "day": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "pose": {
+                                "type": "string",
+                                "enum": [
+                                    "front",
+                                    "side",
+                                    "back",
+                                    "other"
+                                ]
+                            },
+                            "width": {
+                                "type": "integer"
+                            },
+                            "height": {
+                                "type": "integer"
+                            },
+                            "url": {
+                                "description": "The photo (2048 px a side at most).",
+                                "type": "string"
+                            },
+                            "thumbnailUrl": {
+                                "description": "A small version (480 px), for lists.",
+                                "type": "string"
+                            },
+                            "downloadUrl": {
+                                "description": "The photo as a download, under a neutral name.",
+                                "type": "string"
+                            },
+                            "expiresAt": {
+                                "description": "When the links stop working.",
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "A photo, with fresh links."
+            },
+            "ProgressPhoto_noid": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "day",
+                    "pose",
+                    "width",
+                    "height",
+                    "url",
+                    "thumbnailUrl",
+                    "downloadUrl",
+                    "expiresAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "day": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "pose": {
+                        "type": "string",
+                        "enum": [
+                            "front",
+                            "side",
+                            "back",
+                            "other"
+                        ]
+                    },
+                    "width": {
+                        "type": "integer"
+                    },
+                    "height": {
+                        "type": "integer"
+                    },
+                    "url": {
+                        "description": "The photo (2048 px a side at most).",
+                        "type": "string"
+                    },
+                    "thumbnailUrl": {
+                        "description": "A small version (480 px), for lists.",
+                        "type": "string"
+                    },
+                    "downloadUrl": {
+                        "description": "The photo as a download, under a neutral name.",
+                        "type": "string"
+                    },
+                    "expiresAt": {
+                        "description": "When the links stop working.",
                         "type": "string",
                         "format": "date-time"
                     }
@@ -12224,6 +15605,271 @@
                     }
                 }
             },
+            "TrainingAnalytics": {
+                "type": "object",
+                "description": "Totals of the finished workouts of a period, and of each of its weeks (Monday first).",
+                "required": [
+                    "period",
+                    "totals",
+                    "weeks",
+                    "sessionsPerWeek"
+                ],
+                "properties": {
+                    "period": {
+                        "type": "string",
+                        "enum": [
+                            "7d",
+                            "30d",
+                            "3m",
+                            "6m",
+                            "1y",
+                            "all"
+                        ]
+                    },
+                    "totals": {
+                        "type": "object",
+                        "properties": {
+                            "sessions": {
+                                "type": "integer"
+                            },
+                            "workingSets": {
+                                "type": "integer"
+                            },
+                            "reps": {
+                                "type": "integer"
+                            },
+                            "tonnageKg": {
+                                "type": "number"
+                            },
+                            "records": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "sessions",
+                            "workingSets",
+                            "reps",
+                            "tonnageKg",
+                            "records"
+                        ]
+                    },
+                    "weeks": {
+                        "type": "array",
+                        "items": {
+                            "allOf": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "sessions": {
+                                            "type": "integer"
+                                        },
+                                        "workingSets": {
+                                            "type": "integer"
+                                        },
+                                        "reps": {
+                                            "type": "integer"
+                                        },
+                                        "tonnageKg": {
+                                            "type": "number"
+                                        },
+                                        "records": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "sessions",
+                                        "workingSets",
+                                        "reps",
+                                        "tonnageKg",
+                                        "records"
+                                    ]
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "week": {
+                                            "type": "string",
+                                            "format": "date"
+                                        }
+                                    },
+                                    "required": [
+                                        "week"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "sessionsPerWeek": {
+                        "description": "Sessions a week on average over the period.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "TrainingAnalytics.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "period",
+                            "totals",
+                            "weeks",
+                            "sessionsPerWeek"
+                        ],
+                        "properties": {
+                            "period": {
+                                "type": "string",
+                                "enum": [
+                                    "7d",
+                                    "30d",
+                                    "3m",
+                                    "6m",
+                                    "1y",
+                                    "all"
+                                ]
+                            },
+                            "totals": {
+                                "type": "object",
+                                "properties": {
+                                    "sessions": {
+                                        "type": "integer"
+                                    },
+                                    "workingSets": {
+                                        "type": "integer"
+                                    },
+                                    "reps": {
+                                        "type": "integer"
+                                    },
+                                    "tonnageKg": {
+                                        "type": "number"
+                                    },
+                                    "records": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "sessions",
+                                    "workingSets",
+                                    "reps",
+                                    "tonnageKg",
+                                    "records"
+                                ]
+                            },
+                            "weeks": {
+                                "type": "array",
+                                "items": {
+                                    "allOf": [
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "sessions": {
+                                                    "type": "integer"
+                                                },
+                                                "workingSets": {
+                                                    "type": "integer"
+                                                },
+                                                "reps": {
+                                                    "type": "integer"
+                                                },
+                                                "tonnageKg": {
+                                                    "type": "number"
+                                                },
+                                                "records": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "required": [
+                                                "sessions",
+                                                "workingSets",
+                                                "reps",
+                                                "tonnageKg",
+                                                "records"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "week": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                }
+                                            },
+                                            "required": [
+                                                "week"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "sessionsPerWeek": {
+                                "description": "Sessions a week on average over the period.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "Totals of the finished workouts of a period, and of each of its weeks (Monday first)."
+            },
+            "TrendPointOutput": {
+                "type": "object",
+                "required": [
+                    "day",
+                    "weightKg",
+                    "average7Kg",
+                    "average30Kg"
+                ],
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "weightKg": {
+                        "type": "number"
+                    },
+                    "average7Kg": {
+                        "description": "Mean of the weigh-ins of the 7 days ending that day.",
+                        "type": "number"
+                    },
+                    "average30Kg": {
+                        "description": "Mean of the weigh-ins of the 30 days ending that day.",
+                        "type": "number"
+                    }
+                }
+            },
+            "TrendPointOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "day",
+                    "weightKg",
+                    "average7Kg",
+                    "average30Kg"
+                ],
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "weightKg": {
+                        "type": "number"
+                    },
+                    "average7Kg": {
+                        "description": "Mean of the weigh-ins of the 7 days ending that day.",
+                        "type": "number"
+                    },
+                    "average30Kg": {
+                        "description": "Mean of the weigh-ins of the 30 days ending that day.",
+                        "type": "number"
+                    }
+                }
+            },
             "TwoFactorDisabling.PasswordConfirmation": {
                 "type": "object",
                 "description": "Turns two-factor authentication off (password required).",
@@ -12290,6 +15936,692 @@
                     }
                 ],
                 "description": "Starts enrolling an authenticator app (password required, email must be verified)."
+            },
+            "WeekAverageOutput": {
+                "type": "object",
+                "required": [
+                    "week",
+                    "averageKg",
+                    "weighIns"
+                ],
+                "properties": {
+                    "week": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "averageKg": {
+                        "type": "number"
+                    },
+                    "weighIns": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "WeekAverageOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "week",
+                    "averageKg",
+                    "weighIns"
+                ],
+                "properties": {
+                    "week": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "averageKg": {
+                        "type": "number"
+                    },
+                    "weighIns": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "WeighIn": {
+                "type": "object",
+                "description": "The weigh-ins, the most recent first.",
+                "required": [
+                    "day",
+                    "weightKg",
+                    "recordedAt"
+                ],
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "weightKg": {
+                        "type": "number"
+                    },
+                    "recordedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "WeighIn.WeighInInput": {
+                "type": "object",
+                "description": "Records the weight of a day, or replaces it (one a day; sending it again changes nothing).",
+                "required": [
+                    "weightKg"
+                ],
+                "properties": {
+                    "weightKg": {
+                        "minimum": 20,
+                        "maximum": 400,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "WeighIn.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "day",
+                            "weightKg",
+                            "recordedAt"
+                        ],
+                        "properties": {
+                            "day": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "weightKg": {
+                                "type": "number"
+                            },
+                            "recordedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "The weigh-ins, the most recent first."
+            },
+            "WeightGoal": {
+                "type": "object",
+                "description": "The goal followed and the progress on it; 404 without one.",
+                "required": [
+                    "id",
+                    "startDay",
+                    "startWeightKg",
+                    "targetKg",
+                    "direction",
+                    "steps",
+                    "percent",
+                    "sinceLastStepKg",
+                    "next",
+                    "toTargetKg",
+                    "toTarget",
+                    "setAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "startDay": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "startWeightKg": {
+                        "type": "number"
+                    },
+                    "targetKg": {
+                        "type": "number"
+                    },
+                    "direction": {
+                        "type": "string",
+                        "enum": [
+                            "gaining",
+                            "losing"
+                        ]
+                    },
+                    "steps": {
+                        "description": "The milestones then the target, in the order they come.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GoalStepOutput"
+                        }
+                    },
+                    "percent": {
+                        "description": "Share of the way from the start to the target, 0 to 100.",
+                        "type": "integer"
+                    },
+                    "sinceLastStepKg": {
+                        "description": "Change since the last step reached (or the start).",
+                        "type": "number"
+                    },
+                    "next": {
+                        "description": "The next step to reach, what is left to it and the estimate; null once the target is reached.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/NextStepOutput_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "toTargetKg": {
+                        "type": "number"
+                    },
+                    "toTarget": {
+                        "$ref": "#/components/schemas/EstimateOutput"
+                    },
+                    "setAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "WeightGoal.WeightGoalInput": {
+                "type": "object",
+                "description": "Sets the goal to follow, from the latest weigh-in; the previous goal ends (it is kept).",
+                "required": [
+                    "targetKg"
+                ],
+                "properties": {
+                    "targetKg": {
+                        "minimum": 20,
+                        "maximum": 400,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "milestonesKg": {
+                        "maxItems": 10,
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
+                }
+            },
+            "WeightGoal.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "startDay",
+                            "startWeightKg",
+                            "targetKg",
+                            "direction",
+                            "steps",
+                            "percent",
+                            "sinceLastStepKg",
+                            "next",
+                            "toTargetKg",
+                            "toTarget",
+                            "setAt"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "startDay": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "startWeightKg": {
+                                "type": "number"
+                            },
+                            "targetKg": {
+                                "type": "number"
+                            },
+                            "direction": {
+                                "type": "string",
+                                "enum": [
+                                    "gaining",
+                                    "losing"
+                                ]
+                            },
+                            "steps": {
+                                "description": "The milestones then the target, in the order they come.",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/GoalStepOutput.jsonld"
+                                }
+                            },
+                            "percent": {
+                                "description": "Share of the way from the start to the target, 0 to 100.",
+                                "type": "integer"
+                            },
+                            "sinceLastStepKg": {
+                                "description": "Change since the last step reached (or the start).",
+                                "type": "number"
+                            },
+                            "next": {
+                                "description": "The next step to reach, what is left to it and the estimate; null once the target is reached.",
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/NextStepOutput.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "toTargetKg": {
+                                "type": "number"
+                            },
+                            "toTarget": {
+                                "$ref": "#/components/schemas/EstimateOutput.jsonld"
+                            },
+                            "setAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "The goal followed and the progress on it; 404 without one."
+            },
+            "WeightGoal.jsonld_noid": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchemaWithoutId"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "startDay",
+                            "startWeightKg",
+                            "targetKg",
+                            "direction",
+                            "steps",
+                            "percent",
+                            "sinceLastStepKg",
+                            "next",
+                            "toTargetKg",
+                            "toTarget",
+                            "setAt"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "startDay": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "startWeightKg": {
+                                "type": "number"
+                            },
+                            "targetKg": {
+                                "type": "number"
+                            },
+                            "direction": {
+                                "type": "string",
+                                "enum": [
+                                    "gaining",
+                                    "losing"
+                                ]
+                            },
+                            "steps": {
+                                "description": "The milestones then the target, in the order they come.",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/GoalStepOutput.jsonld_noid"
+                                }
+                            },
+                            "percent": {
+                                "description": "Share of the way from the start to the target, 0 to 100.",
+                                "type": "integer"
+                            },
+                            "sinceLastStepKg": {
+                                "description": "Change since the last step reached (or the start).",
+                                "type": "number"
+                            },
+                            "next": {
+                                "description": "The next step to reach, what is left to it and the estimate; null once the target is reached.",
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/NextStepOutput.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "toTargetKg": {
+                                "type": "number"
+                            },
+                            "toTarget": {
+                                "$ref": "#/components/schemas/EstimateOutput.jsonld_noid"
+                            },
+                            "setAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "The goal followed and the progress on it; 404 without one."
+            },
+            "WeightGoal_noid": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "startDay",
+                    "startWeightKg",
+                    "targetKg",
+                    "direction",
+                    "steps",
+                    "percent",
+                    "sinceLastStepKg",
+                    "next",
+                    "toTargetKg",
+                    "toTarget",
+                    "setAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "startDay": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "startWeightKg": {
+                        "type": "number"
+                    },
+                    "targetKg": {
+                        "type": "number"
+                    },
+                    "direction": {
+                        "type": "string",
+                        "enum": [
+                            "gaining",
+                            "losing"
+                        ]
+                    },
+                    "steps": {
+                        "description": "The milestones then the target, in the order they come.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GoalStepOutput_noid"
+                        }
+                    },
+                    "percent": {
+                        "description": "Share of the way from the start to the target, 0 to 100.",
+                        "type": "integer"
+                    },
+                    "sinceLastStepKg": {
+                        "description": "Change since the last step reached (or the start).",
+                        "type": "number"
+                    },
+                    "next": {
+                        "description": "The next step to reach, what is left to it and the estimate; null once the target is reached.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/NextStepOutput_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "toTargetKg": {
+                        "type": "number"
+                    },
+                    "toTarget": {
+                        "$ref": "#/components/schemas/EstimateOutput_noid"
+                    },
+                    "setAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "WeightSummary": {
+                "type": "object",
+                "description": "Where the weight stands and its chart over a period.",
+                "required": [
+                    "period",
+                    "latest",
+                    "first",
+                    "average7Kg",
+                    "average30Kg",
+                    "kgPerWeek",
+                    "direction",
+                    "sinceStartKg",
+                    "goal",
+                    "points",
+                    "weeks"
+                ],
+                "properties": {
+                    "period": {
+                        "type": "string",
+                        "enum": [
+                            "7d",
+                            "30d",
+                            "3m",
+                            "6m",
+                            "1y",
+                            "all"
+                        ]
+                    },
+                    "latest": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/DayWeightOutput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "first": {
+                        "description": "The first weigh-in ever: where the user started from.",
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/DayWeightOutput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "average7Kg": {
+                        "description": "Mean of the weigh-ins of the last 7 days (today included).",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "average30Kg": {
+                        "description": "Mean of the weigh-ins of the last 30 days.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "kgPerWeek": {
+                        "description": "Speed over the last 4 weeks (least squares); null with too few weigh-ins.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "direction": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "gaining",
+                            "losing",
+                            "stable",
+                            null
+                        ]
+                    },
+                    "sinceStartKg": {
+                        "description": "Latest minus first weigh-in.",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "goal": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/WeightGoal_noid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "points": {
+                        "description": "Each weigh-in of the period, with the averages ending that day.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TrendPointOutput"
+                        }
+                    },
+                    "weeks": {
+                        "description": "Mean weight of each week of the period (Monday first).",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WeekAverageOutput"
+                        }
+                    }
+                }
+            },
+            "WeightSummary.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "period",
+                            "latest",
+                            "first",
+                            "average7Kg",
+                            "average30Kg",
+                            "kgPerWeek",
+                            "direction",
+                            "sinceStartKg",
+                            "goal",
+                            "points",
+                            "weeks"
+                        ],
+                        "properties": {
+                            "period": {
+                                "type": "string",
+                                "enum": [
+                                    "7d",
+                                    "30d",
+                                    "3m",
+                                    "6m",
+                                    "1y",
+                                    "all"
+                                ]
+                            },
+                            "latest": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/DayWeightOutput.jsonld"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "first": {
+                                "description": "The first weigh-in ever: where the user started from.",
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/DayWeightOutput.jsonld"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "average7Kg": {
+                                "description": "Mean of the weigh-ins of the last 7 days (today included).",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "average30Kg": {
+                                "description": "Mean of the weigh-ins of the last 30 days.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "kgPerWeek": {
+                                "description": "Speed over the last 4 weeks (least squares); null with too few weigh-ins.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "direction": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "gaining",
+                                    "losing",
+                                    "stable",
+                                    null
+                                ]
+                            },
+                            "sinceStartKg": {
+                                "description": "Latest minus first weigh-in.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "goal": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/WeightGoal.jsonld_noid"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "points": {
+                                "description": "Each weigh-in of the period, with the averages ending that day.",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/TrendPointOutput.jsonld"
+                                }
+                            },
+                            "weeks": {
+                                "description": "Mean weight of each week of the period (Monday first).",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/WeekAverageOutput.jsonld"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "Where the weight stands and its chart over a period."
             },
             "Workout": {
                 "type": "object",
@@ -13270,6 +17602,10 @@
             "description": "A day of the food journal, meal by meal, against the target in force that day.\nJournal writes (JournalEntry) answer with the day they changed, so the screen is redrawn from one response."
         },
         {
+            "name": "NutritionHistory",
+            "description": "Calories and proteins over a period (spec \u00a755\u201356): each complete day logged, each week's\nmean, the mean of the period, and the target in force today."
+        },
+        {
             "name": "Recipe",
             "description": "A dish made of foods. Its values follow its foods; journal entries keep those of the day they were logged."
         },
@@ -13286,6 +17622,38 @@
             "description": "Daily targets from a day on. Never edited: each change is a new entry of the history."
         },
         {
+            "name": "Measure",
+            "description": "A measure one can take (spec \u00a754): a body part (`name` null, the app names it) or one of the\nuser's own."
+        },
+        {
+            "name": "Measurements",
+            "description": "The measurements of one of the user's days: one set a day, identified by the day."
+        },
+        {
+            "name": "MeasurementsSummary",
+            "description": "Every measure over a period (spec \u00a754\u201355)."
+        },
+        {
+            "name": "PhotoSession",
+            "description": "The photos of a day, with that day's weight and measurements, or the latest before it (spec \u00a761)."
+        },
+        {
+            "name": "ProgressPhoto",
+            "description": "A progress photo (spec \u00a760, ADR-0027): never public, read through links that expire after a\nfew minutes (ask for the photo again for new ones)."
+        },
+        {
+            "name": "WeighIn",
+            "description": "The weight of one of the user's days: one a day, identified by the day."
+        },
+        {
+            "name": "WeightGoal",
+            "description": "The weight goal followed, its milestones, and where the user stands on it (spec \u00a752\u201353)."
+        },
+        {
+            "name": "WeightSummary",
+            "description": "The weight page (spec \u00a751\u201355): the latest weigh-in, the 7 and 30-day averages and the speed\nending today, the change since the first weigh-in, the goal, and the chart of a period."
+        },
+        {
             "name": "Health",
             "description": "Resource 'Health' operations."
         },
@@ -13296,6 +17664,10 @@
         {
             "name": "ExerciseProgress",
             "description": "Personal records of an exercise and its workouts over time."
+        },
+        {
+            "name": "TrainingAnalytics",
+            "description": "The training of a period (spec \u00a757): sessions, frequency, working sets, reps, tonnage and\nrecords beaten, in all and week by week."
         },
         {
             "name": "Program",

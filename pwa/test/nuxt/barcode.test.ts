@@ -331,7 +331,7 @@ describe('scanning a product into the journal', () => {
     const card = wrapper.get('dialog[open] article')
     expect(card.text()).toContain('Pâte à tartiner aux noisettes')
     expect(card.text()).toContain('Nutella · 400 g')
-    expect(card.text()).toContain('539 kcal')
+    expect(card.text()).toContain('539\u00A0kcal')
     expect(card.text()).toContain('Open Food Facts (ODbL)')
     expect(fake.calls.some(call => call.route === 'POST /api/nutrition/barcode/confirm'), 'nothing kept before the user agrees').toBe(false)
 

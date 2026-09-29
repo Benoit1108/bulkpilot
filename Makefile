@@ -134,7 +134,7 @@ e2e: ## Playwright against the running dev stack (quick feedback; Nuxt DevTools 
 
 e2e-prod: ## Build the production image and run Playwright against it on a throwaway stack
 	@trap '$(DC_TEST) down --volumes --remove-orphans' EXIT; \
-	$(DC_TEST) up $(UP_FLAGS) --wait php database mailer && \
+	$(DC_TEST) up $(UP_FLAGS) --wait php database mailer s3 s3-tls && \
 	$(DC_TEST) exec -T php bin/console nutrition:catalogue:import /fixtures/ciqual -q && \
 	CI=1 $(DC_TEST) --profile e2e run --rm e2e
 
