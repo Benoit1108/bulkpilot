@@ -1,5 +1,4 @@
-import AxeBuilder from '@axe-core/playwright'
-import type { Page } from '@playwright/test'
+import { expectAccessible } from './support/accessibility'
 import { expect, registerThroughApi, test, uniqueEmail } from './support/fixtures'
 
 /** A random valid EAN-13 in the in-store range (GS1 prefix 29). */
@@ -7,12 +6,6 @@ function inStoreCode(): string {
   const body = `29${String(Math.floor(Math.random() * 1e10)).padStart(10, '0')}`
   const sum = [...body].reverse().reduce((total, digit, index) => total + Number(digit) * (index % 2 === 0 ? 3 : 1), 0)
   return `${body}${(10 - (sum % 10)) % 10}`
-}
-
-/** WCAG 2.2 AA violations on the page as it is now (drawers included). */
-async function expectAccessible(page: Page): Promise<void> {
-  const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze()
-  expect(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`)).toEqual([])
 }
 
 // Needs the CIQUAL excerpt (api/tests/Fixtures/ciqual), imported by `make e2e` and `make e2e-prod`.

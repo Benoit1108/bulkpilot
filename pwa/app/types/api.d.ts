@@ -144,6 +144,98 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/exercises": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Exercise resources.
+         * @description Retrieves the collection of Exercise resources.
+         */
+        get: operations["api_exercises_get_collection"];
+        put?: never;
+        /**
+         * Creates a Exercise resource.
+         * @description Creates a Exercise resource.
+         */
+        post: operations["api_exercises_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exercises/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a Exercise resource.
+         * @description Retrieves a Exercise resource.
+         */
+        get: operations["api_exercises_id_get"];
+        /**
+         * Replaces the Exercise resource.
+         * @description Replaces the Exercise resource.
+         */
+        put: operations["api_exercises_id_put"];
+        post?: never;
+        /**
+         * Removes the Exercise resource.
+         * @description Removes the Exercise resource.
+         */
+        delete: operations["api_exercises_id_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exercises/{id}/note": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replaces the Exercise resource.
+         * @description Replaces the Exercise resource.
+         */
+        put: operations["exercise_note"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exercises/{id}/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a ExerciseProgress resource.
+         * @description Retrieves a ExerciseProgress resource.
+         */
+        get: operations["api_exercises_idprogress_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/nutrition/favorite-meals": {
         parameters: {
             query?: never;
@@ -572,6 +664,98 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/programs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Program resources.
+         * @description Retrieves the collection of Program resources.
+         */
+        get: operations["api_programs_get_collection"];
+        put?: never;
+        /**
+         * Creates a Program resource.
+         * @description Creates a Program resource.
+         */
+        post: operations["api_programs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/programs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a Program resource.
+         * @description Retrieves a Program resource.
+         */
+        get: operations["api_programs_id_get"];
+        /**
+         * Replaces the Program resource.
+         * @description Replaces the Program resource.
+         */
+        put: operations["api_programs_id_put"];
+        post?: never;
+        /**
+         * Removes the Program resource.
+         * @description Removes the Program resource.
+         */
+        delete: operations["api_programs_id_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/programs/{id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a Program resource.
+         * @description Creates a Program resource.
+         */
+        post: operations["program_activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/programs/{id}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a Program resource.
+         * @description Creates a Program resource.
+         */
+        post: operations["program_deactivate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/recipes": {
         parameters: {
             query?: never;
@@ -824,6 +1008,158 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/workouts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Workout resources.
+         * @description Retrieves the collection of Workout resources.
+         */
+        get: operations["workouts_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workouts/in-progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Workout resources.
+         * @description Retrieves the collection of Workout resources.
+         */
+        get: operations["workouts_in_progress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workouts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a Workout resource.
+         * @description Retrieves a Workout resource.
+         */
+        get: operations["api_workouts_id_get"];
+        /**
+         * Replaces the Workout resource.
+         * @description Replaces the Workout resource.
+         */
+        put: operations["workout_start"];
+        post?: never;
+        /**
+         * Removes the Workout resource.
+         * @description Removes the Workout resource.
+         */
+        delete: operations["api_workouts_id_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workouts/{id}/finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a Workout resource.
+         * @description Creates a Workout resource.
+         */
+        post: operations["workout_finish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workouts/{workoutId}/exercises/{index}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replaces the WorkoutExercise resource.
+         * @description Replaces the WorkoutExercise resource.
+         */
+        put: operations["api_workouts_workoutIdexercises_index_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workouts/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a WorkoutPlan resource.
+         * @description Retrieves a WorkoutPlan resource.
+         */
+        get: operations["api_workoutspreview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/workouts/{workoutId}/sets/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replaces the WorkoutSet resource.
+         * @description Replaces the WorkoutSet resource.
+         */
+        put: operations["api_workouts_workoutIdsets_id_put"];
+        post?: never;
+        /**
+         * Removes the WorkoutSet resource.
+         * @description Removes the WorkoutSet resource.
+         */
+        delete: operations["api_workouts_workoutIdsets_id_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -924,6 +1260,9 @@ export interface components {
             status: "known" | "found";
             food: components["schemas"]["Food.jsonld_noid"] | null;
             product: components["schemas"]["ScannedProduct.jsonld"] | null;
+        };
+        BlockInput: {
+            exercises?: components["schemas"]["PlannedExerciseInput"][];
         };
         Composition: {
             energyKcal: number;
@@ -1031,6 +1370,11 @@ export interface components {
             salt?: number | null;
             barcode?: string | null;
             portions?: components["schemas"]["PortionInput"][];
+        };
+        DayInput: {
+            /** @default  */
+            name: string;
+            blocks?: components["schemas"]["BlockInput"][];
         };
         /** @description Redeems the link emailed at registration (works signed in or not). */
         EmailVerification: {
@@ -1241,6 +1585,107 @@ export interface components {
             goal: "bulk" | "maintain" | "cut";
             /** @default 0 */
             weeklyWeightChangeKg: number;
+        };
+        /** @description The exercises the user can use (library and their own, their own first), filtered by name and muscle. */
+        Exercise: {
+            id: string;
+            /** @enum {string} */
+            source: "library" | "custom";
+            name: string;
+            /** @enum {string} */
+            primaryMuscle: "chest" | "lats" | "upper_back" | "traps" | "lower_back" | "front_delts" | "side_delts" | "rear_delts" | "biceps" | "triceps" | "forearms" | "abs" | "obliques" | "glutes" | "quads" | "hamstrings" | "adductors" | "calves";
+            secondaryMuscles: ("chest" | "lats" | "upper_back" | "traps" | "lower_back" | "front_delts" | "side_delts" | "rear_delts" | "biceps" | "triceps" | "forearms" | "abs" | "obliques" | "glutes" | "quads" | "hamstrings" | "adductors" | "calves")[];
+            /** @enum {string} */
+            type: "compound" | "isolation";
+            /** @enum {string} */
+            equipment: "barbell" | "dumbbell" | "ez_bar" | "machine" | "cable" | "smith_machine" | "kettlebell" | "band" | "bodyweight" | "other";
+            /** @enum {string} */
+            measurement: "weight" | "bodyweight" | "duration";
+            description: string | null;
+            mediaUrl: string | null;
+            repMin: number;
+            repMax: number;
+            targetRir: number | null;
+            restSeconds: number;
+            tempo: string | null;
+            note: string | null;
+            editable: boolean;
+        };
+        /** @description Creates one of the user's own exercises. */
+        "Exercise.ExerciseInput": {
+            /** @default  */
+            name: string;
+            /**
+             * @default
+             * @enum {string}
+             */
+            primaryMuscle: "chest" | "lats" | "upper_back" | "traps" | "lower_back" | "front_delts" | "side_delts" | "rear_delts" | "biceps" | "triceps" | "forearms" | "abs" | "obliques" | "glutes" | "quads" | "hamstrings" | "adductors" | "calves";
+            secondaryMuscles?: string[];
+            /**
+             * @default compound
+             * @enum {string}
+             */
+            type: "compound" | "isolation";
+            /**
+             * @default other
+             * @enum {string}
+             */
+            equipment: "barbell" | "dumbbell" | "ez_bar" | "machine" | "cable" | "smith_machine" | "kettlebell" | "band" | "bodyweight" | "other";
+            /**
+             * @default weight
+             * @enum {string}
+             */
+            measurement: "weight" | "bodyweight" | "duration";
+            repMin: number | null;
+            repMax: number | null;
+            targetRir?: number | null;
+            /** @default 120 */
+            restSeconds: number;
+            tempo?: string | null;
+            description?: string | null;
+            /** Format: uri */
+            mediaUrl?: string | null;
+        };
+        /** @description Sets the user's standing cue for an exercise (shown every time they do it); blank removes it. */
+        "Exercise.ExerciseNoteInput": {
+            text?: string | null;
+        };
+        /** @description The exercises the user can use (library and their own, their own first), filtered by name and muscle. */
+        "Exercise.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            /** @enum {string} */
+            source: "library" | "custom";
+            name: string;
+            /** @enum {string} */
+            primaryMuscle: "chest" | "lats" | "upper_back" | "traps" | "lower_back" | "front_delts" | "side_delts" | "rear_delts" | "biceps" | "triceps" | "forearms" | "abs" | "obliques" | "glutes" | "quads" | "hamstrings" | "adductors" | "calves";
+            secondaryMuscles: ("chest" | "lats" | "upper_back" | "traps" | "lower_back" | "front_delts" | "side_delts" | "rear_delts" | "biceps" | "triceps" | "forearms" | "abs" | "obliques" | "glutes" | "quads" | "hamstrings" | "adductors" | "calves")[];
+            /** @enum {string} */
+            type: "compound" | "isolation";
+            /** @enum {string} */
+            equipment: "barbell" | "dumbbell" | "ez_bar" | "machine" | "cable" | "smith_machine" | "kettlebell" | "band" | "bodyweight" | "other";
+            /** @enum {string} */
+            measurement: "weight" | "bodyweight" | "duration";
+            description: string | null;
+            mediaUrl: string | null;
+            repMin: number;
+            repMax: number;
+            targetRir: number | null;
+            restSeconds: number;
+            tempo: string | null;
+            note: string | null;
+            editable: boolean;
+        };
+        /** @description Records and one point per finished workout, oldest first. */
+        ExerciseProgress: {
+            id: string;
+            records: components["schemas"]["RecordOutput"][];
+            sessions: components["schemas"]["SessionOutput"][];
+        };
+        /** @description Records and one point per finished workout, oldest first. */
+        "ExerciseProgress.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            records: components["schemas"]["RecordOutput.jsonld"][];
+            sessions: components["schemas"]["SessionOutput.jsonld"][];
         };
         /** @description Favourite meals, by name, with their current values. */
         FavoriteMeal: {
@@ -1736,10 +2181,138 @@ export interface components {
             /** @default  */
             email: string;
         };
+        PlannedExerciseInput: {
+            /**
+             * Format: uuid
+             * @default
+             */
+            exerciseId: string;
+            sets: number | null;
+            repMin: number | null;
+            repMax: number | null;
+            targetRir?: number | null;
+            /** @default 120 */
+            restSeconds: number;
+            /**
+             * @default double_progression
+             * @enum {string}
+             */
+            strategy: "double_progression" | "linear" | "fixed_load" | "fixed_reps" | "target_rir";
+            /** @default 2.5 */
+            incrementKg: number;
+            /** @default 0 */
+            warmupSets: number;
+            /** @default false */
+            dropSet: boolean;
+            tempo?: string | null;
+            notes?: string | null;
+        };
         PortionInput: {
             /** @default  */
             label: string;
             grams: number | null;
+        };
+        PreviousOutput: {
+            /** Format: date-time */
+            date: string;
+            sets: components["schemas"]["WorkoutSetOutput"][];
+        };
+        "PreviousOutput.jsonld": {
+            /** Format: date-time */
+            date: string;
+            sets: components["schemas"]["WorkoutSetOutput.jsonld"][];
+        };
+        /** @description The user's programs, the active one first, each with its current version. */
+        Program: {
+            id: string;
+            name: string;
+            active: boolean;
+            currentVersion: number;
+            version: number;
+            /** Format: date-time */
+            versionCreatedAt: string;
+            days: components["schemas"]["ProgramDay"][];
+            versions: components["schemas"]["ProgramVersionSummary"][];
+        };
+        /** @description Creates a program; the user's first one becomes active. */
+        "Program.ProgramInput": {
+            /** @default  */
+            name: string;
+            days?: components["schemas"]["DayInput"][];
+        };
+        /** @description The user's programs, the active one first, each with its current version. */
+        "Program.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            name: string;
+            active: boolean;
+            currentVersion: number;
+            version: number;
+            /** Format: date-time */
+            versionCreatedAt: string;
+            days: components["schemas"]["ProgramDay.jsonld"][];
+            versions: components["schemas"]["ProgramVersionSummary.jsonld"][];
+        };
+        ProgramBlock: {
+            exercises: components["schemas"]["ProgramExercise"][];
+        };
+        "ProgramBlock.jsonld": {
+            exercises: components["schemas"]["ProgramExercise.jsonld"][];
+        };
+        ProgramDay: {
+            name: string;
+            blocks: components["schemas"]["ProgramBlock"][];
+        };
+        "ProgramDay.jsonld": {
+            name: string;
+            blocks: components["schemas"]["ProgramBlock.jsonld"][];
+        };
+        ProgramExercise: {
+            exerciseId: string;
+            name: string;
+            /** @enum {string} */
+            measurement: "weight" | "bodyweight" | "duration";
+            available: boolean;
+            sets: number;
+            warmupSets: number;
+            repMin: number;
+            repMax: number;
+            targetRir: number | null;
+            restSeconds: number;
+            tempo: string | null;
+            /** @enum {string} */
+            strategy: "double_progression" | "linear" | "fixed_load" | "fixed_reps" | "target_rir";
+            incrementKg: number;
+            dropSet: boolean;
+            notes: string | null;
+        };
+        "ProgramExercise.jsonld": {
+            exerciseId: string;
+            name: string;
+            /** @enum {string} */
+            measurement: "weight" | "bodyweight" | "duration";
+            available: boolean;
+            sets: number;
+            warmupSets: number;
+            repMin: number;
+            repMax: number;
+            targetRir: number | null;
+            restSeconds: number;
+            tempo: string | null;
+            /** @enum {string} */
+            strategy: "double_progression" | "linear" | "fixed_load" | "fixed_reps" | "target_rir";
+            incrementKg: number;
+            dropSet: boolean;
+            notes: string | null;
+        };
+        ProgramVersionSummary: {
+            number: number;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        "ProgramVersionSummary.jsonld": {
+            number: number;
+            /** Format: date-time */
+            createdAt: string;
         };
         Proposal: {
             items: components["schemas"]["ProposalItem"][];
@@ -1819,6 +2392,24 @@ export interface components {
             nutrients: components["schemas"]["Nutrients.jsonld"];
             available: boolean;
         };
+        RecordOutput: {
+            /** @enum {string} */
+            kind: "load" | "estimated_one_rep_max" | "volume" | "reps" | "duration" | "reps_at_load";
+            value: number;
+            loadKg: number | null;
+            /** Format: date-time */
+            date: string;
+            workoutId: string;
+        };
+        "RecordOutput.jsonld": {
+            /** @enum {string} */
+            kind: "load" | "estimated_one_rep_max" | "volume" | "reps" | "duration" | "reps_at_load";
+            value: number;
+            loadKg: number | null;
+            /** Format: date-time */
+            date: string;
+            workoutId: string;
+        };
         /** @description Activates two-factor authentication with a first valid code; returns the recovery codes. */
         RecoveryCodes: {
             recoveryCodes: string[];
@@ -1893,6 +2484,28 @@ export interface components {
             lastSeenAt: string;
             current: boolean;
         };
+        SessionOutput: {
+            workoutId: string;
+            /** Format: date-time */
+            date: string;
+            workingSets: number;
+            topLoadKg: number | null;
+            estimatedOneRepMax: number | null;
+            volumeKg: number;
+            bestReps: number | null;
+            bestSeconds: number | null;
+        };
+        "SessionOutput.jsonld": {
+            workoutId: string;
+            /** Format: date-time */
+            date: string;
+            workingSets: number;
+            topLoadKg: number | null;
+            estimatedOneRepMax: number | null;
+            volumeKg: number;
+            bestReps: number | null;
+            bestSeconds: number | null;
+        };
         /** @description Checks email and password; signs the device in, or asks for the second factor. */
         SignIn: {
             twoFactorRequired: boolean;
@@ -1923,6 +2536,20 @@ export interface components {
         "SignInProviders.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
             providers: ("google" | "apple" | "fake")[];
         };
+        SuggestionOutput: {
+            /** @enum {string} */
+            reason: "increase_load" | "add_reps" | "repeat" | "decrease_load";
+            loadKg: number | null;
+            reps: number | null;
+            seconds: number | null;
+        };
+        "SuggestionOutput.jsonld": {
+            /** @enum {string} */
+            reason: "increase_load" | "add_reps" | "repeat" | "decrease_load";
+            loadKg: number | null;
+            reps: number | null;
+            seconds: number | null;
+        };
         /** @description Turns two-factor authentication off (password required). */
         "TwoFactorDisabling.PasswordConfirmation": {
             /** @default  */
@@ -1942,6 +2569,206 @@ export interface components {
         "TwoFactorSetup.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
             secret: string;
             otpauthUri: string;
+        };
+        /** @description The workout in progress, if any (to resume it after an interruption or on another device). */
+        Workout: {
+            id: string;
+            /** @enum {string} */
+            status: "in_progress" | "finished";
+            programDay: components["schemas"]["WorkoutProgramDay"] | null;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: date-time */
+            finishedAt: string | null;
+            exercises: components["schemas"]["WorkoutExerciseOutput"][];
+            sets: components["schemas"]["WorkoutSetOutput"][];
+        };
+        /** @description Finishes the workout (only when the user says so); finishing again keeps the first time. */
+        "Workout.FinishWorkoutInput": {
+            /** Format: date-time */
+            finishedAt: string | null;
+        };
+        /** @description Starts a workout with this id (sending it again changes nothing): from a program day as the device saw it, or empty. 409 while another one is in progress. */
+        "Workout.StartWorkoutInput": {
+            /** Format: date-time */
+            startedAt: string | null;
+            /** Format: uuid */
+            programId?: string | null;
+            versionNumber?: number | null;
+            /** @default 0 */
+            dayIndex: number;
+        };
+        /** @description Finished workouts, the latest first. */
+        "Workout.WorkoutSummary": {
+            id: string;
+            dayName: string | null;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: date-time */
+            finishedAt: string | null;
+            exercises: number;
+            workingSets: number;
+            volumeKg: number;
+        };
+        /** @description Finished workouts, the latest first. */
+        "Workout.WorkoutSummary.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            dayName: string | null;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: date-time */
+            finishedAt: string | null;
+            exercises: number;
+            workingSets: number;
+            volumeKg: number;
+        };
+        /** @description The workout in progress, if any (to resume it after an interruption or on another device). */
+        "Workout.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            /** @enum {string} */
+            status: "in_progress" | "finished";
+            programDay: components["schemas"]["WorkoutProgramDay.jsonld"] | null;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: date-time */
+            finishedAt: string | null;
+            exercises: components["schemas"]["WorkoutExerciseOutput.jsonld"][];
+            sets: components["schemas"]["WorkoutSetOutput.jsonld"][];
+        };
+        /** @description Adds an exercise after the last one, with its usual values. */
+        "WorkoutExercise.AddWorkoutExerciseInput": {
+            /**
+             * Format: uuid
+             * @default
+             */
+            exerciseId: string;
+        };
+        WorkoutExerciseOutput: {
+            index: number;
+            exerciseId: string;
+            name: string;
+            /** @enum {string} */
+            measurement: "weight" | "bodyweight" | "duration";
+            block: number;
+            added: boolean;
+            sets: number;
+            warmupSets: number;
+            repMin: number;
+            repMax: number;
+            targetRir: number | null;
+            restSeconds: number;
+            tempo: string | null;
+            /** @enum {string} */
+            strategy: "double_progression" | "linear" | "fixed_load" | "fixed_reps" | "target_rir";
+            incrementKg: number;
+            dropSet: boolean;
+            programNotes: string | null;
+            note: string | null;
+            previous: components["schemas"]["PreviousOutput"] | null;
+            suggestion: components["schemas"]["SuggestionOutput"] | null;
+            records: components["schemas"]["RecordOutput"][];
+            newRecords: components["schemas"]["RecordOutput"][];
+        };
+        "WorkoutExerciseOutput.jsonld": {
+            index: number;
+            exerciseId: string;
+            name: string;
+            /** @enum {string} */
+            measurement: "weight" | "bodyweight" | "duration";
+            block: number;
+            added: boolean;
+            sets: number;
+            warmupSets: number;
+            repMin: number;
+            repMax: number;
+            targetRir: number | null;
+            restSeconds: number;
+            tempo: string | null;
+            /** @enum {string} */
+            strategy: "double_progression" | "linear" | "fixed_load" | "fixed_reps" | "target_rir";
+            incrementKg: number;
+            dropSet: boolean;
+            programNotes: string | null;
+            note: string | null;
+            previous: components["schemas"]["PreviousOutput.jsonld"] | null;
+            suggestion: components["schemas"]["SuggestionOutput.jsonld"] | null;
+            records: components["schemas"]["RecordOutput.jsonld"][];
+            newRecords: components["schemas"]["RecordOutput.jsonld"][];
+        };
+        /** @description The plan of a day of a program (its current version). */
+        WorkoutPlan: {
+            programId: string;
+            programDay: components["schemas"]["WorkoutProgramDay"];
+            exercises: components["schemas"]["WorkoutExerciseOutput"][];
+        };
+        /** @description The plan of a day of a program (its current version). */
+        "WorkoutPlan.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            programId: string;
+            programDay: components["schemas"]["WorkoutProgramDay.jsonld"];
+            exercises: components["schemas"]["WorkoutExerciseOutput.jsonld"][];
+        };
+        WorkoutProgramDay: {
+            programId: string;
+            programName: string;
+            versionNumber: number;
+            dayIndex: number;
+            dayName: string;
+        };
+        "WorkoutProgramDay.jsonld": {
+            programId: string;
+            programName: string;
+            versionNumber: number;
+            dayIndex: number;
+            dayName: string;
+        };
+        /** @description Removes a set (removing it again changes nothing). */
+        WorkoutSet: {
+            workoutId?: string;
+            id?: string;
+        };
+        /** @description Records a set, or corrects it (same id). Sending it again changes nothing. */
+        "WorkoutSet.WorkoutSetInput": {
+            exerciseIndex: number | null;
+            /**
+             * @default normal
+             * @enum {string}
+             */
+            kind: "warmup" | "approach" | "normal" | "effective" | "drop";
+            loadKg?: number | null;
+            reps?: number | null;
+            seconds?: number | null;
+            rir?: number | null;
+            /** Format: date-time */
+            doneAt: string | null;
+        };
+        /** @description Removes a set (removing it again changes nothing). */
+        "WorkoutSet.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            workoutId?: string;
+            id?: string;
+        };
+        WorkoutSetOutput: {
+            id: string;
+            exerciseIndex: number;
+            /** @enum {string} */
+            kind: "warmup" | "approach" | "normal" | "effective" | "drop";
+            loadKg: number | null;
+            reps: number | null;
+            seconds: number | null;
+            rir: number | null;
+            /** Format: date-time */
+            doneAt: string;
+        };
+        "WorkoutSetOutput.jsonld": {
+            id: string;
+            exerciseIndex: number;
+            /** @enum {string} */
+            kind: "warmup" | "approach" | "normal" | "effective" | "drop";
+            loadKg: number | null;
+            reps: number | null;
+            seconds: number | null;
+            rir: number | null;
+            /** Format: date-time */
+            doneAt: string;
         };
     };
     responses: never;
@@ -2273,6 +3100,311 @@ export interface operations {
                     "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
                     "application/problem+json": components["schemas"]["ConstraintViolation"];
                     "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_exercises_get_collection: {
+        parameters: {
+            query?: {
+                /** @description Words of the name, accents and case ignored. */
+                q?: string;
+                /** @description Only exercises working this muscle (primary or secondary). */
+                muscle?: "chest" | "lats" | "upper_back" | "traps" | "lower_back" | "front_delts" | "side_delts" | "rear_delts" | "biceps" | "triceps" | "forearms" | "abs" | "obliques" | "glutes" | "quads" | "hamstrings" | "adductors" | "calves";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Exercise collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Exercise.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Exercise"][];
+                };
+            };
+        };
+    };
+    api_exercises_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new Exercise resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Exercise.ExerciseInput"];
+                "application/json": components["schemas"]["Exercise.ExerciseInput"];
+            };
+        };
+        responses: {
+            /** @description Exercise resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Exercise.jsonld"];
+                    "application/json": components["schemas"]["Exercise"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_exercises_id_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Exercise identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Exercise resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Exercise.jsonld"];
+                    "application/json": components["schemas"]["Exercise"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_exercises_id_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Exercise identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated Exercise resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Exercise.ExerciseInput"];
+                "application/json": components["schemas"]["Exercise.ExerciseInput"];
+            };
+        };
+        responses: {
+            /** @description Exercise resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Exercise.jsonld"];
+                    "application/json": components["schemas"]["Exercise"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_exercises_id_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Exercise identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Exercise resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    exercise_note: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Exercise identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated Exercise resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Exercise.ExerciseNoteInput"];
+                "application/json": components["schemas"]["Exercise.ExerciseNoteInput"];
+            };
+        };
+        responses: {
+            /** @description Exercise resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Exercise.jsonld"];
+                    "application/json": components["schemas"]["Exercise"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_exercises_idprogress_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description ExerciseProgress identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ExerciseProgress resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ExerciseProgress.jsonld"];
+                    "application/json": components["schemas"]["ExerciseProgress"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -3378,6 +4510,303 @@ export interface operations {
             };
         };
     };
+    api_programs_get_collection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Program collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Program.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Program"][];
+                };
+            };
+        };
+    };
+    api_programs_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new Program resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Program.ProgramInput"];
+                "application/json": components["schemas"]["Program.ProgramInput"];
+            };
+        };
+        responses: {
+            /** @description Program resource created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Program.jsonld"];
+                    "application/json": components["schemas"]["Program"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_programs_id_get: {
+        parameters: {
+            query?: {
+                /** @description Number of the version to spell out. */
+                version?: number;
+            };
+            header?: never;
+            path: {
+                /** @description Program identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Program resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Program.jsonld"];
+                    "application/json": components["schemas"]["Program"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_programs_id_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Program identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated Program resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Program.ProgramInput"];
+                "application/json": components["schemas"]["Program.ProgramInput"];
+            };
+        };
+        responses: {
+            /** @description Program resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Program.jsonld"];
+                    "application/json": components["schemas"]["Program"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_programs_id_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Program identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Program resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    program_activate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Program identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Program resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Program.jsonld"];
+                    "application/json": components["schemas"]["Program"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    program_deactivate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Program identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Program resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Program.jsonld"];
+                    "application/json": components["schemas"]["Program"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
     api_recipes_get_collection: {
         parameters: {
             query?: never;
@@ -3994,6 +5423,434 @@ export interface operations {
                     "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
                     "application/problem+json": components["schemas"]["ConstraintViolation"];
                     "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    workouts_history: {
+        parameters: {
+            query?: {
+                /** @description At most 50. */
+                limit?: number;
+                /** @description Only workouts started before this time (the startedAt of the last one received, for the next page). */
+                before?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Workout collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Workout.WorkoutSummary.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Workout.WorkoutSummary"][];
+                };
+            };
+        };
+    };
+    workouts_in_progress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Workout collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Workout.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Workout"][];
+                };
+            };
+        };
+    };
+    api_workouts_id_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Workout identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Workout resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Workout.jsonld"];
+                    "application/json": components["schemas"]["Workout"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    workout_start: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Workout identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated Workout resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Workout.StartWorkoutInput"];
+                "application/json": components["schemas"]["Workout.StartWorkoutInput"];
+            };
+        };
+        responses: {
+            /** @description Workout resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Workout.jsonld"];
+                    "application/json": components["schemas"]["Workout"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_workouts_id_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Workout identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Workout resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    workout_finish: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Workout identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The new Workout resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Workout.FinishWorkoutInput"];
+                "application/json": components["schemas"]["Workout.FinishWorkoutInput"];
+            };
+        };
+        responses: {
+            /** @description Workout resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Workout.jsonld"];
+                    "application/json": components["schemas"]["Workout"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_workouts_workoutIdexercises_index_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description WorkoutExercise identifier */
+                workoutId: string;
+                /** @description WorkoutExercise identifier */
+                index: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated WorkoutExercise resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["WorkoutExercise.AddWorkoutExerciseInput"];
+                "application/json": components["schemas"]["WorkoutExercise.AddWorkoutExerciseInput"];
+            };
+        };
+        responses: {
+            /** @description WorkoutExercise resource updated */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_workoutspreview_get: {
+        parameters: {
+            query: {
+                /** @description WorkoutPlan programId */
+                programId: string;
+                /** @description Index of the day in the program, from 0. */
+                day: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WorkoutPlan resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["WorkoutPlan.jsonld"];
+                    "application/json": components["schemas"]["WorkoutPlan"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_workouts_workoutIdsets_id_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description WorkoutSet identifier */
+                workoutId: string;
+                /** @description WorkoutSet identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated WorkoutSet resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["WorkoutSet.WorkoutSetInput"];
+                "application/json": components["schemas"]["WorkoutSet.WorkoutSetInput"];
+            };
+        };
+        responses: {
+            /** @description WorkoutSet resource updated */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    api_workouts_workoutIdsets_id_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description WorkoutSet identifier */
+                workoutId: string;
+                /** @description WorkoutSet identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WorkoutSet resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };

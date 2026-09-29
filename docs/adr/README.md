@@ -26,3 +26,5 @@ Format : contexte → décision → conséquences. Un ADR accepté n'est pas ré
 | [0020](0020-journal-snapshots-and-versioned-targets.md) | Journal en instantanés, objectifs versionnés, jour local | Accepté |
 | [0021](0021-deterministic-meal-builder.md) | Meal Builder déterministe | Accepté |
 | [0022](0022-barcode-scanning.md) | Scan de code-barres et produits Open Food Facts | Accepté |
+| [0023](0023-exercise-library-and-versioned-programs.md) | Bibliothèque d'exercices et programmes versionnés | Accepté |
+| [0024](0024-offline-workouts.md) | Séances hors ligne, écritures idempotentes, progression et records côté serveur | Accepté |

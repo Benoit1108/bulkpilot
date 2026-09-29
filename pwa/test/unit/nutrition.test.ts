@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { dayLabel, isDay, localDay, parseDay, shiftDay } from '~/features/nutrition/days'
-import { formatGrams, formatKcal, formatMacro, formatNumber, formatSignedKcal, parseAmount } from '~/features/nutrition/format'
-import { matches, MEAL_SLOTS, searchKey, slotAt, slotLabel, toSlot } from '~/features/nutrition/nutrition'
+import { formatGrams, formatKcal, formatMacro, formatNumber, formatSignedKcal } from '~/features/nutrition/format'
+import { parseAmount } from '~/services/text/numbers'
+import { MEAL_SLOTS, slotAt, slotLabel, toSlot } from '~/features/nutrition/nutrition'
+import { matches, searchKey } from '~/services/text/search'
 import { energyOfMacros } from '~/features/nutrition/rules'
 
 const NBSP = ' '

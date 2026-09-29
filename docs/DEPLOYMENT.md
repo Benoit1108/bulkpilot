@@ -48,6 +48,7 @@ GitHub → CI (qa + e2e sur l'image) → registre d'images → staging → valid
 | `FOOD_DATABASE` | `openfoodfacts` (défaut) ; `fake` uniquement pour les tests : refusé au démarrage en production sauf `ALLOW_FAKE_PROVIDERS=1` (E2E sur l'image de prod) |
 | `OPEN_FOOD_FACTS_USER_AGENT` | `NomApp/Version (contact)` : Open Food Facts demande à être contacté en cas d'abus |
 | `RATE_LIMIT_BARCODE_SCAN` | scans et confirmations par minute et par compte (30) ; en plus, 90 lectures / min vers Open Food Facts pour toute l'instance |
+| `RATE_LIMIT_TRAINING_WRITES` | écritures Training (séances, séries, programmes, exercices) par minute et par compte (600) : une séance hors ligne se vide d'un coup au retour du réseau |
 | `LOCK_DSN` | verrous (limiteurs de débit) : `flock` pour une instance, `postgresql+advisory://…` pour plusieurs |
 
 ## Premier démarrage

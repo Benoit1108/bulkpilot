@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import '~/features/identity/messages'
 import '~/features/nutrition/messages'
+import '~/features/training/messages'
 import { ApiError } from '~/services/api/errors'
 import { fieldErrors, hasMessageFor, messageFor, messageForCode } from '~/services/api/messages'
 

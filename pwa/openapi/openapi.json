@@ -564,6 +564,600 @@
                 }
             }
         },
+        "/api/exercises": {
+            "get": {
+                "operationId": "api_exercises_get_collection",
+                "tags": [
+                    "Exercise"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Exercise collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Exercise.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Exercise.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Exercise"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Exercise resources.",
+                "description": "Retrieves the collection of Exercise resources.",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Words of the name, accents and case ignored.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 100
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "muscle",
+                        "in": "query",
+                        "description": "Only exercises working this muscle (primary or secondary).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "chest",
+                                "lats",
+                                "upper_back",
+                                "traps",
+                                "lower_back",
+                                "front_delts",
+                                "side_delts",
+                                "rear_delts",
+                                "biceps",
+                                "triceps",
+                                "forearms",
+                                "abs",
+                                "obliques",
+                                "glutes",
+                                "quads",
+                                "hamstrings",
+                                "adductors",
+                                "calves"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "post": {
+                "operationId": "api_exercises_post",
+                "tags": [
+                    "Exercise"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Exercise resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Exercise.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Exercise"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Exercise resource.",
+                "description": "Creates a Exercise resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Exercise resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Exercise.ExerciseInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Exercise.ExerciseInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/exercises/{id}": {
+            "get": {
+                "operationId": "api_exercises_id_get",
+                "tags": [
+                    "Exercise"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Exercise resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Exercise.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Exercise"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Exercise resource.",
+                "description": "Retrieves a Exercise resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Exercise identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "put": {
+                "operationId": "api_exercises_id_put",
+                "tags": [
+                    "Exercise"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Exercise resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Exercise.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Exercise"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Replaces the Exercise resource.",
+                "description": "Replaces the Exercise resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Exercise identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Exercise resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Exercise.ExerciseInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Exercise.ExerciseInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "delete": {
+                "operationId": "api_exercises_id_delete",
+                "tags": [
+                    "Exercise"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Exercise resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Exercise resource.",
+                "description": "Removes the Exercise resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Exercise identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/exercises/{id}/note": {
+            "put": {
+                "operationId": "exercise_note",
+                "tags": [
+                    "Exercise"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Exercise resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Exercise.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Exercise"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Replaces the Exercise resource.",
+                "description": "Replaces the Exercise resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Exercise identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Exercise resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Exercise.ExerciseNoteInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Exercise.ExerciseNoteInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/exercises/{id}/progress": {
+            "get": {
+                "operationId": "api_exercises_idprogress_get",
+                "tags": [
+                    "ExerciseProgress"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ExerciseProgress resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExerciseProgress.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExerciseProgress"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a ExerciseProgress resource.",
+                "description": "Retrieves a ExerciseProgress resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ExerciseProgress identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
         "/api/nutrition/favorite-meals": {
             "get": {
                 "operationId": "api_nutritionfavorite-meals_get_collection",
@@ -2564,6 +3158,552 @@
                 }
             }
         },
+        "/api/programs": {
+            "get": {
+                "operationId": "api_programs_get_collection",
+                "tags": [
+                    "Program"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Program collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Program.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Program.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Program"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Program resources.",
+                "description": "Retrieves the collection of Program resources.",
+                "parameters": []
+            },
+            "post": {
+                "operationId": "api_programs_post",
+                "tags": [
+                    "Program"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Program resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Program resource.",
+                "description": "Creates a Program resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Program resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Program.ProgramInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Program.ProgramInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/programs/{id}": {
+            "get": {
+                "operationId": "api_programs_id_get",
+                "tags": [
+                    "Program"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Program resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Program resource.",
+                "description": "Retrieves a Program resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Program identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    },
+                    {
+                        "name": "version",
+                        "in": "query",
+                        "description": "Number of the version to spell out.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "put": {
+                "operationId": "api_programs_id_put",
+                "tags": [
+                    "Program"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Program resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Replaces the Program resource.",
+                "description": "Replaces the Program resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Program identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Program resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Program.ProgramInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Program.ProgramInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "delete": {
+                "operationId": "api_programs_id_delete",
+                "tags": [
+                    "Program"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Program resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Program resource.",
+                "description": "Removes the Program resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Program identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/programs/{id}/activate": {
+            "post": {
+                "operationId": "program_activate",
+                "tags": [
+                    "Program"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Program resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Program resource.",
+                "description": "Creates a Program resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Program identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/programs/{id}/deactivate": {
+            "post": {
+                "operationId": "program_deactivate",
+                "tags": [
+                    "Program"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Program resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Program resource.",
+                "description": "Creates a Program resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Program identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
         "/api/recipes": {
             "get": {
                 "operationId": "api_recipes_get_collection",
@@ -3647,6 +4787,845 @@
                     "required": true
                 }
             }
+        },
+        "/api/workouts": {
+            "get": {
+                "operationId": "workouts_history",
+                "tags": [
+                    "Workout"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Workout collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Workout.WorkoutSummary.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Workout.WorkoutSummary.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Workout.WorkoutSummary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Workout resources.",
+                "description": "Retrieves the collection of Workout resources.",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "At most 50.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 50,
+                            "default": 20
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "Only workouts started before this time (the startedAt of the last one received, for the next page).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
+        "/api/workouts/in-progress": {
+            "get": {
+                "operationId": "workouts_in_progress",
+                "tags": [
+                    "Workout"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Workout collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Workout.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Workout.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Workout"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Workout resources.",
+                "description": "Retrieves the collection of Workout resources.",
+                "parameters": []
+            }
+        },
+        "/api/workouts/{id}": {
+            "get": {
+                "operationId": "api_workouts_id_get",
+                "tags": [
+                    "Workout"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Workout resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workout.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workout"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Workout resource.",
+                "description": "Retrieves a Workout resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Workout identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "put": {
+                "operationId": "workout_start",
+                "tags": [
+                    "Workout"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Workout resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workout.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workout"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Replaces the Workout resource.",
+                "description": "Replaces the Workout resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Workout identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Workout resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Workout.StartWorkoutInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Workout.StartWorkoutInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "delete": {
+                "operationId": "api_workouts_id_delete",
+                "tags": [
+                    "Workout"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Workout resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Workout resource.",
+                "description": "Removes the Workout resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Workout identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/workouts/{id}/finish": {
+            "post": {
+                "operationId": "workout_finish",
+                "tags": [
+                    "Workout"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Workout resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workout.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workout"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Workout resource.",
+                "description": "Creates a Workout resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Workout identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The new Workout resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Workout.FinishWorkoutInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Workout.FinishWorkoutInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/workouts/{workoutId}/exercises/{index}": {
+            "put": {
+                "operationId": "api_workouts_workoutIdexercises_index_put",
+                "tags": [
+                    "WorkoutExercise"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "WorkoutExercise resource updated",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Replaces the WorkoutExercise resource.",
+                "description": "Replaces the WorkoutExercise resource.",
+                "parameters": [
+                    {
+                        "name": "workoutId",
+                        "in": "path",
+                        "description": "WorkoutExercise identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    },
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "description": "WorkoutExercise identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated WorkoutExercise resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WorkoutExercise.AddWorkoutExerciseInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WorkoutExercise.AddWorkoutExerciseInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/workouts/preview": {
+            "get": {
+                "operationId": "api_workoutspreview_get",
+                "tags": [
+                    "WorkoutPlan"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "WorkoutPlan resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkoutPlan.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkoutPlan"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a WorkoutPlan resource.",
+                "description": "Retrieves a WorkoutPlan resource.",
+                "parameters": [
+                    {
+                        "name": "programId",
+                        "in": "query",
+                        "description": "WorkoutPlan programId",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "day",
+                        "in": "query",
+                        "description": "Index of the day in the program, from 0.",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 6
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
+        "/api/workouts/{workoutId}/sets/{id}": {
+            "put": {
+                "operationId": "api_workouts_workoutIdsets_id_put",
+                "tags": [
+                    "WorkoutSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "WorkoutSet resource updated",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Replaces the WorkoutSet resource.",
+                "description": "Replaces the WorkoutSet resource.",
+                "parameters": [
+                    {
+                        "name": "workoutId",
+                        "in": "path",
+                        "description": "WorkoutSet identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "WorkoutSet identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated WorkoutSet resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WorkoutSet.WorkoutSetInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WorkoutSet.WorkoutSetInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "delete": {
+                "operationId": "api_workouts_workoutIdsets_id_delete",
+                "tags": [
+                    "WorkoutSet"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "WorkoutSet resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the WorkoutSet resource.",
+                "description": "Removes the WorkoutSet resource.",
+                "parameters": [
+                    {
+                        "name": "workoutId",
+                        "in": "path",
+                        "description": "WorkoutSet identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "WorkoutSet identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -4076,6 +6055,19 @@
                     }
                 ],
                 "description": "What a barcode stands for: a food already here (known), or what Open Food Facts proposes (found). 404 when nobody knows it, 503 when Open Food Facts cannot be reached."
+            },
+            "BlockInput": {
+                "type": "object",
+                "properties": {
+                    "exercises": {
+                        "minItems": 1,
+                        "maxItems": 4,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PlannedExerciseInput"
+                        }
+                    }
+                }
             },
             "Composition": {
                 "type": "object",
@@ -4529,6 +6521,27 @@
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/PortionInput"
+                        }
+                    }
+                }
+            },
+            "DayInput": {
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "maxLength": 40,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "blocks": {
+                        "minItems": 1,
+                        "maxItems": 15,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BlockInput"
                         }
                     }
                 }
@@ -5304,6 +7317,539 @@
                     "heightCm",
                     "weightKg"
                 ]
+            },
+            "Exercise": {
+                "type": "object",
+                "description": "The exercises the user can use (library and their own, their own first), filtered by name and muscle.",
+                "required": [
+                    "id",
+                    "source",
+                    "name",
+                    "primaryMuscle",
+                    "secondaryMuscles",
+                    "type",
+                    "equipment",
+                    "measurement",
+                    "description",
+                    "mediaUrl",
+                    "repMin",
+                    "repMax",
+                    "targetRir",
+                    "restSeconds",
+                    "tempo",
+                    "note",
+                    "editable"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "source": {
+                        "type": "string",
+                        "enum": [
+                            "library",
+                            "custom"
+                        ]
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "primaryMuscle": {
+                        "type": "string",
+                        "enum": [
+                            "chest",
+                            "lats",
+                            "upper_back",
+                            "traps",
+                            "lower_back",
+                            "front_delts",
+                            "side_delts",
+                            "rear_delts",
+                            "biceps",
+                            "triceps",
+                            "forearms",
+                            "abs",
+                            "obliques",
+                            "glutes",
+                            "quads",
+                            "hamstrings",
+                            "adductors",
+                            "calves"
+                        ]
+                    },
+                    "secondaryMuscles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "chest",
+                                "lats",
+                                "upper_back",
+                                "traps",
+                                "lower_back",
+                                "front_delts",
+                                "side_delts",
+                                "rear_delts",
+                                "biceps",
+                                "triceps",
+                                "forearms",
+                                "abs",
+                                "obliques",
+                                "glutes",
+                                "quads",
+                                "hamstrings",
+                                "adductors",
+                                "calves"
+                            ]
+                        }
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "compound",
+                            "isolation"
+                        ]
+                    },
+                    "equipment": {
+                        "type": "string",
+                        "enum": [
+                            "barbell",
+                            "dumbbell",
+                            "ez_bar",
+                            "machine",
+                            "cable",
+                            "smith_machine",
+                            "kettlebell",
+                            "band",
+                            "bodyweight",
+                            "other"
+                        ]
+                    },
+                    "measurement": {
+                        "type": "string",
+                        "enum": [
+                            "weight",
+                            "bodyweight",
+                            "duration"
+                        ]
+                    },
+                    "description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "mediaUrl": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "repMin": {
+                        "type": "integer"
+                    },
+                    "repMax": {
+                        "type": "integer"
+                    },
+                    "targetRir": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "restSeconds": {
+                        "type": "integer"
+                    },
+                    "tempo": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "note": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "editable": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Exercise.ExerciseInput": {
+                "type": "object",
+                "description": "Creates one of the user's own exercises.",
+                "required": [
+                    "name",
+                    "primaryMuscle",
+                    "repMin",
+                    "repMax"
+                ],
+                "properties": {
+                    "name": {
+                        "maxLength": 100,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "primaryMuscle": {
+                        "enum": [
+                            "chest",
+                            "lats",
+                            "upper_back",
+                            "traps",
+                            "lower_back",
+                            "front_delts",
+                            "side_delts",
+                            "rear_delts",
+                            "biceps",
+                            "triceps",
+                            "forearms",
+                            "abs",
+                            "obliques",
+                            "glutes",
+                            "quads",
+                            "hamstrings",
+                            "adductors",
+                            "calves"
+                        ],
+                        "default": "",
+                        "type": "string"
+                    },
+                    "secondaryMuscles": {
+                        "maxItems": 6,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "type": {
+                        "enum": [
+                            "compound",
+                            "isolation"
+                        ],
+                        "default": "compound",
+                        "type": "string"
+                    },
+                    "equipment": {
+                        "enum": [
+                            "barbell",
+                            "dumbbell",
+                            "ez_bar",
+                            "machine",
+                            "cable",
+                            "smith_machine",
+                            "kettlebell",
+                            "band",
+                            "bodyweight",
+                            "other"
+                        ],
+                        "default": "other",
+                        "type": "string"
+                    },
+                    "measurement": {
+                        "enum": [
+                            "weight",
+                            "bodyweight",
+                            "duration"
+                        ],
+                        "default": "weight",
+                        "type": "string"
+                    },
+                    "repMin": {
+                        "minimum": 1,
+                        "maximum": 300,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "repMax": {
+                        "minimum": 1,
+                        "maximum": 300,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "targetRir": {
+                        "minimum": 0,
+                        "maximum": 10,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "restSeconds": {
+                        "minimum": 0,
+                        "maximum": 900,
+                        "default": 120,
+                        "type": "integer"
+                    },
+                    "tempo": {
+                        "maxLength": 15,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "description": {
+                        "maxLength": 2000,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "mediaUrl": {
+                        "maxLength": 500,
+                        "format": "uri",
+                        "externalDocs": {
+                            "url": "https://schema.org/url"
+                        },
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "Exercise.ExerciseNoteInput": {
+                "type": "object",
+                "description": "Sets the user's standing cue for an exercise (shown every time they do it); blank removes it.",
+                "properties": {
+                    "text": {
+                        "maxLength": 500,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "Exercise.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "source",
+                            "name",
+                            "primaryMuscle",
+                            "secondaryMuscles",
+                            "type",
+                            "equipment",
+                            "measurement",
+                            "description",
+                            "mediaUrl",
+                            "repMin",
+                            "repMax",
+                            "targetRir",
+                            "restSeconds",
+                            "tempo",
+                            "note",
+                            "editable"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "source": {
+                                "type": "string",
+                                "enum": [
+                                    "library",
+                                    "custom"
+                                ]
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "primaryMuscle": {
+                                "type": "string",
+                                "enum": [
+                                    "chest",
+                                    "lats",
+                                    "upper_back",
+                                    "traps",
+                                    "lower_back",
+                                    "front_delts",
+                                    "side_delts",
+                                    "rear_delts",
+                                    "biceps",
+                                    "triceps",
+                                    "forearms",
+                                    "abs",
+                                    "obliques",
+                                    "glutes",
+                                    "quads",
+                                    "hamstrings",
+                                    "adductors",
+                                    "calves"
+                                ]
+                            },
+                            "secondaryMuscles": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "enum": [
+                                        "chest",
+                                        "lats",
+                                        "upper_back",
+                                        "traps",
+                                        "lower_back",
+                                        "front_delts",
+                                        "side_delts",
+                                        "rear_delts",
+                                        "biceps",
+                                        "triceps",
+                                        "forearms",
+                                        "abs",
+                                        "obliques",
+                                        "glutes",
+                                        "quads",
+                                        "hamstrings",
+                                        "adductors",
+                                        "calves"
+                                    ]
+                                }
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "compound",
+                                    "isolation"
+                                ]
+                            },
+                            "equipment": {
+                                "type": "string",
+                                "enum": [
+                                    "barbell",
+                                    "dumbbell",
+                                    "ez_bar",
+                                    "machine",
+                                    "cable",
+                                    "smith_machine",
+                                    "kettlebell",
+                                    "band",
+                                    "bodyweight",
+                                    "other"
+                                ]
+                            },
+                            "measurement": {
+                                "type": "string",
+                                "enum": [
+                                    "weight",
+                                    "bodyweight",
+                                    "duration"
+                                ]
+                            },
+                            "description": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "mediaUrl": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "repMin": {
+                                "type": "integer"
+                            },
+                            "repMax": {
+                                "type": "integer"
+                            },
+                            "targetRir": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            },
+                            "restSeconds": {
+                                "type": "integer"
+                            },
+                            "tempo": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "note": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "editable": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                ],
+                "description": "The exercises the user can use (library and their own, their own first), filtered by name and muscle."
+            },
+            "ExerciseProgress": {
+                "type": "object",
+                "description": "Records and one point per finished workout, oldest first.",
+                "required": [
+                    "id",
+                    "records",
+                    "sessions"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "records": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RecordOutput"
+                        }
+                    },
+                    "sessions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SessionOutput"
+                        }
+                    }
+                }
+            },
+            "ExerciseProgress.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "records",
+                            "sessions"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "records": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/RecordOutput.jsonld"
+                                }
+                            },
+                            "sessions": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/SessionOutput.jsonld"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "Records and one point per finished workout, oldest first."
             },
             "FavoriteMeal": {
                 "type": "object",
@@ -7351,6 +9897,104 @@
                     }
                 }
             },
+            "PlannedExerciseInput": {
+                "type": "object",
+                "required": [
+                    "exerciseId",
+                    "sets",
+                    "repMin",
+                    "repMax"
+                ],
+                "properties": {
+                    "exerciseId": {
+                        "format": "uuid",
+                        "externalDocs": {
+                            "url": "https://schema.org/identifier"
+                        },
+                        "default": "",
+                        "type": "string"
+                    },
+                    "sets": {
+                        "minimum": 1,
+                        "maximum": 10,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "repMin": {
+                        "minimum": 1,
+                        "maximum": 300,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "repMax": {
+                        "minimum": 1,
+                        "maximum": 300,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "targetRir": {
+                        "minimum": 0,
+                        "maximum": 10,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "restSeconds": {
+                        "minimum": 0,
+                        "maximum": 900,
+                        "default": 120,
+                        "type": "integer"
+                    },
+                    "strategy": {
+                        "enum": [
+                            "double_progression",
+                            "linear",
+                            "fixed_load",
+                            "fixed_reps",
+                            "target_rir"
+                        ],
+                        "default": "double_progression",
+                        "type": "string"
+                    },
+                    "incrementKg": {
+                        "minimum": 0.25,
+                        "maximum": 20,
+                        "default": 2.5,
+                        "type": "number"
+                    },
+                    "warmupSets": {
+                        "minimum": 0,
+                        "maximum": 5,
+                        "default": 0,
+                        "type": "integer"
+                    },
+                    "dropSet": {
+                        "default": false,
+                        "type": "boolean"
+                    },
+                    "tempo": {
+                        "maxLength": 15,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "notes": {
+                        "maxLength": 200,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
             "PortionInput": {
                 "type": "object",
                 "required": [
@@ -7371,6 +10015,439 @@
                             "number",
                             "null"
                         ]
+                    }
+                }
+            },
+            "PreviousOutput": {
+                "type": "object",
+                "required": [
+                    "date",
+                    "sets"
+                ],
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "sets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WorkoutSetOutput"
+                        }
+                    }
+                }
+            },
+            "PreviousOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "date",
+                    "sets"
+                ],
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "sets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WorkoutSetOutput.jsonld"
+                        }
+                    }
+                }
+            },
+            "Program": {
+                "type": "object",
+                "description": "The user's programs, the active one first, each with its current version.",
+                "required": [
+                    "id",
+                    "name",
+                    "active",
+                    "currentVersion",
+                    "version",
+                    "versionCreatedAt",
+                    "days",
+                    "versions"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "active": {
+                        "type": "boolean"
+                    },
+                    "currentVersion": {
+                        "type": "integer"
+                    },
+                    "version": {
+                        "type": "integer"
+                    },
+                    "versionCreatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "days": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProgramDay"
+                        }
+                    },
+                    "versions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProgramVersionSummary"
+                        }
+                    }
+                }
+            },
+            "Program.ProgramInput": {
+                "type": "object",
+                "description": "Creates a program; the user's first one becomes active.",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "maxLength": 100,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "days": {
+                        "minItems": 1,
+                        "maxItems": 7,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DayInput"
+                        }
+                    }
+                }
+            },
+            "Program.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "name",
+                            "active",
+                            "currentVersion",
+                            "version",
+                            "versionCreatedAt",
+                            "days",
+                            "versions"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "active": {
+                                "type": "boolean"
+                            },
+                            "currentVersion": {
+                                "type": "integer"
+                            },
+                            "version": {
+                                "type": "integer"
+                            },
+                            "versionCreatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "days": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ProgramDay.jsonld"
+                                }
+                            },
+                            "versions": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ProgramVersionSummary.jsonld"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "The user's programs, the active one first, each with its current version."
+            },
+            "ProgramBlock": {
+                "type": "object",
+                "required": [
+                    "exercises"
+                ],
+                "properties": {
+                    "exercises": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProgramExercise"
+                        }
+                    }
+                }
+            },
+            "ProgramBlock.jsonld": {
+                "type": "object",
+                "required": [
+                    "exercises"
+                ],
+                "properties": {
+                    "exercises": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProgramExercise.jsonld"
+                        }
+                    }
+                }
+            },
+            "ProgramDay": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "blocks"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "blocks": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProgramBlock"
+                        }
+                    }
+                }
+            },
+            "ProgramDay.jsonld": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "blocks"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "blocks": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProgramBlock.jsonld"
+                        }
+                    }
+                }
+            },
+            "ProgramExercise": {
+                "type": "object",
+                "required": [
+                    "exerciseId",
+                    "name",
+                    "measurement",
+                    "available",
+                    "sets",
+                    "warmupSets",
+                    "repMin",
+                    "repMax",
+                    "targetRir",
+                    "restSeconds",
+                    "tempo",
+                    "strategy",
+                    "incrementKg",
+                    "dropSet",
+                    "notes"
+                ],
+                "properties": {
+                    "exerciseId": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "measurement": {
+                        "type": "string",
+                        "enum": [
+                            "weight",
+                            "bodyweight",
+                            "duration"
+                        ]
+                    },
+                    "available": {
+                        "type": "boolean"
+                    },
+                    "sets": {
+                        "type": "integer"
+                    },
+                    "warmupSets": {
+                        "type": "integer"
+                    },
+                    "repMin": {
+                        "type": "integer"
+                    },
+                    "repMax": {
+                        "type": "integer"
+                    },
+                    "targetRir": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "restSeconds": {
+                        "type": "integer"
+                    },
+                    "tempo": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "strategy": {
+                        "type": "string",
+                        "enum": [
+                            "double_progression",
+                            "linear",
+                            "fixed_load",
+                            "fixed_reps",
+                            "target_rir"
+                        ]
+                    },
+                    "incrementKg": {
+                        "type": "number"
+                    },
+                    "dropSet": {
+                        "type": "boolean"
+                    },
+                    "notes": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "ProgramExercise.jsonld": {
+                "type": "object",
+                "required": [
+                    "exerciseId",
+                    "name",
+                    "measurement",
+                    "available",
+                    "sets",
+                    "warmupSets",
+                    "repMin",
+                    "repMax",
+                    "targetRir",
+                    "restSeconds",
+                    "tempo",
+                    "strategy",
+                    "incrementKg",
+                    "dropSet",
+                    "notes"
+                ],
+                "properties": {
+                    "exerciseId": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "measurement": {
+                        "type": "string",
+                        "enum": [
+                            "weight",
+                            "bodyweight",
+                            "duration"
+                        ]
+                    },
+                    "available": {
+                        "type": "boolean"
+                    },
+                    "sets": {
+                        "type": "integer"
+                    },
+                    "warmupSets": {
+                        "type": "integer"
+                    },
+                    "repMin": {
+                        "type": "integer"
+                    },
+                    "repMax": {
+                        "type": "integer"
+                    },
+                    "targetRir": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "restSeconds": {
+                        "type": "integer"
+                    },
+                    "tempo": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "strategy": {
+                        "type": "string",
+                        "enum": [
+                            "double_progression",
+                            "linear",
+                            "fixed_load",
+                            "fixed_reps",
+                            "target_rir"
+                        ]
+                    },
+                    "incrementKg": {
+                        "type": "number"
+                    },
+                    "dropSet": {
+                        "type": "boolean"
+                    },
+                    "notes": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "ProgramVersionSummary": {
+                "type": "object",
+                "required": [
+                    "number",
+                    "createdAt"
+                ],
+                "properties": {
+                    "number": {
+                        "type": "integer"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "ProgramVersionSummary.jsonld": {
+                "type": "object",
+                "required": [
+                    "number",
+                    "createdAt"
+                ],
+                "properties": {
+                    "number": {
+                        "type": "integer"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -7708,6 +10785,84 @@
                     },
                     "available": {
                         "type": "boolean"
+                    }
+                }
+            },
+            "RecordOutput": {
+                "type": "object",
+                "required": [
+                    "kind",
+                    "value",
+                    "loadKg",
+                    "date",
+                    "workoutId"
+                ],
+                "properties": {
+                    "kind": {
+                        "type": "string",
+                        "enum": [
+                            "load",
+                            "estimated_one_rep_max",
+                            "volume",
+                            "reps",
+                            "duration",
+                            "reps_at_load"
+                        ]
+                    },
+                    "value": {
+                        "type": "number"
+                    },
+                    "loadKg": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "workoutId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "RecordOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "kind",
+                    "value",
+                    "loadKg",
+                    "date",
+                    "workoutId"
+                ],
+                "properties": {
+                    "kind": {
+                        "type": "string",
+                        "enum": [
+                            "load",
+                            "estimated_one_rep_max",
+                            "volume",
+                            "reps",
+                            "duration",
+                            "reps_at_load"
+                        ]
+                    },
+                    "value": {
+                        "type": "number"
+                    },
+                    "loadKg": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "workoutId": {
+                        "type": "string"
                     }
                 }
             },
@@ -8103,6 +11258,110 @@
                 ],
                 "description": "Signed-in devices, most recently active first."
             },
+            "SessionOutput": {
+                "type": "object",
+                "required": [
+                    "workoutId",
+                    "date",
+                    "workingSets",
+                    "topLoadKg",
+                    "estimatedOneRepMax",
+                    "volumeKg",
+                    "bestReps",
+                    "bestSeconds"
+                ],
+                "properties": {
+                    "workoutId": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "workingSets": {
+                        "type": "integer"
+                    },
+                    "topLoadKg": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "estimatedOneRepMax": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "volumeKg": {
+                        "type": "number"
+                    },
+                    "bestReps": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "bestSeconds": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "SessionOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "workoutId",
+                    "date",
+                    "workingSets",
+                    "topLoadKg",
+                    "estimatedOneRepMax",
+                    "volumeKg",
+                    "bestReps",
+                    "bestSeconds"
+                ],
+                "properties": {
+                    "workoutId": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "workingSets": {
+                        "type": "integer"
+                    },
+                    "topLoadKg": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "estimatedOneRepMax": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "volumeKg": {
+                        "type": "number"
+                    },
+                    "bestReps": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "bestSeconds": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
+            },
             "SignIn": {
                 "type": "object",
                 "description": "Checks email and password; signs the device in, or asks for the second factor.",
@@ -8237,6 +11496,82 @@
                 ],
                 "description": "Enabled external sign-in providers."
             },
+            "SuggestionOutput": {
+                "type": "object",
+                "required": [
+                    "reason",
+                    "loadKg",
+                    "reps",
+                    "seconds"
+                ],
+                "properties": {
+                    "reason": {
+                        "type": "string",
+                        "enum": [
+                            "increase_load",
+                            "add_reps",
+                            "repeat",
+                            "decrease_load"
+                        ]
+                    },
+                    "loadKg": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "reps": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "seconds": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "SuggestionOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "reason",
+                    "loadKg",
+                    "reps",
+                    "seconds"
+                ],
+                "properties": {
+                    "reason": {
+                        "type": "string",
+                        "enum": [
+                            "increase_load",
+                            "add_reps",
+                            "repeat",
+                            "decrease_load"
+                        ]
+                    },
+                    "loadKg": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "reps": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "seconds": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
+            },
             "TwoFactorDisabling.PasswordConfirmation": {
                 "type": "object",
                 "description": "Turns two-factor authentication off (password required).",
@@ -8303,6 +11638,898 @@
                     }
                 ],
                 "description": "Starts enrolling an authenticator app (password required, email must be verified)."
+            },
+            "Workout": {
+                "type": "object",
+                "description": "The workout in progress, if any (to resume it after an interruption or on another device).",
+                "required": [
+                    "id",
+                    "status",
+                    "programDay",
+                    "startedAt",
+                    "finishedAt",
+                    "exercises",
+                    "sets"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "in_progress",
+                            "finished"
+                        ]
+                    },
+                    "programDay": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/WorkoutProgramDay"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "startedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "finishedAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "exercises": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WorkoutExerciseOutput"
+                        }
+                    },
+                    "sets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WorkoutSetOutput"
+                        }
+                    }
+                }
+            },
+            "Workout.FinishWorkoutInput": {
+                "type": "object",
+                "description": "Finishes the workout (only when the user says so); finishing again keeps the first time.",
+                "required": [
+                    "finishedAt"
+                ],
+                "properties": {
+                    "finishedAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    }
+                }
+            },
+            "Workout.StartWorkoutInput": {
+                "type": "object",
+                "description": "Starts a workout with this id (sending it again changes nothing): from a program day as the device saw it, or empty. 409 while another one is in progress.",
+                "required": [
+                    "startedAt"
+                ],
+                "properties": {
+                    "startedAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "programId": {
+                        "format": "uuid",
+                        "externalDocs": {
+                            "url": "https://schema.org/identifier"
+                        },
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "versionNumber": {
+                        "minimum": 0,
+                        "exclusiveMinimum": 0,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "dayIndex": {
+                        "minimum": 0,
+                        "maximum": 6,
+                        "default": 0,
+                        "type": "integer"
+                    }
+                }
+            },
+            "Workout.WorkoutSummary": {
+                "type": "object",
+                "description": "Finished workouts, the latest first.",
+                "required": [
+                    "id",
+                    "dayName",
+                    "startedAt",
+                    "finishedAt",
+                    "exercises",
+                    "workingSets",
+                    "volumeKg"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "dayName": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "startedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "finishedAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "exercises": {
+                        "type": "integer"
+                    },
+                    "workingSets": {
+                        "type": "integer"
+                    },
+                    "volumeKg": {
+                        "type": "number"
+                    }
+                }
+            },
+            "Workout.WorkoutSummary.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "dayName",
+                            "startedAt",
+                            "finishedAt",
+                            "exercises",
+                            "workingSets",
+                            "volumeKg"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "dayName": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "startedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "finishedAt": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            },
+                            "exercises": {
+                                "type": "integer"
+                            },
+                            "workingSets": {
+                                "type": "integer"
+                            },
+                            "volumeKg": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                ],
+                "description": "Finished workouts, the latest first."
+            },
+            "Workout.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "status",
+                            "programDay",
+                            "startedAt",
+                            "finishedAt",
+                            "exercises",
+                            "sets"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": [
+                                    "in_progress",
+                                    "finished"
+                                ]
+                            },
+                            "programDay": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/WorkoutProgramDay.jsonld"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "startedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "finishedAt": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            },
+                            "exercises": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/WorkoutExerciseOutput.jsonld"
+                                }
+                            },
+                            "sets": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/WorkoutSetOutput.jsonld"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "The workout in progress, if any (to resume it after an interruption or on another device)."
+            },
+            "WorkoutExercise.AddWorkoutExerciseInput": {
+                "type": "object",
+                "description": "Adds an exercise after the last one, with its usual values.",
+                "required": [
+                    "exerciseId"
+                ],
+                "properties": {
+                    "exerciseId": {
+                        "format": "uuid",
+                        "externalDocs": {
+                            "url": "https://schema.org/identifier"
+                        },
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "WorkoutExerciseOutput": {
+                "type": "object",
+                "required": [
+                    "index",
+                    "exerciseId",
+                    "name",
+                    "measurement",
+                    "block",
+                    "added",
+                    "sets",
+                    "warmupSets",
+                    "repMin",
+                    "repMax",
+                    "targetRir",
+                    "restSeconds",
+                    "tempo",
+                    "strategy",
+                    "incrementKg",
+                    "dropSet",
+                    "programNotes",
+                    "note",
+                    "previous",
+                    "suggestion",
+                    "records",
+                    "newRecords"
+                ],
+                "properties": {
+                    "index": {
+                        "type": "integer"
+                    },
+                    "exerciseId": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "measurement": {
+                        "type": "string",
+                        "enum": [
+                            "weight",
+                            "bodyweight",
+                            "duration"
+                        ]
+                    },
+                    "block": {
+                        "type": "integer"
+                    },
+                    "added": {
+                        "type": "boolean"
+                    },
+                    "sets": {
+                        "type": "integer"
+                    },
+                    "warmupSets": {
+                        "type": "integer"
+                    },
+                    "repMin": {
+                        "type": "integer"
+                    },
+                    "repMax": {
+                        "type": "integer"
+                    },
+                    "targetRir": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "restSeconds": {
+                        "type": "integer"
+                    },
+                    "tempo": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "strategy": {
+                        "type": "string",
+                        "enum": [
+                            "double_progression",
+                            "linear",
+                            "fixed_load",
+                            "fixed_reps",
+                            "target_rir"
+                        ]
+                    },
+                    "incrementKg": {
+                        "type": "number"
+                    },
+                    "dropSet": {
+                        "type": "boolean"
+                    },
+                    "programNotes": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "note": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "previous": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/PreviousOutput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "suggestion": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/SuggestionOutput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "records": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RecordOutput"
+                        }
+                    },
+                    "newRecords": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RecordOutput"
+                        }
+                    }
+                }
+            },
+            "WorkoutExerciseOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "index",
+                    "exerciseId",
+                    "name",
+                    "measurement",
+                    "block",
+                    "added",
+                    "sets",
+                    "warmupSets",
+                    "repMin",
+                    "repMax",
+                    "targetRir",
+                    "restSeconds",
+                    "tempo",
+                    "strategy",
+                    "incrementKg",
+                    "dropSet",
+                    "programNotes",
+                    "note",
+                    "previous",
+                    "suggestion",
+                    "records",
+                    "newRecords"
+                ],
+                "properties": {
+                    "index": {
+                        "type": "integer"
+                    },
+                    "exerciseId": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "measurement": {
+                        "type": "string",
+                        "enum": [
+                            "weight",
+                            "bodyweight",
+                            "duration"
+                        ]
+                    },
+                    "block": {
+                        "type": "integer"
+                    },
+                    "added": {
+                        "type": "boolean"
+                    },
+                    "sets": {
+                        "type": "integer"
+                    },
+                    "warmupSets": {
+                        "type": "integer"
+                    },
+                    "repMin": {
+                        "type": "integer"
+                    },
+                    "repMax": {
+                        "type": "integer"
+                    },
+                    "targetRir": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "restSeconds": {
+                        "type": "integer"
+                    },
+                    "tempo": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "strategy": {
+                        "type": "string",
+                        "enum": [
+                            "double_progression",
+                            "linear",
+                            "fixed_load",
+                            "fixed_reps",
+                            "target_rir"
+                        ]
+                    },
+                    "incrementKg": {
+                        "type": "number"
+                    },
+                    "dropSet": {
+                        "type": "boolean"
+                    },
+                    "programNotes": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "note": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "previous": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/PreviousOutput.jsonld"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "suggestion": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/SuggestionOutput.jsonld"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "records": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RecordOutput.jsonld"
+                        }
+                    },
+                    "newRecords": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RecordOutput.jsonld"
+                        }
+                    }
+                }
+            },
+            "WorkoutPlan": {
+                "type": "object",
+                "description": "The plan of a day of a program (its current version).",
+                "required": [
+                    "programId",
+                    "programDay",
+                    "exercises"
+                ],
+                "properties": {
+                    "programId": {
+                        "type": "string"
+                    },
+                    "programDay": {
+                        "$ref": "#/components/schemas/WorkoutProgramDay"
+                    },
+                    "exercises": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WorkoutExerciseOutput"
+                        }
+                    }
+                }
+            },
+            "WorkoutPlan.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "programId",
+                            "programDay",
+                            "exercises"
+                        ],
+                        "properties": {
+                            "programId": {
+                                "type": "string"
+                            },
+                            "programDay": {
+                                "$ref": "#/components/schemas/WorkoutProgramDay.jsonld"
+                            },
+                            "exercises": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/WorkoutExerciseOutput.jsonld"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "The plan of a day of a program (its current version)."
+            },
+            "WorkoutProgramDay": {
+                "type": "object",
+                "required": [
+                    "programId",
+                    "programName",
+                    "versionNumber",
+                    "dayIndex",
+                    "dayName"
+                ],
+                "properties": {
+                    "programId": {
+                        "type": "string"
+                    },
+                    "programName": {
+                        "type": "string"
+                    },
+                    "versionNumber": {
+                        "type": "integer"
+                    },
+                    "dayIndex": {
+                        "type": "integer"
+                    },
+                    "dayName": {
+                        "type": "string"
+                    }
+                }
+            },
+            "WorkoutProgramDay.jsonld": {
+                "type": "object",
+                "required": [
+                    "programId",
+                    "programName",
+                    "versionNumber",
+                    "dayIndex",
+                    "dayName"
+                ],
+                "properties": {
+                    "programId": {
+                        "type": "string"
+                    },
+                    "programName": {
+                        "type": "string"
+                    },
+                    "versionNumber": {
+                        "type": "integer"
+                    },
+                    "dayIndex": {
+                        "type": "integer"
+                    },
+                    "dayName": {
+                        "type": "string"
+                    }
+                }
+            },
+            "WorkoutSet": {
+                "type": "object",
+                "description": "Removes a set (removing it again changes nothing).",
+                "properties": {
+                    "workoutId": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "WorkoutSet.WorkoutSetInput": {
+                "type": "object",
+                "description": "Records a set, or corrects it (same id). Sending it again changes nothing.",
+                "required": [
+                    "exerciseIndex",
+                    "doneAt"
+                ],
+                "properties": {
+                    "exerciseIndex": {
+                        "minimum": 0,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "kind": {
+                        "enum": [
+                            "warmup",
+                            "approach",
+                            "normal",
+                            "effective",
+                            "drop"
+                        ],
+                        "default": "normal",
+                        "type": "string"
+                    },
+                    "loadKg": {
+                        "minimum": 0,
+                        "maximum": 1000,
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "reps": {
+                        "minimum": 0,
+                        "maximum": 300,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "seconds": {
+                        "minimum": 1,
+                        "maximum": 3600,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "rir": {
+                        "minimum": 0,
+                        "maximum": 10,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "doneAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    }
+                }
+            },
+            "WorkoutSet.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "workoutId": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "description": "Removes a set (removing it again changes nothing)."
+            },
+            "WorkoutSetOutput": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "exerciseIndex",
+                    "kind",
+                    "loadKg",
+                    "reps",
+                    "seconds",
+                    "rir",
+                    "doneAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "exerciseIndex": {
+                        "type": "integer"
+                    },
+                    "kind": {
+                        "type": "string",
+                        "enum": [
+                            "warmup",
+                            "approach",
+                            "normal",
+                            "effective",
+                            "drop"
+                        ]
+                    },
+                    "loadKg": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "reps": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "seconds": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "rir": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "doneAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "WorkoutSetOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "exerciseIndex",
+                    "kind",
+                    "loadKg",
+                    "reps",
+                    "seconds",
+                    "rir",
+                    "doneAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "exerciseIndex": {
+                        "type": "integer"
+                    },
+                    "kind": {
+                        "type": "string",
+                        "enum": [
+                            "warmup",
+                            "approach",
+                            "normal",
+                            "effective",
+                            "drop"
+                        ]
+                    },
+                    "loadKg": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "reps": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "seconds": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "rir": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "doneAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
             }
         },
         "responses": {},
@@ -8409,6 +12636,34 @@
         {
             "name": "Health",
             "description": "Resource 'Health' operations."
+        },
+        {
+            "name": "Exercise",
+            "description": "A movement from the shared library or one of the user's own, with what it is usually done\nwith (proposed when it is added to a program) and the user's standing cue for it."
+        },
+        {
+            "name": "ExerciseProgress",
+            "description": "Personal records of an exercise and its workouts over time."
+        },
+        {
+            "name": "Program",
+            "description": "A training plan: days of exercises (a block of several is a superset). Changing its days\nrecords a new version; past workouts stay tied to the version they followed."
+        },
+        {
+            "name": "Workout",
+            "description": "A training session (spec \u00a742\u201346). Ids are chosen by the device and every write is idempotent:\nthe PWA records sets offline and sends them again until they are acknowledged."
+        },
+        {
+            "name": "WorkoutExercise",
+            "description": "An exercise added to a workout, at the next position (sending it again changes nothing)."
+        },
+        {
+            "name": "WorkoutPlan",
+            "description": "What starting a program day would plan, with each exercise's cue and last performance: the\ndevice keeps it, to start the workout even offline."
+        },
+        {
+            "name": "WorkoutSet",
+            "description": "A set of a workout, sent by the device as soon as it is done (and again until acknowledged)."
         }
     ],
     "webhooks": {}

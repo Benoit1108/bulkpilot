@@ -2,7 +2,8 @@
 import { ScanBarcode } from 'lucide-vue-next'
 import { NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
 import { formatKcal } from '~/features/nutrition/format'
-import { matches, type FavoriteMeal, type Food, type Loggable, type Recipe } from '~/features/nutrition/nutrition'
+import type { FavoriteMeal, Food, Loggable, Recipe } from '~/features/nutrition/nutrition'
+import { matches } from '~/services/text/search'
 import { SEARCH_MIN_LENGTH } from '~/features/nutrition/rules'
 
 /**

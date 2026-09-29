@@ -139,9 +139,11 @@ pwa/app/
 ├── components/
 │   ├── ui/         design system (UiButton, UiCard, UiInput, UiSelect, UiAlert, UiEmptyState…)
 │   └── shell/      ShellNav, ShellConnectivityBanner, ShellUpdatePrompt, ShellBackLink
-├── features/       code par fonctionnalité : identity/ (compte, messages, règles, composants), shell/, system/
+├── features/       code par fonctionnalité : identity/, nutrition/, training/ (séance, file d'envoi, plans gardés), shell/, system/
 ├── composables/    useApi, useAccount, useSubmission, useTheme, usePwaUpdate, useEventListener
 ├── services/api/   contrat typé (contract.ts), client unique (client.ts), erreurs et messages par code
+├── services/offline/ IndexedDB (store.ts, mémoire en repli) et compte propriétaire de l'appareil (owner.ts)
+├── services/text/  recherche sans accents, nombres à la française
 ├── plugins/        api (client + gestion du 401), messages (enregistrement par fonctionnalité), theme
 ├── error.vue       page d'erreur en français, sans détail technique
 └── types/          api.d.ts généré depuis l'OpenAPI (ne pas éditer)
@@ -162,5 +164,7 @@ pwa/app/
   accent violet, `--color-accent-fill` pour les surfaces portant du texte blanc (contraste AA), cibles tactiles ≥ 44 px,
   état actif de navigation non porté par la seule couleur.
 - **Thème** : `public/theme-init.js` l'applique avant le premier rendu ; `features/shell/theme.ts` centralise les valeurs.
+- **Hors ligne** (ADR-0024) : la séance en cours et sa file d'envoi vivent dans IndexedDB, écrites ensemble ; le plugin
+  `offline.client.ts` lie l'appareil au compte connecté (données d'un autre compte effacées), puis vide la file.
 - **Connectivité** : `ShellConnectivityBanner` n'apparaît que si le serveur est injoignable ou dégradé ; le détail est dans Réglages › À propos.
 - **Mises à jour** : le service worker ne s'active qu'après validation (« Mettre à jour » / « Plus tard ») ; vérification horaire.

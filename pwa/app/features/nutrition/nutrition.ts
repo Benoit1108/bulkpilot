@@ -83,13 +83,3 @@ export const TARGET_SOURCES: Record<NutritionTarget['source'], string> = {
   manual: 'Saisie manuelle',
   coach: 'Coach',
 }
-
-/** Lowercase, accent-free text for filtering lists on the device (the API does the same for search). */
-export function searchKey(text: string): string {
-  return text.toLowerCase().replace(/œ/g, 'oe').replace(/æ/g, 'ae').replace(/ß/g, 'ss').normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/\s+/g, ' ').trim()
-}
-
-export function matches(name: string, query: string): boolean {
-  const key = searchKey(name)
-  return searchKey(query).split(' ').every(word => key.includes(word))
-}

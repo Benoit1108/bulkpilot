@@ -23,11 +23,11 @@ use App\Nutrition\Domain\Recipe\RecipeId;
 use App\Nutrition\Presentation\Api\Favorite\FavoriteMealState;
 use App\Nutrition\Presentation\Api\Food\FoodProvider;
 use App\Nutrition\Presentation\Api\Shared\Days;
-use App\Nutrition\Presentation\Api\Shared\Ids;
 use App\Shared\Application\Bus\Command\CommandBus;
 use App\Shared\Application\Bus\Query\QueryBus;
 use App\Shared\Application\Security\CurrentUser;
 use App\Shared\Domain\Identifier\UuidGenerator;
+use App\Shared\Presentation\Api\Ids;
 
 /**
  * @implements ProcessorInterface<LogFoodInput|LogFoodsInput|LogFavoriteInput|CorrectEntryInput|null, NutritionDay|null>

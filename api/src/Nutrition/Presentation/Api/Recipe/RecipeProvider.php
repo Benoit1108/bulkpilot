@@ -11,9 +11,9 @@ use App\Nutrition\Application\Recipe\GetRecipe;
 use App\Nutrition\Application\Recipe\ListRecipes;
 use App\Nutrition\Domain\Exception\RecipeNotFound;
 use App\Nutrition\Domain\Recipe\RecipeId;
-use App\Nutrition\Presentation\Api\Shared\Ids;
 use App\Shared\Application\Bus\Query\QueryBus;
 use App\Shared\Application\Security\CurrentUser;
+use App\Shared\Presentation\Api\Ids;
 
 /**
  * @implements ProviderInterface<Recipe>

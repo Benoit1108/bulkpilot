@@ -21,7 +21,7 @@
 | Traçabilité | Chaque réponse porte `X-Request-Id` (posé par Caddy), repris dans les erreurs côté PWA. |
 | Erreurs métier | Les `DomainException` deviennent du problem+json avec leur `code` stable (`identity.invalid_token`…) ; statut selon la catégorie : `NotFound` 404, `Conflict` 409, `AuthenticationFailed` 401, `Unavailable` 503 (service externe injoignable), autre règle 422. La PWA traduit le `code`. |
 | CSRF | Requête mutante refusée (403) si `Origin` ≠ l'hôte ou `Sec-Fetch-Site` indique un autre site. |
-| Limitation | 429 + `Retry-After` : connexion (5 / 15 min par IP+email, 30 / 15 min par IP, 50 / h par compte), inscription (5 / h par IP), liens email (10 / h par IP et par adresse), second facteur (5 / 15 min par compte), ressaisie du mot de passe (10 / 15 min par compte). Valeurs par variables `RATE_LIMIT_*`. |
+| Limitation | 429 + `Retry-After` : connexion (5 / 15 min par IP+email, 30 / 15 min par IP, 50 / h par compte), inscription (5 / h par IP), liens email (10 / h par IP et par adresse), second facteur (5 / 15 min par compte), ressaisie du mot de passe (10 / 15 min par compte), écritures Training (600 / min par compte). Valeurs par variables `RATE_LIMIT_*`. |
 | Jours | Un jour calendaire est `YYYY-MM-DD` (jour **local** de l'utilisateur, envoyé par la PWA) ; accepté jusqu'à demain (fuseaux en avance) et sur 10 ans d'historique. |
 | Concurrence | 409 `shared.concurrent_update` quand deux requêtes modifient la même chose en même temps. |
 
@@ -68,6 +68,28 @@
 | POST | `/api/nutrition/targets` | Nouveaux objectifs à partir d'aujourd'hui (ou demain), avec l'estimation d'origine éventuelle → `201 NutritionTarget` | connecté |
 | POST | `/api/nutrition/barcode/scan` | `{barcode}` → `{status: known, food}` (déjà ici) ou `{status: found, product}` (proposition Open Food Facts, `missing`, `suspect`, `complete`) ; 404 inconnu, 503 Open Food Facts injoignable ou budget global épuisé, 429 au-delà de 30 scans et confirmations / min. N'enregistre rien | connecté |
 | POST | `/api/nutrition/barcode/confirm` | `{barcode, corrections?}` : sans corrections, produit partagé (valeurs relues à la source) ; avec, aliment personnel avec son code → `201 Food` (422 `nutrition.incomplete_product` si incomplet sans corrections, `nutrition.invalid_barcode` si le code des corrections diffère, violations `corrections.*` ; 409 code déjà pris par un autre de ses aliments ou confirmation simultanée) | connecté |
+| GET | `/api/exercises?q=&muscle=` | Exercices utilisables (bibliothèque + perso, perso d'abord), filtrés par mots du nom et muscle (principal ou secondaire) ; muscle inconnu → 422 | connecté |
+| GET | `/api/exercises/{id}` | Un exercice, avec sa consigne personnelle (`note`) et ses valeurs habituelles | connecté |
+| POST | `/api/exercises` | Crée un exercice perso (300 au plus) → `201 Exercise` | connecté |
+| PUT | `/api/exercises/{id}` | Remplace un exercice perso ; bibliothèque → 422 `training.invalid_exercise` | connecté |
+| DELETE | `/api/exercises/{id}` | Suppression douce d'un exercice perso (reste nommé dans les programmes) → `204` | connecté |
+| PUT | `/api/exercises/{id}/note` | `{text}` : consigne personnelle, vide = retirée → `Exercise` | connecté |
+| GET | `/api/programs` | Programmes, l'actif d'abord, chacun avec sa version courante | connecté |
+| GET | `/api/programs/{id}?version=` | Un programme, une version détaillée (la courante par défaut) et la liste des versions | connecté |
+| POST | `/api/programs` | `{name, days: [{name, blocks: [{exercises: [...]}]}]}` (50 programmes au plus) ; devient le programme suivi si aucun ne l'est → `201 Program` | connecté |
+| PUT | `/api/programs/{id}` | Renomme ; si les jours changent, enregistre la version suivante (500 au plus) → `Program` | connecté |
+| POST | `/api/programs/{id}/activate` · `/deactivate` | Programme suivi (un seul à la fois ; course → 409) → `Program` | connecté |
+| DELETE | `/api/programs/{id}` | Archive (versions conservées pour les séances passées) → `204` | connecté |
+| GET | `/api/exercises/{id}/progress` | Records de l'exercice et un point par séance terminée (charge max, 1RM estimé, volume, reps, durée) | connecté |
+| GET | `/api/workouts/preview?programId=&day=` | Plan d'un jour du programme (version courante) avec consigne, dernière fois, suggestion et records de chaque exercice ; gardé par la PWA pour démarrer hors ligne | connecté |
+| PUT | `/api/workouts/{id}` | Démarre la séance `{startedAt, programId?, versionNumber?, dayIndex}` (id choisi par l'appareil, idempotent) ; 409 `training.workout_in_progress` si une autre est en cours ; id abandonné ou d'un autre compte → 422 ; le jour garde le nom du programme (`programDay.programName`) → `Workout` | connecté |
+| PUT | `/api/workouts/{workoutId}/exercises/{index}` | `{exerciseId}` : ajoute un exercice après le dernier (idempotent, 80 au plus, séance en cours seulement) → `204` | connecté |
+| PUT · DELETE | `/api/workouts/{workoutId}/sets/{id}` | `{exerciseIndex, kind, loadKg?, reps?, seconds?, rir?, doneAt}` : enregistre ou corrige une série (id de l'appareil ; `doneAt` entre 5 min avant le début et la fin ; une correction ne change pas d'exercice) ; la retire → `204` | connecté |
+| POST | `/api/workouts/{id}/finish` | `{finishedAt}` : termine (idempotent) → `Workout` | connecté |
+| DELETE | `/api/workouts/{id}` | Abandonne une séance lancée par erreur (idempotent : déjà abandonnée → `204` ; inconnue → 404) → `204` | connecté |
+| GET | `/api/workouts/in-progress` | La séance en cours (0 ou 1), pour la reprendre ailleurs | connecté |
+| GET | `/api/workouts?limit=&before=` | Séances terminées, la plus récente d'abord (résumé : exercices faits, séries de travail, volume) ; `before` (date ISO 8601) invalide → 400 | connecté |
+| GET | `/api/workouts/{id}` | Une séance, chaque exercice avec dernière fois, suggestion, records d'avant et records battus | connecté |
 | GET | `/api/recipes` | Recettes de l'utilisateur, avec composition (total, par portion, pour 100 g) | connecté |
 | GET | `/api/recipes/{id}` | Une recette, ingrédient par ingrédient (`available: false` si l'aliment a été supprimé depuis) | connecté |
 | POST | `/api/recipes` | `{name, servings, cookedWeightGrams?, ingredients: [{foodId, grams}]}` → `201 Recipe` | connecté |

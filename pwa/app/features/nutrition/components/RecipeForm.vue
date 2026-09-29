@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Trash2 } from 'lucide-vue-next'
 import FoodPicker from '~/features/nutrition/components/FoodPicker.vue'
-import { parseAmount } from '~/features/nutrition/format'
+import { parseAmount } from '~/services/text/numbers'
 import type { Loggable, Recipe, RecipeInput } from '~/features/nutrition/nutrition'
 
 const MAX_INGREDIENTS = 50 // Recipe::MAX_INGREDIENTS

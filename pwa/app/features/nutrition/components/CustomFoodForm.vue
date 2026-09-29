@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ScanBarcode, Trash2 } from 'lucide-vue-next'
 import BarcodeScanner from '~/features/nutrition/components/BarcodeScanner.vue'
-import { parseAmount } from '~/features/nutrition/format'
+import { parseAmount } from '~/services/text/numbers'
 import { FOOD_STATES, type CustomFoodInput, type Food, type FoodState, type ScannedProduct } from '~/features/nutrition/nutrition'
 import { MAX_PORTIONS } from '~/features/nutrition/rules'
 

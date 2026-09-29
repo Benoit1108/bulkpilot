@@ -42,6 +42,8 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	# Single-instance deployment for now; with several replicas this becomes a one-off release job.
 	if [ "$( find ./migrations -iname '*.php' -print -quit )" ]; then
 		php bin/console doctrine:migrations:migrate --no-interaction --all-or-nothing
+		# The exercise library ships with the code: kept up to date on every start (idempotent).
+		php bin/console training:library:import --no-interaction
 	fi
 
 	# Dev only: the container user (root) and www-data share var/ on the bind mount.

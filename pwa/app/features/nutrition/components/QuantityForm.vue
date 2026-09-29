@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import MacroLine from '~/features/nutrition/components/MacroLine.vue'
-import { formatGrams, parseAmount } from '~/features/nutrition/format'
+import { formatGrams } from '~/features/nutrition/format'
+import { parseAmount } from '~/services/text/numbers'
 import { MEAL_SLOTS, type MealSlot } from '~/features/nutrition/nutrition'
 
 /**

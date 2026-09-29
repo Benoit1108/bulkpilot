@@ -43,5 +43,13 @@
   "nutrition.target_not_found",
   "shared.concurrent_update",
   "shared.invalid_identifier",
-  "shared.not_authenticated"
+  "shared.not_authenticated",
+  "training.exercise_not_found",
+  "training.invalid_exercise",
+  "training.invalid_prescription",
+  "training.invalid_program",
+  "training.invalid_workout",
+  "training.program_not_found",
+  "training.workout_in_progress",
+  "training.workout_not_found"
 ]

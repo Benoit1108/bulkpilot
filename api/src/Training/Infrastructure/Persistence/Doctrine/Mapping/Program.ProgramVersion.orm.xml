@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Training\Domain\Program\ProgramVersion" table="training_program_versions">
+        <unique-constraints>
+            <unique-constraint name="training_program_versions_number_unique" columns="program_id,number"/>
+        </unique-constraints>
+
+        <id name="id" type="program_version_id"/>
+        <field name="programId" type="program_id"/>
+        <field name="number" type="smallint"/>
+        <field name="days" type="training_days"/>
+        <field name="createdAt" type="datetimetz_immutable"/>
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Training\Domain\Workout\Workout" table="workouts">
+        <indexes>
+            <index name="workouts_owner_started_idx" columns="owner_id,started_at"/>
+        </indexes>
+        <unique-constraints>
+            <!-- One workout in progress per user. Written as PostgreSQL prints it back, so that schema:validate matches. -->
+            <unique-constraint name="workouts_one_in_progress" columns="owner_id">
+                <options>
+                    <option name="where">((finished_at IS NULL) AND (deleted_at IS NULL))</option>
+                </options>
+            </unique-constraint>
+        </unique-constraints>
+
+        <id name="id" type="workout_id"/>
+        <field name="version" type="integer" version="true"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="programDay" type="program_day" nullable="true"/>
+        <field name="exercises" type="workout_exercises"/>
+        <field name="sets" type="workout_sets"/>
+        <field name="exerciseKey" type="text"/>
+        <field name="startedAt" type="datetimetz_immutable"/>
+        <field name="finishedAt" type="datetimetz_immutable" nullable="true"/>
+        <field name="deletedAt" type="datetimetz_immutable" nullable="true"/>
+    </entity>
+</doctrine-mapping>

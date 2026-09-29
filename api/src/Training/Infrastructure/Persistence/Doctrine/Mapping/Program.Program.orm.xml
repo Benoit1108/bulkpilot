@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Training\Domain\Program\Program" table="training_programs">
+        <indexes>
+            <index name="training_programs_owner_idx" columns="owner_id"/>
+        </indexes>
+        <unique-constraints>
+            <!-- One active program per user (spec §48). Written as PostgreSQL prints it back, so that schema:validate matches. -->
+            <unique-constraint name="training_programs_one_active" columns="owner_id">
+                <options>
+                    <option name="where">(active AND (deleted_at IS NULL))</option>
+                </options>
+            </unique-constraint>
+        </unique-constraints>
+
+        <id name="id" type="program_id"/>
+        <field name="version" type="integer" version="true"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="name" length="100"/>
+        <field name="active" type="boolean"/>
+        <field name="currentVersionId" type="program_version_id"/>
+        <field name="currentVersionNumber" type="smallint"/>
+        <field name="createdAt" type="datetimetz_immutable"/>
+        <field name="deletedAt" type="datetimetz_immutable" nullable="true"/>
+    </entity>
+</doctrine-mapping>

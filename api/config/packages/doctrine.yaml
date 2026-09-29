@@ -22,6 +22,17 @@ doctrine:
             recipe_ingredients: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\IngredientsType
             favorite_items: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\FavoriteItemsType
             barcode: App\Nutrition\Infrastructure\Persistence\Doctrine\Type\BarcodeType
+            exercise_id: App\Training\Infrastructure\Persistence\Doctrine\Type\ExerciseIdType
+            exercise_note_id: App\Training\Infrastructure\Persistence\Doctrine\Type\ExerciseNoteIdType
+            program_id: App\Training\Infrastructure\Persistence\Doctrine\Type\ProgramIdType
+            program_version_id: App\Training\Infrastructure\Persistence\Doctrine\Type\ProgramVersionIdType
+            tempo: App\Training\Infrastructure\Persistence\Doctrine\Type\TempoType
+            muscles: App\Training\Infrastructure\Persistence\Doctrine\Type\MusclesType
+            training_days: App\Training\Infrastructure\Persistence\Doctrine\Type\TrainingDaysType
+            workout_id: App\Training\Infrastructure\Persistence\Doctrine\Type\WorkoutIdType
+            program_day: App\Training\Infrastructure\Persistence\Doctrine\Type\ProgramDayRefType
+            workout_exercises: App\Training\Infrastructure\Persistence\Doctrine\Type\WorkoutExercisesType
+            workout_sets: App\Training\Infrastructure\Persistence\Doctrine\Type\WorkoutSetsType
 
     orm:
         validate_xml_mapping: true
@@ -42,6 +53,11 @@ doctrine:
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Nutrition/Infrastructure/Persistence/Doctrine/Mapping'
                 prefix: 'App\Nutrition\Domain'
+            Training:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Training/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Training\Domain'
 
 when@test:
     doctrine:

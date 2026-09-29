@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Training\Domain\Exercise\ExerciseNote" table="exercise_notes">
+        <unique-constraints>
+            <unique-constraint name="exercise_notes_owner_exercise_unique" columns="owner_id,exercise_id"/>
+        </unique-constraints>
+
+        <id name="id" type="exercise_note_id"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="exerciseId" type="exercise_id"/>
+        <field name="text" length="500"/>
+        <field name="updatedAt" type="datetimetz_immutable"/>
+    </entity>
+</doctrine-mapping>

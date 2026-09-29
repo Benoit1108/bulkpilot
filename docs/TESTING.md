@@ -58,6 +58,14 @@ Playwright tourne dans le service compose `e2e` (profil `e2e`) ; l'image suit la
   `2000000000015` incomplet, `2000000000022` invraisemblable, `2000000000039` panne (503), tout code EAN-13 en `29…` = produit généré
   (l'E2E en tire un nouveau à chaque exécution : les produits confirmés sont partagés), tout autre code valide = inconnu.
 - Les jours du journal sont relatifs à aujourd'hui dans les tests d'API et E2E (le serveur refuse les jours trop éloignés).
+- Bibliothèque d'exercices : importée par les tests d'API (`TrainingApiTestCase`) et, en E2E, au démarrage du conteneur.
+
+## Hors ligne (séances)
+
+- Vitest : magasin IndexedDB (`fake-indexeddb`) et repli mémoire, file d'envoi (ordre, nouvelles tentatives, échecs gardés,
+  abandon), session (superset, repos, reprise après rechargement), page de séance.
+- E2E sur l'image de prod : une série saisie avec `context.setOffline(true)` reste « en attente », part au retour du réseau,
+  la séance survit à un rechargement, puis l'historique et la suggestion de la séance suivante sont vérifiés.
 
 ## Temps
 

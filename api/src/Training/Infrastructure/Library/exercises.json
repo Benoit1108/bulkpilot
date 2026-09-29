@@ -1,0 +1,1300 @@
+[
+ {
+  "key": "barbell_bench_press",
+  "name": "Développé couché à la barre",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "triceps",
+   "front_delts"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 6,
+  "repMax": 10,
+  "targetRir": 2,
+  "restSeconds": 180
+ },
+ {
+  "key": "incline_barbell_bench_press",
+  "name": "Développé incliné à la barre",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "front_delts",
+   "triceps"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 6,
+  "repMax": 10,
+  "targetRir": 2,
+  "restSeconds": 180
+ },
+ {
+  "key": "dumbbell_bench_press",
+  "name": "Développé couché aux haltères",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "triceps",
+   "front_delts"
+  ],
+  "type": "compound",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "incline_dumbbell_press",
+  "name": "Développé incliné aux haltères",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "front_delts",
+   "triceps"
+  ],
+  "type": "compound",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "decline_bench_press",
+  "name": "Développé décliné",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "triceps"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 6,
+  "repMax": 10,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "machine_chest_press",
+  "name": "Développé à la machine (chest press)",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "triceps",
+   "front_delts"
+  ],
+  "type": "compound",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 120
+ },
+ {
+  "key": "smith_incline_press",
+  "name": "Développé incliné à la Smith machine",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "front_delts",
+   "triceps"
+  ],
+  "type": "compound",
+  "equipment": "smith_machine",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "dumbbell_fly",
+  "name": "Écarté couché aux haltères",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "front_delts"
+  ],
+  "type": "isolation",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "cable_crossover",
+  "name": "Écarté à la poulie vis-à-vis",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "front_delts"
+  ],
+  "type": "isolation",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "pec_deck",
+  "name": "Pec deck (butterfly)",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "front_delts"
+  ],
+  "type": "isolation",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "push_up",
+  "name": "Pompes",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "triceps",
+   "front_delts",
+   "abs"
+  ],
+  "type": "compound",
+  "equipment": "bodyweight",
+  "measurement": "bodyweight",
+  "repMin": 8,
+  "repMax": 20,
+  "targetRir": 2,
+  "restSeconds": 90
+ },
+ {
+  "key": "chest_dip",
+  "name": "Dips (buste penché)",
+  "primaryMuscle": "chest",
+  "secondaryMuscles": [
+   "triceps",
+   "front_delts"
+  ],
+  "type": "compound",
+  "equipment": "bodyweight",
+  "measurement": "bodyweight",
+  "repMin": 6,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "pull_up",
+  "name": "Tractions pronation",
+  "primaryMuscle": "lats",
+  "secondaryMuscles": [
+   "biceps",
+   "upper_back",
+   "forearms"
+  ],
+  "type": "compound",
+  "equipment": "bodyweight",
+  "measurement": "bodyweight",
+  "repMin": 5,
+  "repMax": 10,
+  "targetRir": 2,
+  "restSeconds": 180
+ },
+ {
+  "key": "chin_up",
+  "name": "Tractions supination",
+  "primaryMuscle": "lats",
+  "secondaryMuscles": [
+   "biceps",
+   "upper_back"
+  ],
+  "type": "compound",
+  "equipment": "bodyweight",
+  "measurement": "bodyweight",
+  "repMin": 5,
+  "repMax": 10,
+  "targetRir": 2,
+  "restSeconds": 180
+ },
+ {
+  "key": "lat_pulldown",
+  "name": "Tirage vertical à la poulie",
+  "primaryMuscle": "lats",
+  "secondaryMuscles": [
+   "biceps",
+   "upper_back"
+  ],
+  "type": "compound",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 120
+ },
+ {
+  "key": "close_grip_pulldown",
+  "name": "Tirage vertical prise serrée",
+  "primaryMuscle": "lats",
+  "secondaryMuscles": [
+   "biceps",
+   "upper_back"
+  ],
+  "type": "compound",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 120
+ },
+ {
+  "key": "straight_arm_pulldown",
+  "name": "Pull-over à la poulie bras tendus",
+  "primaryMuscle": "lats",
+  "secondaryMuscles": [
+   "triceps"
+  ],
+  "type": "isolation",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "barbell_row",
+  "name": "Rowing barre",
+  "primaryMuscle": "upper_back",
+  "secondaryMuscles": [
+   "lats",
+   "biceps",
+   "rear_delts",
+   "lower_back"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 6,
+  "repMax": 10,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "pendlay_row",
+  "name": "Rowing Pendlay",
+  "primaryMuscle": "upper_back",
+  "secondaryMuscles": [
+   "lats",
+   "biceps",
+   "lower_back"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 5,
+  "repMax": 8,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "dumbbell_row",
+  "name": "Rowing unilatéral à l’haltère",
+  "primaryMuscle": "lats",
+  "secondaryMuscles": [
+   "upper_back",
+   "biceps",
+   "rear_delts"
+  ],
+  "type": "compound",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 120
+ },
+ {
+  "key": "seated_cable_row",
+  "name": "Tirage horizontal à la poulie",
+  "primaryMuscle": "upper_back",
+  "secondaryMuscles": [
+   "lats",
+   "biceps",
+   "rear_delts"
+  ],
+  "type": "compound",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 120
+ },
+ {
+  "key": "chest_supported_row",
+  "name": "Rowing buste appuyé",
+  "primaryMuscle": "upper_back",
+  "secondaryMuscles": [
+   "lats",
+   "rear_delts",
+   "biceps"
+  ],
+  "type": "compound",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 120
+ },
+ {
+  "key": "t_bar_row",
+  "name": "Rowing T-bar",
+  "primaryMuscle": "upper_back",
+  "secondaryMuscles": [
+   "lats",
+   "biceps",
+   "lower_back"
+  ],
+  "type": "compound",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "deadlift",
+  "name": "Soulevé de terre",
+  "primaryMuscle": "hamstrings",
+  "secondaryMuscles": [
+   "glutes",
+   "lower_back",
+   "upper_back",
+   "traps",
+   "forearms"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 3,
+  "repMax": 6,
+  "targetRir": 2,
+  "restSeconds": 240
+ },
+ {
+  "key": "rack_pull",
+  "name": "Rack pull",
+  "primaryMuscle": "lower_back",
+  "secondaryMuscles": [
+   "upper_back",
+   "traps",
+   "glutes"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 4,
+  "repMax": 8,
+  "targetRir": 2,
+  "restSeconds": 180
+ },
+ {
+  "key": "back_extension",
+  "name": "Extensions lombaires (banc à 45°)",
+  "primaryMuscle": "lower_back",
+  "secondaryMuscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "type": "isolation",
+  "equipment": "bodyweight",
+  "measurement": "bodyweight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "barbell_shrug",
+  "name": "Haussements d’épaules à la barre",
+  "primaryMuscle": "traps",
+  "secondaryMuscles": [
+   "forearms"
+  ],
+  "type": "isolation",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "dumbbell_shrug",
+  "name": "Haussements d’épaules aux haltères",
+  "primaryMuscle": "traps",
+  "secondaryMuscles": [
+   "forearms"
+  ],
+  "type": "isolation",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "overhead_press",
+  "name": "Développé militaire à la barre",
+  "primaryMuscle": "front_delts",
+  "secondaryMuscles": [
+   "side_delts",
+   "triceps",
+   "upper_back"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 5,
+  "repMax": 8,
+  "targetRir": 2,
+  "restSeconds": 180
+ },
+ {
+  "key": "seated_dumbbell_press",
+  "name": "Développé épaules assis aux haltères",
+  "primaryMuscle": "front_delts",
+  "secondaryMuscles": [
+   "side_delts",
+   "triceps"
+  ],
+  "type": "compound",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "machine_shoulder_press",
+  "name": "Développé épaules à la machine",
+  "primaryMuscle": "front_delts",
+  "secondaryMuscles": [
+   "side_delts",
+   "triceps"
+  ],
+  "type": "compound",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 120
+ },
+ {
+  "key": "arnold_press",
+  "name": "Développé Arnold",
+  "primaryMuscle": "front_delts",
+  "secondaryMuscles": [
+   "side_delts",
+   "triceps"
+  ],
+  "type": "compound",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 120
+ },
+ {
+  "key": "lateral_raise",
+  "name": "Élévations latérales aux haltères",
+  "primaryMuscle": "side_delts",
+  "secondaryMuscles": [
+   "traps"
+  ],
+  "type": "isolation",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "cable_lateral_raise",
+  "name": "Élévations latérales à la poulie",
+  "primaryMuscle": "side_delts",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "machine_lateral_raise",
+  "name": "Élévations latérales à la machine",
+  "primaryMuscle": "side_delts",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "front_raise",
+  "name": "Élévations frontales",
+  "primaryMuscle": "front_delts",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "rear_delt_fly",
+  "name": "Oiseau aux haltères",
+  "primaryMuscle": "rear_delts",
+  "secondaryMuscles": [
+   "upper_back"
+  ],
+  "type": "isolation",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "reverse_pec_deck",
+  "name": "Pec deck inversé (deltoïdes postérieurs)",
+  "primaryMuscle": "rear_delts",
+  "secondaryMuscles": [
+   "upper_back"
+  ],
+  "type": "isolation",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "face_pull",
+  "name": "Face pull",
+  "primaryMuscle": "rear_delts",
+  "secondaryMuscles": [
+   "upper_back",
+   "traps"
+  ],
+  "type": "isolation",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "upright_row",
+  "name": "Rowing menton",
+  "primaryMuscle": "side_delts",
+  "secondaryMuscles": [
+   "traps",
+   "biceps"
+  ],
+  "type": "compound",
+  "equipment": "ez_bar",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 2,
+  "restSeconds": 90
+ },
+ {
+  "key": "barbell_curl",
+  "name": "Curl à la barre",
+  "primaryMuscle": "biceps",
+  "secondaryMuscles": [
+   "forearms"
+  ],
+  "type": "isolation",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "ez_bar_curl",
+  "name": "Curl à la barre EZ",
+  "primaryMuscle": "biceps",
+  "secondaryMuscles": [
+   "forearms"
+  ],
+  "type": "isolation",
+  "equipment": "ez_bar",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "dumbbell_curl",
+  "name": "Curl aux haltères",
+  "primaryMuscle": "biceps",
+  "secondaryMuscles": [
+   "forearms"
+  ],
+  "type": "isolation",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "incline_dumbbell_curl",
+  "name": "Curl incliné aux haltères",
+  "primaryMuscle": "biceps",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "hammer_curl",
+  "name": "Curl marteau",
+  "primaryMuscle": "biceps",
+  "secondaryMuscles": [
+   "forearms"
+  ],
+  "type": "isolation",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "preacher_curl",
+  "name": "Curl pupitre",
+  "primaryMuscle": "biceps",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "ez_bar",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "cable_curl",
+  "name": "Curl à la poulie",
+  "primaryMuscle": "biceps",
+  "secondaryMuscles": [
+   "forearms"
+  ],
+  "type": "isolation",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "concentration_curl",
+  "name": "Curl concentré",
+  "primaryMuscle": "biceps",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "close_grip_bench_press",
+  "name": "Développé couché prise serrée",
+  "primaryMuscle": "triceps",
+  "secondaryMuscles": [
+   "chest",
+   "front_delts"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 6,
+  "repMax": 10,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "triceps_dip",
+  "name": "Dips (buste droit)",
+  "primaryMuscle": "triceps",
+  "secondaryMuscles": [
+   "chest",
+   "front_delts"
+  ],
+  "type": "compound",
+  "equipment": "bodyweight",
+  "measurement": "bodyweight",
+  "repMin": 6,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "skull_crusher",
+  "name": "Barre au front",
+  "primaryMuscle": "triceps",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "ez_bar",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "triceps_pushdown",
+  "name": "Extension triceps à la poulie",
+  "primaryMuscle": "triceps",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "rope_pushdown",
+  "name": "Extension triceps à la corde",
+  "primaryMuscle": "triceps",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "overhead_triceps_extension",
+  "name": "Extension triceps au-dessus de la tête",
+  "primaryMuscle": "triceps",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "cable_overhead_extension",
+  "name": "Extension triceps à la poulie haute, dos à la poulie",
+  "primaryMuscle": "triceps",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "wrist_curl",
+  "name": "Curl poignets",
+  "primaryMuscle": "forearms",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "farmer_walk",
+  "name": "Marche du fermier",
+  "primaryMuscle": "forearms",
+  "secondaryMuscles": [
+   "traps",
+   "abs"
+  ],
+  "type": "compound",
+  "equipment": "dumbbell",
+  "measurement": "duration",
+  "repMin": 30,
+  "repMax": 60,
+  "targetRir": 2,
+  "restSeconds": 120
+ },
+ {
+  "key": "back_squat",
+  "name": "Squat barre (arrière)",
+  "primaryMuscle": "quads",
+  "secondaryMuscles": [
+   "glutes",
+   "adductors",
+   "lower_back"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 5,
+  "repMax": 8,
+  "targetRir": 2,
+  "restSeconds": 210
+ },
+ {
+  "key": "front_squat",
+  "name": "Squat avant",
+  "primaryMuscle": "quads",
+  "secondaryMuscles": [
+   "glutes",
+   "abs",
+   "upper_back"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 5,
+  "repMax": 8,
+  "targetRir": 2,
+  "restSeconds": 180
+ },
+ {
+  "key": "hack_squat",
+  "name": "Hack squat",
+  "primaryMuscle": "quads",
+  "secondaryMuscles": [
+   "glutes"
+  ],
+  "type": "compound",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "leg_press",
+  "name": "Presse à cuisses",
+  "primaryMuscle": "quads",
+  "secondaryMuscles": [
+   "glutes",
+   "adductors"
+  ],
+  "type": "compound",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 15,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "bulgarian_split_squat",
+  "name": "Squat bulgare",
+  "primaryMuscle": "quads",
+  "secondaryMuscles": [
+   "glutes",
+   "adductors"
+  ],
+  "type": "compound",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 120
+ },
+ {
+  "key": "walking_lunge",
+  "name": "Fentes marchées",
+  "primaryMuscle": "quads",
+  "secondaryMuscles": [
+   "glutes",
+   "adductors"
+  ],
+  "type": "compound",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 2,
+  "restSeconds": 120
+ },
+ {
+  "key": "goblet_squat",
+  "name": "Goblet squat",
+  "primaryMuscle": "quads",
+  "secondaryMuscles": [
+   "glutes",
+   "abs"
+  ],
+  "type": "compound",
+  "equipment": "kettlebell",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 2,
+  "restSeconds": 90
+ },
+ {
+  "key": "leg_extension",
+  "name": "Leg extension",
+  "primaryMuscle": "quads",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "romanian_deadlift",
+  "name": "Soulevé de terre roumain",
+  "primaryMuscle": "hamstrings",
+  "secondaryMuscles": [
+   "glutes",
+   "lower_back"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 6,
+  "repMax": 10,
+  "targetRir": 2,
+  "restSeconds": 180
+ },
+ {
+  "key": "dumbbell_romanian_deadlift",
+  "name": "Soulevé de terre roumain aux haltères",
+  "primaryMuscle": "hamstrings",
+  "secondaryMuscles": [
+   "glutes",
+   "lower_back"
+  ],
+  "type": "compound",
+  "equipment": "dumbbell",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "lying_leg_curl",
+  "name": "Leg curl allongé",
+  "primaryMuscle": "hamstrings",
+  "secondaryMuscles": [
+   "calves"
+  ],
+  "type": "isolation",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "seated_leg_curl",
+  "name": "Leg curl assis",
+  "primaryMuscle": "hamstrings",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "nordic_curl",
+  "name": "Nordic curl",
+  "primaryMuscle": "hamstrings",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "bodyweight",
+  "measurement": "bodyweight",
+  "repMin": 4,
+  "repMax": 8,
+  "targetRir": 1,
+  "restSeconds": 120
+ },
+ {
+  "key": "hip_thrust",
+  "name": "Hip thrust à la barre",
+  "primaryMuscle": "glutes",
+  "secondaryMuscles": [
+   "hamstrings"
+  ],
+  "type": "compound",
+  "equipment": "barbell",
+  "measurement": "weight",
+  "repMin": 8,
+  "repMax": 12,
+  "targetRir": 2,
+  "restSeconds": 150
+ },
+ {
+  "key": "glute_bridge",
+  "name": "Pont fessier",
+  "primaryMuscle": "glutes",
+  "secondaryMuscles": [
+   "hamstrings"
+  ],
+  "type": "isolation",
+  "equipment": "bodyweight",
+  "measurement": "bodyweight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "cable_kickback",
+  "name": "Kickback fessier à la poulie",
+  "primaryMuscle": "glutes",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "hip_abduction",
+  "name": "Abduction à la machine",
+  "primaryMuscle": "glutes",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "hip_adduction",
+  "name": "Adduction à la machine",
+  "primaryMuscle": "adductors",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "standing_calf_raise",
+  "name": "Mollets debout",
+  "primaryMuscle": "calves",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "seated_calf_raise",
+  "name": "Mollets assis",
+  "primaryMuscle": "calves",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "leg_press_calf_raise",
+  "name": "Mollets à la presse",
+  "primaryMuscle": "calves",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "machine",
+  "measurement": "weight",
+  "repMin": 12,
+  "repMax": 20,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "plank",
+  "name": "Gainage (planche)",
+  "primaryMuscle": "abs",
+  "secondaryMuscles": [
+   "obliques"
+  ],
+  "type": "isolation",
+  "equipment": "bodyweight",
+  "measurement": "duration",
+  "repMin": 30,
+  "repMax": 60,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "side_plank",
+  "name": "Gainage latéral",
+  "primaryMuscle": "obliques",
+  "secondaryMuscles": [
+   "abs"
+  ],
+  "type": "isolation",
+  "equipment": "bodyweight",
+  "measurement": "duration",
+  "repMin": 20,
+  "repMax": 45,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "hanging_leg_raise",
+  "name": "Relevés de jambes suspendu",
+  "primaryMuscle": "abs",
+  "secondaryMuscles": [
+   "obliques"
+  ],
+  "type": "isolation",
+  "equipment": "bodyweight",
+  "measurement": "bodyweight",
+  "repMin": 8,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "cable_crunch",
+  "name": "Crunch à la poulie",
+  "primaryMuscle": "abs",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "crunch",
+  "name": "Crunch",
+  "primaryMuscle": "abs",
+  "secondaryMuscles": [],
+  "type": "isolation",
+  "equipment": "bodyweight",
+  "measurement": "bodyweight",
+  "repMin": 15,
+  "repMax": 25,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "ab_wheel_rollout",
+  "name": "Roue abdominale",
+  "primaryMuscle": "abs",
+  "secondaryMuscles": [
+   "lats"
+  ],
+  "type": "isolation",
+  "equipment": "other",
+  "measurement": "bodyweight",
+  "repMin": 8,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 90
+ },
+ {
+  "key": "russian_twist",
+  "name": "Rotations russes",
+  "primaryMuscle": "obliques",
+  "secondaryMuscles": [
+   "abs"
+  ],
+  "type": "isolation",
+  "equipment": "bodyweight",
+  "measurement": "bodyweight",
+  "repMin": 15,
+  "repMax": 25,
+  "targetRir": 1,
+  "restSeconds": 60
+ },
+ {
+  "key": "pallof_press",
+  "name": "Pallof press",
+  "primaryMuscle": "obliques",
+  "secondaryMuscles": [
+   "abs"
+  ],
+  "type": "isolation",
+  "equipment": "cable",
+  "measurement": "weight",
+  "repMin": 10,
+  "repMax": 15,
+  "targetRir": 1,
+  "restSeconds": 60
+ }
+]

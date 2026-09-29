@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
-import { parseAmount } from '~/features/nutrition/format'
+import { parseAmount } from '~/services/text/numbers'
 import { MEAL_SLOTS, type MealSlot, type MealSplit } from '~/features/nutrition/nutrition'
 
 const props = defineProps<{ split: MealSplit }>()

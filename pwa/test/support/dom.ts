@@ -27,3 +27,10 @@ export async function confirm(wrapper: VueWrapper, name: string): Promise<void> 
   await button(wrapper, name).trigger('click')
   await button(wrapper, 'Confirmer la suppression').trigger('click')
 }
+
+/** The radio or checkbox inside the label whose text is exactly `text` (chips). */
+export function choice(wrapper: VueWrapper, text: string) {
+  const label = wrapper.findAll('label').find(l => l.text() === text)
+  expect(label, text).toBeDefined()
+  return label!.get('input')
+}

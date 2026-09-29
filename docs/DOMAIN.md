@@ -108,6 +108,35 @@ Limites connues (assumées pour une application personnelle à un utilisateur, �
   rattacher un code inconnu à un aliment personnel déjà saisi (il faut aujourd'hui modifier cet aliment pour y mettre le code), et
   l'E2E du lecteur WebAssembly avec une fausse caméra (couvert par Vitest ; l'E2E saisit le code).
 
+## Training (phase 4)
+
+| Élément | Règles |
+| --- | --- |
+| `Exercise` (agrégat) | Bibliothèque (`library`, clé stable, partagée, lecture seule, rafraîchie à chaque démarrage) ou perso (`custom`, à un utilisateur, modifiable, suppression douce). Muscle principal + jusqu'à 6 secondaires, type (poly/isolation), équipement, **mesure** (charge × reps, poids du corps × reps, durée), description, lien https, valeurs habituelles (fourchette, RIR, repos, tempo). |
+| `ExerciseNote` (agrégat) | Consigne permanente d'un utilisateur pour un exercice (≤ 500 caractères), bibliothèque comprise ; une par exercice. |
+| `Program` (agrégat) | Nom + version courante ; un seul actif par utilisateur (un programme créé quand aucun n'est suivi le devient), archivage doux. Au plus 50 par utilisateur et 500 versions chacun. |
+| `ProgramVersion` (agrégat immuable) | 1 à 7 jours aux noms distincts → 1 à 15 blocs → 1 à 4 exercices (plusieurs = superset). Changer les jours crée la version suivante ; renommer non. |
+| `PlannedExercise` (VO) | 1 à 10 séries de travail, fourchette 1–300 (reps ou secondes), RIR 0–10 facultatif, repos 0–900 s, tempo 4 phases (`3-1-1-0`, `X` = explosif), stratégie de progression (double, linéaire, charge fixe, reps fixes, RIR cible), palier 0,25–20 kg, 0 à 5 séries d'échauffement, drop set après la dernière, consigne propre au programme. |
+| `Workout` (agrégat) | Séance : jour de programme suivi (version figée) ou séance libre, copie des exercices prévus (+ ajoutés), séries faites. Id et horaires de l'appareil (début sur les 30 derniers jours, séries entre 5 min avant le début et la fin, un jour au plus), 80 exercices au plus, écritures idempotentes, une seule en cours par utilisateur, terminée seulement sur demande, séries corrigeables ensuite (sans changer d'exercice), abandon = suppression douce, idempotent. Garde le nom du programme tel qu'il était. |
+| `WorkoutSet` (VO) | Échauffement, approche, normale, effective, dégressive (drop) ; charge 0–1 000 kg et 0–300 reps, ou lest facultatif + reps (poids du corps), ou 1–3 600 s ; RIR facultatif. Seules les séries normales et effectives comptent (progression, records). |
+| `ProgressionAdvisor` (service) | Suggestion depuis la dernière séance où l'exercice a été fait, sur ses séries de travail les plus lourdes (autant que de séries prévues) : double progression (toutes les séries au haut de la fourchette → +palier, sinon +1 rep), linéaire (toutes au bas → +palier), charge fixe (+1 rep), reps fixes (+palier si RIR > cible), RIR cible (écart ≥ 2 → ±palier) ; durées : +5 s. Jamais appliquée seule. |
+| `RecordBook` (service) | Records par exercice : charge max, 1RM estimé (Epley, ≤ 12 reps), volume de la séance, reps (poids du corps), durée, reps à une charge déjà faite. Un record bat une séance antérieure : la première fois n'en est pas un. Calculé sur les 300 dernières séances où l'exercice figure. |
+
+Règles transverses :
+
+- Au plus 300 exercices perso par utilisateur ; écritures Training limitées à 600 / min par compte (`RATE_LIMIT_TRAINING_WRITES`).
+- Le déroulé d'une séance (repos à lancer, supersets, drop sets, valeurs de départ) est décidé par la PWA pour marcher hors ligne
+  (ADR-0024) ; la progression et les records restent calculés par l'API.
+
+Limites connues (reportées volontairement) :
+
+- L'éditeur de programme ne prévient pas avant de quitter avec des changements non enregistrés ; pas de préréglages de repos.
+- La clé de recherche (`SearchKey`) est dupliquée entre Nutrition et Training plutôt que partagée (contextes isolés).
+- La prescription habituelle d'un exercice ajouté en séance est une règle de l'appareil, pas encore exposée par l'API.
+- Records recalculés à la lecture (pas de table de projection) : borné par les 300 dernières séances.
+- Séance en cours sur un autre appareil : proposée « Reprendre / Terminer », sans écran dédié pour résoudre un conflit (409).
+- L'OpenAPI ne décrit pas encore les réponses 404 / 409 des routes Training.
+
 ## Événements de domaine prévus
 
 `WeightMeasurementRecorded` · `DailyNutritionTargetReached` · `WorkoutCompleted` · `GoalChanged` ·

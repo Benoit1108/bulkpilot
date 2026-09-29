@@ -7,6 +7,7 @@ namespace App\Nutrition\Infrastructure\Persistence\Doctrine\Type;
 use App\Nutrition\Domain\Favorite\FavoriteItem;
 use App\Nutrition\Domain\Food\FoodId;
 use App\Nutrition\Domain\Recipe\RecipeId;
+use App\Shared\Infrastructure\Persistence\Doctrine\Reconstitute;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Exception\InvalidType;
 use Doctrine\DBAL\Types\Exception\ValueNotConvertible;

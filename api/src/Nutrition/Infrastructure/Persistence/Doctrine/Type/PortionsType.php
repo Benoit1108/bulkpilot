@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nutrition\Infrastructure\Persistence\Doctrine\Type;
 
 use App\Nutrition\Domain\Food\Portion;
+use App\Shared\Infrastructure\Persistence\Doctrine\Reconstitute;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Exception\InvalidType;
 use Doctrine\DBAL\Types\Exception\ValueNotConvertible;

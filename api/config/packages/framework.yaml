@@ -54,6 +54,11 @@ framework:
             policy: sliding_window
             limit: '%env(int:RATE_LIMIT_BARCODE_SCAN)%'
             interval: '1 minute'
+        # Keyed by account: training writes (a workout synced after a long offline session sends a burst).
+        training_writes:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_TRAINING_WRITES)%'
+            interval: '1 minute'
         # Global: Open Food Facts asks one application for < 100 product reads a minute.
         open_food_facts:
             policy: sliding_window

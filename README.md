@@ -60,4 +60,5 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 | 1 | Identity : comptes, sessions et appareils, mots de passe, 2FA (TOTP + codes de secours), Google (OIDC), architecture Apple | ✅ |
 | 2 | Nutrition : base CIQUAL, aliments personnels, journal par repas, objectifs (estimation détaillée, historique), répartition, moyennes 7/30 j, recettes et portions, repas favoris, Meal Builder | ✅ |
 | 3 | Barcode : scan caméra (natif + WASM) ou saisie, Open Food Facts derrière Symfony, confirmation ou correction, catalogue partagé | ✅ |
-| 4–10 | Training, Progression, Coach, Dashboard, Export/Sécurité, Qualité, Production | — |
+| 4 | Training : bibliothèque d’exercices et exercices perso, programmes versionnés (supersets, drop sets, tempo, RIR), séances, minuteur, progression, PR | ✅ |
+| 5–10 | Progression, Coach, Dashboard, Export/Sécurité, Qualité, Production | — |

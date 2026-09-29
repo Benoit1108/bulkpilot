@@ -1,4 +1,5 @@
 import { fetchAccount, type Account, type AccountState, type ProfileInput } from '~/features/identity/account'
+import { forgetDevice } from '~/services/offline/owner'
 
 /**
  * The signed-in account, shared by the whole app. Sign-in state lives in the httpOnly session
@@ -39,6 +40,8 @@ export function useAccount() {
    */
   async function signOut(): Promise<void> {
     await api.post('/api/auth/sign-out')
+    // Signed out on purpose (a shared device): nothing of the account stays offline either.
+    await forgetDevice()
     forget()
   }
 

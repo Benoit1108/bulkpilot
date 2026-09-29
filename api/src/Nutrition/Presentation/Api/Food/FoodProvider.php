@@ -14,10 +14,10 @@ use App\Nutrition\Application\Food\ListRecentFoods;
 use App\Nutrition\Application\Food\SearchFoods;
 use App\Nutrition\Domain\Exception\FoodNotFound;
 use App\Nutrition\Domain\Food\FoodId;
-use App\Nutrition\Presentation\Api\Shared\Ids;
 use App\Shared\Application\Bus\Query\QueryBus;
 use App\Shared\Application\Security\CurrentUser;
 use App\Shared\Domain\Identifier\UserId;
+use App\Shared\Presentation\Api\Ids;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
