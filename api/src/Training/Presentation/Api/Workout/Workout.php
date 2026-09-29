@@ -12,6 +12,9 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Response;
+use App\Shared\Presentation\Api\OpenApi\Problems;
 use App\Training\Application\Workout\ListWorkoutsHandler;
 use App\Training\Application\Workout\WorkoutView;
 
@@ -27,6 +30,7 @@ use App\Training\Application\Workout\WorkoutView;
             description: 'Finished workouts, the latest first.',
             paginationEnabled: false,
             output: WorkoutSummary::class,
+            openapi: new Operation(responses: ['400' => new Response(Problems::INVALID_QUERY)]),
             provider: WorkoutProvider::class,
             parameters: [
                 'limit' => new QueryParameter(description: 'At most '.ListWorkoutsHandler::MAX.'.', schema: ['type' => 'integer', 'minimum' => 1, 'maximum' => ListWorkoutsHandler::MAX, 'default' => 20]),
@@ -48,6 +52,7 @@ use App\Training\Application\Workout\WorkoutView;
             description: 'Starts a workout with this id (sending it again changes nothing): from a program day as the device saw it, or empty. 409 while another one is in progress.',
             input: StartWorkoutInput::class,
             read: false,
+            openapi: new Operation(responses: ['409' => new Response('Another workout is in progress (`training.workout_in_progress`), or: '.Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]),
             processor: WorkoutProcessor::class,
             name: 'workout_start',
         ),
@@ -58,10 +63,11 @@ use App\Training\Application\Workout\WorkoutView;
             description: 'Finishes the workout (only when the user says so); finishing again keeps the first time.',
             input: FinishWorkoutInput::class,
             read: false,
+            openapi: new Operation(responses: ['404' => new Response(Problems::NOT_FOUND), '409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]),
             processor: WorkoutProcessor::class,
             name: 'workout_finish',
         ),
-        new Delete(uriTemplate: '/workouts/{id}', requirements: ['id' => '[0-9a-f-]{36}'], description: 'Discards a workout started by mistake.', read: false, processor: WorkoutProcessor::class),
+        new Delete(uriTemplate: '/workouts/{id}', requirements: ['id' => '[0-9a-f-]{36}'], description: 'Discards a workout started by mistake (discarding it again changes nothing).', read: false, openapi: new Operation(responses: ['409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]), processor: WorkoutProcessor::class),
     ],
 )]
 final readonly class Workout

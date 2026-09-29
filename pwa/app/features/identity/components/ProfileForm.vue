@@ -18,24 +18,31 @@ const sexOptions = [
   { value: 'male', label: 'Homme' },
 ] as const
 
-async function submit(): Promise<void> {
-  saved.value = false
-  saved.value = await run(() => updateProfile({
+function body() {
+  return {
     firstName: firstName.value,
     birthDate: birthDate.value || null,
     sex: sex.value,
     heightCm: heightCm.value === '' || heightCm.value === null ? null : Math.round(Number(heightCm.value)),
-  }))
+  }
+}
+const { markSaved } = useUnsavedChanges(body)
+
+async function submit(): Promise<void> {
+  saved.value = false
+  const sent = body()
+  saved.value = await run(() => updateProfile(sent))
+  if (saved.value) markSaved(sent)
 }
 </script>
 
 <template>
   <form
-    class="form"
+    class="flex flex-col gap-4"
     novalidate
     @submit.prevent="submit"
   >
-    <p class="form__intro">
+    <p class="text-muted">
       Utilisé pour estimer tes besoins. Ton poids se renseigne dans Progression.
     </p>
     <UiAlert

@@ -9,55 +9,23 @@ defineProps<{
 </script>
 
 <template>
-  <div class="ui-empty-state">
-    <span class="ui-empty-state__icon">
+  <div class="flex flex-col items-center gap-2 px-4 py-8 text-center">
+    <span class="mb-2 grid size-14 place-items-center rounded-full bg-accent-soft text-accent-ink">
       <component
         :is="icon"
         :size="28"
         aria-hidden="true"
       />
     </span>
-    <p class="ui-empty-state__title">
+    <p class="font-semibold">
       {{ title }}
     </p>
     <p
       v-if="description"
-      class="ui-empty-state__description"
+      class="max-w-[36ch] text-sm text-muted"
     >
       {{ description }}
     </p>
     <slot />
   </div>
 </template>
-
-<style scoped>
-.ui-empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-6) var(--space-4);
-  text-align: center;
-}
-
-.ui-empty-state__icon {
-  display: grid;
-  place-items: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  margin-bottom: var(--space-2);
-  border-radius: var(--radius-full);
-  background: var(--color-accent-soft);
-  color: var(--color-accent-text);
-}
-
-.ui-empty-state__title {
-  font-weight: 600;
-}
-
-.ui-empty-state__description {
-  max-width: 36ch;
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-</style>

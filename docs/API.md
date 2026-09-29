@@ -19,7 +19,7 @@
 | Identifiants | UUID dans les IRIs. |
 | Authentification | Cookie de session httpOnly, `SameSite=Lax`, même origine (phase 1, ADR-0008) — les opérations ne sont donc pas `stateless`. |
 | Traçabilité | Chaque réponse porte `X-Request-Id` (posé par Caddy), repris dans les erreurs côté PWA. |
-| Erreurs métier | Les `DomainException` deviennent du problem+json avec leur `code` stable (`identity.invalid_token`…) ; statut selon la catégorie : `NotFound` 404, `Conflict` 409, `AuthenticationFailed` 401, `Unavailable` 503 (service externe injoignable), autre règle 422. La PWA traduit le `code`. |
+| Erreurs métier | Les `DomainException` deviennent du problem+json avec leur `code` stable (`identity.invalid_token`…) ; statut selon la catégorie : `NotFound` 404, `Conflict` 409, `AuthenticationFailed` 401, `Unavailable` 503 (service externe injoignable), autre règle 422. La PWA traduit le `code`. Les routes Training déclarent dans l'OpenAPI les erreurs qu'elles peuvent renvoyer (404, 409, 429…), avec ce corps (`ProblemResponses`) ; Identity et Nutrition le feront (limite connue). |
 | CSRF | Requête mutante refusée (403) si `Origin` ≠ l'hôte ou `Sec-Fetch-Site` indique un autre site. |
 | Limitation | 429 + `Retry-After` : connexion (5 / 15 min par IP+email, 30 / 15 min par IP, 50 / h par compte), inscription (5 / h par IP), liens email (10 / h par IP et par adresse), second facteur (5 / 15 min par compte), ressaisie du mot de passe (10 / 15 min par compte), écritures Training (600 / min par compte). Valeurs par variables `RATE_LIMIT_*`. |
 | Jours | Un jour calendaire est `YYYY-MM-DD` (jour **local** de l'utilisateur, envoyé par la PWA) ; accepté jusqu'à demain (fuseaux en avance) et sur 10 ans d'historique. |

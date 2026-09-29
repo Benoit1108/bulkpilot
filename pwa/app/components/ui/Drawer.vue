@@ -3,7 +3,6 @@ import { X } from 'lucide-vue-next'
 
 /**
  * Modal panel on a native <dialog>: focus is trapped and restored by the browser, Escape closes it.
- * A bottom sheet on phones, a side panel from 48rem.
  */
 const open = defineModel<boolean>('open', { required: true })
 
@@ -35,25 +34,26 @@ function closeOnBackdrop(event: MouseEvent): void {
 </script>
 
 <template>
+  <!-- A bottom sheet on phones, a side panel from md. -->
   <dialog
     ref="dialog"
-    class="ui-drawer"
+    class="mx-0 mt-auto mb-0 max-h-[90dvh] w-full max-w-full rounded-t-lg border border-line bg-surface p-0 text-ink shadow-raised backdrop:bg-scrim md:mt-0 md:ml-auto md:h-dvh md:max-h-dvh md:w-md md:rounded-l-lg md:rounded-tr-none"
     :aria-labelledby="titleId"
     @close="open = false"
     @pointerdown="press"
     @click="closeOnBackdrop"
   >
-    <div class="ui-drawer__panel">
-      <header class="ui-drawer__header">
+    <div class="flex max-h-[90dvh] flex-col md:h-full md:max-h-dvh">
+      <header class="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
         <h2
           :id="titleId"
-          class="ui-drawer__title"
+          class="text-lg font-bold"
         >
           {{ title }}
         </h2>
         <button
           type="button"
-          class="ui-drawer__close"
+          class="grid size-tap cursor-pointer place-items-center rounded-sm bg-transparent p-0 text-muted"
           aria-label="Fermer"
           @click="open = false"
         >
@@ -63,82 +63,9 @@ function closeOnBackdrop(event: MouseEvent): void {
           />
         </button>
       </header>
-      <div class="ui-drawer__body">
+      <div class="overflow-y-auto p-4 pb-safe-or-4">
         <slot v-if="open" />
       </div>
     </div>
   </dialog>
 </template>
-
-<style scoped>
-.ui-drawer {
-  width: 100%;
-  max-width: 100%;
-  max-height: 90dvh;
-  margin: auto 0 0;
-  padding: 0;
-  background: var(--color-surface);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  box-shadow: var(--shadow-raised);
-}
-
-.ui-drawer::backdrop {
-  background: rgb(0 0 0 / 0.5);
-}
-
-.ui-drawer__panel {
-  display: flex;
-  flex-direction: column;
-  max-height: 90dvh;
-}
-
-.ui-drawer__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.ui-drawer__title {
-  font-size: var(--text-lg);
-  font-weight: 700;
-}
-
-.ui-drawer__close {
-  display: grid;
-  place-items: center;
-  width: var(--tap-target);
-  height: var(--tap-target);
-  padding: 0;
-  background: transparent;
-  border: 0;
-  border-radius: var(--radius-sm);
-  color: var(--color-text-muted);
-  cursor: pointer;
-}
-
-.ui-drawer__body {
-  overflow-y: auto;
-  padding: var(--space-4);
-  padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
-}
-
-@media (min-width: 48rem) {
-  .ui-drawer {
-    width: 28rem;
-    height: 100dvh;
-    max-height: 100dvh;
-    margin: 0 0 0 auto;
-    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
-  }
-
-  .ui-drawer__panel {
-    height: 100%;
-    max-height: 100dvh;
-  }
-}
-</style>

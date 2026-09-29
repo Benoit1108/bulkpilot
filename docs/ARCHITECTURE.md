@@ -85,7 +85,7 @@ en `error`. Une réaction qui ne doit pas être perdue est routée vers le trans
 Ces comportements sont couverts par `tests/Integration/Shared/Infrastructure/Bus/BusWiringTest.php`.
 
 Le transport `async` (Doctrine, table `messenger_messages`) est prêt pour les tâches lourdes
-(rapports, exports, photos, IA, notifications). Rien n'y est routé tant qu'aucun message asynchrone n'existe ;
+(rapports, exports, IA, notifications ; les photos sont traitées à l'envoi, ADR-0027). Rien n'y est routé tant qu'aucun message asynchrone n'existe ;
 un service `worker` sera ajouté au compose à ce moment-là.
 
 ### Authentification
@@ -134,13 +134,13 @@ Un service qui garde un état par requête l'annonce et implémente `ResetInterf
 ```text
 pwa/app/
 ├── pages/          routes fines : sections, pages publiques d'identité (connexion…), reglages/{index,profil,compte}
-├── layouts/        default (navigation, en-tête, bandeau de connectivité) · auth (pages publiques)
+├── layouts/        default (navigation, en-tête, bandeau de connectivité) · auth (pages publiques) · focus (séance, plein écran)
 ├── middleware/     auth.global.ts : pages privées → connexion (règles pures dans features/identity/access.ts)
 ├── components/
-│   ├── ui/         design system (UiButton, UiCard, UiInput, UiSelect, UiAlert, UiEmptyState…)
+│   ├── ui/         design system (UiButton, UiLinkButton, UiCard, UiInput, UiSelect, UiAlert, UiEmptyState…), classes.ts
 │   └── shell/      ShellNav, ShellConnectivityBanner, ShellUpdatePrompt, ShellBackLink
 ├── features/       code par fonctionnalité : identity/, nutrition/, training/ (séance, file d'envoi, plans gardés), shell/, system/
-├── composables/    useApi, useAccount, useSubmission, useTheme, usePwaUpdate, useEventListener
+├── composables/    useApi, useAccount, useSubmission, useUnsavedChanges, useWakeLock, useTheme, usePwaUpdate, useEventListener
 ├── services/api/   contrat typé (contract.ts), client unique (client.ts), erreurs et messages par code
 ├── services/offline/ IndexedDB (store.ts, mémoire en repli) et compte propriétaire de l'appareil (owner.ts)
 ├── services/text/  recherche sans accents, nombres à la française
@@ -160,9 +160,28 @@ pwa/app/
   le 401 attendu d'un visiteur ne déclenche rien.
 - **Navigation** : barre basse sur téléphone ; rail vertical dès 48rem ; barre latérale libellée dès 75rem.
   Les Réglages sont séparés des cinq sections (en-tête sur téléphone, bas du rail sinon).
-- **Design system** : tokens CSS (`assets/css/tokens.css`), thème sombre par défaut (clair et « système » dans les Réglages),
-  accent violet, `--color-accent-fill` pour les surfaces portant du texte blanc (contraste AA), cibles tactiles ≥ 44 px,
-  état actif de navigation non porté par la seule couleur.
+- **Design system** : tokens dans le thème Tailwind (`assets/css/tokens.css`), thème sombre par défaut (clair et « système »
+  dans les Réglages : seules les couleurs changent), accent violet, `accent-fill` pour les surfaces portant du texte blanc
+  (contraste AA), cibles tactiles ≥ 44 px (`min-h-tap`, `size-tap`), état actif de navigation non porté par la seule couleur.
+- **Styles** (ADR-0025) : Tailwind v4, sans son preflight (la base est celle de `main.css`). Règles :
+  - uniquement des classes utilitaires dans les templates, pas de bloc `<style>` ; exception : ce que les utilitaires ne savent
+    pas dire proprement (animation propre, pseudo-élément d'un composant tiers), dans un `<style scoped>` court et commenté ;
+  - couleurs, rayons, tailles de texte **du thème uniquement** (`bg-surface`, `text-muted`, `border-line`, `rounded-md`,
+    `text-sm`…), jamais de valeur brute ; espacements sur l'échelle (`gap-4` = 1 rem) ;
+  - les variantes d'un composant de base vivent dans le composant (`UiButton`, `UiLinkButton`, `UiLinkRow`) ou dans
+    `components/ui/classes.ts` (boutons, `CHIP`, `TEXT_LINK`, `LIST_ROW`, champs), écrites en entier (Tailwind lit les sources :
+    une liste de classes peut être jointe à une autre, un nom de classe n'est jamais fabriqué par morceaux) ;
+  - zones sûres de l'écran (encoche, barre d'accueil) par les utilitaires de `main.css` : `pt-safe-4`, `pb-safe-*`, `px-gutter`,
+    `pb-nav`, `bottom-above-nav`… plutôt que des `calc(env(...))` recopiés ;
+  - pas de `focus:outline-none` à côté d'un `focus-visible:outline-*` sur le même élément : en v4 le premier annule le second
+    (l'anneau global de `main.css` suffit) ;
+  - pas de classe « crochet » pour les tests : rôle et nom accessibles d'abord, `data-testid` sinon ;
+  - pas de `>` dans un attribut de template (le garde-fou typographique lit le template) : sortir l'expression dans le script ;
+  - ESLint (`better-tailwindcss`) refuse une classe inconnue ou en conflit et impose l'ordre des classes (`make pwa-lint-fix`).
+- **Formulaires** : un formulaire d'édition appelle `useUnsavedChanges(body)` ; quitter la page (ou l'application) après
+  une modification non enregistrée demande confirmation.
+- **Taille des composants** : 250 lignes au plus par fichier `.vue` (ESLint `max-lines`, lignes vides et commentaires exclus) ;
+  au-delà, la logique part dans un composable et les morceaux d'écran dans des composants.
 - **Thème** : `public/theme-init.js` l'applique avant le premier rendu ; `features/shell/theme.ts` centralise les valeurs.
 - **Hors ligne** (ADR-0024) : la séance en cours et sa file d'envoi vivent dans IndexedDB, écrites ensemble ; le plugin
   `offline.client.ts` lie l'appareil au compte connecté (données d'un autre compte effacées), puis vide la file.

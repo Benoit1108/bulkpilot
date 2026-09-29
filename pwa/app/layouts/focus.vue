@@ -9,11 +9,13 @@ useHead({
 </script>
 
 <template>
-  <div class="focus">
+  <div
+    class="min-h-dvh bg-canvas pt-safe-3 px-gutter pb-safe-4"
+  >
     <!-- Training mode (spec §42): the whole screen for the workout, no navigation around it. -->
     <main
       id="main"
-      class="focus__main"
+      class="mx-auto flex max-w-xl flex-col gap-4 focus:outline-none"
       tabindex="-1"
       aria-labelledby="page-title"
     >
@@ -22,23 +24,3 @@ useHead({
     <ShellUpdatePrompt />
   </div>
 </template>
-
-<style scoped>
-.focus {
-  min-height: 100dvh;
-  padding: calc(env(safe-area-inset-top) + var(--space-3)) max(var(--space-4), env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + var(--space-4)) max(var(--space-4), env(safe-area-inset-left));
-  background: var(--color-bg);
-}
-
-.focus__main {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  max-width: 36rem;
-  margin: 0 auto;
-}
-
-.focus__main:focus {
-  outline: none;
-}
-</style>

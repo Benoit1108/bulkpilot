@@ -16,6 +16,7 @@ export default defineConfig({
         test: {
           name: 'nuxt',
           include: ['test/nuxt/**/*.test.ts'],
+          setupFiles: ['test/nuxt/setup.ts'],
           environment: 'nuxt',
           environmentOptions: { nuxt: { domEnvironment: 'happy-dom' } },
           // Spies and stubbed globals never leak from one test into the next.

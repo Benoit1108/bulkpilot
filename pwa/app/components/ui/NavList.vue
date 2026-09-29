@@ -14,20 +14,20 @@ defineProps<{ label: string, items: readonly NavListItem[] }>()
 
 <template>
   <nav :aria-label="label">
-    <ul class="ui-nav-list">
+    <ul class="m-0 list-none divide-y divide-line rounded-lg border border-line bg-surface p-0">
       <li
         v-for="item in items"
         :key="item.to"
       >
         <NuxtLink
           :to="item.to"
-          class="ui-nav-list__row"
+          class="flex min-h-14 items-center justify-between gap-3 px-4 py-3 text-ink no-underline focus-visible:rounded-lg focus-visible:-outline-offset-2"
         >
-          <span class="ui-nav-list__text">
-            <span class="ui-nav-list__title">{{ item.title }}</span>
+          <span class="flex flex-col">
+            <span class="font-semibold">{{ item.title }}</span>
             <span
               v-if="item.summary"
-              class="ui-nav-list__summary"
+              class="text-sm text-muted"
               :data-testid="item.summaryTestId"
             >{{ item.summary }}</span>
           </span>
@@ -40,48 +40,3 @@ defineProps<{ label: string, items: readonly NavListItem[] }>()
     </ul>
   </nav>
 </template>
-
-<style scoped>
-.ui-nav-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-}
-
-.ui-nav-list li + li {
-  border-top: 1px solid var(--color-border);
-}
-
-.ui-nav-list__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: 3.5rem;
-  padding: var(--space-3) var(--space-4);
-  color: var(--color-text);
-  text-decoration: none;
-}
-
-.ui-nav-list__row:focus-visible {
-  outline-offset: -2px;
-  border-radius: var(--radius-lg);
-}
-
-.ui-nav-list__text {
-  display: flex;
-  flex-direction: column;
-}
-
-.ui-nav-list__title {
-  font-weight: 600;
-}
-
-.ui-nav-list__summary {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-</style>

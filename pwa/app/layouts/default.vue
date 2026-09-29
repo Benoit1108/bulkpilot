@@ -14,23 +14,26 @@ useHead({
 </script>
 
 <template>
-  <div class="shell">
+  <div class="min-h-dvh pt-safe-0 pb-nav md:pb-safe-0 md:pl-nav-rail xl:pl-nav-sidebar">
     <a
       href="#main"
-      class="shell__skip-link"
+      class="absolute top-3 left-3 z-40 translate-y-[-200%] rounded-sm bg-accent-fill px-4 py-2 font-semibold text-accent-contrast focus:translate-y-0"
     >Aller au contenu</a>
     <ShellNav />
-    <div class="shell__body">
-      <header class="shell__header">
+    <div>
+      <header
+        class="mx-auto flex max-w-content items-center justify-between gap-3 pt-4 px-gutter pb-2 md:pt-8"
+      >
         <h1
           id="page-title"
-          class="shell__title"
+          class="text-2xl font-bold tracking-tight"
         >
           {{ title }}
         </h1>
+        <!-- From md, settings sit at the bottom of the rail. -->
         <NuxtLink
           :to="settingsNavigation.to"
-          class="shell__settings"
+          class="grid size-tap place-items-center rounded-full border border-line bg-surface text-muted transition-colors hover:border-accent hover:text-ink aria-[current=page]:border-accent aria-[current=page]:bg-accent-soft aria-[current=page]:text-accent-ink md:hidden"
           :aria-current="route.path.startsWith(settingsNavigation.to) ? 'page' : undefined"
           :aria-label="settingsNavigation.label"
           :title="settingsNavigation.label"
@@ -43,7 +46,7 @@ useHead({
       </header>
       <main
         id="main"
-        class="shell__main"
+        class="mx-auto flex max-w-content flex-col gap-4 pt-2 px-gutter pb-8 focus:outline-none"
         tabindex="-1"
         aria-labelledby="page-title"
       >
@@ -54,108 +57,3 @@ useHead({
     <ShellUpdatePrompt />
   </div>
 </template>
-
-<style scoped>
-.shell {
-  --gutter-left: max(var(--space-4), env(safe-area-inset-left));
-  --gutter-right: max(var(--space-4), env(safe-area-inset-right));
-
-  min-height: 100dvh;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
-}
-
-.shell__skip-link {
-  position: absolute;
-  top: var(--space-3);
-  left: var(--space-3);
-  z-index: 40;
-  padding: var(--space-2) var(--space-4);
-  background: var(--color-accent-fill);
-  color: var(--color-accent-contrast);
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  transform: translateY(-200%);
-}
-
-.shell__skip-link:focus {
-  transform: none;
-}
-
-.shell__header,
-.shell__main {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-  padding-inline: var(--gutter-left) var(--gutter-right);
-}
-
-.shell__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding-block: var(--space-4) var(--space-2);
-}
-
-.shell__title {
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.shell__settings {
-  display: grid;
-  place-items: center;
-  width: var(--tap-target);
-  height: var(--tap-target);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
-  background: var(--color-surface);
-  color: var(--color-text-muted);
-  transition: color var(--transition-fast), border-color var(--transition-fast);
-}
-
-.shell__settings[aria-current='page'] {
-  border-color: var(--color-accent);
-  background: var(--color-accent-soft);
-  color: var(--color-accent-text);
-}
-
-.shell__settings:hover {
-  color: var(--color-text);
-  border-color: var(--color-accent);
-}
-
-.shell__main {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  padding-block: var(--space-2) var(--space-6);
-}
-
-.shell__main:focus {
-  outline: none;
-}
-
-@media (min-width: 48rem) {
-  .shell {
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: var(--nav-rail-width);
-  }
-
-  .shell__header {
-    padding-top: var(--space-6);
-  }
-
-  /* Settings sit at the bottom of the rail. */
-  .shell__settings {
-    display: none;
-  }
-}
-
-@media (min-width: 75rem) {
-  .shell {
-    padding-left: var(--nav-sidebar-width);
-  }
-}
-</style>

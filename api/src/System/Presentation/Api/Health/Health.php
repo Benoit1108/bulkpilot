@@ -17,7 +17,14 @@ use App\System\Application\Health\HealthReport;
         new Get(
             uriTemplate: '/health',
             description: 'Readiness of the API and its dependencies. Answers 503 with the same body when degraded.',
-            openapi: new Operation(responses: ['503' => new Response(description: 'At least one dependency is down')]),
+            // Same body as the 200, not the problem body other errors get (ProblemResponses leaves it as declared).
+            openapi: new Operation(responses: ['503' => new Response(
+                description: 'At least one dependency is down',
+                content: new \ArrayObject([
+                    'application/ld+json' => ['schema' => ['$ref' => '#/components/schemas/Health.jsonld']],
+                    'application/json' => ['schema' => ['$ref' => '#/components/schemas/Health']],
+                ]),
+            )]),
             provider: HealthProvider::class,
         ),
     ],

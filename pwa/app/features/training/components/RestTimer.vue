@@ -37,27 +37,27 @@ watch(remaining, (value) => {
 
 <template>
   <section
-    class="rest"
+    class="sticky top-safe-2 z-5 flex flex-col gap-2 rounded-md border border-accent bg-surface-raised p-3"
     :aria-labelledby="titleId"
   >
-    <div class="rest__line">
+    <div class="flex items-baseline justify-between gap-3">
       <h2
         :id="titleId"
         ref="heading"
-        class="rest__title"
+        class="text-sm font-bold tracking-caps text-muted uppercase focus:outline-none"
         tabindex="-1"
       >
         Repos<template v-if="paused">
           en pause
         </template>
       </h2>
-      <p class="rest__clock">
+      <p class="text-clock leading-none font-extrabold tabular-nums">
         <span aria-hidden="true">{{ formatClock(remaining) }}</span>
-        <span class="visually-hidden">{{ spokenDuration(remaining) }} restantes</span>
+        <span class="sr-only">{{ spokenDuration(remaining) }} restantes</span>
       </p>
     </div>
     <p
-      class="visually-hidden"
+      class="sr-only"
       role="status"
     >
       {{ announcement }}
@@ -68,7 +68,7 @@ watch(remaining, (value) => {
       :max="100"
       :value-text="`${spokenDuration(remaining)} restantes`"
     />
-    <div class="rest__actions">
+    <div class="flex flex-wrap gap-2 *:flex-[1_1_4.5rem]">
       <UiButton
         variant="secondary"
         @click="emit('adjust', -15)"
@@ -99,54 +99,3 @@ watch(remaining, (value) => {
     </div>
   </section>
 </template>
-
-<style scoped>
-.rest {
-  position: sticky;
-  top: calc(env(safe-area-inset-top) + var(--space-2));
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-accent);
-  border-radius: var(--radius-md);
-}
-
-.rest__line {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.rest__title {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.rest__title:focus {
-  outline: none;
-}
-
-.rest__clock {
-  font-size: clamp(2rem, 11vw, 3rem);
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-
-.rest__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.rest__actions > * {
-  flex: 1 1 4.5rem;
-}
-</style>

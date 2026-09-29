@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ExternalLink } from 'lucide-vue-next'
 import ExerciseForm from '~/features/training/components/ExerciseForm.vue'
+import ExerciseRecords from '~/features/training/components/ExerciseRecords.vue'
 import { TRAINING_KEYS, isExerciseKey } from '~/features/training/cacheKeys'
 import { EQUIPMENT, EXERCISE_TYPES, MEASUREMENTS, MUSCLES, formatRest, formatTarget, labelOf, type Exercise } from '~/features/training/training'
-import { formatRecord } from '~/features/training/workout'
 import { asApiError } from '~/services/api/client'
 
 definePageMeta({ title: 'Exercice' })
@@ -15,24 +15,17 @@ const key = computed(() => TRAINING_KEYS.exercise(id.value))
 const { data: exercise, error, refresh } = useAsyncData(key, () => api.get('/api/exercises/{id}', { path: { id: id.value } }))
 // Records and sessions: secondary, loaded apart (and never blocking the page).
 const { data: progress } = useAsyncData(() => `${key.value}-progress`, () => api.get('/api/exercises/{id}/progress', { path: { id: id.value } }))
-const dateFormat = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' })
-type Session = NonNullable<typeof progress.value>['sessions'][number]
-function summary(session: Session): string {
-  return [
-    session.topLoadKg ? `${session.topLoadKg.toLocaleString('fr-FR')}\u00A0kg max` : null,
-    session.bestReps ? `${session.bestReps}\u00A0reps` : null,
-    session.bestSeconds ? `${session.bestSeconds}\u00A0s` : null,
-    `${session.workingSets}\u00A0séries`,
-  ].filter(Boolean).join(' · ')
-}
-const recent = computed(() => [...(progress.value?.sessions ?? [])].reverse().slice(0, 5))
 const gone = computed(() => error.value !== null && error.value !== undefined && asApiError(error.value).kind === 'not_found')
 const notice = ref<string | null>(null)
 const removal = useSubmission()
 const noting = useSubmission()
 const note = ref('')
+const noteGuard = useUnsavedChanges(() => note.value.trim())
 // Filled from the exercise once, and again only for another one: saving the exercise keeps a cue being typed.
-watch(() => exercise.value?.id, () => (note.value = exercise.value?.note ?? ''), { immediate: true })
+watch(() => exercise.value?.id, () => {
+  note.value = exercise.value?.note ?? ''
+  noteGuard.markSaved(note.value.trim())
+}, { immediate: true })
 
 const facts = computed(() => {
   const value = exercise.value
@@ -59,8 +52,10 @@ function onSaved(value: Exercise): void {
 }
 
 async function saveNote(): Promise<void> {
+  const sent = note.value.trim()
   await noting.run(async () => {
-    changed(await api.put('/api/exercises/{id}/note', { text: note.value.trim() || null }, { path: { id: id.value } }))
+    changed(await api.put('/api/exercises/{id}/note', { text: sent || null }, { path: { id: id.value } }))
+    noteGuard.markSaved(sent)
     notice.value = note.value.trim() ? 'Consigne enregistrée.' : 'Consigne retirée.'
   })
 }
@@ -74,7 +69,7 @@ async function destroy(): Promise<void> {
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/training/exercices"
       label="Exercices"
@@ -91,18 +86,22 @@ async function destroy(): Promise<void> {
     />
     <template v-else-if="exercise">
       <UiCard :title="exercise.name">
-        <dl class="facts">
+        <dl class="grid grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] gap-3">
           <div
             v-for="fact in facts"
             :key="fact.label"
           >
-            <dt>{{ fact.label }}</dt>
-            <dd>{{ fact.value }}</dd>
+            <dt class="text-sm text-muted">
+              {{ fact.label }}
+            </dt>
+            <dd class="font-semibold">
+              {{ fact.value }}
+            </dd>
           </div>
         </dl>
         <p
           v-if="exercise.description"
-          class="description"
+          class="mt-3 whitespace-pre-line"
         >
           {{ exercise.description }}
         </p>
@@ -111,63 +110,32 @@ async function destroy(): Promise<void> {
           :href="exercise.mediaUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="media"
+          class="mt-2 inline-flex min-h-tap items-center gap-1 font-semibold text-accent-ink"
         >
           Voir le mouvement
           <ExternalLink
             :size="16"
             aria-hidden="true"
           />
-          <span class="visually-hidden">(nouvel onglet)</span>
+          <span class="sr-only">(nouvel onglet)</span>
         </a>
         <p
           v-if="exercise.source === 'library'"
-          class="source"
+          class="mt-2 text-sm text-muted"
         >
           Exercice de la bibliothèque, commun à tous.
         </p>
       </UiCard>
 
-      <UiCard
-        v-if="progress && !progress.records.length"
-        title="Mes records"
-      >
-        <p class="records__date">
-          Pas encore de record&nbsp;: ils apparaîtront après ta première séance avec cet exercice.
-        </p>
-      </UiCard>
-      <UiCard
-        v-else-if="progress"
-        title="Mes records"
-      >
-        <ul class="records">
-          <li
-            v-for="record in progress.records"
-            :key="record.kind"
-          >
-            {{ formatRecord(record, exercise.measurement) }}
-            <span class="records__date">{{ dateFormat.format(new Date(record.date)) }}</span>
-          </li>
-        </ul>
-        <h3 class="records__title">
-          Dernières séances
-        </h3>
-        <ul class="records">
-          <li
-            v-for="session in recent"
-            :key="session.workoutId"
-          >
-            <NuxtLink :to="`/training/seances/${session.workoutId}`">
-              {{ dateFormat.format(new Date(session.date)) }}
-            </NuxtLink>
-            <span class="records__date">{{ summary(session) }}</span>
-          </li>
-        </ul>
-      </UiCard>
+      <ExerciseRecords
+        v-if="progress"
+        :progress="progress"
+        :measurement="exercise.measurement"
+      />
 
       <UiCard title="Ma consigne">
         <form
-          class="form"
+          class="flex flex-col gap-4"
           novalidate
           @submit.prevent="saveNote"
         >
@@ -222,70 +190,3 @@ async function destroy(): Promise<void> {
     />
   </div>
 </template>
-
-<style scoped>
-.facts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-  gap: var(--space-3);
-}
-
-.facts dt {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.facts dd {
-  font-weight: 600;
-}
-
-.description {
-  margin-top: var(--space-3);
-  white-space: pre-line;
-}
-
-.records {
-  display: flex;
-  flex-direction: column;
-}
-
-.records li {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--space-1) var(--space-3);
-  padding: var(--space-2) 0;
-  border-top: 1px solid var(--color-border);
-}
-
-.records a {
-  color: var(--color-accent-text);
-  font-weight: 600;
-}
-
-.records__title {
-  margin-top: var(--space-3);
-  font-weight: 700;
-}
-
-.records__date {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.media {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-height: var(--tap-target);
-  margin-top: var(--space-2);
-  color: var(--color-accent-text);
-  font-weight: 600;
-}
-
-.source {
-  margin-top: var(--space-2);
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-</style>

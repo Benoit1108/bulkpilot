@@ -17,20 +17,20 @@ defineExpose({ focus: (id: string) => buttons.get(id)?.$el.focus() })
 
 <template>
   <ol
-    class="done"
+    class="flex flex-col"
     aria-label="Séries faites"
   >
     <li
       v-for="(set, i) in sets"
       :key="set.id"
-      class="done__set"
-      :class="{ 'done__set--editing': set.id === editing }"
+      class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-line tabular-nums"
+      :class="{ 'bg-surface-raised shadow-mark': set.id === editing }"
     >
       <span>
-        <span class="done__kind">{{ i + 1 }}. {{ labelOf(SET_KINDS, set.kind) }}</span>
+        <span class="text-sm text-muted">{{ i + 1 }}. {{ labelOf(SET_KINDS, set.kind) }}</span>
         {{ formatSet(set, exercise.measurement) }}
       </span>
-      <span class="done__actions">
+      <span class="flex gap-2">
         <UiButton
           :ref="button => keep(set.id, button)"
           variant="ghost"
@@ -49,35 +49,3 @@ defineExpose({ focus: (id: string) => buttons.get(id)?.$el.focus() })
     </li>
   </ol>
 </template>
-
-<style scoped>
-.done {
-  display: flex;
-  flex-direction: column;
-}
-
-.done__set {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-1) var(--space-2);
-  border-top: 1px solid var(--color-border);
-  font-variant-numeric: tabular-nums;
-}
-
-.done__set--editing {
-  background: var(--color-surface-raised);
-  box-shadow: inset 3px 0 0 var(--color-accent);
-}
-
-.done__kind {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.done__actions {
-  display: flex;
-  gap: var(--space-2);
-}
-</style>

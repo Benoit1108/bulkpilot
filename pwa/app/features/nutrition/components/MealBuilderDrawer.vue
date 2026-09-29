@@ -78,7 +78,7 @@ async function add(proposal: Proposal, index: number): Promise<void> {
     v-model:open="open"
     title="Que manger&#x202F;?"
   >
-    <div class="builder">
+    <div class="flex flex-col gap-3">
       <UiSelect
         v-model="scope"
         label="Composer pour"
@@ -100,7 +100,7 @@ async function add(proposal: Proposal, index: number): Promise<void> {
         {{ message }}
       </UiAlert>
       <p
-        class="muted"
+        class="text-muted empty:hidden"
         role="status"
       >
         <template v-if="loading">
@@ -116,13 +116,13 @@ async function add(proposal: Proposal, index: number): Promise<void> {
       <template v-else-if="result && !loading">
         <p
           v-if="!result.remaining"
-          class="muted"
+          class="text-muted"
         >
           Définis d’abord tes objectifs&nbsp;: je compose avec ce qu’il te reste.
         </p>
         <template v-else>
           <p
-            class="remaining"
+            class="tabular-nums"
             data-testid="remaining"
           >
             Restant&nbsp;:
@@ -137,23 +137,23 @@ async function add(proposal: Proposal, index: number): Promise<void> {
           </p>
           <p
             v-if="!result.proposals.length"
-            class="muted"
+            class="text-muted"
           >
             Rien à proposer&nbsp;: l’objectif est presque atteint, ou il manque des aliments. Saisis des repas pour que tes habitudes servent de base.
           </p>
-          <ol class="proposals">
+          <ol class="m-0 flex list-none flex-col gap-3 p-0">
             <li
               v-for="(proposal, index) in result.proposals"
               :key="index"
-              class="proposal"
+              class="flex flex-col gap-2 rounded-md border border-line bg-surface-raised p-3"
             >
               <h3
                 :id="`proposal-${index}`"
-                class="proposal__title"
+                class="font-bold"
               >
                 Proposition {{ index + 1 }}
               </h3>
-              <ul class="proposal__items">
+              <ul class="text-sm text-muted">
                 <li
                   v-for="item in proposal.items"
                   :key="item.foodId"
@@ -161,7 +161,7 @@ async function add(proposal: Proposal, index: number): Promise<void> {
                   {{ item.name }} · {{ formatGrams(item.grams) }}
                 </li>
               </ul>
-              <p class="proposal__totals">
+              <p class="font-semibold">
                 <MacroLine
                   :energy-kcal="proposal.totals.energyKcal"
                   :protein="proposal.totals.protein"
@@ -186,55 +186,3 @@ async function add(proposal: Proposal, index: number): Promise<void> {
     </div>
   </UiDrawer>
 </template>
-
-<style scoped>
-.builder {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.muted {
-  color: var(--color-text-muted);
-}
-
-.muted:empty {
-  display: none;
-}
-
-.remaining {
-  font-variant-numeric: tabular-nums;
-}
-
-.proposals {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.proposal {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-}
-
-.proposal__title {
-  font-weight: 700;
-}
-
-.proposal__items {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.proposal__totals {
-  font-weight: 600;
-}
-</style>

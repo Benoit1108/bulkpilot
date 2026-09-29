@@ -1,6 +1,6 @@
 import 'fake-indexeddb/auto'
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
-import { enableAutoUnmount, flushPromises } from '@vue/test-utils'
+import { flushPromises } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import RestTimer from '~/features/training/components/RestTimer.vue'
 import SetForm from '~/features/training/components/SetForm.vue'
@@ -20,8 +20,6 @@ mockNuxtImport('useApi', () => () => api.current!.client)
 mockNuxtImport('navigateTo', () => navigate)
 const fake = createFakeApi()
 api.current = fake
-
-enableAutoUnmount(afterEach)
 
 const plan: WorkoutPlan = {
   programId: ppl.id,
@@ -58,7 +56,7 @@ async function queued(): Promise<WorkoutWrite[]> {
 
 async function openWorkout(query = '') {
   const wrapper = await mountSuspended(WorkoutPage, { route: `/training/seance${query}`, attachTo: document.body })
-  await vi.waitFor(() => expect(wrapper.find('.workout').exists()).toBe(true))
+  await vi.waitFor(() => expect(wrapper.find('h1').exists()).toBe(true))
   await settle()
   return wrapper
 }
@@ -217,7 +215,7 @@ describe('training mode', () => {
     expect(wrapper.text()).toContain('Omoplates serrées')
     expect(wrapper.text()).toContain('Pause sur la poitrine')
     expect(wrapper.text()).toContain('Échauffement 1/1')
-    expect(wrapper.get('.exercise__previous').text(), 'working sets only').toBe('80\u00A0kg × 12 · RIR\u00A02')
+    expect(wrapper.get('[data-testid="previous-sets"]').text(), 'working sets only').toBe('80\u00A0kg × 12 · RIR\u00A02')
     expect(wrapper.text()).toContain('Suggestion\u00A0: 82,5\u00A0kg × 8')
     expect((field(wrapper, 'Charge').element as HTMLInputElement).value).toBe('42.5')
     expect((choice(wrapper, 'Échauffement').element as HTMLInputElement).checked).toBe(true)
@@ -231,14 +229,14 @@ describe('training mode', () => {
     await wrapper.get('form').trigger('submit')
     await settle()
     expect(wrapper.text()).toContain('Série enregistrée\u00A0: 42,5\u00A0kg × 12.')
-    expect(wrapper.find('.rest').exists()).toBe(true)
+    expect(wrapper.findComponent(RestTimer).exists()).toBe(true)
     expect(document.activeElement?.textContent?.trim(), 'focus on the rest').toBe('Repos')
     expect((field(wrapper, 'Charge').element as HTMLInputElement).value, 'the suggestion, not the warm-up').toBe('82.5')
     expect(wrapper.text()).toContain('Série 1/2')
 
     await button(wrapper, 'Passer').trigger('click')
     await settle()
-    expect(wrapper.find('.rest').exists()).toBe(false)
+    expect(wrapper.findComponent(RestTimer).exists()).toBe(false)
     expect(document.activeElement?.textContent?.trim()).toBe('Développé couché')
   })
 
@@ -269,10 +267,10 @@ describe('training mode', () => {
 
     await button(wrapper, 'Corriger la série 1').trigger('click')
     await settle()
-    expect(wrapper.get('.correction__title').text()).toBe('Correction de la série 1 (Échauffement)')
+    expect(wrapper.get('[data-testid="correction"] h3').text()).toBe('Correction de la série 1 (Échauffement)')
     expect(document.activeElement).toBe(field(wrapper, 'Charge').element)
     await field(wrapper, 'Répétitions').setValue('12')
-    await wrapper.get('.correction form').trigger('submit')
+    await wrapper.get('[data-testid="correction"] form').trigger('submit')
     await settle()
     expect(session.workout.value?.sets[0]?.reps).toBe(12)
     expect(document.activeElement?.textContent?.trim()).toBe('Corriger')
@@ -280,7 +278,7 @@ describe('training mode', () => {
     await button(wrapper, 'Corriger la série 1').trigger('click')
     await button(wrapper, 'Suivant').trigger('click')
     await settle()
-    expect(wrapper.find('.correction').exists(), 'moving on closes the correction').toBe(false)
+    expect(wrapper.find('[data-testid="correction"]').exists(), 'moving on closes the correction').toBe(false)
   })
 
   it('removes a set in two taps', async () => {
@@ -310,7 +308,7 @@ describe('training mode', () => {
     expect(document.activeElement?.textContent?.trim()).toBe('Élévations latérales')
     await button(wrapper, 'Tous les exercices').trigger('click')
     await settle()
-    await wrapper.findAll('.list__item')[2]!.trigger('click')
+    await wrapper.get('dialog[open]').findAll('li button')[2]!.trigger('click')
     await settle()
     expect(wrapper.text()).toContain('Superset B · 2/2\u00A0— puis repos\u00A0: 1\u00A0min')
     expect(wrapper.text()).toContain('Durée')
@@ -329,7 +327,7 @@ describe('training mode', () => {
 
     const dialog = wrapper.get('dialog[open]')
     expect(dialog.text()).toContain('Il reste des séries sur 3\u00A0exercices\u00A0: Développé couché, Élévations latérales, Gainage.')
-    expect(dialog.get('.finish').findAll('button')[0]!.text()).toBe('Continuer la séance')
+    expect(dialog.findAll('button').filter(b => b.attributes('aria-label') !== 'Fermer')[0]!.text()).toBe('Continuer la séance')
     await button(wrapper, 'Terminer quand même').trigger('click')
     await settle()
     expect(navigate).toHaveBeenCalledWith(expect.stringMatching(/^\/training\/seances\//))

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { LIST_ROW, TEXT_LINK } from '~/components/ui/classes'
 import { ScanBarcode } from 'lucide-vue-next'
 import { NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
 import { formatKcal } from '~/features/nutrition/format'
@@ -76,13 +77,15 @@ async function search(value: string): Promise<void> {
   }
 }
 
+/** One row of a result list: the whole row picks. */
+
 function foodDetail(food: Food): string {
   return [food.brand, `${formatKcal(food.per100g.energyKcal)} / 100\u00A0g`].filter(Boolean).join(' · ')
 }
 </script>
 
 <template>
-  <div class="picker">
+  <div class="flex flex-col gap-3">
     <UiButton
       v-if="scan"
       variant="secondary"
@@ -104,7 +107,7 @@ function foodDetail(food: Food): string {
     />
 
     <p
-      class="picker__status"
+      class="text-sm text-muted empty:hidden"
       role="status"
     >
       <template v-if="searching">
@@ -123,24 +126,24 @@ function foodDetail(food: Food): string {
 
     <section
       v-if="listedFavorites.length"
-      class="picker__group"
+      class="flex flex-col gap-1"
       aria-label="Repas favoris"
     >
-      <h3 class="picker__heading">
+      <h3 class="text-sm font-semibold text-muted">
         Repas favoris
       </h3>
-      <ul class="picker__list">
+      <ul class="flex flex-col">
         <li
           v-for="meal in listedFavorites"
           :key="meal.id"
         >
           <button
             type="button"
-            class="item"
+            :class="LIST_ROW"
             @click="emit('favorite', meal)"
           >
-            <span class="item__name"><span class="visually-hidden">Ajouter le repas favori </span>{{ meal.name }}</span>
-            <span class="item__detail">{{ meal.items.map(item => item.name).join(', ') }} · {{ formatKcal(meal.totals.energyKcal) }}</span>
+            <span class="font-semibold"><span class="sr-only">Ajouter le repas favori </span>{{ meal.name }}</span>
+            <span class="text-sm text-muted">{{ meal.items.map(item => item.name).join(', ') }} · {{ formatKcal(meal.totals.energyKcal) }}</span>
           </button>
         </li>
       </ul>
@@ -148,24 +151,24 @@ function foodDetail(food: Food): string {
 
     <section
       v-if="foods.length"
-      class="picker__group"
+      class="flex flex-col gap-1"
       :aria-label="browsing ? 'Récents' : 'Aliments'"
     >
-      <h3 class="picker__heading">
+      <h3 class="text-sm font-semibold text-muted">
         {{ browsing ? 'Récents' : 'Aliments' }}
       </h3>
-      <ul class="picker__list">
+      <ul class="flex flex-col">
         <li
           v-for="food in foods"
           :key="food.id"
         >
           <button
             type="button"
-            class="item"
+            :class="LIST_ROW"
             @click="emit('pick', { kind: 'food', food })"
           >
-            <span class="item__name">{{ food.name }}</span>
-            <span class="item__detail">{{ foodDetail(food) }}</span>
+            <span class="font-semibold">{{ food.name }}</span>
+            <span class="text-sm text-muted">{{ foodDetail(food) }}</span>
           </button>
         </li>
       </ul>
@@ -173,24 +176,24 @@ function foodDetail(food: Food): string {
 
     <section
       v-if="listedRecipes.length"
-      class="picker__group"
+      class="flex flex-col gap-1"
       aria-label="Mes recettes"
     >
-      <h3 class="picker__heading">
+      <h3 class="text-sm font-semibold text-muted">
         Mes recettes
       </h3>
-      <ul class="picker__list">
+      <ul class="flex flex-col">
         <li
           v-for="recipe in listedRecipes"
           :key="recipe.id"
         >
           <button
             type="button"
-            class="item"
+            :class="LIST_ROW"
             @click="emit('pick', { kind: 'recipe', recipe })"
           >
-            <span class="item__name">{{ recipe.name }}</span>
-            <span class="item__detail">{{ formatKcal(recipe.perServing.energyKcal) }} / portion</span>
+            <span class="font-semibold">{{ recipe.name }}</span>
+            <span class="text-sm text-muted">{{ formatKcal(recipe.perServing.energyKcal) }} / portion</span>
           </button>
         </li>
       </ul>
@@ -198,84 +201,12 @@ function foodDetail(food: Food): string {
 
     <NuxtLink
       :to="createLink"
-      class="picker__create"
+      :class="TEXT_LINK"
     >
       Aliment introuvable&nbsp;? Créer un aliment
     </NuxtLink>
-    <p class="picker__source">
+    <p class="text-xs text-muted">
       Valeurs nutritionnelles&nbsp;: Anses, table de composition Ciqual 2020 (Licence Ouverte)&nbsp;; produits&nbsp;: Open Food Facts (ODbL).
     </p>
   </div>
 </template>
-
-<style scoped>
-.picker {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.picker__status {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.picker__status:empty {
-  display: none;
-}
-
-.picker__group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.picker__heading {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-text-muted);
-}
-
-.picker__list {
-  display: flex;
-  flex-direction: column;
-}
-
-.item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-1);
-  width: 100%;
-  min-height: var(--tap-target);
-  padding: var(--space-2) 0;
-  background: transparent;
-  border: 0;
-  border-top: 1px solid var(--color-border);
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.item__name {
-  font-weight: 600;
-}
-
-.item__detail {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.picker__create {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap-target);
-  color: var(--color-accent-text);
-  font-weight: 600;
-}
-
-.picker__source {
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-}
-</style>

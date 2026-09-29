@@ -61,4 +61,5 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 | 2 | Nutrition : base CIQUAL, aliments personnels, journal par repas, objectifs (estimation détaillée, historique), répartition, moyennes 7/30 j, recettes et portions, repas favoris, Meal Builder | ✅ |
 | 3 | Barcode : scan caméra (natif + WASM) ou saisie, Open Food Facts derrière Symfony, confirmation ou correction, catalogue partagé | ✅ |
 | 4 | Training : bibliothèque d’exercices et exercices perso, programmes versionnés (supersets, drop sets, tempo, RIR), séances, minuteur, progression, PR | ✅ |
+| 4.5 | Socle front : Tailwind CSS sur nos tokens, composants de 250 lignes au plus, garde « quitter sans enregistrer », erreurs dans l’OpenAPI, budget de taille, ADR graphiques et photos | ✅ |
 | 5–10 | Progression, Coach, Dashboard, Export/Sécurité, Qualité, Production | — |

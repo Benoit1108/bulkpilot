@@ -7,7 +7,7 @@ defineProps<{ to: string, label: string }>()
 <template>
   <NuxtLink
     :to="to"
-    class="back-link"
+    class="inline-flex min-h-tap items-center gap-1 font-semibold text-accent-ink no-underline"
   >
     <ChevronLeft
       :size="18"
@@ -16,15 +16,3 @@ defineProps<{ to: string, label: string }>()
     {{ label }}
   </NuxtLink>
 </template>
-
-<style scoped>
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-height: var(--tap-target);
-  color: var(--color-accent-text);
-  font-weight: 600;
-  text-decoration: none;
-}
-</style>

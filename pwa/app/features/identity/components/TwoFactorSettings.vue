@@ -56,7 +56,7 @@ async function disable(password: string): Promise<void> {
 </script>
 
 <template>
-  <div class="two-factor">
+  <div class="flex flex-col gap-3">
     <RecoveryCodesPanel
       v-if="step === 'codes'"
       :codes="recoveryCodes"
@@ -64,7 +64,7 @@ async function disable(password: string): Promise<void> {
     />
 
     <template v-else-if="props.account.twoFactorEnabled">
-      <p class="two-factor__status two-factor__status--on">
+      <p class="before:mr-2 before:text-success before:content-['●']">
         Active&nbsp;: un code de ton application est demandé à chaque connexion.
       </p>
       <PasswordConfirmForm
@@ -77,7 +77,7 @@ async function disable(password: string): Promise<void> {
       />
       <div
         v-else
-        class="form__actions"
+        class="flex flex-wrap gap-2"
       >
         <UiButton
           variant="secondary"
@@ -95,19 +95,19 @@ async function disable(password: string): Promise<void> {
     </template>
 
     <template v-else>
-      <p class="two-factor__status">
+      <p>
         Protège ton compte avec un code généré par une application (Google Authenticator, 1Password, Aegis…).
       </p>
       <p
         v-if="!props.account.emailVerified"
-        class="two-factor__hint"
+        class="text-sm text-muted [&_a]:font-semibold [&_a]:text-accent-ink"
       >
         Confirme d’abord ton adresse email pour pouvoir l’activer.
         <NuxtLink to="/reglages/compte#email">Renvoyer le lien</NuxtLink>
       </p>
       <p
         v-else-if="!props.account.hasPassword"
-        class="two-factor__hint"
+        class="text-sm text-muted [&_a]:font-semibold [&_a]:text-accent-ink"
       >
         Définis d’abord un mot de passe&nbsp;: il est demandé pour activer ou désactiver la double authentification.
         <NuxtLink to="/mot-de-passe-oublie">Définir un mot de passe</NuxtLink>
@@ -140,27 +140,3 @@ async function disable(password: string): Promise<void> {
     </template>
   </div>
 </template>
-
-<style scoped>
-.two-factor {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.two-factor__status--on::before {
-  content: '●';
-  margin-right: var(--space-2);
-  color: var(--color-success);
-}
-
-.two-factor__hint {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.two-factor__hint a {
-  color: var(--color-accent-text);
-  font-weight: 600;
-}
-</style>

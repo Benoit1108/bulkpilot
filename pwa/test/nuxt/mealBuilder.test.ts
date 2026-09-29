@@ -63,7 +63,7 @@ describe('meal builder', () => {
 
     expect(fake.calls.find(call => call.route === 'POST /api/nutrition/entries/batch')?.body).toEqual({ day: TODAY, slot: 'dinner', items: [{ foodId: chicken.id, grams: 140 }, { foodId: rice.id, grams: 320 }, { foodId: oil.id, grams: 18 }] })
     expect(wrapper.find('dialog[open]').exists()).toBe(false)
-    expect(wrapper.get('.ui-status').text()).toBe('Proposition 1 ajoutée au dîner.')
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('Proposition 1 ajoutée au dîner.')
   })
 
   it('logs into another meal when asked', async () => {

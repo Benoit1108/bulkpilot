@@ -48,11 +48,11 @@ function submit(): void {
 
 <template>
   <form
-    class="quantity"
+    class="flex flex-col gap-3"
     novalidate
     @submit.prevent="submit"
   >
-    <p class="quantity__name">
+    <p class="font-bold">
       {{ name }}
     </p>
     <UiAlert
@@ -64,7 +64,7 @@ function submit(): void {
 
     <div
       v-if="portions.length"
-      class="quantity__portions"
+      class="flex flex-wrap gap-2"
       role="group"
       aria-label="Portions"
     >
@@ -72,7 +72,7 @@ function submit(): void {
         v-for="portion in portions"
         :key="portion.label"
         type="button"
-        class="chip"
+        class="min-h-tap cursor-pointer rounded-full border border-line bg-surface-raised px-3 text-inherit aria-pressed:border-accent aria-pressed:bg-accent-soft"
         :aria-pressed="quantity === portion.grams"
         @click="grams = portion.grams"
       >
@@ -81,7 +81,8 @@ function submit(): void {
     </div>
     <p
       v-if="hint"
-      class="quantity__hint"
+      class="text-sm text-muted"
+      data-testid="quantity-hint"
     >
       {{ hint }}
     </p>
@@ -103,7 +104,10 @@ function submit(): void {
       :error="fields.slot"
     />
 
-    <p class="quantity__preview">
+    <p
+      class="text-muted"
+      data-testid="quantity-preview"
+    >
       <MacroLine
         :energy-kcal="preview.energyKcal"
         :protein="preview.protein"
@@ -122,45 +126,3 @@ function submit(): void {
     <slot />
   </form>
 </template>
-
-<style scoped>
-.quantity {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.quantity__name {
-  font-weight: 700;
-}
-
-.quantity__portions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.quantity__hint {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.chip {
-  min-height: var(--tap-target);
-  padding: 0 var(--space-3);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
-  color: inherit;
-  cursor: pointer;
-}
-
-.chip[aria-pressed='true'] {
-  background: var(--color-accent-soft);
-  border-color: var(--color-accent);
-}
-
-.quantity__preview {
-  color: var(--color-text-muted);
-}
-</style>

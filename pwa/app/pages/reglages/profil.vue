@@ -7,7 +7,7 @@ const { account } = useAccount()
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/reglages"
       label="Réglages"

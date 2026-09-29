@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TEXT_LINK } from '~/components/ui/classes'
 import { Dumbbell } from 'lucide-vue-next'
 import SyncStatus from '~/features/training/components/SyncStatus.vue'
 import { TRAINING_KEYS } from '~/features/training/cacheKeys'
@@ -80,16 +81,16 @@ const shortcuts = [
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <SyncStatus />
     <UiCard
       v-if="local || elsewhere"
       title="Séance en cours"
     >
-      <p class="muted">
+      <p class="mb-3 text-sm text-muted">
         Ta séance est toujours en cours ({{ local?.programDay?.dayName ?? elsewhere?.programDay?.dayName ?? 'séance libre' }}).
       </p>
-      <div class="form__actions">
+      <div class="flex flex-wrap gap-2">
         <UiButton @click="open(false)">
           Reprendre
         </UiButton>
@@ -112,7 +113,7 @@ const shortcuts = [
     >
       <p
         v-if="offline"
-        class="muted"
+        class="mb-3 text-sm text-muted"
       >
         Hors ligne&nbsp;: le programme tel que gardé sur le téléphone.
       </p>
@@ -124,26 +125,26 @@ const shortcuts = [
       </UiAlert>
       <ul
         v-if="!local && !elsewhere"
-        class="days"
+        class="mb-3 flex flex-col gap-2"
       >
         <li
           v-for="(day, index) in active.days"
           :key="day.name"
+          class="flex flex-wrap items-center gap-x-3 gap-y-2"
         >
           <UiButton
-            class="days__start"
             :loading="starting === index"
             :disabled="starting !== null && starting !== index"
             @click="start(index)"
           >
             Démarrer {{ day.name }}
           </UiButton>
-          <span class="muted">{{ exercisesIn(active, index) }}&nbsp;exercice{{ exercisesIn(active, index) > 1 ? 's' : '' }}</span>
+          <span class="text-sm text-muted">{{ exercisesIn(active, index) }}&nbsp;exercice{{ exercisesIn(active, index) > 1 ? 's' : '' }}</span>
         </li>
       </ul>
       <NuxtLink
         :to="`/training/programmes/${active.id}`"
-        class="more"
+        :class="TEXT_LINK"
       >
         Voir le programme
       </NuxtLink>
@@ -154,12 +155,11 @@ const shortcuts = [
         title="Aucun programme suivi"
         :description="programs.length ? 'Choisis le programme à suivre parmi les tiens.' : 'Compose tes séances à partir de la bibliothèque d’exercices.'"
       />
-      <NuxtLink
+      <UiLinkButton
         :to="programs.length ? '/training/programmes' : '/training/programmes/nouveau'"
-        class="link-button"
       >
         {{ programs.length ? 'Mes programmes' : 'Créer un programme' }}
-      </NuxtLink>
+      </UiLinkButton>
     </UiCard>
     <UiButton
       v-if="!local && !elsewhere"
@@ -176,37 +176,3 @@ const shortcuts = [
     />
   </div>
 </template>
-
-<style scoped>
-.muted {
-  margin-bottom: var(--space-3);
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.days {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-}
-
-.days li {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-}
-
-.days .muted {
-  margin: 0;
-}
-
-.more {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap-target);
-  color: var(--color-accent-text);
-  font-weight: 600;
-}
-</style>

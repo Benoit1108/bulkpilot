@@ -58,7 +58,7 @@ function toggleRecoveryCode(): void {
 <template>
   <form
     v-if="step === 'password'"
-    class="form"
+    class="flex flex-col gap-4"
     novalidate
     @submit.prevent="submitPassword"
   >
@@ -91,20 +91,20 @@ function toggleRecoveryCode(): void {
     >
       Se connecter
     </UiButton>
-    <p class="form__links">
+    <UiLinkRow>
       <NuxtLink to="/mot-de-passe-oublie">Mot de passe oublié&#x202F;?</NuxtLink>
       <NuxtLink to="/inscription">Créer un compte</NuxtLink>
-    </p>
+    </UiLinkRow>
     <ExternalSignIn :redirect="redirectTarget" />
   </form>
 
   <form
     v-else
-    class="form"
+    class="flex flex-col gap-4"
     novalidate
     @submit.prevent="submitCode"
   >
-    <p class="form__intro">
+    <p class="text-muted">
       {{ useRecoveryCode
         ? 'Saisis l’un de tes codes de secours. Chaque code ne fonctionne qu’une fois.'
         : 'Saisis le code à 6 chiffres affiché par ton application d’authentification.' }}
@@ -141,21 +141,19 @@ function toggleRecoveryCode(): void {
     >
       Valider
     </UiButton>
-    <p class="form__links">
-      <button
-        type="button"
-        class="link-button"
+    <div class="flex flex-wrap justify-between gap-3">
+      <UiButton
+        variant="ghost"
         @click="toggleRecoveryCode"
       >
         {{ useRecoveryCode ? 'Utiliser l’application' : 'Utiliser un code de secours' }}
-      </button>
-      <button
-        type="button"
-        class="link-button"
+      </UiButton>
+      <UiButton
+        variant="ghost"
         @click="restart"
       >
         Retour
-      </button>
-    </p>
+      </UiButton>
+    </div>
   </form>
 </template>

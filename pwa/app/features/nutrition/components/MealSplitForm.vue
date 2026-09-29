@@ -15,9 +15,14 @@ const rounded = computed(() => Object.fromEntries(MEAL_SLOTS.map(slot => [slot.v
 const total = computed(() => MEAL_SLOTS.reduce((sum, slot) => sum + rounded.value[slot.value], 0))
 const gap = computed(() => (total.value < 100 ? `il manque ${100 - total.value}\u00A0%` : `${total.value - 100}\u00A0% de trop`))
 
+const { markSaved } = useUnsavedChanges(() => rounded.value)
+
 async function submit(): Promise<void> {
   await run(async () => {
-    emit('saved', await api.put('/api/nutrition/meal-split', rounded.value))
+    const sent = rounded.value
+    const saved = await api.put('/api/nutrition/meal-split', sent)
+    markSaved(sent)
+    emit('saved', saved)
     clearNuxtData(NUTRITION_KEYS.mealSplit)
   })
 }
@@ -25,11 +30,11 @@ async function submit(): Promise<void> {
 
 <template>
   <form
-    class="form"
+    class="flex flex-col gap-3"
     novalidate
     @submit.prevent="submit"
   >
-    <p class="form__intro">
+    <p class="text-muted">
       Part des calories du jour prévue pour chaque repas. Mets 0&nbsp;% à un repas que tu ne prends pas.
     </p>
     <UiAlert
@@ -48,9 +53,10 @@ async function submit(): Promise<void> {
       suffix="%"
     />
     <p
-      class="form__total"
-      :class="{ 'form__total--off': total !== 100 }"
+      class="font-semibold tabular-nums"
+      :class="{ 'text-danger': total !== 100 }"
       role="status"
+      data-testid="split-total"
     >
       Total&nbsp;: {{ total }}&nbsp;%<template v-if="total !== 100">
         ({{ gap }})
@@ -65,24 +71,3 @@ async function submit(): Promise<void> {
     </UiButton>
   </form>
 </template>
-
-<style scoped>
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.form__intro {
-  color: var(--color-text-muted);
-}
-
-.form__total {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.form__total--off {
-  color: var(--color-danger);
-}
-</style>

@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto'
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
-import { enableAutoUnmount, flushPromises } from '@vue/test-utils'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { flushPromises } from '@vue/test-utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { resetWorkoutOutbox, useWorkoutOutbox } from '~/features/training/outbox'
 import { resetWorkoutSession, useWorkoutSession } from '~/features/training/session'
 import type { Workout, WorkoutPlan } from '~/features/training/workout'
@@ -20,8 +20,6 @@ mockNuxtImport('useApi', () => () => api.current!.client)
 mockNuxtImport('navigateTo', () => navigate)
 const fake = createFakeApi()
 api.current = fake
-
-enableAutoUnmount(afterEach)
 
 const offline = () => new ApiError('network', null, 'x', 'offline')
 function planOf(day: number): WorkoutPlan {
@@ -141,12 +139,12 @@ describe('training home', () => {
     fake.on('GET /api/programs', () => [])
     const empty = await openHome()
     expect(empty.text()).toContain('Aucun programme suivi')
-    expect(empty.get('a.link-button').attributes('href')).toBe('/training/programmes/nouveau')
+    expect(empty.findAll('a').find(a => a.text() === 'Créer un programme')?.attributes('href')).toBe('/training/programmes/nouveau')
 
     clearNuxtData()
     fake.on('GET /api/programs', () => [{ ...ppl, active: false }])
     const none = await openHome()
-    expect(none.get('a.link-button').attributes('href')).toBe('/training/programmes')
+    expect(none.findAll('a').find(a => a.text() === 'Mes programmes')?.attributes('href')).toBe('/training/programmes')
   })
 
   it('offers a retry when programs cannot load and nothing was kept', async () => {

@@ -11,7 +11,7 @@ const password = ref('')
 
 <template>
   <form
-    class="form"
+    class="flex flex-col gap-4"
     novalidate
     @submit.prevent="emit('submit', password)"
   >
@@ -24,7 +24,7 @@ const password = ref('')
       autofocus
       :error="error"
     />
-    <div class="form__actions">
+    <div class="flex flex-wrap gap-2">
       <UiButton
         type="submit"
         :loading="pending"

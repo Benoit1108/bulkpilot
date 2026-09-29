@@ -136,11 +136,11 @@ describe('meal split page', () => {
     expect(wrapper.get('[role="status"]').text()).toBe('Total : 100 %')
 
     await field(wrapper, 'Collation').setValue('10')
-    expect(wrapper.get('.form__total').text()).toBe('Total\u00A0: 110\u00A0% (10\u00A0% de trop)')
+    expect(wrapper.get('[data-testid="split-total"]').text()).toBe('Total\u00A0: 110\u00A0% (10\u00A0% de trop)')
     await field(wrapper, 'Collation').setValue('')
-    expect(wrapper.get('.form__total').text()).toBe('Total\u00A0: 100\u00A0%')
+    expect(wrapper.get('[data-testid="split-total"]').text()).toBe('Total\u00A0: 100\u00A0%')
     await field(wrapper, 'Dîner').setValue('25')
-    expect(wrapper.get('.form__total').text()).toContain('(il manque 5\u00A0%)')
+    expect(wrapper.get('[data-testid="split-total"]').text()).toContain('(il manque 5\u00A0%)')
     await field(wrapper, 'Dîner').setValue('30')
     await field(wrapper, 'Collation').setValue('10')
     expect(button(wrapper, 'Enregistrer').attributes('disabled')).toBeDefined()
@@ -150,7 +150,7 @@ describe('meal split page', () => {
     await flushPromises()
 
     expect(fake.calls.find(call => call.route === 'PUT /api/nutrition/meal-split')?.body).toEqual({ breakfast: 25, lunch: 30, snack: 10, gainer: 15, dinner: 20 })
-    expect(wrapper.get('.ui-status').text()).toBe('Répartition enregistrée.')
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('Répartition enregistrée.')
   })
 
   it('shows a refusal', async () => {

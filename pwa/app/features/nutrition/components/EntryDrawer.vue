@@ -54,7 +54,7 @@ async function destroy(): Promise<void> {
       :fields="fields"
       @submit="save"
     >
-      <div class="entry__remove">
+      <div class="mt-4 flex justify-end">
         <UiConfirmButton
           label="Supprimer l’entrée"
           variant="ghost"
@@ -65,11 +65,3 @@ async function destroy(): Promise<void> {
     </QuantityForm>
   </UiDrawer>
 </template>
-
-<style scoped>
-.entry__remove {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: var(--space-4);
-}
-</style>

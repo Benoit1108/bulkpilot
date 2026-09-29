@@ -20,34 +20,34 @@ async function revoke(session: DeviceSession): Promise<void> {
 </script>
 
 <template>
-  <div class="devices">
+  <div>
     <UiAlert
       v-if="message"
       tone="error"
     >
       {{ message }}
     </UiAlert>
-    <ul class="devices__list">
+    <ul class="m-0 flex list-none flex-col divide-y divide-line p-0">
       <li
         v-for="session in sessions ?? []"
         :key="session.id"
-        class="devices__item"
+        class="flex items-center gap-3 py-3"
       >
         <component
           :is="isMobile(session) ? Smartphone : Laptop"
           :size="22"
           aria-hidden="true"
-          class="devices__icon"
+          class="flex-none text-muted"
         />
-        <div class="devices__text">
-          <p class="devices__label">
+        <div class="min-w-0 flex-1">
+          <p class="font-semibold">
             {{ session.deviceLabel }}
             <span
               v-if="session.current"
-              class="devices__current"
+              class="ml-2 rounded-full bg-accent-soft px-2 py-0.5 text-xs font-bold text-accent-ink"
             >Cet appareil</span>
           </p>
-          <p class="devices__meta">
+          <p class="text-sm text-muted">
             Actif le {{ lastSeen.format(new Date(session.lastSeenAt)) }}
           </p>
         </div>
@@ -64,54 +64,3 @@ async function revoke(session: DeviceSession): Promise<void> {
     </ul>
   </div>
 </template>
-
-<style scoped>
-.devices__list {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.devices__item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) 0;
-  border-top: 1px solid var(--color-border);
-}
-
-.devices__item:first-child {
-  border-top: 0;
-}
-
-.devices__icon {
-  flex: none;
-  color: var(--color-text-muted);
-}
-
-.devices__text {
-  flex: 1;
-  min-width: 0;
-}
-
-.devices__label {
-  font-weight: 600;
-}
-
-.devices__current {
-  margin-left: var(--space-2);
-  padding: 2px var(--space-2);
-  border-radius: var(--radius-full);
-  background: var(--color-accent-soft);
-  color: var(--color-accent-text);
-  font-size: var(--text-xs);
-  font-weight: 700;
-}
-
-.devices__meta {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-</style>

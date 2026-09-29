@@ -130,12 +130,11 @@ Règles transverses :
 
 Limites connues (reportées volontairement) :
 
-- L'éditeur de programme ne prévient pas avant de quitter avec des changements non enregistrés ; pas de préréglages de repos.
+- Pas de préréglages de repos.
 - La clé de recherche (`SearchKey`) est dupliquée entre Nutrition et Training plutôt que partagée (contextes isolés).
 - La prescription habituelle d'un exercice ajouté en séance est une règle de l'appareil, pas encore exposée par l'API.
 - Records recalculés à la lecture (pas de table de projection) : borné par les 300 dernières séances.
 - Séance en cours sur un autre appareil : proposée « Reprendre / Terminer », sans écran dédié pour résoudre un conflit (409).
-- L'OpenAPI ne décrit pas encore les réponses 404 / 409 des routes Training.
 
 ## Événements de domaine prévus
 

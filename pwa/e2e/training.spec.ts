@@ -47,7 +47,8 @@ test.describe('training', () => {
 
     await expect(page).toHaveURL(/\/training\/programmes\/[0-9a-f-]{36}$/)
     await expect(page.getByText('Programme suivi · version 1')).toBeVisible()
-    const push = page.locator('.day', { has: page.getByRole('heading', { name: 'Push' }) })
+    // The summary's day, not the editor's (same name, with fields).
+    const push = page.getByRole('group', { name: 'Push', exact: true }).filter({ hasNot: page.getByRole('textbox') })
     await expect(push).toContainText('3 × 6–10 reps · RIR 2 · repos 3 min')
     await expect(push).toContainText('Superset')
 
@@ -64,6 +65,24 @@ test.describe('training', () => {
     await page.goto('/training')
     await expect(page.getByRole('button', { name: 'Démarrer Push' })).toBeVisible()
     await expect(page.getByText('3 exercices')).toBeVisible()
+  })
+
+  test('asks before leaving a program being written', async ({ page, account: _account }) => {
+    await page.goto('/training/programmes/nouveau')
+    await page.getByLabel('Nom du programme').fill('Upper')
+    const nav = page.getByRole('navigation', { name: 'Navigation principale' })
+
+    page.once('dialog', dialog => void (async () => {
+      expect([dialog.type(), dialog.message()]).toEqual(['confirm', 'Quitter sans enregistrer\u202F? Les changements seront perdus.'])
+      await dialog.dismiss()
+    })())
+    await nav.getByRole('link', { name: 'Nutrition' }).click()
+    await expect(page).toHaveURL(/\/training\/programmes\/nouveau$/)
+    await expect(page.getByLabel('Nom du programme')).toHaveValue('Upper')
+
+    page.once('dialog', dialog => void dialog.accept())
+    await nav.getByRole('link', { name: 'Nutrition' }).click()
+    await expect(page.getByRole('heading', { level: 1, name: 'Nutrition' })).toBeVisible()
   })
 
   test('a cue on a library exercise, and an own exercise', async ({ page, account: _account }) => {

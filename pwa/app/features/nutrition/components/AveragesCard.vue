@@ -31,7 +31,7 @@ const rows = computed(() => {
   <UiCard title="Moyennes">
     <template #actions>
       <div
-        class="periods"
+        class="flex gap-1 rounded-full bg-surface-raised p-1"
         role="group"
         aria-label="Période"
       >
@@ -39,7 +39,7 @@ const rows = computed(() => {
           v-for="period in PERIODS"
           :key="period"
           type="button"
-          class="periods__option"
+          class="min-h-tap cursor-pointer rounded-full bg-transparent px-3 font-semibold text-muted aria-pressed:bg-accent-fill aria-pressed:text-accent-contrast"
           :aria-pressed="days === period"
           @click="days = period"
         >
@@ -50,7 +50,7 @@ const rows = computed(() => {
 
     <p
       v-if="status === 'pending' && !averages"
-      class="muted"
+      class="text-muted"
     >
       Chargement…
     </p>
@@ -67,7 +67,7 @@ const rows = computed(() => {
       </UiButton>
     </UiAlert>
     <template v-else-if="averages">
-      <p class="muted">
+      <p class="text-muted">
         <template v-if="averages.loggedDays">
           Moyenne par jour des {{ averages.loggedDays }}&nbsp;jour{{ averages.loggedDays > 1 ? 's' : '' }} renseigné{{ averages.loggedDays > 1 ? 's' : '' }} sur les {{ averages.days }}&nbsp;derniers (aujourd’hui non compris).
         </template>
@@ -77,18 +77,19 @@ const rows = computed(() => {
       </p>
       <dl
         v-if="rows.length"
-        class="averages"
+        class="grid grid-cols-2 gap-3"
       >
         <div
           v-for="row in rows"
           :key="row.label"
-          class="averages__row"
         >
-          <dt>{{ row.label }}</dt>
-          <dd>
+          <dt class="text-sm text-muted">
+            {{ row.label }}
+          </dt>
+          <dd class="font-semibold tabular-nums">
             {{ row.value }}<span
               v-if="row.target"
-              class="muted"
+              class="text-muted"
             > / {{ row.target }}</span>
           </dd>
         </div>
@@ -96,49 +97,3 @@ const rows = computed(() => {
     </template>
   </UiCard>
 </template>
-
-<style scoped>
-.periods {
-  display: flex;
-  gap: var(--space-1);
-  padding: var(--space-1);
-  background: var(--color-surface-raised);
-  border-radius: var(--radius-full);
-}
-
-.periods__option {
-  min-height: var(--tap-target);
-  padding: 0 var(--space-3);
-  background: transparent;
-  border: 0;
-  border-radius: var(--radius-full);
-  color: var(--color-text-muted);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.periods__option[aria-pressed='true'] {
-  background: var(--color-accent-fill);
-  color: var(--color-accent-contrast);
-}
-
-.muted {
-  color: var(--color-text-muted);
-}
-
-.averages {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
-}
-
-.averages__row dt {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-}
-
-.averages__row dd {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-</style>

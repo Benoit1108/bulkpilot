@@ -20,8 +20,8 @@ const over = computed(() => ratio.value > 1)
 <template>
   <!-- Without a target there is no progress to report: a plain bar, the figure is in the text next to it. -->
   <div
-    class="ui-progress"
-    :class="[`ui-progress--${size}`, { 'ui-progress--over': over, 'ui-progress--empty': !max }]"
+    class="relative overflow-hidden rounded-full bg-surface-raised"
+    :class="size === 'lg' ? 'h-3' : 'h-2'"
     :role="max ? 'progressbar' : undefined"
     :aria-label="max ? label : undefined"
     :aria-valuemin="max ? 0 : undefined"
@@ -30,42 +30,11 @@ const over = computed(() => ratio.value > 1)
     :aria-valuetext="max ? valueText : undefined"
     :aria-hidden="max ? undefined : 'true'"
   >
+    <!-- Over the target is not an error (spec §30): neutral, yet distinct from "on the way". -->
     <span
-      class="ui-progress__fill"
+      class="absolute inset-y-0 left-0 rounded-[inherit] transition-[width] motion-reduce:transition-none"
+      :class="over ? 'bg-muted' : 'bg-accent'"
       :style="{ width: fill }"
     />
   </div>
 </template>
-
-<style scoped>
-.ui-progress {
-  position: relative;
-  overflow: hidden;
-  height: 0.5rem;
-  background: var(--color-surface-raised);
-  border-radius: var(--radius-full);
-}
-
-.ui-progress--lg {
-  height: 0.75rem;
-}
-
-.ui-progress__fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  background: var(--color-accent);
-  border-radius: inherit;
-  transition: width var(--transition-fast);
-}
-
-.ui-progress--over .ui-progress__fill {
-  /* Over the target is not an error (spec §30): neutral, yet distinct from "on the way". */
-  background: var(--color-text-muted);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ui-progress__fill {
-    transition: none;
-  }
-}
-</style>

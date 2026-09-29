@@ -12,18 +12,18 @@ const dayFormat = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'lon
 <template>
   <ol
     v-if="targets.length"
-    class="history"
+    class="m-0 flex list-none flex-col p-0"
   >
     <li
       v-for="target in targets"
       :key="target.id"
-      class="history__item"
+      class="group border-b border-line py-2"
     >
-      <p class="history__title">
+      <p class="font-bold group-first:text-accent-ink">
         {{ formatKcal(target.energyKcal) }}
-        <span class="history__meta">depuis le {{ dayFormat.format(parseDay(target.effectiveFrom)) }} · {{ TARGET_SOURCES[target.source] }}</span>
+        <span class="text-sm font-normal text-muted">depuis le {{ dayFormat.format(parseDay(target.effectiveFrom)) }} · {{ TARGET_SOURCES[target.source] }}</span>
       </p>
-      <p class="history__macros">
+      <p class="text-sm text-muted">
         <MacroLine
           :protein="target.proteinGrams"
           :carbohydrate="target.carbohydrateGrams"
@@ -34,39 +34,8 @@ const dayFormat = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'lon
   </ol>
   <p
     v-else
-    class="history__empty"
+    class="text-sm text-muted"
   >
     Aucun objectif enregistré pour l’instant.
   </p>
 </template>
-
-<style scoped>
-.history {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.history__item {
-  padding: var(--space-2) 0;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.history__item:first-child .history__title {
-  color: var(--color-accent-text);
-}
-
-.history__title {
-  font-weight: 700;
-}
-
-.history__meta,
-.history__macros,
-.history__empty {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-weight: 400;
-}
-</style>

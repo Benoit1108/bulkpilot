@@ -79,9 +79,9 @@ const shortcuts = [
 </script>
 
 <template>
-  <div class="page">
+  <div class="flex flex-col gap-4">
     <nav
-      class="days"
+      class="flex items-center gap-2"
       aria-label="Changer de jour"
     >
       <UiButton
@@ -96,8 +96,9 @@ const shortcuts = [
       </UiButton>
       <p
         ref="dayLabelElement"
-        class="days__label"
+        class="flex-1 text-center font-bold first-letter:uppercase focus:outline-none"
         tabindex="-1"
+        data-testid="day-label"
         aria-live="polite"
       >
         {{ label }}
@@ -106,7 +107,6 @@ const shortcuts = [
         variant="ghost"
         aria-label="Jour suivant"
         :aria-disabled="isToday ? 'true' : undefined"
-        :class="{ 'days__next--off': isToday }"
         @click="next"
       >
         <ChevronRight
@@ -137,7 +137,7 @@ const shortcuts = [
     </UiAlert>
     <p
       v-else-if="!journal"
-      class="muted"
+      class="text-muted"
       role="status"
     >
       Chargement…
@@ -148,7 +148,7 @@ const shortcuts = [
         :day="journal"
         @build="building = true"
       />
-      <div class="meals">
+      <div class="grid gap-3 lg:grid-cols-2">
         <MealSection
           v-for="meal in journal.meals"
           :key="meal.slot"
@@ -204,51 +204,3 @@ const shortcuts = [
     </template>
   </div>
 </template>
-
-<style scoped>
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.days {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.days__label {
-  flex: 1;
-  font-weight: 700;
-  text-align: center;
-}
-
-.days__label:focus {
-  outline: none;
-}
-
-.days__label::first-letter {
-  text-transform: uppercase;
-}
-
-.days__next--off {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.meals {
-  display: grid;
-  gap: var(--space-3);
-}
-
-@media (min-width: 64rem) {
-  .meals {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.muted {
-  color: var(--color-text-muted);
-}
-</style>

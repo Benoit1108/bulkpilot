@@ -20,7 +20,7 @@ async function remove(meal: FavoriteMeal): Promise<void> {
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/nutrition"
       label="Nutrition"
@@ -57,7 +57,7 @@ async function remove(meal: FavoriteMeal): Promise<void> {
           @confirm="remove(meal)"
         />
       </template>
-      <ul class="items">
+      <ul class="flex flex-col gap-1 text-muted">
         <li
           v-for="(item, index) in meal.items"
           :key="index"
@@ -67,11 +67,11 @@ async function remove(meal: FavoriteMeal): Promise<void> {
       </ul>
       <p
         :id="`favorite-${meal.id}`"
-        class="visually-hidden"
+        class="sr-only"
       >
         {{ meal.name }}
       </p>
-      <p class="total">
+      <p class="font-bold tabular-nums">
         {{ formatKcal(meal.totals.energyKcal) }}
       </p>
     </UiCard>
@@ -81,17 +81,3 @@ async function remove(meal: FavoriteMeal): Promise<void> {
     />
   </div>
 </template>
-
-<style scoped>
-.items {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  color: var(--color-text-muted);
-}
-
-.total {
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-</style>

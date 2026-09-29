@@ -15,7 +15,7 @@ async function onSaved(): Promise<void> {
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/nutrition"
       label="Nutrition"
@@ -39,16 +39,10 @@ async function onSaved(): Promise<void> {
       />
       <p
         v-else
-        class="muted"
+        class="text-muted"
       >
         Chargement…
       </p>
     </UiCard>
   </div>
 </template>
-
-<style scoped>
-.muted {
-  color: var(--color-text-muted);
-}
-</style>

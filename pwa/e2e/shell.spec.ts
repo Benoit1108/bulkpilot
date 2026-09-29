@@ -74,6 +74,40 @@ test.describe('settings', () => {
   })
 })
 
+test.describe('layout by screen size', () => {
+  test('phones: the navigation bar sits at the bottom and the page ends above it', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'phone layout only')
+    await page.goto('/reglages/compte')
+    const nav = (await page.getByRole('navigation', { name: 'Navigation principale' }).boundingBox())!
+    const viewport = page.viewportSize()!
+    expect(nav.y + nav.height).toBe(viewport.height)
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+    const main = (await page.locator('main').boundingBox())!
+    expect(main.y + main.height, 'the last content is not under the bar').toBeLessThanOrEqual(nav.y + 1)
+  })
+
+  test('tablets: a rail on the left, the page beside it', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'resized from the desktop project')
+    await page.setViewportSize({ width: 900, height: 800 })
+    await page.goto('/')
+
+    const nav = (await page.getByRole('navigation', { name: 'Navigation principale' }).boundingBox())!
+    expect([nav.x, nav.y, nav.width, nav.height]).toEqual([0, 0, 88, 800])
+    const main = (await page.locator('main').boundingBox())!
+    expect(main.x).toBeGreaterThanOrEqual(nav.width)
+    await expect(page.getByRole('navigation', { name: 'Navigation principale' }).getByText('Nutrition')).toBeVisible()
+  })
+
+  test('each theme paints its own background', async ({ page }) => {
+    await page.goto('/reglages')
+    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(13, 11, 20)')
+
+    await page.getByRole('radio', { name: 'Clair' }).check()
+    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(247, 246, 251)')
+  })
+})
+
 test.describe('large screens', () => {
   test('use a side navigation instead of the bottom bar', async ({ page, isMobile }) => {
     test.skip(isMobile, 'desktop layout only')

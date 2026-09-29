@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { buttonClass } from '~/components/ui/classes'
+
 const props = defineProps<{ redirect?: string }>()
 
 const api = useApi()
@@ -20,60 +22,18 @@ function href(provider: string): string {
 <template>
   <div
     v-if="data?.providers.length"
-    class="external"
+    class="flex flex-col gap-3"
   >
-    <p class="external__separator">
+    <p class="flex items-center gap-3 text-sm text-muted before:h-px before:flex-1 before:bg-line after:h-px after:flex-1 after:bg-line">
       <span>ou</span>
     </p>
     <a
       v-for="provider in data.providers"
       :key="provider"
-      class="external__button"
+      :class="buttonClass('secondary')"
       :href="href(provider)"
     >
       {{ labels[provider] ?? provider }}
     </a>
   </div>
 </template>
-
-<style scoped>
-.external {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.external__separator {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.external__separator::before,
-.external__separator::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--color-border);
-}
-
-.external__button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--tap-target);
-  padding: 0 var(--space-4);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.external__button:hover {
-  border-color: var(--color-accent);
-}
-</style>

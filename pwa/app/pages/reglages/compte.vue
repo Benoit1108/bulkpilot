@@ -10,7 +10,7 @@ const { account } = useAccount()
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/reglages"
       label="Réglages"
@@ -26,7 +26,7 @@ const { account } = useAccount()
         <PasswordChangeForm v-if="account.hasPassword" />
         <p
           v-else
-          class="subpage__hint"
+          class="text-sm text-muted [&_a]:font-semibold [&_a]:text-accent-ink"
         >
           Tu te connectes avec un service externe. Pour ajouter un mot de passe, utilise
           <NuxtLink to="/mot-de-passe-oublie">Mot de passe oublié</NuxtLink> avec ton adresse email.
@@ -41,15 +41,3 @@ const { account } = useAccount()
     </template>
   </div>
 </template>
-
-<style scoped>
-.subpage__hint {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.subpage__hint a {
-  color: var(--color-accent-text);
-  font-weight: 600;
-}
-</style>

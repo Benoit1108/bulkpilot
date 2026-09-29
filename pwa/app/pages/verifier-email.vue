@@ -19,7 +19,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="form">
+  <div class="flex flex-col gap-4">
     <p
       v-if="status === 'pending'"
       role="status"
@@ -38,19 +38,13 @@ onMounted(async () => {
     >
       {{ message }}
     </UiAlert>
-    <p
-      v-if="status === 'failed' && account"
-      class="form__links"
-    >
+    <UiLinkRow v-if="status === 'failed' && account">
       <NuxtLink to="/reglages/compte#email">Recevoir un nouveau lien</NuxtLink>
-    </p>
-    <p
-      v-else-if="status !== 'pending'"
-      class="form__links"
-    >
+    </UiLinkRow>
+    <UiLinkRow v-else-if="status !== 'pending'">
       <NuxtLink :to="account ? '/' : '/connexion'">
         {{ account ? 'Aller à l’accueil' : 'Aller à la connexion' }}
       </NuxtLink>
-    </p>
+    </UiLinkRow>
   </div>
 </template>

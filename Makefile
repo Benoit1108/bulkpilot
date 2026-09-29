@@ -116,6 +116,10 @@ phpunit: ## PHP tests (unit, integration, api) + coverage gate on Domain/Applica
 pwa-lint: ## ESLint (incl. formatting)
 	$(PWA) pnpm lint
 
+.PHONY: pwa-lint-fix
+pwa-lint-fix: ## ESLint with automatic fixes (formatting, Tailwind class order)
+	$(PWA) pnpm lint:fix
+
 pwa-typecheck: ## vue-tsc strict type check
 	$(PWA) pnpm typecheck
 

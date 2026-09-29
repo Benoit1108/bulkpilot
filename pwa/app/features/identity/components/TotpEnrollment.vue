@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { encode } from 'uqr'
+import { buttonClass } from '~/components/ui/classes'
 
 const props = defineProps<{
   secret: string
@@ -33,19 +34,23 @@ async function copySecret(): Promise<void> {
 
 <template>
   <form
-    class="form"
+    class="flex flex-col gap-4"
     novalidate
     @submit.prevent="emit('submit', code)"
   >
-    <!-- On a phone, the authenticator app is on the same device: open it directly. -->
+    <!--
+      On a phone, the authenticator app is on the same device: open it directly. Scanning is for
+      another device: with a mouse (hover + fine pointer) only the QR code is offered.
+    -->
     <a
-      class="enrol__open"
+      class="text-center [@media(hover:hover)_and_(pointer:fine)]:hidden"
+      :class="buttonClass('primary')"
       :href="otpauthUri"
     >Ouvrir dans mon application d’authentification</a>
 
     <p>Ou scanne ce QR code depuis ton application&nbsp;:</p>
     <svg
-      class="enrol__qr"
+      class="block h-auto w-[min(14rem,100%)] rounded-sm"
       :viewBox="`0 0 ${qr.size} ${qr.size}`"
       role="img"
       aria-label="QR code de configuration de l’application d’authentification"
@@ -62,14 +67,17 @@ async function copySecret(): Promise<void> {
       />
     </svg>
 
-    <div class="enrol__key">
-      <p class="enrol__hint">
+    <div class="flex flex-wrap items-center gap-2">
+      <p class="basis-full text-sm text-muted">
         Ou saisis cette clé à la main&nbsp;:
       </p>
-      <code data-testid="totp-secret"><span
+      <code
+        class="flex flex-wrap gap-x-[0.5ch] font-mono"
+        data-testid="totp-secret"
+      ><span
         v-for="(group, index) in groups"
         :key="index"
-        class="enrol__group"
+        class="whitespace-nowrap"
       >{{ group }}</span></code>
       <UiButton
         variant="ghost"
@@ -78,7 +86,7 @@ async function copySecret(): Promise<void> {
         {{ copied ? 'Clé copiée' : 'Copier la clé' }}
       </UiButton>
       <span
-        class="visually-hidden"
+        class="sr-only"
         role="status"
       >{{ copied ? 'Clé copiée' : '' }}</span>
     </div>
@@ -93,7 +101,7 @@ async function copySecret(): Promise<void> {
       required
       :error="error"
     />
-    <div class="form__actions">
+    <div class="flex flex-wrap gap-2">
       <UiButton
         type="submit"
         :loading="pending"
@@ -109,57 +117,3 @@ async function copySecret(): Promise<void> {
     </div>
   </form>
 </template>
-
-<style scoped>
-.enrol__open {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--tap-target);
-  padding: 0 var(--space-4);
-  background: var(--color-accent-fill);
-  border-radius: var(--radius-md);
-  color: var(--color-accent-contrast);
-  font-weight: 600;
-  text-align: center;
-  text-decoration: none;
-}
-
-/* Scanning is for another device: on touch screens the direct link comes first, the QR stays. */
-@media (hover: hover) and (pointer: fine) {
-  .enrol__open {
-    display: none;
-  }
-}
-
-.enrol__qr {
-  display: block;
-  width: min(14rem, 100%);
-  height: auto;
-  border-radius: var(--radius-sm);
-}
-
-.enrol__key {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.enrol__hint {
-  flex-basis: 100%;
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.enrol__key code {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 0.5ch;
-  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-}
-
-.enrol__group {
-  white-space: nowrap;
-}
-</style>

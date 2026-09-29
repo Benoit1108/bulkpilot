@@ -26,9 +26,8 @@ function click(): void {
 
 <template>
   <UiButton
-    :variant="variant"
+    :variant="armed ? 'danger' : variant"
     :loading="loading"
-    :class="{ 'ui-confirm--armed': armed }"
     @click="click"
     @blur="armed = false"
     @keydown.esc="armed = false"
@@ -36,10 +35,3 @@ function click(): void {
     {{ armed ? confirmLabel : label }}
   </UiButton>
 </template>
-
-<style scoped>
-.ui-confirm--armed {
-  color: var(--color-danger);
-  border-color: var(--color-danger);
-}
-</style>

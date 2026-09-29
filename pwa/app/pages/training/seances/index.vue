@@ -21,7 +21,7 @@ const items = computed(() => (workouts.value ?? []).map(workout => ({
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/training"
       label="Training"

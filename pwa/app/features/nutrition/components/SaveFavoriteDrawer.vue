@@ -33,11 +33,11 @@ async function save(): Promise<void> {
     title="Enregistrer comme repas favori"
   >
     <form
-      class="form"
+      class="flex flex-col gap-3"
       novalidate
       @submit.prevent="save"
     >
-      <p class="form__intro">
+      <p class="text-muted">
         Tu pourras le rajouter en un geste, dans n’importe quel repas. Il suit les valeurs actuelles de ses aliments et recettes.
       </p>
       <UiAlert
@@ -63,15 +63,3 @@ async function save(): Promise<void> {
     </form>
   </UiDrawer>
 </template>
-
-<style scoped>
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.form__intro {
-  color: var(--color-text-muted);
-}
-</style>

@@ -26,7 +26,7 @@ async function submit(): Promise<void> {
 </script>
 
 <template>
-  <div class="form">
+  <div class="flex flex-col gap-4">
     <UiAlert
       v-if="done"
       tone="success"
@@ -37,13 +37,13 @@ async function submit(): Promise<void> {
       <UiAlert tone="error">
         Ce lien est invalide, expiré ou a déjà été utilisé.
       </UiAlert>
-      <p class="form__links">
+      <UiLinkRow>
         <NuxtLink to="/mot-de-passe-oublie">Demander un nouveau lien</NuxtLink>
-      </p>
+      </UiLinkRow>
     </template>
     <form
       v-else
-      class="form"
+      class="flex flex-col gap-4"
       novalidate
       @submit.prevent="submit"
     >
@@ -69,8 +69,8 @@ async function submit(): Promise<void> {
         Enregistrer
       </UiButton>
     </form>
-    <p class="form__links">
+    <UiLinkRow>
       <NuxtLink to="/connexion">Aller à la connexion</NuxtLink>
-    </p>
+    </UiLinkRow>
   </div>
 </template>

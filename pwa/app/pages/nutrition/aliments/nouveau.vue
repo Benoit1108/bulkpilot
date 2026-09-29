@@ -16,7 +16,7 @@ async function onSaved(): Promise<void> {
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       :to="back"
       :label="route.query.retour ? 'Retour' : 'Mes aliments'"

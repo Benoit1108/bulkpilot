@@ -9,6 +9,9 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Response;
+use App\Shared\Presentation\Api\OpenApi\Problems;
 
 /**
  * A set of a workout, sent by the device as soon as it is done (and again until acknowledged).
@@ -29,6 +32,7 @@ use ApiPlatform\Metadata\Put;
             input: WorkoutSetInput::class,
             output: false,
             read: false,
+            openapi: new Operation(responses: ['409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]),
             processor: WorkoutEntryProcessor::class,
         ),
         new Delete(
@@ -41,6 +45,7 @@ use ApiPlatform\Metadata\Put;
             requirements: ['workoutId' => '[0-9a-f-]{36}', 'id' => '[0-9a-f-]{36}'],
             description: 'Removes a set (removing it again changes nothing).',
             read: false,
+            openapi: new Operation(responses: ['409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]),
             processor: WorkoutEntryProcessor::class,
         ),
     ],

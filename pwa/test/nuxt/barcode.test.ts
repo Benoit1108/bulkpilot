@@ -328,7 +328,7 @@ describe('scanning a product into the journal', () => {
     const wrapper = await openScanner()
 
     await type(wrapper, SPREAD)
-    const card = wrapper.get('dialog[open] .product')
+    const card = wrapper.get('dialog[open] article')
     expect(card.text()).toContain('Pâte à tartiner aux noisettes')
     expect(card.text()).toContain('Nutella · 400 g')
     expect(card.text()).toContain('539 kcal')
@@ -352,7 +352,7 @@ describe('scanning a product into the journal', () => {
     await type(wrapper, SPREAD)
     expect(wrapper.get('dialog[open]').text()).toContain('Il manque des valeurs')
     expect(wrapper.findAll('button').some(b => b.text() === 'Valeurs conformes à l’étiquette')).toBe(false)
-    expect(wrapper.get('dialog[open] .product').text()).toContain('inconnu')
+    expect(wrapper.get('dialog[open] article').text()).toContain('inconnu')
     await button(wrapper, 'Compléter les valeurs').trigger('click')
     await flushPromises()
 
@@ -396,12 +396,12 @@ describe('scanning a product into the journal', () => {
     down = false
     await button(wrapper, 'Réessayer').trigger('click')
     await flushPromises()
-    expect(wrapper.find('dialog[open] .product').exists()).toBe(true)
+    expect(wrapper.find('dialog[open] article').exists()).toBe(true)
 
     await button(wrapper, 'Scanner un autre produit').trigger('click')
-    expect(wrapper.find('dialog[open] .scanner').exists()).toBe(true)
+    expect(wrapper.find('dialog[open] [data-testid="scanner"]').exists()).toBe(true)
     await button(wrapper, 'Rechercher par le nom').trigger('click')
-    expect(wrapper.find('dialog[open] .scanner').exists()).toBe(false)
+    expect(wrapper.find('dialog[open] [data-testid="scanner"]').exists()).toBe(false)
   })
 
   it('starts each step at its heading, and says what happens in one live region', async () => {
@@ -414,16 +414,16 @@ describe('scanning a product into the journal', () => {
 
     await type(wrapper, SPREAD)
     expect(document.activeElement?.textContent?.trim()).toBe('Recherche du produit')
-    const live = wrapper.findAll('dialog[open] .flow > [role="status"]')
+    const live = wrapper.findAll('dialog[open] [role="status"]')
     expect(live).toHaveLength(1)
     expect(live[0]!.text()).toContain(`Recherche du produit ${SPREAD}`)
 
     answer({ barcode: SPREAD, status: 'found', food: null, product })
     await flushPromises()
     expect(document.activeElement?.textContent?.trim()).toBe(product.name)
-    expect(wrapper.get('dialog[open] .flow > [role="status"]').text()).toContain('Produit trouvé')
-    expect(wrapper.get('dialog[open] .product').text()).toContain('portion indiquée\u00A0: 15\u00A0g')
-    expect(wrapper.get('dialog[open] .product').text()).toContain(`Code-barres\u00A0: ${SPREAD}`)
+    expect(wrapper.get('dialog[open] [data-testid="scan-status"]').text()).toContain('Produit trouvé')
+    expect(wrapper.get('dialog[open] article').text()).toContain('portion indiquée\u00A0: 15\u00A0g')
+    expect(wrapper.get('dialog[open] article').text()).toContain(`Code-barres\u00A0: ${SPREAD}`)
   })
 
   it('cancels a slow lookup, and ignores its late answer', async () => {
@@ -438,8 +438,8 @@ describe('scanning a product into the journal', () => {
     answer({ barcode: SPREAD, status: 'found', food: null, product })
     await flushPromises()
 
-    expect(wrapper.find('dialog[open] .scanner').exists()).toBe(true)
-    expect(wrapper.find('dialog[open] .product').exists()).toBe(false)
+    expect(wrapper.find('dialog[open] [data-testid="scanner"]').exists()).toBe(true)
+    expect(wrapper.find('dialog[open] article').exists()).toBe(false)
   })
 
   it('flags values that do not hold together', async () => {
@@ -449,7 +449,7 @@ describe('scanning a product into the journal', () => {
     await type(wrapper, SPREAD)
     const dialog = wrapper.get('dialog[open]')
     expect(dialog.text()).toContain('protéines, glucides et lipides dépassent 100\u00A0g pour 100\u00A0g')
-    expect(dialog.findAll('.product__flag')).toHaveLength(3)
+    expect(dialog.findAll('dd span').filter(flag => flag.text() === '(à vérifier)')).toHaveLength(3)
 
     await button(wrapper, 'Compléter les valeurs').trigger('click')
     await flushPromises()
@@ -488,7 +488,7 @@ describe('scanning a product into the journal', () => {
     await flushPromises()
 
     expect(wrapper.get('dialog[open]').text()).toContain('Open Food Facts ne répond pas')
-    expect(wrapper.find('dialog[open] .product').exists()).toBe(true)
+    expect(wrapper.find('dialog[open] article').exists()).toBe(true)
     await button(wrapper, 'Corriger pour moi').trigger('click')
     await flushPromises()
     expect(wrapper.get('dialog[open]').text(), 'the error belongs to the previous step').not.toContain('Open Food Facts ne répond pas')

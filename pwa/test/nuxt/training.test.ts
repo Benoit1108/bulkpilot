@@ -45,13 +45,13 @@ describe('training home', () => {
     const empty = await mountSuspended(TrainingPage, { route: '/training' })
     await flushPromises()
     expect(empty.text()).toContain('Aucun programme suivi')
-    expect(empty.get('a.link-button').attributes('href')).toBe('/training/programmes/nouveau')
+    expect(empty.findAll('a').find(a => a.text() === 'Créer un programme')?.attributes('href')).toBe('/training/programmes/nouveau')
 
     clearNuxtData()
     fake.on('GET /api/programs', () => [{ ...ppl, active: false }])
     const none = await mountSuspended(TrainingPage, { route: '/training' })
     await flushPromises()
-    expect(none.get('a.link-button').attributes('href')).toBe('/training/programmes')
+    expect(none.findAll('a').find(a => a.text() === 'Mes programmes')?.attributes('href')).toBe('/training/programmes')
   })
 
   it('offers a retry when programs cannot load', async () => {
@@ -123,7 +123,7 @@ describe('exercises', () => {
 
     expect(wrapper.text()).toContain('Muscles secondairesBiceps')
     expect(wrapper.text()).toContain('6–10\u00A0reps · RIR\u00A02 · repos 3\u00A0min · tempo 2-0-1-1')
-    expect(wrapper.get('a.media').attributes('rel')).toBe('noopener noreferrer')
+    expect(wrapper.findAll('a').find(link => link.text().startsWith('Voir le mouvement'))?.attributes('rel')).toBe('noopener noreferrer')
     expect(wrapper.text()).toContain('charge max\u00A0: 90\u00A0kg')
     expect(wrapper.text()).toContain('90\u00A0kg max · 8\u00A0reps · 3\u00A0séries')
     expect((field(wrapper, 'Consigne').element as HTMLTextAreaElement).value).toBe('Buste à 30°')
@@ -195,7 +195,7 @@ describe('programs', () => {
     expect(field(wrapper, 'Repos après le tour')).toBeDefined()
 
     await button(wrapper, 'Monter Élévations latérales aux haltères').trigger('click')
-    expect(wrapper.findAll('.planned__name').map(name => name.text())).toEqual(['A1 Élévations latérales aux haltères', 'A2 Gainage (planche)', 'B Développé couché à la barre'])
+    expect(wrapper.findAll('[data-testid="planned-name"]').map(name => name.text())).toEqual(['A1 Élévations latérales aux haltères', 'A2 Gainage (planche)', 'B Développé couché à la barre'])
     await button(wrapper, 'Retirer Gainage (planche) de Haut').trigger('click')
     await wrapper.get('details summary').trigger('click')
     await field(wrapper, 'Progression').setValue('target_rir')
@@ -204,9 +204,9 @@ describe('programs', () => {
 
     await button(wrapper, 'Ajouter un jour').trigger('click')
     expect((field(wrapper, 'Nom du jour 2').element as HTMLInputElement).value).toBe('Jour B')
-    await button(wrapper, 'Retirer ce jour', 'fieldset.day:nth-of-type(2)').trigger('click')
-    await button(wrapper, 'Confirmer', 'fieldset.day:nth-of-type(2)').trigger('click')
-    expect(wrapper.findAll('fieldset.day')).toHaveLength(1)
+    await button(wrapper, 'Retirer ce jour', 'form > fieldset:nth-of-type(2)').trigger('click')
+    await button(wrapper, 'Confirmer', 'form > fieldset:nth-of-type(2)').trigger('click')
+    expect(wrapper.findAll('form > fieldset')).toHaveLength(1)
 
     await wrapper.get('form').trigger('submit')
     await flushPromises()
@@ -242,17 +242,18 @@ describe('programs', () => {
     await flushPromises()
 
     expect(wrapper.text()).toContain('Programme suivi · version 2')
-    const day = (name: string) => wrapper.findAll('.day').find(d => d.get('.day__name').text() === name)!
+    const day = (name: string) => wrapper.findAll('[role="group"]').find(group => group.find('h3').exists() && group.get('h3').text() === name)!
     const push = day('Push')
     expect(push.text()).toContain('4\u00A0×\u00A06–10\u00A0reps · RIR\u00A02 · repos 3\u00A0min')
     expect(push.text()).toContain('2 d’échauffement · tempo 3-1-1-0 · Progression linéaire')
     expect(push.text()).toContain('Pause sur la poitrine')
-    expect(push.findAll('.block--superset')).toHaveLength(1)
-    expect(push.findAll('.exercise__label').map(label => label.text())).toEqual(['A', 'B1', 'B2'])
+    expect(push.findAll('p').filter(kind => kind.text() === 'Superset')).toHaveLength(1)
+    expect(push.findAll('[data-testid="exercise-label"]').map(label => label.text())).toEqual(['A', 'B1', 'B2'])
     expect(push.text()).toContain('drop set sur la dernière')
     expect(day('Pull').text()).toContain('Rowing Yates (supprimé)')
-    expect(wrapper.findAll('.versions a').map(link => link.text())).toEqual(['Version 2 (actuelle)', 'Version 1'])
-    expect(wrapper.get('.versions a[aria-current="page"]').text()).toBe('Version 2 (actuelle)')
+    const versions = wrapper.findAll('a').filter(link => link.text().startsWith('Version '))
+    expect(versions.map(link => link.text())).toEqual(['Version 2 (actuelle)', 'Version 1'])
+    expect(versions.find(link => link.attributes('aria-current') === 'page')?.text()).toBe('Version 2 (actuelle)')
 
     await button(wrapper, 'Ne plus le suivre').trigger('click')
     await flushPromises()

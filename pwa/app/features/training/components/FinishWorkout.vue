@@ -10,7 +10,7 @@ const emit = defineEmits<{ finish: [], resume: [], discard: [] }>()
 </script>
 
 <template>
-  <div class="finish">
+  <div class="flex flex-col gap-3">
     <template v-if="left.length">
       <p>
         Il reste des séries sur {{ left.length }}&nbsp;exercice{{ left.length > 1 ? 's' : '' }}&nbsp;: {{ left.map(exercise => exercise.name).join(', ') }}.
@@ -45,11 +45,3 @@ const emit = defineEmits<{ finish: [], resume: [], discard: [] }>()
     />
   </div>
 </template>
-
-<style scoped>
-.finish {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-</style>

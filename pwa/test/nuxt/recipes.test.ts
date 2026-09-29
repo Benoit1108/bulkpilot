@@ -54,7 +54,7 @@ describe('logging a recipe or a favourite meal', () => {
     expect(wrapper.get('dialog[open]').text()).toContain('327 kcal / portion')
     await buttonStartingWith(wrapper, 'Riz au poulet', 'dialog[open]').trigger('click')
     expect((field(wrapper, 'Quantité').element as HTMLInputElement).value).toBe('275')
-    expect(wrapper.get('dialog[open] .quantity__hint').text()).toBe('Une portion pèse 275 g.')
+    expect(wrapper.get('dialog[open] [data-testid="quantity-hint"]').text()).toBe('Une portion pèse 275 g.')
     await button(wrapper, '2 portions (550 g)').trigger('click')
     await wrapper.get('dialog[open] form').trigger('submit')
     await flushPromises()
@@ -83,7 +83,7 @@ describe('logging a recipe or a favourite meal', () => {
     expect(fake.calls.find(call => call.route === 'POST /api/nutrition/favorite-meals/{id}/log')).toMatchObject({ body: { day: TODAY, slot: 'breakfast' }, params: { path: { id: favorite.id } } })
     expect(wrapper.find('dialog[open]').exists()).toBe(false)
     expect(wrapper.get('[data-testid="meal-breakfast"]').text()).toContain('Skyr nature')
-    expect(wrapper.get('.ui-status').text()).toBe('« Petit-déj habituel » ajouté au petit-déjeuner (2 éléments).')
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('« Petit-déj habituel » ajouté au petit-déjeuner (2 éléments).')
   })
 
   it('shows why a favourite could not be added', async () => {
@@ -113,7 +113,7 @@ describe('logging a recipe or a favourite meal', () => {
     await flushPromises()
 
     expect(fake.calls.find(call => call.route === 'POST /api/nutrition/favorite-meals')?.body).toEqual({ name: 'Goûter', day: TODAY, slot: 'snack' })
-    expect(wrapper.get('.ui-status').text()).toBe('« Goûter » est dans tes repas favoris.')
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('« Goûter » est dans tes repas favoris.')
   })
 
   it('explains a refused favourite', async () => {
@@ -212,7 +212,7 @@ describe('recipes', () => {
     await wrapper.get('form').trigger('submit')
     await flushPromises()
     expect(fake.calls.find(call => call.route === 'PUT /api/recipes/{id}')).toMatchObject({ body: { servings: 5, ingredients: [{ foodId: rice.id, grams: 300 }, { foodId: skyr.id, grams: 400 }] }, params: { path: { id: recipe.id } } })
-    expect(wrapper.get('.ui-status').text()).toContain('Recette enregistrée.')
+    expect(wrapper.get('[data-testid="status"]').text()).toContain('Recette enregistrée.')
 
     await confirm(wrapper, 'Supprimer la recette')
     await flushPromises()
@@ -267,7 +267,7 @@ describe('favourite meals page', () => {
     await flushPromises()
 
     expect(wrapper.text()).toContain('Aucun repas favori')
-    expect(wrapper.get('.ui-status').text()).toBe('« Petit-déj habituel » supprimé des repas favoris.')
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('« Petit-déj habituel » supprimé des repas favoris.')
   })
 
   it('reports a failed deletion, or a list that could not be loaded', async () => {

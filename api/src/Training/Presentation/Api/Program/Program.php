@@ -12,6 +12,9 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Response;
+use App\Shared\Presentation\Api\OpenApi\Problems;
 use App\Training\Application\Program\ProgramView;
 
 /**
@@ -31,8 +34,8 @@ use App\Training\Application\Program\ProgramView;
                 'version' => new QueryParameter(description: 'Number of the version to spell out.', schema: ['type' => 'integer', 'minimum' => 1]),
             ],
         ),
-        new Post(uriTemplate: '/programs', description: 'Creates a program; the user\'s first one becomes active.', input: ProgramInput::class, processor: ProgramProcessor::class),
-        new Put(uriTemplate: '/programs/{id}', requirements: ['id' => '[0-9a-f-]{36}'], description: 'Renames a program and, when its days changed, records them as its next version.', input: ProgramInput::class, read: false, processor: ProgramProcessor::class),
+        new Post(uriTemplate: '/programs', description: 'Creates a program; it becomes the one followed when none is.', input: ProgramInput::class, openapi: new Operation(responses: ['429' => new Response(Problems::TOO_MANY)]), processor: ProgramProcessor::class),
+        new Put(uriTemplate: '/programs/{id}', requirements: ['id' => '[0-9a-f-]{36}'], description: 'Renames a program and, when its days changed, records them as its next version.', input: ProgramInput::class, read: false, openapi: new Operation(responses: ['409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]), processor: ProgramProcessor::class),
         new Post(
             uriTemplate: '/programs/{id}/activate',
             requirements: ['id' => '[0-9a-f-]{36}'],
@@ -40,6 +43,7 @@ use App\Training\Application\Program\ProgramView;
             description: 'Makes it the program the user follows; the previous one is no longer active.',
             input: false,
             read: false,
+            openapi: new Operation(responses: ['404' => new Response(Problems::NOT_FOUND), '409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]),
             processor: ProgramProcessor::class,
             name: 'program_activate',
         ),
@@ -50,10 +54,11 @@ use App\Training\Application\Program\ProgramView;
             description: 'The user follows no program for now.',
             input: false,
             read: false,
+            openapi: new Operation(responses: ['404' => new Response(Problems::NOT_FOUND), '409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]),
             processor: ProgramProcessor::class,
             name: 'program_deactivate',
         ),
-        new Delete(uriTemplate: '/programs/{id}', requirements: ['id' => '[0-9a-f-]{36}'], description: 'Archives a program; past workouts keep the version they followed.', read: false, processor: ProgramProcessor::class),
+        new Delete(uriTemplate: '/programs/{id}', requirements: ['id' => '[0-9a-f-]{36}'], description: 'Archives a program; past workouts keep the version they followed.', read: false, openapi: new Operation(responses: ['409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]), processor: ProgramProcessor::class),
     ],
 )]
 final readonly class Program

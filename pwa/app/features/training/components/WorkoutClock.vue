@@ -14,23 +14,12 @@ watch(long, value => value && emit('long'), { immediate: true })
 
 <template>
   <span
-    class="clock"
-    :class="{ 'clock--long': long }"
+    class="tabular-nums"
+    :class="{ 'font-bold text-accent-ink': long }"
   >
-    <span class="visually-hidden">Durée de la séance&nbsp;: {{ spokenDuration(elapsed) }}</span>
+    <span class="sr-only">Durée de la séance&nbsp;: {{ spokenDuration(elapsed) }}</span>
     <span aria-hidden="true">{{ formatClock(elapsed) }}</span><template v-if="long">
       · plus d’1&nbsp;h
     </template>
   </span>
 </template>
-
-<style scoped>
-.clock {
-  font-variant-numeric: tabular-nums;
-}
-
-.clock--long {
-  color: var(--color-accent-text);
-  font-weight: 700;
-}
-</style>

@@ -99,13 +99,17 @@ function body(): CustomFoodInput {
   } as CustomFoodInput
 }
 
+const { markSaved } = useUnsavedChanges(body)
+
 async function submit(): Promise<void> {
   await run(async () => {
+    const sent = body()
     const saved = props.save
-      ? await props.save(body())
+      ? await props.save(sent)
       : props.food
-        ? await api.put('/api/foods/{id}', body(), { path: { id: props.food.id } })
-        : await api.post('/api/foods', body())
+        ? await api.put('/api/foods/{id}', sent, { path: { id: props.food.id } })
+        : await api.post('/api/foods', sent)
+    markSaved(sent)
     emit('saved', saved)
   })
 }
@@ -113,7 +117,7 @@ async function submit(): Promise<void> {
 
 <template>
   <form
-    class="form"
+    class="flex flex-col gap-3"
     novalidate
     @submit.prevent="submit"
   >
@@ -140,7 +144,7 @@ async function submit(): Promise<void> {
     />
     <div
       v-if="!draft"
-      class="form__barcode"
+      class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2"
     >
       <UiInput
         v-model="barcode"
@@ -151,7 +155,9 @@ async function submit(): Promise<void> {
         hint="Facultatif&nbsp;: pour le retrouver en le scannant."
         :error="fieldError('barcode')"
       />
+      <!-- Level with the field, below its label. -->
       <UiButton
+        class="mt-label"
         variant="secondary"
         aria-label="Scanner le code-barres"
         @click="scanning = true"
@@ -182,9 +188,12 @@ async function submit(): Promise<void> {
       :error="fieldError('state')"
     />
 
-    <fieldset class="form__group">
-      <legend>Pour 100&nbsp;g</legend>
-      <div class="form__grid">
+    <!-- A fieldset defaults to min-width: min-content: min-w-0 keeps it a plain block. -->
+    <fieldset class="m-0 min-w-0 p-0">
+      <legend class="mb-2 font-bold">
+        Pour 100&nbsp;g
+      </legend>
+      <div class="grid grid-cols-2 gap-3">
         <UiInput
           v-for="nutrient in NUTRIENTS"
           :key="nutrient.key"
@@ -200,16 +209,18 @@ async function submit(): Promise<void> {
       </div>
     </fieldset>
 
-    <fieldset class="form__group">
-      <legend>Portions</legend>
-      <div class="form__group-body">
-        <p class="form__hint">
+    <fieldset class="m-0 min-w-0 p-0">
+      <legend class="mb-2 font-bold">
+        Portions
+      </legend>
+      <div class="flex flex-col gap-3">
+        <p class="text-sm text-muted">
           Par exemple «&nbsp;1 pot&nbsp;» = 150&nbsp;g, pour saisir plus vite.
         </p>
         <div
           v-for="(portion, index) in portions"
           :key="portion.id"
-          class="portion"
+          class="grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto] items-end gap-2"
         >
           <UiInput
             v-model="portion.label"
@@ -254,60 +265,3 @@ async function submit(): Promise<void> {
     </UiButton>
   </form>
 </template>
-
-<style scoped>
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-/* A fieldset defaults to min-width: min-content and is a poor flex container: keep it a plain block. */
-.form__group {
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.form__group legend {
-  margin-bottom: var(--space-2);
-  font-weight: 700;
-}
-
-.form__group-body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.form__hint {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.form__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
-}
-
-.form__barcode {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  gap: var(--space-2);
-}
-
-/* Level with the field, below its label. */
-.form__barcode > .ui-button {
-  margin-top: calc(var(--text-sm) * 1.5 + var(--space-1));
-}
-
-.portion {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
-  align-items: end;
-  gap: var(--space-2);
-}
-</style>

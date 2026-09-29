@@ -38,6 +38,11 @@ Playwright tourne dans le service compose `e2e` (profil `e2e`) ; l'image suit la
   Une exception PHPStan doit être ciblée (identifiant + chemin + `count`) et commentée.
 - Un test instable est un bug : on trouve la cause, on ne l'ignore pas.
 - Ordre d'exécution aléatoire (`executionOrder="random"`) : les tests PHP doivent être indépendants.
+- Front : un composant monté est démonté après chaque test (`test/nuxt/setup.ts`) ; rien de ce qu'il a enregistré
+  (garde du routeur, écouteurs, minuteurs) ne déborde sur le test suivant.
+- Sélecteurs : rôle et nom accessibles d'abord (`getByRole`, texte visible), `data-testid` sinon ; jamais une classe CSS
+  (les classes sont des utilitaires Tailwind, ADR-0025).
+- Taille de l'application : le build de l'image de production échoue au-delà de `pwa/bundle-budget.json` (`pnpm budget`).
 - Chaque fonctionnalité importante a des critères d'acceptation traduits en tests API et/ou E2E.
 - En fin de phase : revue de code multi-agents (sécurité, bugs, architecture, complexité, front, tests, UX/UI),
   correction des constats, puis relance complète de `make ci`.

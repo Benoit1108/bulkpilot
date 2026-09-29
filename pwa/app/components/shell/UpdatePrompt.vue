@@ -10,15 +10,15 @@ watch(needRefresh, () => {
 </script>
 
 <template>
-  <!-- Always mounted so screen readers announce content changes. -->
+  <!-- Always mounted so screen readers announce content changes. Above the bottom bar on phones. -->
   <div
-    class="update-prompt"
-    :class="{ 'update-prompt--visible': visible }"
+    class="fixed inset-x-4 bottom-above-nav z-20 mx-auto max-w-reading md:right-6 md:bottom-safe-6 md:left-auto md:w-104"
+    :class="{ 'flex flex-wrap items-center justify-between gap-3 rounded-md border border-line bg-surface-raised px-4 py-3 text-sm shadow-raised': visible }"
     role="status"
   >
     <template v-if="visible">
       <p>Une nouvelle version est disponible.</p>
-      <div class="update-prompt__actions">
+      <div class="flex gap-2">
         <UiButton
           variant="ghost"
           @click="dismissed = true"
@@ -32,39 +32,3 @@ watch(needRefresh, () => {
     </template>
   </div>
 </template>
-
-<style scoped>
-.update-prompt {
-  position: fixed;
-  inset: auto var(--space-4) calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + var(--space-3));
-  z-index: 20;
-  max-width: var(--reading-max-width);
-  margin: 0 auto;
-}
-
-.update-prompt--visible {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-raised);
-  font-size: var(--text-sm);
-}
-
-.update-prompt__actions {
-  display: flex;
-  gap: var(--space-2);
-}
-
-@media (min-width: 48rem) {
-  .update-prompt {
-    inset: auto var(--space-5) calc(env(safe-area-inset-bottom) + var(--space-5)) auto;
-    width: 26rem;
-  }
-}
-</style>

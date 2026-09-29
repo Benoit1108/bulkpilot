@@ -8,6 +8,9 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Response;
+use App\Shared\Presentation\Api\OpenApi\Problems;
 
 /**
  * An exercise added to a workout, at the next position (sending it again changes nothing).
@@ -27,6 +30,7 @@ use ApiPlatform\Metadata\Put;
             input: AddWorkoutExerciseInput::class,
             output: false,
             read: false,
+            openapi: new Operation(responses: ['409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]),
             processor: WorkoutEntryProcessor::class,
         ),
     ],

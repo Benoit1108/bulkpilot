@@ -15,44 +15,17 @@ onBeforeUnmount(() => clearTimeout(timer))
 </script>
 
 <template>
+  <!-- Above the bottom navigation on phones. -->
   <div
-    class="ui-status"
+    data-testid="status"
+    class="pointer-events-none fixed inset-x-4 bottom-above-nav z-30 flex justify-center md:bottom-safe-6"
     role="status"
   >
     <p
       v-if="message"
-      class="ui-status__message"
+      class="max-w-reading rounded-md border border-line bg-surface-raised px-4 py-3 font-semibold shadow-raised"
     >
       {{ message }}
     </p>
   </div>
 </template>
-
-<style scoped>
-.ui-status {
-  position: fixed;
-  right: var(--space-4);
-  bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + var(--space-3));
-  left: var(--space-4);
-  z-index: 30;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.ui-status__message {
-  max-width: var(--reading-max-width);
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-raised);
-  font-weight: 600;
-}
-
-@media (min-width: 48rem) {
-  .ui-status {
-    bottom: var(--space-5);
-  }
-}
-</style>

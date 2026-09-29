@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from '@tailwindcss/vite'
 import { THEME_COLORS } from './app/features/shell/theme'
 
 const appName = process.env.NUXT_PUBLIC_APP_NAME ?? 'BulkPilot'
@@ -45,6 +46,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-09-01',
 
   vite: {
+    plugins: [tailwindcss()],
     server: {
       // The dev server is reached through Caddy (https://localhost), not directly.
       allowedHosts: true,

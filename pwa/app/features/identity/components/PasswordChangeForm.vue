@@ -19,7 +19,7 @@ async function submit(): Promise<void> {
 
 <template>
   <form
-    class="form"
+    class="flex flex-col gap-4"
     novalidate
     @submit.prevent="submit"
   >

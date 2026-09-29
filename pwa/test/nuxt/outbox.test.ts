@@ -1,6 +1,6 @@
 import 'fake-indexeddb/auto'
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
-import { enableAutoUnmount, flushPromises } from '@vue/test-utils'
+import { flushPromises } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import SyncStatus from '~/features/training/components/SyncStatus.vue'
 import { flush, isTransient, resetWorkoutOutbox, useWorkoutOutbox, type WorkoutWrite } from '~/features/training/outbox'
@@ -15,8 +15,6 @@ const { api } = vi.hoisted(() => ({ api: { current: null as ReturnType<typeof cr
 mockNuxtImport('useApi', () => () => api.current!.client)
 const fake = createFakeApi()
 api.current = fake
-
-enableAutoUnmount(afterEach)
 
 const start: WorkoutWrite = { op: 'start', workoutId: 'w1', body: { startedAt: '2026-09-28T18:00:00Z', dayIndex: 0 } }
 const set = (id: string): WorkoutWrite => ({ op: 'record_set', workoutId: 'w1', setId: id, body: { exerciseIndex: 0, kind: 'normal', loadKg: 80, reps: 8, seconds: null, rir: null, doneAt: '2026-09-28T18:05:00Z' } })

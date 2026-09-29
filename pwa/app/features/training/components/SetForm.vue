@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Minus, Plus } from 'lucide-vue-next'
+import { CHIP, CHIP_NUMBER } from '~/components/ui/classes'
+import StepperField from '~/features/training/components/StepperField.vue'
 import type { SetValues } from '~/features/training/session'
 import { MAIN_KINDS, SET_KINDS, type SetKind, type WorkoutExercise } from '~/features/training/workout'
 import { parseAmount } from '~/services/text/numbers'
@@ -94,145 +95,105 @@ function submit(): void {
 
 <template>
   <form
-    class="set"
+    class="flex flex-col gap-3"
     novalidate
     @submit.prevent="submit"
   >
-    <fieldset class="set__choices">
-      <legend class="set__legend">
+    <fieldset class="m-0 min-w-0 p-0">
+      <legend class="mb-1 text-sm font-semibold">
         Type de série
       </legend>
-      <div class="set__chips">
+      <div class="flex flex-wrap gap-2">
         <label
           v-for="option in kinds"
           :key="option.value"
-          class="chip"
+          :class="CHIP"
         >
           <input
             v-model="kind"
             type="radio"
             :name="kindName"
             :value="option.value"
-            class="visually-hidden"
+            class="sr-only"
           >
           <span>{{ option.label }}</span>
         </label>
         <button
           v-if="!moreKinds"
           type="button"
-          class="chip chip--more"
+          class="text-accent-ink"
+          :class="CHIP"
           @click="moreKinds = true"
         >
           Autre…
         </button>
       </div>
-      <p class="set__hint">
+      <p class="mt-1 text-sm text-muted">
         {{ kindHint }}
       </p>
     </fieldset>
 
-    <div
+    <StepperField
       v-if="!timed"
-      class="set__field"
-    >
-      <UiInput
-        ref="loadField"
-        v-model="load"
-        :label="bodyweight ? 'Lest' : 'Charge'"
-        type="number"
-        suffix="kg"
-        :hint="bodyweight ? 'Facultatif.' : undefined"
-        :error="errors.load"
-      />
-      <div class="set__steps">
-        <UiButton
-          variant="secondary"
-          :aria-label="`Retirer ${kg(exercise.incrementKg)} kg`"
-          @click="step('load', -exercise.incrementKg)"
-        >
-          <Minus
-            :size="20"
-            aria-hidden="true"
-          />
-        </UiButton>
-        <UiButton
-          variant="secondary"
-          :aria-label="`Ajouter ${kg(exercise.incrementKg)} kg`"
-          @click="step('load', exercise.incrementKg)"
-        >
-          <Plus
-            :size="20"
-            aria-hidden="true"
-          />
-        </UiButton>
-      </div>
-    </div>
-    <div class="set__field">
-      <UiInput
-        v-if="timed"
-        ref="countField"
-        v-model="seconds"
-        label="Durée"
-        type="number"
-        inputmode="numeric"
-        suffix="s"
-        :error="errors.seconds"
-      />
-      <UiInput
-        v-else
-        ref="countField"
-        v-model="reps"
-        label="Répétitions"
-        type="number"
-        inputmode="numeric"
-        :error="errors.reps"
-      />
-      <div class="set__steps">
-        <UiButton
-          variant="secondary"
-          :aria-label="timed ? 'Retirer 5 secondes' : 'Une répétition de moins'"
-          @click="timed ? step('seconds', -5, 1) : step('reps', -1)"
-        >
-          <Minus
-            :size="20"
-            aria-hidden="true"
-          />
-        </UiButton>
-        <UiButton
-          variant="secondary"
-          :aria-label="timed ? 'Ajouter 5 secondes' : 'Une répétition de plus'"
-          @click="timed ? step('seconds', 5, 1) : step('reps', 1)"
-        >
-          <Plus
-            :size="20"
-            aria-hidden="true"
-          />
-        </UiButton>
-      </div>
-    </div>
+      ref="loadField"
+      v-model="load"
+      :label="bodyweight ? 'Lest' : 'Charge'"
+      suffix="kg"
+      :hint="bodyweight ? 'Facultatif.' : undefined"
+      :error="errors.load"
+      :less-label="`Retirer ${kg(exercise.incrementKg)} kg`"
+      :more-label="`Ajouter ${kg(exercise.incrementKg)} kg`"
+      @less="step('load', -exercise.incrementKg)"
+      @more="step('load', exercise.incrementKg)"
+    />
+    <StepperField
+      v-if="timed"
+      ref="countField"
+      v-model="seconds"
+      label="Durée"
+      inputmode="numeric"
+      suffix="s"
+      :error="errors.seconds"
+      less-label="Retirer 5 secondes"
+      more-label="Ajouter 5 secondes"
+      @less="step('seconds', -5, 1)"
+      @more="step('seconds', 5, 1)"
+    />
+    <StepperField
+      v-else
+      ref="countField"
+      v-model="reps"
+      label="Répétitions"
+      inputmode="numeric"
+      :error="errors.reps"
+      less-label="Une répétition de moins"
+      more-label="Une répétition de plus"
+      @less="step('reps', -1)"
+      @more="step('reps', 1)"
+    />
     <p
-      class="visually-hidden"
+      class="sr-only"
       role="status"
     >
       {{ stepped }}
     </p>
 
-    <fieldset class="set__choices">
-      <legend class="set__legend">
-        RIR <span class="set__legend-hint">(reps en réserve, 0 = échec, facultatif)</span>
+    <fieldset class="m-0 min-w-0 p-0">
+      <legend class="mb-1 text-sm font-semibold">
+        RIR <span class="font-normal text-muted">(reps en réserve, 0 = échec, facultatif)</span>
       </legend>
-      <div class="set__chips">
+      <div class="flex flex-wrap gap-2">
         <label
           v-for="value in RIR_VALUES"
           :key="value"
-          class="chip chip--small"
+          :class="CHIP_NUMBER"
         >
           <input
             type="radio"
             :name="rirName"
             :value="value"
             :checked="rir === value"
-            class="visually-hidden"
+            class="sr-only"
             @click="toggleRir(value)"
           >
           <span>{{ value }}</span>
@@ -240,10 +201,11 @@ function submit(): void {
       </div>
     </fieldset>
 
-    <div class="set__actions">
+    <div class="flex flex-col gap-2">
+      <!-- The one button of the screen that matters: taller, larger text. -->
       <UiButton
         type="submit"
-        class="set__submit"
+        class="min-h-14! text-lg"
       >
         {{ submitLabel }}
       </UiButton>
@@ -257,112 +219,3 @@ function submit(): void {
     </div>
   </form>
 </template>
-
-<style scoped>
-.set {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.set__choices {
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.set__legend {
-  margin-bottom: var(--space-1);
-  font-size: var(--text-sm);
-  font-weight: 600;
-}
-
-.set__legend-hint,
-.set__hint {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-weight: 400;
-}
-
-.set__hint {
-  margin-top: var(--space-1);
-}
-
-.set__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--tap-target);
-  min-height: var(--tap-target);
-  padding: 0 var(--space-3);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: inherit;
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.chip:has(input:checked) {
-  background: var(--color-accent-fill);
-  border-color: var(--color-accent-fill);
-  color: var(--color-accent-contrast);
-}
-
-.chip:has(input:focus-visible),
-.chip--more:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-.chip--small {
-  padding: 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.chip--more {
-  color: var(--color-accent-text);
-}
-
-.set__field {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  gap: var(--space-2);
-}
-
-.set__field :deep(.ui-input__field) {
-  font-size: 1.5rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.set__steps {
-  display: flex;
-  gap: var(--space-2);
-  margin-top: calc(var(--text-sm) * 1.5 + var(--space-1));
-}
-
-.set__steps :deep(.ui-button) {
-  min-width: calc(var(--tap-target) * 1.2);
-}
-
-.set__actions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.set__submit {
-  min-height: calc(var(--tap-target) * 1.25);
-  font-size: var(--text-lg, 1.125rem);
-}
-</style>

@@ -19,15 +19,16 @@ onBeforeUnmount(() => document.removeEventListener('visibilitychange', refreshDa
 </script>
 
 <template>
-  <div class="page">
+  <div class="flex flex-col gap-4">
     <div>
       <p
         v-if="account"
-        class="greeting"
+        class="text-lg font-semibold"
       >
         Bonjour {{ account.firstName }}
       </p>
-      <p class="today">
+      <!-- "Lundi 28 septembre": only the first letter is capitalised in French. -->
+      <p class="text-muted first-letter:uppercase">
         {{ today }}
       </p>
     </div>
@@ -51,25 +52,3 @@ onBeforeUnmount(() => document.removeEventListener('visibilitychange', refreshDa
     </UiCard>
   </div>
 </template>
-
-<style scoped>
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.greeting {
-  font-size: var(--text-lg);
-  font-weight: 600;
-}
-
-.today {
-  color: var(--color-text-muted);
-}
-
-/* "Lundi 28 septembre": only the first letter is capitalised in French. */
-.today::first-letter {
-  text-transform: uppercase;
-}
-</style>

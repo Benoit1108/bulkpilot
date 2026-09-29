@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { LIST_ROW } from '~/components/ui/classes'
 import { Plus, Star } from 'lucide-vue-next'
 import { formatGrams, formatKcal } from '~/features/nutrition/format'
 import { slotLabel, toSlot, type Entry, type Meal, type MealSlot } from '~/features/nutrition/nutrition'
@@ -13,19 +14,19 @@ const titleId = computed(() => `meal-title-${props.meal.slot}`)
 
 <template>
   <section
-    class="meal"
+    class="flex flex-col gap-2 rounded-lg border border-line bg-surface p-4"
     :aria-labelledby="titleId"
     :data-testid="`meal-${meal.slot}`"
   >
-    <header class="meal__header">
+    <header class="flex items-baseline justify-between gap-3">
       <h2
         :id="titleId"
-        class="meal__title"
+        class="text-base font-bold focus:outline-none"
         tabindex="-1"
       >
         {{ label }}
       </h2>
-      <p class="meal__energy">
+      <p class="text-sm whitespace-nowrap text-muted tabular-nums">
         {{ formatKcal(meal.totals.energyKcal) }}<template v-if="meal.targetEnergyKcal">
           / {{ formatKcal(meal.targetEnergyKcal) }}
         </template>
@@ -34,7 +35,7 @@ const titleId = computed(() => `meal-title-${props.meal.slot}`)
 
     <ul
       v-if="meal.entries.length"
-      class="meal__entries"
+      class="m-0 flex list-none flex-col p-0"
     >
       <li
         v-for="entry in meal.entries"
@@ -42,16 +43,17 @@ const titleId = computed(() => `meal-title-${props.meal.slot}`)
       >
         <button
           type="button"
-          class="entry"
+          class="focus-visible:rounded-sm focus-visible:outline-offset-2"
+          :class="LIST_ROW"
           @click="emit('edit', entry)"
         >
-          <span class="entry__name"><span class="visually-hidden">Modifier </span>{{ entry.name }}</span>
-          <span class="entry__detail">{{ formatGrams(entry.grams) }} · {{ formatKcal(entry.nutrients.energyKcal) }}</span>
+          <span class="font-semibold"><span class="sr-only">Modifier </span>{{ entry.name }}</span>
+          <span class="text-sm text-muted tabular-nums">{{ formatGrams(entry.grams) }} · {{ formatKcal(entry.nutrients.energyKcal) }}</span>
         </button>
       </li>
     </ul>
 
-    <div class="meal__actions">
+    <div class="flex flex-wrap gap-2">
       <UiButton
         variant="ghost"
         :aria-label="`Ajouter un aliment ${toSlot(meal.slot)}`"
@@ -78,80 +80,3 @@ const titleId = computed(() => `meal-title-${props.meal.slot}`)
     </div>
   </section>
 </template>
-
-<style scoped>
-.meal {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-}
-
-.meal__header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.meal__title {
-  font-size: var(--text-md);
-  font-weight: 700;
-}
-
-.meal__title:focus {
-  outline: none;
-}
-
-.meal__energy {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.meal__entries {
-  display: flex;
-  flex-direction: column;
-}
-
-.entry {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-1);
-  width: 100%;
-  min-height: var(--tap-target);
-  padding: var(--space-2) 0;
-  background: transparent;
-  border: 0;
-  border-top: 1px solid var(--color-border);
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.entry:focus-visible {
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
-}
-
-.entry__name {
-  font-weight: 600;
-}
-
-.entry__detail {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-variant-numeric: tabular-nums;
-}
-
-.meal__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-</style>

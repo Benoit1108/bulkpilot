@@ -11,15 +11,5 @@ withDefaults(defineProps<{
 </script>
 
 <template>
-  <span class="macro-line"><template v-if="energyKcal !== null">{{ formatKcal(energyKcal) }} · </template><abbr title="Protéines">Prot.</abbr>&nbsp;{{ formatMacro(protein) }} · <abbr title="Glucides">Gluc.</abbr>&nbsp;{{ formatMacro(carbohydrate) }} · <abbr title="Lipides">Lip.</abbr>&nbsp;{{ formatMacro(fat) }}</span>
+  <span class="tabular-nums [&_abbr]:no-underline"><template v-if="energyKcal !== null">{{ formatKcal(energyKcal) }} · </template><abbr title="Protéines">Prot.</abbr>&nbsp;{{ formatMacro(protein) }} · <abbr title="Glucides">Gluc.</abbr>&nbsp;{{ formatMacro(carbohydrate) }} · <abbr title="Lipides">Lip.</abbr>&nbsp;{{ formatMacro(fat) }}</span>
 </template>
-
-<style scoped>
-.macro-line {
-  font-variant-numeric: tabular-nums;
-}
-
-.macro-line abbr {
-  text-decoration: none;
-}
-</style>

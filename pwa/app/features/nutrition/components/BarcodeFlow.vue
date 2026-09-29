@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import BarcodeScanner from '~/features/nutrition/components/BarcodeScanner.vue'
 import CustomFoodForm from '~/features/nutrition/components/CustomFoodForm.vue'
+import ScannedProductCard from '~/features/nutrition/components/ScannedProductCard.vue'
 import { NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
-import { formatKcal } from '~/features/nutrition/format'
 import type { BarcodeScan, CustomFoodInput, Food, ScannedProduct } from '~/features/nutrition/nutrition'
 import { asApiError } from '~/services/api/client'
 import type { ApiError } from '~/services/api/errors'
@@ -25,10 +25,9 @@ type Step
     | { kind: 'failed', barcode: string, error: ApiError }
 const step = ref<Step>({ kind: 'scanning' })
 const confirming = useSubmission()
-const productHeading = useId()
 
 /** Each step starts at its heading, so that keyboard and screen reader users follow along. */
-const heading = ref<HTMLElement | null>(null)
+const heading = ref<{ focus: () => void } | null>(null)
 watch(() => step.value.kind, () => {
   confirming.clear()
   void nextTick(() => {
@@ -85,32 +84,6 @@ function saved(food: Food): void {
   emit('food', food)
 }
 
-const grams = (value: number) => `${value.toLocaleString('fr-FR')}\u00A0g`
-const NUTRIENT_NAMES: Record<string, string> = {
-  energyKcal: 'l’énergie', protein: 'les protéines', carbohydrate: 'les glucides', fat: 'les lipides',
-  fibre: 'les fibres', sugars: 'les sucres', saturatedFat: 'les acides gras saturés', salt: 'le sel',
-}
-
-/** What looks wrong, in words. */
-function suspectReason(suspect: NonNullable<ScannedProduct['suspect']>): string {
-  switch (suspect) {
-    case 'macros': return 'protéines, glucides et lipides dépassent 100\u00A0g pour 100\u00A0g'
-    case 'sugars': return 'plus de sucres que de glucides'
-    case 'saturatedFat': return 'plus d’acides gras saturés que de lipides'
-    default: return `${NUTRIENT_NAMES[suspect]} ne semble pas plausible`
-  }
-}
-
-function per100g(product: ScannedProduct) {
-  const suspect = product.suspect === 'macros' ? ['protein', 'carbohydrate', 'fat'] : [product.suspect]
-  return ([
-    ['energyKcal', 'Énergie', product.energyKcal === null ? null : formatKcal(product.energyKcal)],
-    ['protein', 'Protéines', product.protein === null ? null : grams(product.protein)],
-    ['carbohydrate', 'Glucides', product.carbohydrate === null ? null : grams(product.carbohydrate)],
-    ['fat', 'Lipides', product.fat === null ? null : grams(product.fat)],
-  ] as const).map(([key, label, value]) => ({ key, label, value, suspect: suspect.includes(key) }))
-}
-
 const INTROS: Record<Reason, string> = {
   unknown: 'Produit inconnu d’Open Food Facts\u00A0: saisis-le depuis son étiquette, tu le retrouveras en le scannant.',
   unreachable: 'Sans Open Food Facts pour l’instant, saisis le produit depuis son étiquette\u00A0: tu le retrouveras en le scannant.',
@@ -130,10 +103,11 @@ const announcement = computed(() => {
 </script>
 
 <template>
-  <div class="flow">
+  <div class="flex flex-col gap-3">
     <p
-      class="visually-hidden"
+      class="sr-only"
       role="status"
+      data-testid="scan-status"
     >
       {{ announcement }}
     </p>
@@ -141,7 +115,7 @@ const announcement = computed(() => {
     <template v-if="step.kind === 'scanning'">
       <h3
         ref="heading"
-        class="flow__title"
+        class="font-bold focus:outline-none"
         tabindex="-1"
       >
         Scanner le code-barres
@@ -152,16 +126,16 @@ const announcement = computed(() => {
     <template v-else-if="step.kind === 'looking'">
       <h3
         ref="heading"
-        class="flow__title"
+        class="font-bold focus:outline-none"
         tabindex="-1"
       >
         Recherche du produit
       </h3>
       <p
-        class="muted flow__looking"
+        class="flex items-center gap-2 text-muted"
         aria-hidden="true"
       >
-        <span class="flow__spinner" />
+        <span class="size-4 animate-spin rounded-full border-2 border-current border-r-transparent motion-reduce:animate-none" />
         Code-barres&nbsp;: {{ step.barcode }}
       </p>
       <UiButton
@@ -173,66 +147,18 @@ const announcement = computed(() => {
     </template>
 
     <template v-else-if="step.kind === 'proposed'">
-      <article
-        class="product"
-        :aria-labelledby="productHeading"
-      >
-        <h3
-          :id="productHeading"
-          ref="heading"
-          class="product__name"
-          tabindex="-1"
-        >
-          {{ step.product.name ?? 'Produit sans nom' }}
-        </h3>
-        <p class="muted">
-          {{ [step.product.brand, step.product.quantity].filter(Boolean).join(' · ') }}
-          <span class="product__code">Code-barres&nbsp;: {{ step.barcode }}</span>
-        </p>
-        <p class="product__caption">
-          Pour 100&nbsp;g
-          <template v-if="step.product.servingGrams">
-            · portion indiquée&nbsp;: {{ grams(step.product.servingGrams) }}
-          </template>
-        </p>
-        <dl class="product__values">
-          <div
-            v-for="row in per100g(step.product)"
-            :key="row.key"
-          >
-            <dt>{{ row.label }}</dt>
-            <dd :class="{ product__missing: row.value === null || row.suspect }">
-              {{ row.value ?? 'inconnu' }}
-              <span
-                v-if="row.suspect"
-                class="product__flag"
-              >(à vérifier)</span>
-            </dd>
-          </div>
-        </dl>
-        <p class="muted product__note">
-          Données Open Food Facts (ODbL), saisies par des contributeurs&nbsp;: compare-les avec l’étiquette.
-        </p>
-      </article>
-
-      <UiAlert
-        v-if="!step.product.complete"
-        tone="info"
-      >
-        <template v-if="step.product.missing.length">
-          Il manque des valeurs&nbsp;: complète-les depuis l’étiquette.
-        </template>
-        <template v-else-if="step.product.suspect">
-          Ces valeurs ne tiennent pas ensemble ({{ suspectReason(step.product.suspect) }})&nbsp;: corrige-les depuis l’étiquette.
-        </template>
-      </UiAlert>
+      <ScannedProductCard
+        ref="heading"
+        :product="step.product"
+        :barcode="step.barcode"
+      />
       <UiAlert
         v-if="confirming.message.value"
         tone="error"
       >
         {{ confirming.message.value }}
       </UiAlert>
-      <div class="flow__actions">
+      <div class="flex flex-wrap gap-2">
         <UiButton
           v-if="step.product.complete"
           :loading="confirming.pending.value"
@@ -250,7 +176,7 @@ const announcement = computed(() => {
       </div>
       <p
         v-if="step.product.complete"
-        class="muted product__note"
+        class="text-sm text-muted"
       >
         Conformes, elles rejoignent le catalogue commun. Corrigées, elles ne valent que pour toi.
       </p>
@@ -259,14 +185,14 @@ const announcement = computed(() => {
     <template v-else-if="step.kind === 'completing'">
       <h3
         ref="heading"
-        class="flow__title"
+        class="font-bold focus:outline-none"
         tabindex="-1"
       >
         {{ step.reason === 'correcting' ? 'Corriger les valeurs' : 'Saisir le produit' }}
       </h3>
-      <p class="muted">
+      <p class="text-muted">
         {{ INTROS[step.reason] }}
-        <span class="product__code">Code-barres&nbsp;: {{ step.barcode }}</span>
+        <span class="block text-sm tabular-nums">Code-barres&nbsp;: {{ step.barcode }}</span>
       </p>
       <CustomFoodForm
         :draft="{ ...(step.product ?? {}), barcode: step.barcode }"
@@ -280,7 +206,7 @@ const announcement = computed(() => {
     <template v-else-if="step.kind === 'failed'">
       <h3
         ref="heading"
-        class="flow__title"
+        class="font-bold focus:outline-none"
         tabindex="-1"
       >
         Recherche impossible
@@ -288,7 +214,7 @@ const announcement = computed(() => {
       <UiAlert tone="error">
         {{ messageFor(step.error) }}
       </UiAlert>
-      <div class="flow__actions">
+      <div class="flex flex-wrap gap-2">
         <UiButton @click="lookUp(step.barcode)">
           Réessayer
         </UiButton>
@@ -310,107 +236,3 @@ const announcement = computed(() => {
     </UiButton>
   </div>
 </template>
-
-<style scoped>
-.flow {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.flow__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.flow__title {
-  font-weight: 700;
-}
-
-.flow__title:focus,
-.product__name:focus {
-  outline: none;
-}
-
-.flow__looking {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.flow__spinner {
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid currentcolor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  animation: flow-spin 0.8s linear infinite;
-}
-
-@keyframes flow-spin {
-  to { transform: rotate(1turn); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .flow__spinner { animation: none; }
-}
-
-.muted {
-  color: var(--color-text-muted);
-}
-
-.product {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-}
-
-.product__name {
-  font-weight: 700;
-}
-
-.product__code {
-  display: block;
-  font-size: var(--text-sm);
-  font-variant-numeric: tabular-nums;
-}
-
-.product__values {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-2);
-}
-
-.product__values dt {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.product__values dd {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.product__missing {
-  color: var(--color-danger);
-}
-
-.product__caption {
-  font-size: var(--text-sm);
-  font-weight: 600;
-}
-
-.product__flag {
-  font-size: var(--text-sm);
-  font-weight: 400;
-}
-
-.product__note {
-  font-size: var(--text-sm);
-}
-</style>

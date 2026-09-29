@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TEXT_LINK } from '~/components/ui/classes'
 import ProgramForm from '~/features/training/components/ProgramForm.vue'
 import ProgramSummary from '~/features/training/components/ProgramSummary.vue'
 import { TRAINING_KEYS, isProgramKey } from '~/features/training/cacheKeys'
@@ -22,6 +23,7 @@ const { data: program, error, refresh } = useAsyncData(
 )
 const gone = computed(() => error.value !== null && error.value !== undefined && asApiError(error.value).kind === 'not_found')
 const current = computed(() => program.value !== null && program.value !== undefined && program.value.version === program.value.currentVersion)
+const hasHistory = computed(() => (program.value?.versions.length ?? 0) > 1)
 const notice = ref<string | null>(null)
 const action = useSubmission()
 const dateFormat = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' })
@@ -56,7 +58,7 @@ async function archive(): Promise<void> {
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/training/programmes"
       label="Mes programmes"
@@ -73,7 +75,7 @@ async function archive(): Promise<void> {
     />
     <template v-else-if="program">
       <UiCard :title="program.name">
-        <p class="meta">
+        <p class="mb-3 text-sm text-muted">
           <template v-if="current">
             {{ program.active ? 'Programme suivi' : 'Programme non suivi' }} · version {{ program.version }}
           </template>
@@ -84,14 +86,15 @@ async function archive(): Promise<void> {
         <NuxtLink
           v-if="!current"
           :to="`/training/programmes/${program.id}`"
-          class="back-current"
+          class="mb-2"
+          :class="TEXT_LINK"
         >
           Revenir à la version actuelle
         </NuxtLink>
         <ProgramSummary :days="program.days" />
         <div
           v-if="current"
-          class="form__actions actions"
+          class="mt-4 flex flex-wrap gap-2"
         >
           <UiButton
             v-if="!program.active"
@@ -118,18 +121,20 @@ async function archive(): Promise<void> {
       </UiAlert>
 
       <UiCard
-        v-if="program.versions.length > 1"
+        v-if="hasHistory"
         title="Versions"
       >
-        <p class="meta">
+        <p class="mb-3 text-sm text-muted">
           Chaque modification des jours crée une version&nbsp;; tes séances passées restent liées à la leur.
         </p>
-        <ul class="versions">
+        <ul class="flex flex-col">
           <li
             v-for="past in program.versions"
             :key="past.number"
+            class="flex min-h-tap items-center justify-between gap-3 border-t border-line"
           >
             <NuxtLink
+              class="font-semibold text-accent-ink aria-[current=page]:text-inherit"
               :to="past.number === program.currentVersion ? `/training/programmes/${program.id}` : { query: { version: past.number } }"
               :aria-current="past.number === program.version ? 'page' : undefined"
             >
@@ -137,7 +142,7 @@ async function archive(): Promise<void> {
                 (actuelle)
               </template>
             </NuxtLink>
-            <span class="versions__date">{{ dateFormat.format(new Date(past.createdAt)) }}</span>
+            <span class="text-sm text-muted">{{ dateFormat.format(new Date(past.createdAt)) }}</span>
           </li>
         </ul>
       </UiCard>
@@ -164,52 +169,3 @@ async function archive(): Promise<void> {
     />
   </div>
 </template>
-
-<style scoped>
-.meta {
-  margin-bottom: var(--space-3);
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.actions {
-  margin-top: var(--space-4);
-}
-
-.back-current {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap-target);
-  margin-bottom: var(--space-2);
-  color: var(--color-accent-text);
-  font-weight: 600;
-}
-
-.versions {
-  display: flex;
-  flex-direction: column;
-}
-
-.versions li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: var(--tap-target);
-  border-top: 1px solid var(--color-border);
-}
-
-.versions a {
-  color: var(--color-accent-text);
-  font-weight: 600;
-}
-
-.versions a[aria-current='page'] {
-  color: inherit;
-}
-
-.versions__date {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-</style>

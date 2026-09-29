@@ -1,0 +1,39 @@
+/**
+ * Class lists shared across components: buttons (and links styled as one), chips, text links, form
+ * fields. Tailwind reads them from here: each class is written out in full (whole class lists may be
+ * joined, a class name is never built from pieces).
+ */
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
+
+const BUTTON = 'inline-flex min-h-tap cursor-pointer touch-manipulation items-center justify-center gap-2 rounded-md border px-4 font-semibold no-underline transition-[background-color,border-color,opacity] disabled:cursor-not-allowed disabled:opacity-55 aria-disabled:cursor-not-allowed aria-disabled:opacity-55'
+
+const VARIANTS: Record<ButtonVariant, string> = {
+  primary: 'border-transparent bg-accent-fill text-accent-contrast not-disabled:not-aria-disabled:hover:bg-accent-fill-hover',
+  secondary: 'border-line bg-surface-raised text-ink not-disabled:not-aria-disabled:hover:border-accent',
+  ghost: 'border-transparent bg-transparent text-accent-ink not-disabled:not-aria-disabled:hover:bg-accent-soft',
+  /** A destructive action about to happen (a confirm button once armed). */
+  danger: 'border-danger bg-transparent text-danger not-disabled:not-aria-disabled:hover:bg-danger/10',
+}
+
+export const buttonClass = (variant: ButtonVariant) => `${BUTTON} ${VARIANTS[variant]}`
+
+/** A link in running text or under a list ("Créer un aliment", "Voir le mouvement"), tall enough to tap. */
+export const TEXT_LINK = 'inline-flex min-h-tap items-center font-semibold text-accent-ink'
+
+/** A one-tap choice (set kind, RIR): a radio hidden inside its label, filled once checked. */
+const CHIP_BASE = 'inline-flex min-h-tap min-w-tap cursor-pointer items-center justify-center rounded-md border border-line bg-surface-raised font-semibold has-checked:border-accent-fill has-checked:bg-accent-fill has-checked:text-accent-contrast has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent'
+export const CHIP = `${CHIP_BASE} px-3`
+/** A chip for a figure: square, digits of equal width. */
+export const CHIP_NUMBER = `${CHIP_BASE} p-0 tabular-nums`
+
+/** A row of a list that is itself a button (a food, an exercise, an entry): full width, a line above. */
+export const LIST_ROW = 'flex min-h-tap w-full cursor-pointer flex-col items-start gap-1 border-t border-line bg-transparent px-0 py-2 text-left text-inherit'
+
+export const fieldClass = {
+  root: 'flex flex-col gap-1',
+  label: 'text-sm font-semibold',
+  hint: 'text-sm text-muted',
+  error: 'text-sm text-danger',
+  /** The bordered box of a field; a red border once invalid. */
+  box: 'rounded-md border border-line bg-surface-raised aria-invalid:border-danger',
+} as const

@@ -32,23 +32,23 @@ function download(): void {
 </script>
 
 <template>
-  <div class="recovery">
+  <div class="flex flex-col gap-3">
     <UiAlert tone="info">
       Garde ces codes en lieu sûr (gestionnaire de mots de passe). Chacun permet une connexion si tu perds ton téléphone.
       Ils ne seront plus affichés.
     </UiAlert>
     <ol
-      class="recovery__codes"
+      class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-2 rounded-md bg-surface-raised p-3"
       data-testid="recovery-codes"
     >
       <li
         v-for="code in codes"
         :key="code"
       >
-        <code>{{ code }}</code>
+        <code class="font-mono tracking-code">{{ code }}</code>
       </li>
     </ol>
-    <div class="form__actions">
+    <div class="flex flex-wrap gap-2">
       <UiButton
         variant="secondary"
         @click="copy"
@@ -63,8 +63,9 @@ function download(): void {
       </UiButton>
     </div>
     <p
-      class="recovery__feedback"
+      class="text-sm text-muted"
       role="status"
+      data-testid="recovery-feedback"
     >
       {{ feedback }}
     </p>
@@ -76,38 +77,9 @@ function download(): void {
     </UiButton>
     <p
       v-if="!saved"
-      class="recovery__feedback"
+      class="text-sm text-muted"
     >
       Copie ou télécharge les codes pour continuer.
     </p>
   </div>
 </template>
-
-<style scoped>
-.recovery {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.recovery__codes {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
-  gap: var(--space-2);
-  margin: 0;
-  padding: var(--space-3);
-  list-style: none;
-  background: var(--color-surface-raised);
-  border-radius: var(--radius-md);
-}
-
-.recovery__codes code {
-  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-  letter-spacing: 0.05em;
-}
-
-.recovery__feedback {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-</style>

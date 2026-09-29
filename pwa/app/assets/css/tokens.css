@@ -1,17 +1,16 @@
 /*
- * Design tokens. Components only consume these variables, never raw colours,
- * so both themes stay consistent. Dark is the default theme.
+ * Design tokens, as the Tailwind theme: every utility (bg-surface, text-muted, rounded-md…) reads
+ * these variables, never raw values, so both themes stay consistent. Dark is the default theme;
+ * the light theme only redefines the colours. Keep in sync with features/shell/theme.ts.
  */
-:root,
-:root[data-theme='dark'] {
-  color-scheme: dark;
-
-  --color-bg: #0d0b14;
+@theme static {
+  --color-*: initial;
+  --color-canvas: #0d0b14;
   --color-surface: #16131f;
   --color-surface-raised: #1e1a2a;
-  --color-border: #2c2640;
-  --color-text: #f4f2f8;
-  --color-text-muted: #a8a3b8;
+  --color-line: #2c2640;
+  --color-ink: #f4f2f8;
+  --color-muted: #a8a3b8;
 
   /* Accent for rings, icons and strokes. */
   --color-accent: #8b5cf6;
@@ -20,67 +19,102 @@
   --color-accent-fill-hover: #6d28d9;
   --color-accent-contrast: #ffffff;
   --color-accent-soft: rgb(139 92 246 / 0.16);
-  --color-accent-text: #c4b5fd;
+  --color-accent-ink: #c4b5fd;
 
   --color-success: #34d399;
   --color-danger: #f87171;
 
-  --shadow-raised: 0 8px 24px rgb(0 0 0 / 0.35);
-}
+  /* Same in both themes: behind a modal, and around the camera picture. */
+  --color-scrim: rgb(0 0 0 / 0.5);
+  --color-camera: #000000;
 
-:root[data-theme='light'] {
-  color-scheme: light;
+  /* Tailwind copies a shadow's value into its class: its colour is a variable so each theme sets it. */
+  --color-shadow: rgb(0 0 0 / 0.35);
 
-  --color-bg: #f7f6fb;
-  --color-surface: #ffffff;
-  --color-surface-raised: #f0edf7;
-  --color-border: #e2ddec;
-  --color-text: #17141f;
-  --color-text-muted: #5c566d;
+  --shadow-*: initial;
+  --shadow-raised: 0 8px 24px var(--color-shadow);
+  /* A done set's mark on its left edge. */
+  --shadow-mark: inset 3px 0 0 var(--color-accent);
+  /* Darkens everything around the barcode frame. */
+  --shadow-mask: 0 0 0 100vmax rgb(0 0 0 / 0.35);
 
-  --color-accent: #7c3aed;
-  --color-accent-fill: #7c3aed;
-  --color-accent-fill-hover: #6d28d9;
-  --color-accent-contrast: #ffffff;
-  --color-accent-soft: rgb(124 58 237 / 0.1);
-  --color-accent-text: #6d28d9;
-
-  --color-success: #047857;
-  --color-danger: #b91c1c;
-
-  --shadow-raised: 0 8px 24px rgb(23 20 31 / 0.08);
-}
-
-:root {
+  --font-*: initial;
   --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Codes to read or type (recovery codes, TOTP key). */
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
 
+  /* Sizes only: the line height is inherited (1.5 on body) unless a leading-* utility says otherwise. */
+  --text-*: initial;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
-  --text-md: 1rem;
+  --text-base: 1rem;
   --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  /* Figures typed with steppers (load, reps). */
+  --text-number: 1.5rem;
   --text-2xl: 1.75rem;
+  /* Fluid: the workout screen's exercise name and rest clock, read from a distance. */
+  --text-title: clamp(1.5rem, 7vw, 2rem);
+  --text-title--line-height: 1.15;
+  --text-clock: clamp(2rem, 11vw, 3rem);
 
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
+  --tracking-*: initial;
+  --tracking-tight: -0.02em;
+  --tracking-snug: -0.01em;
+  /* Small upper-case labels ("eyebrows"). */
+  --tracking-caps: 0.04em;
+  /* Codes to read out or copy, one character at a time. */
+  --tracking-code: 0.05em;
 
+  --radius-*: initial;
   --radius-sm: 0.5rem;
   --radius-md: 0.875rem;
   --radius-lg: 1.25rem;
   --radius-full: 999px;
 
-  /* WCAG 2.2 target size: every interactive element is at least this tall. */
-  --tap-target: 2.75rem;
+  /* WCAG 2.2 target size: every interactive element is at least this tall (min-h-tap, size-tap). */
+  --spacing-tap: 2.75rem;
+  /* A label's height (text-sm, line height 1.5, gap-1): aligns a button with the field below it. */
+  --spacing-label: calc(var(--text-sm) * 1.5 + 0.25rem);
 
-  /* Navigation: bottom bar on phones, rail from 48rem, sidebar from 75rem (see ShellNav). */
-  --bottom-nav-height: 4rem;
-  --nav-rail-width: 5.5rem;
-  --nav-sidebar-width: 15rem;
-  --content-max-width: 72rem;
-  --reading-max-width: 40rem;
+  /* Navigation: bottom bar on phones, rail from md (48rem), labelled sidebar from xl (75rem). */
+  --breakpoint-xl: 75rem;
+  --spacing-bottom-nav: 4rem;
+  --spacing-nav-rail: 5.5rem;
+  --spacing-nav-sidebar: 15rem;
+  --container-content: 72rem;
+  --container-reading: 40rem;
 
-  --transition-fast: 120ms ease-out;
+  --default-transition-duration: 120ms;
+  --default-transition-timing-function: ease-out;
+}
+
+@layer base {
+  :root,
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+  }
+
+  :root[data-theme='light'] {
+    color-scheme: light;
+
+    --color-canvas: #f7f6fb;
+    --color-surface: #ffffff;
+    --color-surface-raised: #f0edf7;
+    --color-line: #e2ddec;
+    --color-ink: #17141f;
+    --color-muted: #5c566d;
+
+    --color-accent: #7c3aed;
+    --color-accent-fill: #7c3aed;
+    --color-accent-fill-hover: #6d28d9;
+    --color-accent-contrast: #ffffff;
+    --color-accent-soft: rgb(124 58 237 / 0.1);
+    --color-accent-ink: #6d28d9;
+
+    --color-success: #047857;
+    --color-danger: #b91c1c;
+
+    --color-shadow: rgb(23 20 31 / 0.08);
+  }
 }

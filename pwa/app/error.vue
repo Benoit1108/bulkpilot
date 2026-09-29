@@ -12,8 +12,8 @@ useHead({ title: 'Erreur' })
 </script>
 
 <template>
-  <main class="error-page">
-    <h1 class="error-page__title">
+  <main class="flex min-h-dvh flex-col items-center justify-center gap-6 p-6 text-center">
+    <h1 class="text-lg font-semibold">
       {{ message }}
     </h1>
     <UiButton @click="clearError({ redirect: '/' })">
@@ -21,21 +21,3 @@ useHead({ title: 'Erreur' })
     </UiButton>
   </main>
 </template>
-
-<style scoped>
-.error-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-5);
-  min-height: 100dvh;
-  padding: var(--space-5);
-  text-align: center;
-}
-
-.error-page__title {
-  font-size: var(--text-lg);
-  font-weight: 600;
-}
-</style>

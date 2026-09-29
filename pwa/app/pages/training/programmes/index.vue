@@ -18,17 +18,16 @@ const items = computed(() => (programs.value ?? []).map(program => ({
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/training"
       label="Training"
     />
-    <NuxtLink
+    <UiLinkButton
       to="/training/programmes/nouveau"
-      class="link-button"
     >
       Nouveau programme
-    </NuxtLink>
+    </UiLinkButton>
     <UiLoadError
       v-if="error && !programs"
       @retry="refresh()"

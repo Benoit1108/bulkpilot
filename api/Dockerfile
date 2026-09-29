@@ -79,7 +79,8 @@ RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
 	pnpm install --frozen-lockfile --ignore-scripts
 
 COPY --from=pwa --link . ./
-RUN pnpm nuxt prepare && pnpm generate
+# The build fails when the app outgrows its size budget (pwa/bundle-budget.json, ADR-0025).
+RUN pnpm nuxt prepare && pnpm generate && node scripts/bundle-budget.mjs
 
 #--------------------------------------------------------------------------
 # Prod: immutable image, no dev dependencies or tooling, non-root

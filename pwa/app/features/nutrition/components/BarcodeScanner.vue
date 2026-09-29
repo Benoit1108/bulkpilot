@@ -150,26 +150,29 @@ function submitTyped(): void {
 </script>
 
 <template>
-  <div class="scanner">
+  <div
+    class="flex flex-col gap-3"
+    data-testid="scanner"
+  >
     <div
       v-if="state === 'starting' || state === 'scanning'"
-      class="scanner__view"
+      class="relative aspect-4/3 overflow-hidden rounded-md bg-camera"
     >
       <!-- Decorative for screen readers: the typed code below is the accessible way in. -->
       <video
         ref="video"
-        class="scanner__video"
+        class="size-full object-cover"
         muted
         playsinline
         aria-hidden="true"
       />
       <span
-        class="scanner__frame"
+        class="absolute inset-x-[8%] inset-y-[30%] rounded-sm border-2 border-accent-contrast shadow-mask"
         aria-hidden="true"
       />
       <UiButton
         v-if="torch"
-        class="scanner__torch"
+        class="absolute right-2 bottom-2"
         variant="secondary"
         :aria-pressed="torch.on"
         @click="toggleTorch"
@@ -183,7 +186,7 @@ function submitTyped(): void {
       </UiButton>
     </div>
     <p
-      class="scanner__status"
+      class="text-muted"
       role="status"
     >
       <template v-if="state === 'starting'">
@@ -217,7 +220,7 @@ function submitTyped(): void {
     </UiButton>
 
     <form
-      class="scanner__typed"
+      class="flex flex-col gap-2"
       novalidate
       @submit.prevent="submitTyped"
     >
@@ -241,49 +244,3 @@ function submitTyped(): void {
     </form>
   </div>
 </template>
-
-<style scoped>
-.scanner {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.scanner__view {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 4 / 3;
-  background: #000;
-  border-radius: var(--radius-md);
-}
-
-.scanner__video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.scanner__frame {
-  position: absolute;
-  inset: 30% 8%;
-  border: 2px solid var(--color-accent-contrast);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 0 0 100vmax rgb(0 0 0 / 0.35);
-}
-
-.scanner__torch {
-  position: absolute;
-  right: var(--space-2);
-  bottom: var(--space-2);
-}
-
-.scanner__status {
-  color: var(--color-text-muted);
-}
-
-.scanner__typed {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-</style>

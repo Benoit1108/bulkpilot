@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { LIST_ROW, TEXT_LINK } from '~/components/ui/classes'
 import { TRAINING_KEYS } from '~/features/training/cacheKeys'
 import { EQUIPMENT, MUSCLES, labelOf, type Exercise, type Muscle } from '~/features/training/training'
 import { matches } from '~/services/text/search'
@@ -40,7 +41,7 @@ function detail(exercise: Exercise): string {
 </script>
 
 <template>
-  <div class="picker">
+  <div class="flex flex-col gap-3">
     <UiInput
       v-model="query"
       label="Rechercher un exercice"
@@ -60,7 +61,7 @@ function detail(exercise: Exercise): string {
     />
     <p
       v-else
-      class="picker__status"
+      class="text-sm text-muted"
       role="status"
     >
       <template v-if="count !== null">
@@ -71,7 +72,7 @@ function detail(exercise: Exercise): string {
     </p>
     <ul
       v-if="shown.length"
-      class="picker__list"
+      class="flex flex-col"
       aria-label="Exercices"
     >
       <li
@@ -80,71 +81,20 @@ function detail(exercise: Exercise): string {
       >
         <button
           type="button"
-          class="item"
+          :class="LIST_ROW"
           @click="emit('pick', exercise)"
         >
-          <span class="item__name">{{ exercise.name }}</span>
-          <span class="item__detail">{{ detail(exercise) }}</span>
+          <span class="font-semibold">{{ exercise.name }}</span>
+          <span class="text-sm text-muted">{{ detail(exercise) }}</span>
         </button>
       </li>
     </ul>
     <NuxtLink
       v-if="props.create"
       to="/training/exercices/nouveau"
-      class="picker__create"
+      :class="TEXT_LINK"
     >
       Exercice introuvable&nbsp;? Créer un exercice
     </NuxtLink>
   </div>
 </template>
-
-<style scoped>
-.picker {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.picker__status {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.picker__list {
-  display: flex;
-  flex-direction: column;
-}
-
-.item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-1);
-  width: 100%;
-  min-height: var(--tap-target);
-  padding: var(--space-2) 0;
-  background: transparent;
-  border: 0;
-  border-top: 1px solid var(--color-border);
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.item__name {
-  font-weight: 600;
-}
-
-.item__detail {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.picker__create {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap-target);
-  color: var(--color-accent-text);
-  font-weight: 600;
-}
-</style>

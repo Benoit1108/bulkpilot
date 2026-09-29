@@ -19,7 +19,7 @@ async function submit(): Promise<void> {
 
 <template>
   <form
-    class="form"
+    class="flex flex-col gap-4"
     novalidate
     @submit.prevent="submit"
   >
@@ -60,9 +60,9 @@ async function submit(): Promise<void> {
     >
       Créer mon compte
     </UiButton>
-    <p class="form__links">
+    <UiLinkRow>
       <NuxtLink to="/connexion">J’ai déjà un compte</NuxtLink>
-    </p>
+    </UiLinkRow>
     <ExternalSignIn />
   </form>
 </template>

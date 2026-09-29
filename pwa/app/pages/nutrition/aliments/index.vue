@@ -15,17 +15,16 @@ const items = computed(() => (foods.value ?? []).map(food => ({
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/nutrition"
       label="Nutrition"
     />
-    <NuxtLink
+    <UiLinkButton
       to="/nutrition/aliments/nouveau"
-      class="link-button"
     >
       Nouvel aliment
-    </NuxtLink>
+    </UiLinkButton>
     <UiLoadError
       v-if="error && !foods"
       @retry="refresh()"

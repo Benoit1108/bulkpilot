@@ -23,7 +23,7 @@ async function destroy(): Promise<void> {
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/nutrition/aliments"
       label="Mes aliments"
@@ -63,17 +63,10 @@ async function destroy(): Promise<void> {
           :loading="removal.pending.value"
           @confirm="destroy"
         />
-        <p class="note">
+        <p class="text-sm text-muted">
           Les repas déjà saisis gardent leurs valeurs.
         </p>
       </template>
     </template>
   </div>
 </template>
-
-<style scoped>
-.note {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-</style>

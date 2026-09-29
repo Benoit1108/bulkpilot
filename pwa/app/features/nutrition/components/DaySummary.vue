@@ -22,21 +22,18 @@ function macroText(value: number, max: number | null): string {
 </script>
 
 <template>
-  <UiCard
-    title="Bilan du jour"
-    class="summary"
-  >
-    <div class="summary__energy">
-      <p class="summary__kcal">
-        <span class="summary__eaten">{{ formatKcal(eaten) }}</span>
+  <UiCard title="Bilan du jour">
+    <div class="flex flex-wrap items-baseline justify-between gap-2">
+      <p>
+        <span class="text-2xl font-bold tabular-nums">{{ formatKcal(eaten) }}</span>
         <span
           v-if="target"
-          class="summary__target"
+          class="text-muted"
         > sur {{ formatKcal(target.energyKcal) }}</span>
       </p>
       <p
         v-if="gap !== null"
-        class="summary__gap"
+        class="text-muted"
         data-testid="energy-gap"
       >
         <template v-if="gap > 0">
@@ -58,14 +55,18 @@ function macroText(value: number, max: number | null): string {
       :value-text="target ? `${formatKcal(eaten)} sur ${formatKcal(target.energyKcal)}` : formatKcal(eaten)"
     />
 
-    <dl class="summary__macros">
+    <dl class="grid grid-cols-3 gap-3">
       <div
         v-for="macro in macros"
         :key="macro.key"
-        class="summary__macro"
+        class="flex min-w-0 flex-col gap-1"
       >
-        <dt>{{ macro.label }}</dt>
-        <dd>{{ macroText(macro.value, macro.target) }}</dd>
+        <dt class="text-sm font-semibold">
+          {{ macro.label }}
+        </dt>
+        <dd class="text-sm text-muted tabular-nums">
+          {{ macroText(macro.value, macro.target) }}
+        </dd>
         <UiProgressBar
           :label="macro.label"
           :value="macro.value"
@@ -85,66 +86,15 @@ function macroText(value: number, max: number | null): string {
 
     <p
       v-if="!target"
-      class="summary__no-target"
+      class="text-muted"
     >
       Pas encore d’objectif pour ce jour.
-      <NuxtLink to="/nutrition/objectifs">
+      <NuxtLink
+        to="/nutrition/objectifs"
+        class="font-semibold text-accent-ink"
+      >
         Définir mes objectifs
       </NuxtLink>
     </p>
   </UiCard>
 </template>
-
-<style scoped>
-.summary__energy {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-2);
-}
-
-.summary__eaten {
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.summary__target,
-.summary__gap {
-  color: var(--color-text-muted);
-}
-
-.summary__macros {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-3);
-}
-
-.summary__macro {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  min-width: 0;
-}
-
-.summary__macro dt {
-  font-size: var(--text-sm);
-  font-weight: 600;
-}
-
-.summary__macro dd {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-variant-numeric: tabular-nums;
-}
-
-.summary__no-target {
-  color: var(--color-text-muted);
-}
-
-.summary__no-target a {
-  color: var(--color-accent-text);
-  font-weight: 600;
-}
-</style>

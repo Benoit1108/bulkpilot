@@ -63,7 +63,7 @@ describe('nutrition page', () => {
     const wrapper = await openPage()
 
     expect(fake.calls.find(call => call.route === 'GET /api/nutrition/days/{day}')?.params).toMatchObject({ path: { day: TODAY } })
-    expect(wrapper.get('.days__label').text()).toBe('Aujourd’hui')
+    expect(wrapper.get('[data-testid="day-label"]').text()).toBe('Aujourd’hui')
     const lunch = wrapper.get('[data-testid="meal-lunch"]')
     expect(lunch.text()).toContain('Riz blanc, cru')
     expect(lunch.text()).toContain('/ 900 kcal')
@@ -77,7 +77,7 @@ describe('nutrition page', () => {
     const wrapper = await mountSuspended(NutritionPage, { route: `/nutrition?jour=${yesterday}`, attachTo: document.body })
     await flushPromises()
 
-    expect(wrapper.get('.days__label').text()).toBe('Hier')
+    expect(wrapper.get('[data-testid="day-label"]').text()).toBe('Hier')
     await button(wrapper, 'Jour précédent').trigger('click')
     expect(navigate).toHaveBeenCalledWith({ query: { jour: shiftDay(TODAY, -2) } })
     await button(wrapper, 'Jour suivant').trigger('click')
@@ -85,7 +85,7 @@ describe('nutrition page', () => {
     await button(wrapper, 'Aujourd’hui').trigger('click')
     await flushPromises()
     expect(navigate).toHaveBeenLastCalledWith({ query: {} })
-    expect(document.activeElement).toBe(wrapper.get('.days__label').element)
+    expect(document.activeElement).toBe(wrapper.get('[data-testid="day-label"]').element)
     wrapper.unmount()
   })
 
@@ -147,14 +147,14 @@ describe('nutrition page', () => {
     await buttonStartingWith(wrapper, 'Skyr nature', 'dialog[open]').trigger('click')
     expect((field(wrapper, 'Quantité').element as HTMLInputElement).value).toBe('150')
     expect(wrapper.get('dialog[open] [aria-pressed="true"]').text()).toBe('1 pot (150 g)')
-    expect(wrapper.get('dialog[open] .quantity__preview').text()).toContain('95 kcal')
+    expect(wrapper.get('dialog[open] [data-testid="quantity-preview"]').text()).toContain('95 kcal')
 
     await wrapper.get('dialog[open] form').trigger('submit')
     await flushPromises()
 
     expect(fake.calls.find(call => call.route === 'POST /api/nutrition/entries')?.body).toEqual({ foodId: skyr.id, day: TODAY, slot: 'breakfast', grams: 150 })
     expect(wrapper.get('[data-testid="meal-breakfast"]').text()).toContain('Skyr nature')
-    expect(wrapper.get('.ui-status').text()).toBe('Skyr nature ajouté au petit-déjeuner.')
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('Skyr nature ajouté au petit-déjeuner.')
   })
 
   it('reads quantities typed with a decimal comma', async () => {
@@ -263,6 +263,7 @@ describe('nutrition page', () => {
     expect(wrapper.get('dialog[open] [role="alert"]').text()).toContain('entre 0 et 5 000 g')
 
     await button(wrapper, 'Choisir autre chose').trigger('click')
+    await flushPromises()
     expect(wrapper.get('dialog[open]').text()).toContain('Récents')
     expect(wrapper.find('dialog[open] [role="alert"]').exists()).toBe(false)
   })
@@ -281,10 +282,10 @@ describe('nutrition page', () => {
     })
     const wrapper = await openPage()
 
-    await wrapper.get('[data-testid="meal-lunch"] .entry').trigger('click')
+    await wrapper.get('[data-testid="meal-lunch"] li button').trigger('click')
     await flushPromises()
     expect(wrapper.get('dialog[open] h2').text()).toBe('Modifier l’entrée')
-    expect(wrapper.get('dialog[open] .quantity__preview').text()).toContain('352 kcal')
+    expect(wrapper.get('dialog[open] [data-testid="quantity-preview"]').text()).toContain('352 kcal')
     await field(wrapper, 'Quantité').setValue('200')
     await wrapper.get('dialog[open] select').setValue('dinner')
     await wrapper.get('dialog[open] form').trigger('submit')
@@ -292,14 +293,14 @@ describe('nutrition page', () => {
     expect(fake.calls.find(call => call.route === 'PUT /api/nutrition/entries/{id}')).toMatchObject({ body: { day: TODAY, slot: 'dinner', grams: 200 }, params: { path: { id: logged.id } } })
     expect(wrapper.get('[data-testid="meal-dinner"]').text()).toContain('200 g')
 
-    await wrapper.get('[data-testid="meal-dinner"] .entry').trigger('click')
+    await wrapper.get('[data-testid="meal-dinner"] li button').trigger('click')
     await flushPromises()
     await button(wrapper, 'Supprimer l’entrée').trigger('click')
     expect(fake.calls.some(call => call.route === 'DELETE /api/nutrition/entries/{id}'), 'the first tap only asks').toBe(false)
     await button(wrapper, 'Confirmer la suppression').trigger('click')
     await flushPromises()
     expect(wrapper.get('[data-testid="meal-dinner"]').text()).not.toContain('Riz')
-    expect(wrapper.get('.ui-status').text()).toBe('Riz blanc, cru retiré au dîner.')
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('Riz blanc, cru retiré au dîner.')
   })
 
   it('reloads the day, and the averages, when an entry moved to another day', async () => {
@@ -311,7 +312,7 @@ describe('nutrition page', () => {
     const days = loads('GET /api/nutrition/days/{day}')
     const averages = loads('GET /api/nutrition/averages')
 
-    await wrapper.get('[data-testid="meal-lunch"] .entry').trigger('click')
+    await wrapper.get('[data-testid="meal-lunch"] li button').trigger('click')
     await flushPromises()
     await wrapper.get('dialog[open] form').trigger('submit')
     await flushPromises()
@@ -355,17 +356,17 @@ describe('nutrition page', () => {
     await flushPromises()
     await wrapper.get('dialog[open] form').trigger('submit')
     await flushPromises()
-    expect(wrapper.get('.ui-status').text()).toBe('« Collation » est dans tes repas favoris.')
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('« Collation » est dans tes repas favoris.')
 
     await vi.advanceTimersByTimeAsync(6000)
-    expect(wrapper.get('.ui-status').text()).toBe('')
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('')
     vi.useRealTimers()
   })
 
   it('asks before deleting nothing: leaving the confirm button disarms it', async () => {
     fake.on('GET /api/nutrition/days/{day}', (_, params) => day(params!.path!.day!, [entry('lunch', 100)]))
     const wrapper = await openPage()
-    await wrapper.get('[data-testid="meal-lunch"] .entry').trigger('click')
+    await wrapper.get('[data-testid="meal-lunch"] li button').trigger('click')
     await flushPromises()
 
     await button(wrapper, 'Supprimer l’entrée').trigger('click')

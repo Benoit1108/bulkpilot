@@ -131,7 +131,7 @@ describe('recovery codes panel', () => {
     await button(wrapper, 'Copier').trigger('click')
     await flushPromises()
     expect(writeText).toHaveBeenCalledWith(expect.stringContaining('aaaaa-11111'))
-    expect(wrapper.get('.recovery__feedback[role="status"]').text()).toBe('Codes copiés.')
+    expect(wrapper.get('[data-testid="recovery-feedback"][role="status"]').text()).toBe('Codes copiés.')
 
     await button(wrapper, 'J’ai enregistré mes codes').trigger('click')
     expect(wrapper.emitted('done')).toHaveLength(1)
@@ -144,7 +144,7 @@ describe('recovery codes panel', () => {
 
     await button(wrapper, 'Copier').trigger('click')
     await flushPromises()
-    expect(wrapper.get('.recovery__feedback[role="status"]').text()).toContain('Copie impossible')
+    expect(wrapper.get('[data-testid="recovery-feedback"][role="status"]').text()).toContain('Copie impossible')
     expect(button(wrapper, 'J’ai enregistré mes codes').attributes('disabled')).toBeDefined()
 
     await button(wrapper, 'Télécharger').trigger('click')

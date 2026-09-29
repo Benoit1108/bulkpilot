@@ -12,14 +12,14 @@ const rows = computed(() => [
 </script>
 
 <template>
-  <table class="composition">
-    <caption class="composition__caption">
+  <table class="w-full border-collapse tabular-nums [&_:is(td,th)]:border-b [&_:is(td,th)]:border-line [&_:is(td,th)]:px-1 [&_:is(td,th)]:py-2 [&_:is(td,th[scope=col])]:text-right [&_:is(td,th[scope=col])]:whitespace-nowrap">
+    <caption class="mb-2 text-left text-sm text-muted">
       Composition calculée à partir des aliments
     </caption>
     <thead>
-      <tr>
+      <tr class="[&_th]:text-sm [&_th]:font-semibold [&_th]:text-muted">
         <th scope="col">
-          <span class="visually-hidden">Quantité</span>
+          <span class="sr-only">Quantité</span>
         </th>
         <th scope="col">
           Énergie
@@ -40,8 +40,11 @@ const rows = computed(() => [
         v-for="row in rows"
         :key="row.label"
       >
-        <th scope="row">
-          {{ row.label }}<span class="composition__hint">{{ row.hint }}</span>
+        <th
+          scope="row"
+          class="text-left"
+        >
+          {{ row.label }}<span class="block text-xs font-normal text-muted">{{ row.hint }}</span>
         </th>
         <td>{{ formatKcal(row.values.energyKcal) }}</td>
         <td>{{ formatMacro(row.values.protein) }}</td>
@@ -51,44 +54,3 @@ const rows = computed(() => [
     </tbody>
   </table>
 </template>
-
-<style scoped>
-.composition {
-  width: 100%;
-  border-collapse: collapse;
-  font-variant-numeric: tabular-nums;
-}
-
-.composition__caption {
-  margin-bottom: var(--space-2);
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  text-align: left;
-}
-
-.composition th,
-.composition td {
-  padding: var(--space-2) var(--space-1);
-  border-bottom: 1px solid var(--color-border);
-  text-align: right;
-  white-space: nowrap;
-}
-
-.composition th[scope='row'] {
-  text-align: left;
-  white-space: normal;
-}
-
-.composition thead th {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-weight: 600;
-}
-
-.composition__hint {
-  display: block;
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-  font-weight: 400;
-}
-</style>

@@ -44,16 +44,16 @@ async function act(action: () => Promise<void>): Promise<void> {
 </script>
 
 <template>
-  <div class="sync">
+  <div class="flex flex-col gap-2">
     <p
-      class="visually-hidden"
+      class="sr-only"
       role="status"
     >
       {{ announcement }}
     </p>
     <p
       v-if="waiting && state.pending"
-      class="sync__pending"
+      class="text-sm text-muted"
     >
       <template v-if="signedOut">
         Session expirée&nbsp;: {{ state.pending }}&nbsp;modification{{ state.pending > 1 ? 's' : '' }} attend{{ state.pending > 1 ? 'ent' : '' }} ta reconnexion pour être envoyée{{ state.pending > 1 ? 's' : '' }}.
@@ -70,7 +70,7 @@ async function act(action: () => Promise<void>): Promise<void> {
       <p>
         {{ state.failed.length }}&nbsp;modification{{ state.failed.length > 1 ? 's n’ont' : ' n’a' }} pas pu être enregistrée{{ state.failed.length > 1 ? 's' : '' }}&nbsp;: {{ state.failed[0]?.message }}
       </p>
-      <div class="form__actions sync__actions">
+      <div class="mt-2 flex flex-wrap gap-2">
         <UiButton
           variant="secondary"
           :loading="acting"
@@ -88,20 +88,3 @@ async function act(action: () => Promise<void>): Promise<void> {
     </UiAlert>
   </div>
 </template>
-
-<style scoped>
-.sync {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.sync__pending {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.sync__actions {
-  margin-top: var(--space-2);
-}
-</style>

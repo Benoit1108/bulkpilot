@@ -10,8 +10,7 @@ useEventListener('online', () => refresh())
 <template>
   <!-- Always mounted so screen readers announce content changes. -->
   <div
-    class="connectivity"
-    :class="{ 'connectivity--visible': visible }"
+    :class="{ 'flex items-center justify-between gap-3 rounded-md border border-danger bg-surface-raised px-4 py-3 text-sm': visible }"
     role="status"
   >
     <template v-if="visible">
@@ -25,17 +24,3 @@ useEventListener('online', () => refresh())
     </template>
   </div>
 </template>
-
-<style scoped>
-.connectivity--visible {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-danger);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-}
-</style>

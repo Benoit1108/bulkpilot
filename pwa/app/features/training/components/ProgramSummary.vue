@@ -4,6 +4,9 @@ import { STRATEGIES, blockLabel, labelOf, prescription, type ProgramDay, type Pr
 /** A program version, day by day, as it will be followed. */
 defineProps<{ days: ProgramDay[] }>()
 
+const isSuperset = (block: ProgramDay['blocks'][number]) => block.exercises.length > 1
+const dayId = useId()
+
 function extras(exercise: ProgramExercise): string {
   return [
     exercise.warmupSets ? `${exercise.warmupSets} d’échauffement` : null,
@@ -15,49 +18,53 @@ function extras(exercise: ProgramExercise): string {
 </script>
 
 <template>
-  <div class="summary">
+  <div class="flex flex-col gap-4">
     <div
-      v-for="day in days"
+      v-for="(day, d) in days"
       :key="day.name"
-      class="day"
+      role="group"
+      :aria-labelledby="`${dayId}-${d}`"
     >
-      <h3 class="day__name">
+      <h3
+        :id="`${dayId}-${d}`"
+        class="mb-2 font-bold"
+      >
         {{ day.name }}
       </h3>
-      <ol class="day__blocks">
+      <ol class="flex flex-col gap-2">
         <li
           v-for="(block, b) in day.blocks"
           :key="b"
-          class="block"
-          :class="{ 'block--superset': block.exercises.length > 1 }"
+          :class="{ 'border-l-3 border-accent pl-2': isSuperset(block) }"
         >
           <p
-            v-if="block.exercises.length > 1"
-            class="block__kind"
+            v-if="isSuperset(block)"
+            class="text-xs font-semibold tracking-caps text-muted uppercase"
           >
             Superset
           </p>
-          <ul class="block__exercises">
+          <ul class="flex flex-col gap-2">
             <li
               v-for="(exercise, e) in block.exercises"
               :key="e"
-              class="exercise"
+              class="grid grid-cols-[2rem_minmax(0,1fr)] gap-2"
             >
               <span
-                class="exercise__label"
+                class="font-bold text-muted tabular-nums"
                 aria-hidden="true"
+                data-testid="exercise-label"
               >{{ blockLabel(b, e, block.exercises.length) }}</span>
-              <span class="exercise__text">
-                <span class="exercise__name">
+              <span class="flex flex-col">
+                <span class="font-semibold">
                   {{ exercise.name }}<template v-if="!exercise.available">
                     (supprimé)
                   </template>
                 </span>
-                <span class="exercise__detail">{{ prescription(exercise) }}</span>
-                <span class="exercise__detail">{{ extras(exercise) }}</span>
+                <span class="text-sm text-muted">{{ prescription(exercise) }}</span>
+                <span class="text-sm text-muted">{{ extras(exercise) }}</span>
                 <span
                   v-if="exercise.notes"
-                  class="exercise__notes"
+                  class="text-sm text-muted italic"
                 >{{ exercise.notes }}</span>
               </span>
             </li>
@@ -67,72 +74,3 @@ function extras(exercise: ProgramExercise): string {
     </div>
   </div>
 </template>
-
-<style scoped>
-.summary {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.day__name {
-  margin-bottom: var(--space-2);
-  font-weight: 700;
-}
-
-.day__blocks {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.block--superset {
-  padding-left: var(--space-2);
-  border-left: 3px solid var(--color-accent);
-}
-
-.block__kind {
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.block__exercises {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.exercise {
-  display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr);
-  gap: var(--space-2);
-}
-
-.exercise__label {
-  color: var(--color-text-muted);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.exercise__text {
-  display: flex;
-  flex-direction: column;
-}
-
-.exercise__name {
-  font-weight: 600;
-}
-
-.exercise__detail,
-.exercise__notes {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.exercise__notes {
-  font-style: italic;
-}
-</style>

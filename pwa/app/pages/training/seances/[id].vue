@@ -35,7 +35,7 @@ const setsOf = (index: number): WorkoutSet[] => (workout.value?.sets ?? []).filt
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/training/seances"
       label="Historique"
@@ -52,7 +52,7 @@ const setsOf = (index: number): WorkoutSet[] => (workout.value?.sets ?? []).filt
     />
     <template v-else-if="workout">
       <UiCard :title="workout.programDay?.dayName ?? 'Séance libre'">
-        <p class="meta">
+        <p class="text-sm text-muted">
           {{ dateFormat.format(new Date(workout.startedAt)) }}<template v-if="duration">
             · {{ duration }}
           </template><template v-if="workout.status === 'in_progress'">
@@ -63,7 +63,7 @@ const setsOf = (index: number): WorkoutSet[] => (workout.value?.sets ?? []).filt
           v-if="records.length"
           tone="success"
         >
-          <p class="records__title">
+          <p class="font-bold">
             Records battus
           </p>
           <ul>
@@ -81,24 +81,24 @@ const setsOf = (index: number): WorkoutSet[] => (workout.value?.sets ?? []).filt
         :key="exercise.index"
         :title="exercise.name"
       >
-        <p class="meta">
+        <p class="text-sm text-muted">
           Prévu&nbsp;: {{ prescription(exercise, { rest: false }) }}
         </p>
         <ol
           v-if="setsOf(exercise.index).length"
-          class="sets"
+          class="mt-2 flex flex-col gap-1 tabular-nums"
         >
           <li
             v-for="set in setsOf(exercise.index)"
             :key="set.id"
           >
-            <span class="sets__kind">{{ labelOf(SET_KINDS, set.kind) }}</span>
+            <span class="inline-block min-w-28 text-sm text-muted">{{ labelOf(SET_KINDS, set.kind) }}</span>
             {{ formatSet(set, exercise.measurement) }}
           </li>
         </ol>
         <p
           v-else
-          class="meta"
+          class="text-sm text-muted"
         >
           Pas fait.
         </p>
@@ -106,29 +106,3 @@ const setsOf = (index: number): WorkoutSet[] => (workout.value?.sets ?? []).filt
     </template>
   </div>
 </template>
-
-<style scoped>
-.meta {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
-.records__title {
-  font-weight: 700;
-}
-
-.sets {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  margin-top: var(--space-2);
-  font-variant-numeric: tabular-nums;
-}
-
-.sets__kind {
-  display: inline-block;
-  min-width: 7rem;
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-</style>

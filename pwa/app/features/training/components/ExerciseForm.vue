@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { EQUIPMENT, EXERCISE_TYPES, MEASUREMENTS, MUSCLES, type Equipment, type Exercise, type ExerciseInput, type ExerciseType, type Measurement, type Muscle } from '~/features/training/training'
-import { parseAmount } from '~/services/text/numbers'
+import { parseAmount, wholeAmount, type Amount } from '~/services/text/numbers'
 
 /**
  * One of the user's own exercises, with what it is usually done with (proposed when it is added
@@ -12,7 +12,6 @@ const emit = defineEmits<{ saved: [exercise: Exercise] }>()
 const api = useApi()
 const { pending, message, fields, run } = useSubmission()
 
-type Amount = number | string | null
 const exercise = props.exercise
 const name = ref(exercise?.name ?? '')
 const primaryMuscle = ref<Muscle | null>(exercise?.primaryMuscle ?? null)
@@ -36,11 +35,6 @@ function toggle(muscle: Muscle, on: boolean): void {
   secondaryMuscles.value = on ? [...secondaryMuscles.value, muscle] : secondaryMuscles.value.filter(value => value !== muscle)
 }
 
-function whole(value: Amount): number | undefined {
-  const amount = parseAmount(value)
-  return amount === null ? undefined : Math.round(amount)
-}
-
 /** Blank required values are left out, so the API names the field instead of saving 0. */
 function body(): ExerciseInput {
   const rir = parseAmount(targetRir.value)
@@ -51,21 +45,25 @@ function body(): ExerciseInput {
     type: type.value ?? 'compound',
     equipment: equipment.value ?? 'other',
     measurement: measurement.value ?? 'weight',
-    repMin: whole(repMin.value),
-    repMax: whole(repMax.value),
+    repMin: wholeAmount(repMin.value),
+    repMax: wholeAmount(repMax.value),
     targetRir: rir === null ? null : Math.round(rir),
-    restSeconds: whole(restSeconds.value),
+    restSeconds: wholeAmount(restSeconds.value),
     tempo: tempo.value.trim() || null,
     description: (description.value ?? '').trim() || null,
     mediaUrl: mediaUrl.value.trim() || null,
   } as ExerciseInput
 }
 
+const { markSaved } = useUnsavedChanges(body)
+
 async function submit(): Promise<void> {
   await run(async () => {
+    const sent = body()
     const saved = exercise
-      ? await api.put('/api/exercises/{id}', body(), { path: { id: exercise.id } })
-      : await api.post('/api/exercises', body())
+      ? await api.put('/api/exercises/{id}', sent, { path: { id: exercise.id } })
+      : await api.post('/api/exercises', sent)
+    markSaved(sent)
     emit('saved', saved)
   })
 }
@@ -73,7 +71,7 @@ async function submit(): Promise<void> {
 
 <template>
   <form
-    class="form"
+    class="flex flex-col gap-4"
     novalidate
     @submit.prevent="submit"
   >
@@ -98,18 +96,20 @@ async function submit(): Promise<void> {
       :error="fields.primaryMuscle"
     />
     <fieldset
-      class="form__group"
+      class="m-0 min-w-0 p-0"
       :aria-describedby="fields.secondaryMuscles ? secondaryError : undefined"
     >
-      <legend>Muscles secondaires</legend>
+      <legend class="mb-2 font-bold">
+        Muscles secondaires
+      </legend>
       <p
         v-if="fields.secondaryMuscles"
         :id="secondaryError"
-        class="form__error"
+        class="text-sm text-danger"
       >
         {{ fields.secondaryMuscles }}
       </p>
-      <div class="form__checks">
+      <div class="grid grid-cols-[repeat(auto-fill,minmax(11rem,1fr))] gap-x-3">
         <UiCheckbox
           v-for="muscle in others"
           :key="muscle.value"
@@ -119,7 +119,7 @@ async function submit(): Promise<void> {
         />
       </div>
     </fieldset>
-    <div class="form__grid">
+    <div class="grid grid-cols-2 gap-3">
       <UiSelect
         v-model="type"
         label="Type"
@@ -143,9 +143,11 @@ async function submit(): Promise<void> {
       :error="fields.measurement"
     />
 
-    <fieldset class="form__group">
-      <legend>Habituellement</legend>
-      <div class="form__grid">
+    <fieldset class="m-0 min-w-0 p-0">
+      <legend class="mb-2 font-bold">
+        Habituellement
+      </legend>
+      <div class="grid grid-cols-2 gap-3">
         <UiInput
           v-model="repMin"
           :label="timed ? 'Durée min.' : 'Reps min.'"
@@ -181,6 +183,7 @@ async function submit(): Promise<void> {
       </div>
       <UiInput
         v-model="tempo"
+        class="mt-3"
         label="Tempo"
         literal
         :maxlength="15"
@@ -214,38 +217,3 @@ async function submit(): Promise<void> {
     </UiButton>
   </form>
 </template>
-
-<style scoped>
-.form__group {
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.form__group legend {
-  margin-bottom: var(--space-2);
-  font-weight: 700;
-}
-
-.form__error {
-  color: var(--color-danger);
-  font-size: var(--text-sm);
-}
-
-.form__checks {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
-  column-gap: var(--space-3);
-}
-
-.form__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
-}
-
-.form__group > .ui-input {
-  margin-top: var(--space-3);
-}
-</style>

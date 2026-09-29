@@ -12,6 +12,9 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Response;
+use App\Shared\Presentation\Api\OpenApi\Problems;
 use App\Training\Application\Exercise\ExerciseView;
 use App\Training\Domain\Exercise\Muscle;
 
@@ -33,15 +36,16 @@ use App\Training\Domain\Exercise\Muscle;
             ],
         ),
         new Get(uriTemplate: '/exercises/{id}', requirements: ['id' => '[0-9a-f-]{36}'], description: 'A library exercise, or one of the user\'s own.', provider: ExerciseProvider::class),
-        new Post(uriTemplate: '/exercises', description: 'Creates one of the user\'s own exercises.', input: ExerciseInput::class, processor: ExerciseProcessor::class),
-        new Put(uriTemplate: '/exercises/{id}', requirements: ['id' => '[0-9a-f-]{36}'], description: 'Replaces one of the user\'s own exercises (library ones are read-only).', input: ExerciseInput::class, read: false, processor: ExerciseProcessor::class),
-        new Delete(uriTemplate: '/exercises/{id}', requirements: ['id' => '[0-9a-f-]{36}'], description: 'Deletes one of the user\'s own exercises; programs and history using it keep showing it.', read: false, processor: ExerciseProcessor::class),
+        new Post(uriTemplate: '/exercises', description: 'Creates one of the user\'s own exercises.', input: ExerciseInput::class, openapi: new Operation(responses: ['429' => new Response(Problems::TOO_MANY)]), processor: ExerciseProcessor::class),
+        new Put(uriTemplate: '/exercises/{id}', requirements: ['id' => '[0-9a-f-]{36}'], description: 'Replaces one of the user\'s own exercises (library ones are read-only).', input: ExerciseInput::class, read: false, openapi: new Operation(responses: ['409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]), processor: ExerciseProcessor::class),
+        new Delete(uriTemplate: '/exercises/{id}', requirements: ['id' => '[0-9a-f-]{36}'], description: 'Deletes one of the user\'s own exercises; programs and history using it keep showing it.', read: false, openapi: new Operation(responses: ['409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]), processor: ExerciseProcessor::class),
         new Put(
             uriTemplate: '/exercises/{id}/note',
             requirements: ['id' => '[0-9a-f-]{36}'],
             description: 'Sets the user\'s standing cue for an exercise (shown every time they do it); blank removes it.',
             input: ExerciseNoteInput::class,
             read: false,
+            openapi: new Operation(responses: ['409' => new Response(Problems::CONCURRENT), '429' => new Response(Problems::TOO_MANY)]),
             processor: ExerciseProcessor::class,
             name: 'exercise_note',
         ),

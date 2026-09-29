@@ -23,18 +23,17 @@ const items = computed(() => found.value.map(exercise => ({
 </script>
 
 <template>
-  <div class="subpage">
+  <div class="flex max-w-reading flex-col gap-4">
     <ShellBackLink
       to="/training"
       label="Training"
     />
-    <NuxtLink
+    <UiLinkButton
       to="/training/exercices/nouveau"
-      class="link-button"
     >
       Nouvel exercice
-    </NuxtLink>
-    <div class="filters">
+    </UiLinkButton>
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-3">
       <UiInput
         v-model="query"
         label="Rechercher un exercice"
@@ -53,7 +52,7 @@ const items = computed(() => found.value.map(exercise => ({
     />
     <template v-else-if="exercises">
       <p
-        class="count"
+        class="text-sm text-muted"
         role="status"
       >
         {{ found.length }}&nbsp;exercice{{ found.length > 1 ? 's' : '' }}
@@ -73,16 +72,3 @@ const items = computed(() => found.value.map(exercise => ({
     </template>
   </div>
 </template>
-
-<style scoped>
-.filters {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  gap: var(--space-3);
-}
-
-.count {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-</style>
