@@ -64,10 +64,20 @@ framework:
             policy: sliding_window
             limit: '%env(int:RATE_LIMIT_PROGRESSION_WRITES)%'
             interval: '1 minute'
+        # Keyed by account: the time zone the PWA reports and the dashboard layout.
+        preference_writes:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_PREFERENCE_WRITES)%'
+            interval: '1 minute'
         # Keyed by account: analyses (each reads every context), decisions, settings.
         coach_writes:
             policy: sliding_window
             limit: '%env(int:RATE_LIMIT_COACH_WRITES)%'
+            interval: '1 minute'
+        # Keyed by account: checks as the app opens, marking read, settings.
+        notification_writes:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_NOTIFICATION_WRITES)%'
             interval: '1 minute'
         # Global: Open Food Facts asks one application for < 100 product reads a minute.
         open_food_facts:

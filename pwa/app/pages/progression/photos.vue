@@ -62,6 +62,10 @@ async function removed(photo: ProgressPhoto): Promise<void> {
     ?? root.value?.querySelector<HTMLElement>('input[type="file"]')
   next?.focus()
 }
+
+// The global « + » leads here to add a photo: the file picker takes the focus.
+const upload = ref<InstanceType<typeof PhotoUpload> | null>(null)
+useAddRequest('photo', upload)
 </script>
 
 <template>
@@ -74,7 +78,10 @@ async function removed(photo: ProgressPhoto): Promise<void> {
       label="Progression"
     />
     <UiCard title="Ajouter une photo">
-      <PhotoUpload @uploaded="refresh()" />
+      <PhotoUpload
+        ref="upload"
+        @uploaded="refresh()"
+      />
     </UiCard>
     <UiLoadError
       v-if="error && !sessions"

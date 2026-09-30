@@ -36,8 +36,8 @@ export function statusLabel(recommendation: Pick<Recommendation, 'status' | 'pro
 export const CALLS_TO_ACTION: Readonly<Partial<Record<Recommendation['kind'], { label: string, to: string }>>> = {
   'calories.no_target': { label: 'Fixer mon objectif', to: '/nutrition/objectifs' },
   'calories.no_pace': { label: 'Régler le rythme', to: '/coach/reglages' },
-  'journal.incomplete': { label: 'Ajouter un repas', to: '/nutrition' },
-  'weigh_ins.few': { label: 'Ajouter une pesée', to: '/progression' },
+  'journal.incomplete': { label: 'Ajouter un repas', to: '/nutrition?ajouter=aliment' },
+  'weigh_ins.few': { label: 'Ajouter une pesée', to: '/progression?ajouter=pesee' },
 }
 
 /** How the Coach speaks (spec §131): the wording only, never the rules. */

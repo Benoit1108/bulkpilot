@@ -27,6 +27,8 @@ final readonly class WeightSummaryView
         public ?float $kgPerWeek,
         public ?TrendDirection $direction,
         public ?float $sinceStartKg,
+        /** The last weigh-in of the period minus its first; null with fewer than two. */
+        public ?float $periodChangeKg,
         public ?GoalProgress $goal,
         public array $points,
         public array $weeks,

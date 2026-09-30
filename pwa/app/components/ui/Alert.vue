@@ -3,7 +3,9 @@ const props = withDefaults(defineProps<{
   tone?: 'error' | 'success' | 'info'
   /** False for an error that comes on its own (a background sync): announced, but the focus stays where the user is. */
   focusOnMount?: boolean
-}>(), { tone: 'info', focusOnMount: true })
+  /** An error announced politely (status), where several may come at once and none interrupts. */
+  polite?: boolean
+}>(), { tone: 'info', focusOnMount: true, polite: false })
 
 const TONES = {
   error: 'border-l-danger',
@@ -25,7 +27,7 @@ onMounted(() => {
     ref="root"
     class="rounded-md border border-l-4 border-line bg-surface-raised px-4 py-3 text-sm [&_a]:font-semibold [&_a]:text-accent-ink"
     :class="TONES[tone]"
-    :role="tone === 'error' ? 'alert' : 'status'"
+    :role="tone === 'error' && !polite ? 'alert' : 'status'"
     :tabindex="tone === 'error' ? -1 : undefined"
   >
     <slot />

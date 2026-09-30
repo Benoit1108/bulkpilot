@@ -47,7 +47,7 @@ describe('the Coach', () => {
     // A piece of advice leads to where to act on it, then « C'est noté » or « Plus tard ».
     expect(cards[1]!.get('h3').text()).toContain('Information')
     expect(cards[1]!.get('a').text()).toBe('Ajouter une pesée')
-    expect(cards[1]!.get('a').attributes('href')).toBe('/progression')
+    expect(cards[1]!.get('a').attributes('href')).toBe('/progression?ajouter=pesee')
     expect(cards[1]!.findAll('button').map(b => b.text().split('\u00A0:')[0])).toEqual(['C’est noté', 'Plus tard'])
 
     expect(wrapper.text()).toContain('Calories\u00A0: 5 jours sur 7 à ±10\u00A0% de l’objectif')
@@ -244,7 +244,7 @@ describe('the history', () => {
     expect(items(wrapper)[20]!.text()).not.toContain('à partir de demain')
     expect(items(wrapper)[21]!.text(), 'an advice ignored').toContain('Ignorée')
     expect(document.activeElement, 'the first one added').toBe(items(wrapper)[20]!.element)
-    expect(wrapper.get('[data-testid="status"]').text()).toBe('2 recommandations de plus.')
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('2\u00A0recommandations de plus.')
     expect(wrapper.findAll('button').some(b => b.text() === 'Voir plus')).toBe(false)
     wrapper.unmount()
   })

@@ -45,6 +45,7 @@ const sections = computed(() => account.value
       { to: '/reglages/profil', title: 'Profil', summary: account.value.firstName },
       { to: '/reglages/compte', title: 'Compte et sécurité', summary: securitySummary.value, summaryTestId: 'security-summary' },
       { to: '/coach/reglages', title: 'Coach', summary: 'Le ton du Coach et le rythme visé' },
+      { to: '/notifications/reglages', title: 'Notifications', summary: 'Ce qui t’est signalé et les horaires silencieux' },
     ]
   : [])
 

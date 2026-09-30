@@ -51,6 +51,9 @@ GitHub → CI (qa + e2e sur l'image) → registre d'images → staging → valid
 | `RATE_LIMIT_TRAINING_WRITES` | écritures Training (séances, séries, programmes, exercices) par minute et par compte (600) : une séance hors ligne se vide d'un coup au retour du réseau |
 | `RATE_LIMIT_PROGRESSION_WRITES` | pesées, mensurations, objectifs et photos par minute et par compte (120) |
 | `RATE_LIMIT_COACH_WRITES` | analyses relancées, décisions et réglages du Coach par minute et par compte (30) |
+| `RATE_LIMIT_NOTIFICATION_WRITES` | vérifications à l'ouverture, lectures et réglages des notifications par minute et par compte (60) |
+| `RATE_LIMIT_PREFERENCE_WRITES` | fuseau et disposition du tableau de bord par minute et par compte (30) |
+| `RUN_MIGRATIONS` | `0` sur le service `worker` : seul `php` passe les migrations au démarrage (défaut `1`) |
 | `MEDIA_STORAGE` | `s3` en production (le conteneur refuse autre chose) ; `local` en développement |
 | `S3_ENDPOINT` / `S3_REGION` / `S3_BUCKET` / `S3_ACCESS_KEY` / `S3_SECRET_KEY` | bucket S3-compatible **privé** des photos (ADR-0027) — bucket, clés obligatoires ; endpoint vide = Amazon S3 |
 | `S3_PUBLIC_ENDPOINT` / `S3_PATH_STYLE` | l'adresse que le navigateur atteint pour les liens présignés si elle diffère de celle du serveur ; adressage par chemin (`true` pour la plupart des fournisseurs non-Amazon) |
@@ -59,6 +62,22 @@ GitHub → CI (qa + e2e sur l'image) → registre d'images → staging → valid
 Bucket des photos : privé (aucun accès public, aucune politique de lecture anonyme), **sans versionnage ni verrouillage
 d'objet** (une suppression doit effacer), chiffrement au repos du fournisseur ; si le fournisseur garde des sauvegardes, les
 limiter à 30 jours. Les envois font 16 Mo au plus (`upload_max_filesize`) : un proxy devant l'application doit l'accepter.
+
+## Worker
+
+✅ Un service `worker` (même image, mêmes variables) consomme le transport `async` et les programmes planifiés
+(ADR-0029) : vérifications des notifications toutes les 15 minutes, analyse nocturne du Coach vers 3 h dans le fuseau de
+chaque compte. Il démarre après `php` (qui passe les migrations), s'arrête toutes les heures ou au-delà de 192 Mo et
+est relancé par `restart: unless-stopped`. Il pousse aussi les notifications une fois validées (aucun push pour l'instant).
+
+- **Un seul worker.** L'état des programmes (dernier passage) et leur verrou sont locaux au conteneur (cache fichiers,
+  `flock`) : deux workers lanceraient chacun les programmes. Les messages eux-mêmes sont sûrs à plusieurs (une
+  vérification par compte au plus toutes les 5 minutes, une analyse par jour), mais ne lancer qu'un `worker`.
+- **Échecs.** Un message en échec est réessayé après 10 s, 30 s puis 90 s, puis rangé dans la file `failed` :
+  `bin/console messenger:failed:show` pour les voir, `messenger:failed:retry` pour les rejouer (un par un, ou `--force`
+  pour tous), `messenger:failed:remove <id>` pour en retirer un. Rejouer est sûr : chaque message est idempotent.
+- Sans worker, l'application fonctionne : seules les vérifications à l'ouverture et l'analyse à l'ouverture du Coach
+  tournent, et les notifications ne sont pas poussées (elles restent dans l'application).
 
 ## Premier démarrage
 

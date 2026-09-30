@@ -16,6 +16,10 @@ const { data: summary, error, refresh } = useAsyncData(
   { watch: [period] },
 )
 
+// The global « + » leads here to measure: the first measure takes the focus.
+const form = ref<InstanceType<typeof MeasurementsForm> | null>(null)
+useAddRequest('mensurations', form)
+
 async function onSaved(): Promise<void> {
   // What this page shows is read again in place; the other periods are dropped.
   const shown = [PROGRESSION_KEYS.measures, PROGRESSION_KEYS.measurements(period.value, today)]
@@ -37,6 +41,7 @@ async function onSaved(): Promise<void> {
     <template v-else-if="measures && summary">
       <UiCard title="Mesurer">
         <MeasurementsForm
+          ref="form"
           :measures="measures"
           :series="summary.measures"
           @saved="onSaved"

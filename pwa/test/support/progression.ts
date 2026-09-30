@@ -35,6 +35,7 @@ export function summary(override: Partial<WeightSummary> = {}): WeightSummary {
     kgPerWeek: 0.42,
     direction: 'gaining',
     sinceStartKg: 4.8,
+    periodChangeKg: 1.2,
     goal: null,
     points: [
       { day: '2026-09-15', weightKg: 50.6, average7Kg: 50.6, average30Kg: 50.2 },

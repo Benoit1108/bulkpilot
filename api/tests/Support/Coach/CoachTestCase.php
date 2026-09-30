@@ -148,7 +148,12 @@ abstract class CoachTestCase extends TestCase
 
     protected function analyse(bool $again = false, string $today = self::TODAY, ?UserId $userId = null): void
     {
-        $handler = new AnalyseCoachHandler(
+        $this->handler()(new AnalyseCoach($userId ?? $this->alex, self::day($today), $again));
+    }
+
+    protected function handler(): AnalyseCoachHandler
+    {
+        return new AnalyseCoachHandler(
             $this->settings,
             $this->recommendations,
             $this->reports,
@@ -158,7 +163,6 @@ abstract class CoachTestCase extends TestCase
             $this->uuids,
             $this->clock,
         );
-        $handler(new AnalyseCoach($userId ?? $this->alex, self::day($today), $again));
     }
 
     protected function reader(): FactsReader

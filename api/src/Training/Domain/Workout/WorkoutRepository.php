@@ -41,4 +41,14 @@ interface WorkoutRepository
      * @return list<Workout>
      */
     public function historyWith(UserId $userId, array $exerciseIds, ?\DateTimeImmutable $before = null): array;
+
+    /**
+     * @return list<Workout> the finished workouts finished since that time, the oldest first
+     */
+    public function finishedSince(UserId $userId, \DateTimeImmutable $since): array;
+
+    /**
+     * @return list<Workout> the finished workouts started since that time, the oldest first
+     */
+    public function startedSince(UserId $userId, \DateTimeImmutable $since): array;
 }

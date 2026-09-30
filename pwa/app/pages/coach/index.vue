@@ -4,10 +4,12 @@ import { TEXT_LINK } from '~/components/ui/classes'
 import AdherenceCard from '~/features/coach/components/AdherenceCard.vue'
 import RecommendationCard from '~/features/coach/components/RecommendationCard.vue'
 import WeeklyReportCard from '~/features/coach/components/WeeklyReportCard.vue'
-import { COACH_KEYS, type Coach, type Decision, type Recommendation } from '~/features/coach/coach'
+import { COACH_KEYS, type Decision, type Recommendation } from '~/features/coach/coach'
+import { useCoachOfDay } from '~/features/coach/coachOfDay'
 import { decisionNotice } from '~/features/coach/format'
 import { isTargetDerived } from '~/features/nutrition/cacheKeys'
 import { formatFullDay } from '~/services/calendar/days'
+import { counted } from '~/services/text/plural'
 
 definePageMeta({ title: 'Coach' })
 
@@ -15,13 +17,7 @@ const api = useApi()
 // The Coach is the one of the user's today, past midnight too.
 const today = useToday()
 
-/** The analysis runs once a day, when the Coach is opened; the history and reports may then have grown. */
-async function analyse(again: boolean): Promise<Coach> {
-  const coach = await api.post('/api/coach/analysis', { today: today.value, again })
-  clearNuxtData(key => key === COACH_KEYS.history || key === COACH_KEYS.reports)
-  return coach
-}
-const { data: coach, error, refresh } = useAsyncData(() => COACH_KEYS.coach(today.value), () => analyse(false))
+const { coach, error, refresh, analyse } = useCoachOfDay(() => today.value)
 
 /**
  * One write at a time, for the whole page (an answer, « Relancer »): each reads the Coach back, and
@@ -44,7 +40,7 @@ async function analyseAgain(): Promise<void> {
     coach.value = await analyse(true)
   })
   const count = coach.value?.recommendations.length ?? 0
-  if (done) await announce(count ? `Analyse relancée\u00A0: ${count} recommandation${count > 1 ? 's' : ''}.` : 'Analyse relancée\u00A0: rien à signaler.')
+  if (done) await announce(count ? `Analyse relancée\u00A0: ${counted(count, 'recommandation')}.` : 'Analyse relancée\u00A0: rien à signaler.')
 }
 
 // By id: the order of a v-for ref array is not the list's.

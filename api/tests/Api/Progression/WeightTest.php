@@ -89,10 +89,13 @@ final class WeightTest extends ProgressionApiTestCase
         self::assertSame(0.5, self::number($summary, 'kgPerWeek'));
         self::assertSame('gaining', $summary['direction']);
         self::assertSame(1.5, self::number($summary, 'sinceStartKg'));
+        self::assertSame(1.5, self::number($summary, 'periodChangeKg'), 'over the 30 days');
         self::assertCount(4, self::array($summary, 'points'));
         self::assertSame(['day', 'weightKg', 'average7Kg', 'average30Kg'], array_keys(self::array($summary, 'points.0')));
         self::assertSame([['2026-09-07', 60.0], ['2026-09-14', 60.5], ['2026-09-21', 61.0], ['2026-09-28', 61.5]], array_map(static fn (mixed $week): array => [self::string($week, 'week'), self::number($week, 'averageKg')], self::array($summary, 'weeks')), 'a week is its Monday');
-        self::assertCount(1, self::array($this->getJson('/api/progression/weight?period=7d'), 'points'));
+        $week = $this->getJson('/api/progression/weight?period=7d');
+        self::assertCount(1, self::array($week, 'points'));
+        self::assertNull($week['periodChangeKg'], 'a single weigh-in over 7 days: no change to tell');
 
         $this->call('GET', '/api/progression/weight?period=2w');
         self::assertResponseStatusCodeSame(422, 'not one of the periods');

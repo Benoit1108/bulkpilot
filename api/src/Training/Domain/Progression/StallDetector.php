@@ -87,4 +87,21 @@ final class StallDetector
 
         return array_map(static fn (ExerciseId $id): array => RecordBook::beatenInOrder($history, $id), $ids);
     }
+
+    /**
+     * @param array<string, array<string, int>> $byExercise {@see recordsByExercise}
+     *
+     * @return array<string, int> the records each workout beat, every exercise together, by workout id
+     */
+    public static function recordsByWorkout(array $byExercise): array
+    {
+        $records = [];
+        foreach ($byExercise as $byWorkout) {
+            foreach ($byWorkout as $workoutId => $beaten) {
+                $records[$workoutId] = ($records[$workoutId] ?? 0) + $beaten;
+            }
+        }
+
+        return $records;
+    }
 }

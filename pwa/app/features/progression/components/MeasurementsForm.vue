@@ -66,6 +66,10 @@ async function submit(): Promise<void> {
     emit('saved', measurements)
   })
 }
+
+const firstMeasure = ref<Array<{ focus: () => void }>>([])
+/** The global « + » leads to the form: the first measure takes the focus. */
+defineExpose({ focus: () => firstMeasure.value[0]?.focus() })
 </script>
 
 <template>
@@ -91,6 +95,7 @@ async function submit(): Promise<void> {
     <div class="grid grid-cols-2 gap-3 *:min-w-0">
       <UiInput
         v-for="measure in measures"
+        ref="firstMeasure"
         :key="measure.key"
         v-model="values[measure.key]"
         :label="measureName(measure)"

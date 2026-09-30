@@ -6,47 +6,13 @@ import { formatFullDay, localDay } from '~/services/calendar/days'
 
 definePageMeta({ title: 'Historique du Coach' })
 
-const PAGE = 20
 const api = useApi()
-const { data: firstPage, status, error, refresh } = useAsyncData(COACH_KEYS.history, () => api.get('/api/coach/recommendations', { query: { limit: PAGE } }))
-const more = ref<Recommendation[]>([])
-const recommendations = computed(() => [...(firstPage.value ?? []), ...more.value])
-const hasMore = ref(true)
-// A page asked for before the list was read again belongs to the old list: it is dropped.
-let listVersion = 0
-watch(firstPage, (page) => {
-  listVersion++
-  more.value = []
-  hasMore.value = (page?.length ?? 0) === PAGE
-}, { immediate: true })
-
-const loading = useSubmission()
-const notice = ref<string | null>(null)
-// By id: the order of a v-for ref array is not the list's.
-const items = new Map<string, HTMLElement>()
-function keep(id: string, element: unknown): void {
-  if (element instanceof HTMLElement) items.set(id, element)
-  else items.delete(id)
-}
-async function loadMore(): Promise<void> {
-  const last = recommendations.value.at(-1)
-  const version = listVersion
-  let added: Recommendation[] = []
-  await loading.run(async () => {
-    // Several are made in the same second: the cursor is the time and the id of the last one.
-    const page = await api.get('/api/coach/recommendations', { query: { limit: PAGE, before: last?.createdAt, beforeId: last?.id } })
-    if (version !== listVersion) return
-    more.value.push(...page)
-    hasMore.value = page.length === PAGE
-    added = page
-  })
-  const first = added[0]
-  if (!first) return
-  notice.value = `${added.length} recommandation${added.length > 1 ? 's' : ''} de plus.`
-  await nextTick()
-  // The button may be gone (last page): focus goes to the first one added.
-  items.get(first.id)?.focus()
-}
+// Several are made in the same second: the cursor is the time and the id of the last one.
+const { firstPage, items: recommendations, status, error, refresh, hasMore, loading, notice, list, keep, loadMore } = usePagedList<Recommendation>(
+  COACH_KEYS.history,
+  cursor => api.get('/api/coach/recommendations', { query: { limit: 20, ...cursor } }),
+  { size: 20, noun: ['recommandation'] },
+)
 
 const onDay = (time: string) => formatFullDay(localDay(new Date(time)))
 </script>
@@ -68,7 +34,13 @@ const onDay = (time: string) => formatFullDay(localDay(new Date(time)))
       >
         {{ loading.message.value }}
       </UiAlert>
-      <ul class="m-0 flex list-none flex-col p-0">
+      <ul
+        ref="list"
+        class="m-0 flex list-none flex-col p-0"
+        role="list"
+        aria-label="Recommandations, la plus récente d’abord"
+        tabindex="-1"
+      >
         <li
           v-for="recommendation in recommendations"
           :key="recommendation.id"

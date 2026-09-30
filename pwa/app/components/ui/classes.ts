@@ -28,9 +28,10 @@ export const CHIP_NUMBER = `${CHIP_BASE} p-0 tabular-nums`
 
 /**
  * A choice among a few (a period, a portion): a radio hidden in a rounded label, tinted once checked
- * and ticked, so the choice does not rest on colour alone.
+ * and ticked, so the choice does not rest on colour alone. Positioned, so that the hidden radio stays
+ * inside its own pill (a click or a scroll to it lands on the right one).
  */
-export const PILL = 'inline-flex min-h-tap cursor-pointer items-center rounded-full border border-line bg-surface-raised px-3 text-sm font-semibold has-checked:border-2 has-checked:border-accent has-checked:bg-accent-soft has-checked:px-[11px] has-checked:text-accent-ink has-checked:before:me-1 has-checked:before:content-["✓"_/_""] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent'
+export const PILL = 'relative inline-flex min-h-tap cursor-pointer items-center rounded-full border border-line bg-surface-raised px-3 text-sm font-semibold has-checked:border-2 has-checked:border-accent has-checked:bg-accent-soft has-checked:px-[11px] has-checked:text-accent-ink has-checked:before:me-1 has-checked:before:content-["✓"_/_""] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent'
 
 /** A table of figures (the values under a chart): a line under each row, figures to the right. */
 export const DATA_TABLE = 'mt-2 w-full border-collapse tabular-nums [&_:is(td,th)]:border-b [&_:is(td,th)]:border-line [&_:is(td,th)]:py-1 [&_:is(td,th)]:text-right [&_:is(td,th):first-child]:text-left'
@@ -46,3 +47,6 @@ export const fieldClass = {
   /** The bordered box of a field; a red border once invalid. */
   box: 'rounded-md border border-line bg-surface-raised aria-invalid:border-danger',
 } as const
+
+/** A round icon button of the page header (search, add, notifications, settings). */
+export const HEADER_BUTTON = 'relative grid size-tap cursor-pointer place-items-center rounded-full border border-line bg-surface p-0 text-muted transition-colors hover:border-accent hover:text-ink aria-[current=page]:border-accent aria-[current=page]:bg-accent-soft aria-[current=page]:text-accent-ink'

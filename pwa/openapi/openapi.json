@@ -1133,6 +1133,201 @@
                 "parameters": []
             }
         },
+        "/api/me/dashboard": {
+            "get": {
+                "operationId": "api_medashboard_get",
+                "tags": [
+                    "DashboardLayout"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "DashboardLayout resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DashboardLayout.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DashboardLayout"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a DashboardLayout resource.",
+                "description": "Retrieves a DashboardLayout resource.",
+                "parameters": []
+            },
+            "put": {
+                "operationId": "api_medashboard_put",
+                "tags": [
+                    "DashboardLayout"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "DashboardLayout resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DashboardLayout.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DashboardLayout"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Replaces the DashboardLayout resource.",
+                "description": "Replaces the DashboardLayout resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The updated DashboardLayout resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DashboardLayout.DashboardLayoutInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DashboardLayout.DashboardLayoutInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
         "/api/auth/email-verification": {
             "post": {
                 "operationId": "api_authemail-verification_post",
@@ -4400,6 +4595,754 @@
                 ]
             }
         },
+        "/api/training/next-workout": {
+            "get": {
+                "operationId": "api_trainingnext-workout_get",
+                "tags": [
+                    "NextWorkout"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "NextWorkout resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NextWorkout.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NextWorkout"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No active program (`training.no_active_program`).",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves a NextWorkout resource.",
+                "description": "Retrieves a NextWorkout resource.",
+                "parameters": []
+            }
+        },
+        "/api/notifications": {
+            "get": {
+                "operationId": "api_notifications_get_collection",
+                "tags": [
+                    "Notification"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Notification.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Notification.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Notification"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Notification resources.",
+                "description": "Retrieves the collection of Notification resources.",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "At most 50.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 50,
+                            "default": 20
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "Only those made before this time (the createdAt of the last one received, for the next page)\u2026",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "beforeId",
+                        "in": "query",
+                        "description": "\u2026and its id (those of one check share their time).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
+        "/api/notifications/{id}": {
+            "get": {
+                "operationId": "api_notifications_id_get",
+                "tags": [
+                    "Notification"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Notification.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Notification"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found, or not the user's.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves a Notification resource.",
+                "description": "Retrieves a Notification resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Notification identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/notifications/{id}/read": {
+            "post": {
+                "operationId": "notification_read",
+                "tags": [
+                    "Notification"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Notification.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Notification"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found, or not the user's.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Creates a Notification resource.",
+                "description": "Creates a Notification resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Notification identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/notifications/check": {
+            "post": {
+                "operationId": "notifications_check",
+                "tags": [
+                    "NotificationInbox"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "NotificationInbox resource created",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Creates a NotificationInbox resource.",
+                "description": "Creates a NotificationInbox resource.",
+                "parameters": []
+            }
+        },
+        "/api/notifications/read-all": {
+            "post": {
+                "operationId": "notifications_read_all",
+                "tags": [
+                    "NotificationInbox"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "NotificationInbox resource created",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Creates a NotificationInbox resource.",
+                "description": "Creates a NotificationInbox resource.",
+                "parameters": []
+            }
+        },
+        "/api/notifications/unread": {
+            "get": {
+                "operationId": "api_notificationsunread_get",
+                "tags": [
+                    "NotificationInbox"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "NotificationInbox resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotificationInbox.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotificationInbox"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a NotificationInbox resource.",
+                "description": "Retrieves a NotificationInbox resource.",
+                "parameters": []
+            }
+        },
+        "/api/notifications/settings": {
+            "get": {
+                "operationId": "api_notificationssettings_get",
+                "tags": [
+                    "NotificationSettings"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "NotificationSettings resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotificationSettings.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotificationSettings"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a NotificationSettings resource.",
+                "description": "Retrieves a NotificationSettings resource.",
+                "parameters": []
+            },
+            "put": {
+                "operationId": "api_notificationssettings_put",
+                "tags": [
+                    "NotificationSettings"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "NotificationSettings resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotificationSettings.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotificationSettings"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Replaces the NotificationSettings resource.",
+                "description": "Replaces the NotificationSettings resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The updated NotificationSettings resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NotificationSettings.NotificationSettingsInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NotificationSettings.NotificationSettingsInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
         "/api/nutrition/averages": {
             "get": {
                 "operationId": "api_nutritionaverages_get",
@@ -7017,6 +7960,142 @@
                 "parameters": []
             }
         },
+        "/api/me/time-zone": {
+            "put": {
+                "operationId": "api_metime-zone_put",
+                "tags": [
+                    "TimeZone"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "TimeZone resource updated",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Replaces the TimeZone resource.",
+                "description": "Replaces the TimeZone resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The updated TimeZone resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TimeZone.TimeZoneInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TimeZone.TimeZoneInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
         "/api/training/analytics": {
             "get": {
                 "operationId": "api_traininganalytics_get",
@@ -9194,7 +10273,8 @@
                     "sex",
                     "heightCm",
                     "twoFactorEnabled",
-                    "hasPassword"
+                    "hasPassword",
+                    "timeZone"
                 ],
                 "properties": {
                     "id": {
@@ -9238,6 +10318,10 @@
                     },
                     "hasPassword": {
                         "type": "boolean"
+                    },
+                    "timeZone": {
+                        "description": "The IANA time zone of the devices: scheduled notifications follow it.",
+                        "type": "string"
                     }
                 }
             },
@@ -9329,7 +10413,8 @@
                             "sex",
                             "heightCm",
                             "twoFactorEnabled",
-                            "hasPassword"
+                            "hasPassword",
+                            "timeZone"
                         ],
                         "properties": {
                             "id": {
@@ -9373,6 +10458,10 @@
                             },
                             "hasPassword": {
                                 "type": "boolean"
+                            },
+                            "timeZone": {
+                                "description": "The IANA time zone of the devices: scheduled notifications follow it.",
+                                "type": "string"
                             }
                         }
                     }
@@ -9395,7 +10484,8 @@
                             "sex",
                             "heightCm",
                             "twoFactorEnabled",
-                            "hasPassword"
+                            "hasPassword",
+                            "timeZone"
                         ],
                         "properties": {
                             "id": {
@@ -9439,6 +10529,10 @@
                             },
                             "hasPassword": {
                                 "type": "boolean"
+                            },
+                            "timeZone": {
+                                "description": "The IANA time zone of the devices: scheduled notifications follow it.",
+                                "type": "string"
                             }
                         }
                     }
@@ -9456,7 +10550,8 @@
                     "sex",
                     "heightCm",
                     "twoFactorEnabled",
-                    "hasPassword"
+                    "hasPassword",
+                    "timeZone"
                 ],
                 "properties": {
                     "id": {
@@ -9500,6 +10595,10 @@
                     },
                     "hasPassword": {
                         "type": "boolean"
+                    },
+                    "timeZone": {
+                        "description": "The IANA time zone of the devices: scheduled notifications follow it.",
+                        "type": "string"
                     }
                 }
             },
@@ -11412,6 +12511,56 @@
                         }
                     }
                 }
+            },
+            "DashboardLayout": {
+                "type": "object",
+                "description": "Every widget, in the user's order (the default one until arranged).",
+                "required": [
+                    "widgets"
+                ],
+                "properties": {
+                    "widgets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WidgetOutput"
+                        }
+                    }
+                }
+            },
+            "DashboardLayout.DashboardLayoutInput": {
+                "type": "object",
+                "description": "Arranges the dashboard: every widget exactly once, in order.",
+                "properties": {
+                    "widgets": {
+                        "maxItems": 50,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WidgetInput"
+                        }
+                    }
+                }
+            },
+            "DashboardLayout.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "widgets"
+                        ],
+                        "properties": {
+                            "widgets": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/WidgetOutput.jsonld"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "Every widget, in the user's order (the default one until arranged)."
             },
             "DayInput": {
                 "type": "object",
@@ -14848,6 +15997,399 @@
                     }
                 }
             },
+            "NextWorkout": {
+                "type": "object",
+                "description": "The day after the one of the latest workout of the active program (the first day when none); 404 without an active program.",
+                "required": [
+                    "programId",
+                    "programName",
+                    "versionNumber",
+                    "dayIndex",
+                    "dayName",
+                    "exerciseCount",
+                    "lastDoneAt",
+                    "inProgress"
+                ],
+                "properties": {
+                    "programId": {
+                        "type": "string"
+                    },
+                    "programName": {
+                        "type": "string"
+                    },
+                    "versionNumber": {
+                        "description": "The current version, the one a workout started now follows.",
+                        "type": "integer"
+                    },
+                    "dayIndex": {
+                        "type": "integer"
+                    },
+                    "dayName": {
+                        "type": "string"
+                    },
+                    "exerciseCount": {
+                        "type": "integer"
+                    },
+                    "lastDoneAt": {
+                        "description": "When this day of the current version was last started (among the last 60 workouts); the PWA shows it in the user's day.",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "inProgress": {
+                        "description": "A workout is in progress: resume it rather than start another one.",
+                        "type": "boolean"
+                    }
+                }
+            },
+            "NextWorkout.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "programId",
+                            "programName",
+                            "versionNumber",
+                            "dayIndex",
+                            "dayName",
+                            "exerciseCount",
+                            "lastDoneAt",
+                            "inProgress"
+                        ],
+                        "properties": {
+                            "programId": {
+                                "type": "string"
+                            },
+                            "programName": {
+                                "type": "string"
+                            },
+                            "versionNumber": {
+                                "description": "The current version, the one a workout started now follows.",
+                                "type": "integer"
+                            },
+                            "dayIndex": {
+                                "type": "integer"
+                            },
+                            "dayName": {
+                                "type": "string"
+                            },
+                            "exerciseCount": {
+                                "type": "integer"
+                            },
+                            "lastDoneAt": {
+                                "description": "When this day of the current version was last started (among the last 60 workouts); the PWA shows it in the user's day.",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            },
+                            "inProgress": {
+                                "description": "A workout is in progress: resume it rather than start another one.",
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                ],
+                "description": "The day after the one of the latest workout of the active program (the first day when none); 404 without an active program."
+            },
+            "Notification": {
+                "type": "object",
+                "description": "The notifications, the latest first.",
+                "required": [
+                    "id",
+                    "category",
+                    "title",
+                    "body",
+                    "link",
+                    "createdAt",
+                    "readAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "low_calories",
+                            "workout_not_started",
+                            "missing_weigh_in",
+                            "goal_reached",
+                            "record",
+                            "weekly_report"
+                        ]
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "link": {
+                        "description": "The page of the PWA it leads to.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "readAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    }
+                }
+            },
+            "Notification.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "category",
+                            "title",
+                            "body",
+                            "link",
+                            "createdAt",
+                            "readAt"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "category": {
+                                "type": "string",
+                                "enum": [
+                                    "low_calories",
+                                    "workout_not_started",
+                                    "missing_weigh_in",
+                                    "goal_reached",
+                                    "record",
+                                    "weekly_report"
+                                ]
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "body": {
+                                "type": "string"
+                            },
+                            "link": {
+                                "description": "The page of the PWA it leads to.",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "readAt": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "The notifications, the latest first."
+            },
+            "NotificationInbox": {
+                "type": "object",
+                "description": "How many notifications are unread (the bell's badge).",
+                "required": [
+                    "count"
+                ],
+                "properties": {
+                    "count": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "NotificationInbox.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "count"
+                        ],
+                        "properties": {
+                            "count": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "description": "How many notifications are unread (the bell's badge)."
+            },
+            "NotificationSettings": {
+                "type": "object",
+                "description": "Which notifications the user wants (spec \u00a775) and when to be left alone (spec \u00a776), in their time.",
+                "required": [
+                    "categories",
+                    "quietFrom",
+                    "quietTo"
+                ],
+                "properties": {
+                    "categories": {
+                        "type": "object",
+                        "required": [
+                            "low_calories",
+                            "workout_not_started",
+                            "missing_weigh_in",
+                            "goal_reached",
+                            "record",
+                            "weekly_report"
+                        ],
+                        "properties": {
+                            "low_calories": {
+                                "type": "boolean"
+                            },
+                            "workout_not_started": {
+                                "type": "boolean"
+                            },
+                            "missing_weigh_in": {
+                                "type": "boolean"
+                            },
+                            "goal_reached": {
+                                "type": "boolean"
+                            },
+                            "record": {
+                                "type": "boolean"
+                            },
+                            "weekly_report": {
+                                "type": "boolean"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "quietFrom": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "pattern": "^\\d{2}:\\d{2}$"
+                    },
+                    "quietTo": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "pattern": "^\\d{2}:\\d{2}$"
+                    }
+                }
+            },
+            "NotificationSettings.NotificationSettingsInput": {
+                "type": "object",
+                "description": "Which notifications the user wants (spec \u00a775) and when to be left alone (spec \u00a776), in their time.",
+                "required": [
+                    "categories"
+                ],
+                "properties": {
+                    "categories": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "boolean"
+                        }
+                    },
+                    "quietFrom": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "quietTo": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "NotificationSettings.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "categories",
+                            "quietFrom",
+                            "quietTo"
+                        ],
+                        "properties": {
+                            "categories": {
+                                "type": "object",
+                                "required": [
+                                    "low_calories",
+                                    "workout_not_started",
+                                    "missing_weigh_in",
+                                    "goal_reached",
+                                    "record",
+                                    "weekly_report"
+                                ],
+                                "properties": {
+                                    "low_calories": {
+                                        "type": "boolean"
+                                    },
+                                    "workout_not_started": {
+                                        "type": "boolean"
+                                    },
+                                    "missing_weigh_in": {
+                                        "type": "boolean"
+                                    },
+                                    "goal_reached": {
+                                        "type": "boolean"
+                                    },
+                                    "record": {
+                                        "type": "boolean"
+                                    },
+                                    "weekly_report": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            "quietFrom": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "pattern": "^\\d{2}:\\d{2}$"
+                            },
+                            "quietTo": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "pattern": "^\\d{2}:\\d{2}$"
+                            }
+                        }
+                    }
+                ],
+                "description": "Which notifications the user wants (spec \u00a775) and when to be left alone (spec \u00a776), in their time."
+            },
             "Nutrients": {
                 "type": "object",
                 "required": [
@@ -17835,6 +19377,20 @@
                     }
                 }
             },
+            "TimeZone.TimeZoneInput": {
+                "type": "object",
+                "description": "Sets the IANA time zone of the user's devices (the PWA sends its own when it differs), kept in the preferences apart from the account: it never conflicts with an account change; 422 `identity.invalid_time_zone` for an unknown zone.",
+                "required": [
+                    "timeZone"
+                ],
+                "properties": {
+                    "timeZone": {
+                        "maxLength": 64,
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
             "TrainingAnalytics": {
                 "type": "object",
                 "description": "Totals of the finished workouts of a period, and of each of its weeks (Monday first).",
@@ -18628,6 +20184,7 @@
                     "kgPerWeek",
                     "direction",
                     "sinceStartKg",
+                    "periodChangeKg",
                     "goal",
                     "points",
                     "weeks"
@@ -18705,6 +20262,13 @@
                             "null"
                         ]
                     },
+                    "periodChangeKg": {
+                        "description": "The last weigh-in of the period minus its first (null with fewer than two): the change over 7 days, 30 days\u2026",
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
                     "goal": {
                         "anyOf": [
                             {
@@ -18747,6 +20311,7 @@
                             "kgPerWeek",
                             "direction",
                             "sinceStartKg",
+                            "periodChangeKg",
                             "goal",
                             "points",
                             "weeks"
@@ -18824,6 +20389,13 @@
                                     "null"
                                 ]
                             },
+                            "periodChangeKg": {
+                                "description": "The last weigh-in of the period minus its first (null with fewer than two): the change over 7 days, 30 days\u2026",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
                             "goal": {
                                 "anyOf": [
                                     {
@@ -18852,6 +20424,76 @@
                     }
                 ],
                 "description": "Where the weight stands and its chart over a period."
+            },
+            "WidgetInput": {
+                "type": "object",
+                "required": [
+                    "key",
+                    "visible"
+                ],
+                "properties": {
+                    "key": {
+                        "maxLength": 32,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "visible": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "WidgetOutput": {
+                "type": "object",
+                "required": [
+                    "key",
+                    "visible"
+                ],
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "enum": [
+                            "weight",
+                            "nutrition",
+                            "meals",
+                            "workout",
+                            "coach",
+                            "goal",
+                            "records",
+                            "report"
+                        ]
+                    },
+                    "visible": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "WidgetOutput.jsonld": {
+                "type": "object",
+                "required": [
+                    "key",
+                    "visible"
+                ],
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "enum": [
+                            "weight",
+                            "nutrition",
+                            "meals",
+                            "workout",
+                            "coach",
+                            "goal",
+                            "records",
+                            "report"
+                        ]
+                    },
+                    "visible": {
+                        "type": "boolean"
+                    }
+                }
             },
             "Workout": {
                 "type": "object",
@@ -19804,6 +21446,14 @@
             "description": "Resource 'SignOut' operations."
         },
         {
+            "name": "DashboardLayout",
+            "description": "The home dashboard's widgets, in order, and which are shown (spec \u00a713, \u00a782), kept with the\naccount so that every device shows the same dashboard."
+        },
+        {
+            "name": "TimeZone",
+            "description": "The time zone of the user's devices, which scheduled notifications and the nightly Coach\nanalysis follow (ADR-0029). Read with the account (`GET /api/me`)."
+        },
+        {
             "name": "Session",
             "description": "Resource 'Session' operations."
         },
@@ -19818,6 +21468,18 @@
         {
             "name": "TwoFactorSetup",
             "description": "Resource 'TwoFactorSetup' operations."
+        },
+        {
+            "name": "NotificationInbox",
+            "description": "The inbox as a whole: the checks the app runs when it opens, the unread count of the bell, and\nmarking everything read."
+        },
+        {
+            "name": "Notification",
+            "description": "Something worth telling the user (spec \u00a775), in the app until read."
+        },
+        {
+            "name": "NotificationSettings",
+            "description": "Which notifications the user wants (spec \u00a775) and when to be left alone (spec \u00a776), in their time."
         },
         {
             "name": "BarcodeScan",
@@ -19914,6 +21576,10 @@
         {
             "name": "TrainingAnalytics",
             "description": "The training of a period (spec \u00a757): sessions, frequency, working sets, reps, tonnage and\nrecords beaten, in all and week by week."
+        },
+        {
+            "name": "NextWorkout",
+            "description": "The next day of the active program (spec \u00a713: \u00ab prochain entra\u00eenement \u00bb, \u00ab bouton d\u00e9marrer \u00bb)."
         },
         {
             "name": "Program",

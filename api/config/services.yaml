@@ -25,8 +25,17 @@ services:
     App\Shared\Application\Coaching\CalorieTargets: '@App\Nutrition\Application\Coaching\CoachCalorieTargets'
     App\Shared\Application\Coaching\BodyWeight: '@App\Progression\Application\Coaching\WeighInReadings'
     App\Shared\Application\Coaching\TrainingReadings: '@App\Training\Application\Coaching\WorkoutReadings'
+    # Scheduled work lists the accounts and their time zones through a shared port (ADR-0029).
+    App\Shared\Application\Accounts\Accounts: '@App\Identity\Application\Accounts\IdentityAccounts'
     # Only the template provider for now (spec §73): a real one is chosen here, behind the same port.
     App\Coach\Application\Port\AiProvider: '@App\Coach\Infrastructure\Ai\FakeAiProvider'
+
+    # Notifications read the other contexts through shared ports (ADR-0029); no push yet (spec §78).
+    App\Shared\Application\Notifying\EatingReadings: '@App\Nutrition\Application\Notifying\JournalDay'
+    App\Shared\Application\Notifying\WeighingReadings: '@App\Progression\Application\Notifying\WeighInDay'
+    App\Shared\Application\Notifying\TrainingActivity: '@App\Training\Application\Notifying\WorkoutActivity'
+    App\Shared\Application\Notifying\CoachReports: '@App\Coach\Application\Notifying\LatestReport'
+    App\Notification\Application\Port\PushSender: '@App\Notification\Infrastructure\Push\NullPushSender'
 
     App\System\Application\Health\GetHealthHandler:
         arguments:

@@ -13,7 +13,7 @@ services:
       additional_contexts:
         pwa: ./pwa
     restart: unless-stopped
-    environment:
+    environment: &php-environment
       SERVER_NAME: ${SERVER_NAME:-localhost}
       APP_SECRET: ${APP_SECRET:-}
       APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY:-}
@@ -53,6 +53,29 @@ services:
       - target: 443
         published: ${HTTP3_PORT:-443}
         protocol: udp
+
+  # Asynchronous work and the schedules (ADR-0029): the checks behind the notifications every
+  # quarter of an hour, the Coach's nightly analyses. Same image and settings as php, which runs
+  # the migrations first; the worker stops every hour (and on memory growth) to be restarted fresh.
+  worker:
+    image: ${IMAGES_PREFIX:-}bulkpilot-php:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    command: ["bin/console", "messenger:consume", "async", "scheduler_notifications", "scheduler_coach", "--time-limit=3600", "--memory-limit=192M"]
+    environment:
+      <<: *php-environment
+      RUN_MIGRATIONS: "0"
+    # The image's check calls the web server, which the worker does not run: check the consumer
+    # itself is the container's process (the entrypoint execs it).
+    healthcheck:
+      test: ["CMD-SHELL", "grep -q messenger:consume /proc/1/cmdline"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+      start_interval: 2s
+    depends_on:
+      php:
+        condition: service_healthy
 
   database:
     image: postgres:${POSTGRES_VERSION:-18}-alpine

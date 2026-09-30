@@ -5,6 +5,7 @@ import PeriodPicker from '~/features/progression/components/PeriodPicker.vue'
 import TrainingSummary from '~/features/progression/components/TrainingSummary.vue'
 import { periodLong } from '~/features/progression/format'
 import { PROGRESSION_KEYS, type Period } from '~/features/progression/progression'
+import { TRAINING_KEYS } from '~/features/training/cacheKeys'
 import { localDay } from '~/services/calendar/days'
 
 definePageMeta({ title: 'Analyses' })
@@ -17,7 +18,7 @@ const query = () => ({ query: { period: period.value, today } })
 // Each context computes its own figures; this page only sets them side by side.
 const { data: intake, error: intakeError, refresh: refreshIntake } = useAsyncData(() => `nutrition-history-${period.value}-${today}`, () => api.get('/api/nutrition/history', query()), { watch: [period] })
 const { data: weight, error: weightError, refresh: refreshWeight } = useAsyncData(() => PROGRESSION_KEYS.weight(period.value, today), () => api.get('/api/progression/weight', query()), { watch: [period] })
-const { data: training, error: trainingError, refresh: refreshTraining } = useAsyncData(() => `training-analytics-${period.value}-${today}`, () => api.get('/api/training/analytics', query()), { watch: [period] })
+const { data: training, error: trainingError, refresh: refreshTraining } = useAsyncData(() => TRAINING_KEYS.analytics(period.value, today), () => api.get('/api/training/analytics', query()), { watch: [period] })
 </script>
 
 <template>

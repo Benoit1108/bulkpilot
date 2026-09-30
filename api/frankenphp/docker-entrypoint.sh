@@ -53,7 +53,8 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	echo 'The database is now ready and reachable'
 
 	# Single-instance deployment for now; with several replicas this becomes a one-off release job.
-	if [ "$( find ./migrations -iname '*.php' -print -quit )" ]; then
+	# The worker leaves them to php (RUN_MIGRATIONS=0), which it starts after.
+	if [ "${RUN_MIGRATIONS:-1}" = '1' ] && [ "$( find ./migrations -iname '*.php' -print -quit )" ]; then
 		php bin/console doctrine:migrations:migrate --no-interaction --all-or-nothing
 		# The exercise library ships with the code: kept up to date on every start (idempotent).
 		php bin/console training:library:import --no-interaction

@@ -59,6 +59,28 @@ final class InMemoryWorkoutRepository implements WorkoutRepository
         return array_reverse(\array_slice($with, 0, self::HISTORY_LIMIT));
     }
 
+    public function finishedSince(UserId $userId, \DateTimeImmutable $since): array
+    {
+        return $this->oldestFirst(array_filter($this->finished($userId), static fn (Workout $workout): bool => $workout->finishedAt() >= $since));
+    }
+
+    public function startedSince(UserId $userId, \DateTimeImmutable $since): array
+    {
+        return $this->oldestFirst(array_filter($this->finished($userId), static fn (Workout $workout): bool => $workout->startedAt() >= $since));
+    }
+
+    /**
+     * @param array<Workout> $workouts
+     *
+     * @return list<Workout>
+     */
+    private function oldestFirst(array $workouts): array
+    {
+        usort($workouts, static fn (Workout $a, Workout $b): int => [$a->startedAt(), $a->id()->value] <=> [$b->startedAt(), $b->id()->value]);
+
+        return $workouts;
+    }
+
     /**
      * @return list<Workout>
      */

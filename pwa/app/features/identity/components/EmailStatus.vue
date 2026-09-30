@@ -13,7 +13,12 @@ async function resend(): Promise<void> {
 </script>
 
 <template>
-  <div class="flex flex-col items-start gap-3">
+  <!-- Compact (the home page): one line, the link to resend beside it. -->
+  <div
+    :class="compact
+      ? 'flex flex-wrap items-center gap-x-3 rounded-md border border-l-4 border-line border-l-accent bg-surface-raised px-3 py-1'
+      : 'flex flex-col items-start gap-3'"
+  >
     <p
       v-if="!compact"
       class="flex flex-wrap items-center gap-2"
@@ -45,7 +50,7 @@ async function resend(): Promise<void> {
       </UiAlert>
       <UiButton
         v-if="!sent"
-        variant="secondary"
+        :variant="compact ? 'ghost' : 'secondary'"
         :loading="pending"
         @click="resend"
       >

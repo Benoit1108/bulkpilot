@@ -32,3 +32,4 @@ Format : contexte → décision → conséquences. Un ADR accepté n'est pas ré
 | [0026](0026-charts.md) | Graphiques en SVG maison | Accepté |
 | [0027](0027-progress-photos-storage.md) | Photos de progression : stockage privé, métadonnées retirées, liens signés | Accepté |
 | [0028](0028-coach-rules-and-ports.md) | Coach : règles déterministes, ports de lecture, validation explicite | Accepté |
+| [0029](0029-notifications-and-scheduling.md) | Notifications dans l'application, tâches planifiées et worker | Accepté |

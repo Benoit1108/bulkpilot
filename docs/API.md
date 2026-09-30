@@ -21,7 +21,7 @@
 | Traçabilité | Chaque réponse porte `X-Request-Id` (posé par Caddy), repris dans les erreurs côté PWA. |
 | Erreurs métier | Les `DomainException` deviennent du problem+json avec leur `code` stable (`identity.invalid_token`…) ; statut selon la catégorie : `NotFound` 404, `Conflict` 409, `AuthenticationFailed` 401, `Unavailable` 503 (service externe injoignable), autre règle 422. La PWA traduit le `code`. Les routes Training déclarent dans l'OpenAPI les erreurs qu'elles peuvent renvoyer (404, 409, 429…), avec ce corps (`ProblemResponses`) ; Identity et Nutrition le feront (limite connue). |
 | CSRF | Requête mutante refusée (403) si `Origin` ≠ l'hôte ou `Sec-Fetch-Site` indique un autre site. |
-| Limitation | 429 + `Retry-After` : connexion (5 / 15 min par IP+email, 30 / 15 min par IP, 50 / h par compte), inscription (5 / h par IP), liens email (10 / h par IP et par adresse), second facteur (5 / 15 min par compte), ressaisie du mot de passe (10 / 15 min par compte), écritures Training (600 / min par compte), écritures Progression (120 / min par compte), écritures Coach (analyses relancées, décisions, réglages : 30 / min par compte). Valeurs par variables `RATE_LIMIT_*`. |
+| Limitation | 429 + `Retry-After` : connexion (5 / 15 min par IP+email, 30 / 15 min par IP, 50 / h par compte), inscription (5 / h par IP), liens email (10 / h par IP et par adresse), second facteur (5 / 15 min par compte), ressaisie du mot de passe (10 / 15 min par compte), écritures Training (600 / min par compte), écritures Progression (120 / min par compte), écritures Coach (analyses relancées, décisions, réglages : 30 / min par compte), écritures Notification (vérifications, lectures, réglages : 60 / min par compte), préférences (fuseau, tableau de bord : 30 / min par compte). Valeurs par variables `RATE_LIMIT_*`. |
 | Jours | Un jour calendaire est `YYYY-MM-DD` (jour **local** de l'utilisateur, envoyé par la PWA) ; accepté jusqu'à demain (fuseaux en avance) et sur 10 ans d'historique. |
 | Concurrence | 409 `shared.concurrent_update` quand deux requêtes modifient la même chose en même temps. |
 
@@ -41,6 +41,8 @@
 | POST | `/api/auth/password-reset` | Nouveau mot de passe `{token, newPassword}`, déconnecte tous les appareils → `204` | publique |
 | GET | `/api/me` | Compte connecté → `Account` | connecté |
 | PUT | `/api/me/profile` | Profil (prénom, date de naissance `YYYY-MM-DD` stricte, sexe, taille) → `Account` | connecté |
+| PUT | `/api/me/time-zone` | `{timeZone}` IANA des appareils (envoyé par la PWA quand il change) → `204` ; 422 `identity.invalid_time_zone` ; gardé dans les préférences, à part du compte (n'entre jamais en conflit avec une écriture du compte) ; relu dans `Account.timeZone` | connecté |
+| GET · PUT | `/api/me/dashboard` | `{widgets: [{key, visible}]}` : l'ordre et l'affichage des widgets du tableau de bord (`weight`, `nutrition`, `meals`, `workout`, `coach`, `goal`, `records`, `report`), chacun une fois (422 `identity.invalid_dashboard_layout`) ; l'ordre par défaut tant qu'il n'est pas réglé ; gardé à part du compte | connecté |
 | POST | `/api/me/email-verification` | Renvoie un lien (l'ancien meurt) → `204` | connecté |
 | POST | `/api/me/password` | `{currentPassword, newPassword}`, déconnecte les autres appareils → `204` | connecté |
 | POST | `/api/me/two-factor/setup` | `{password}` → `{secret, otpauthUri}` (email vérifié requis) | connecté |
@@ -101,8 +103,9 @@
 | DELETE | `/api/nutrition/favorite-meals/{id}` | → `204` (le journal n'est pas touché) | connecté |
 | GET / PUT | `/api/nutrition/meal-split` | Répartition des calories par repas (entiers, total 100) | connecté |
 | GET | `/api/nutrition/history?period=&today=` | Calories et protéines des jours **renseignés** et complets de la période (aujourd'hui exclu), la moyenne de chaque semaine et de la période, l'objectif en vigueur | connecté |
+| GET | `/api/training/next-workout` | Le prochain jour du programme actif (celui qui suit la dernière séance terminée, en boucle ; le premier après une révision qui a moins de jours), son nombre d'exercices, quand ce jour de la version actuelle a été commencé pour la dernière fois (`lastDoneAt`), et si une séance est en cours ; 404 `training.no_active_program` | connecté |
 | GET | `/api/training/analytics?period=&today=` | Séances terminées de la période : séances, fréquence par semaine, séries de travail, reps, tonnage, records battus, au total et par semaine (semaines vides comprises) | connecté |
-| GET | `/api/progression/weight?period=&today=` | Dernière pesée, moyennes 7 / 30 jours et vitesse sur 4 semaines se terminant `today`, écart depuis la première pesée, objectif suivi, points de la période (pesée et moyennes du jour), moyenne de chaque semaine | connecté |
+| GET | `/api/progression/weight?period=&today=` | Dernière pesée, moyennes 7 / 30 jours et vitesse sur 4 semaines se terminant `today`, écart depuis la première pesée, écart sur la période (`periodChangeKg` : dernière moins première pesée de la période), objectif suivi, points de la période (pesée et moyennes du jour), moyenne de chaque semaine | connecté |
 | GET | `/api/progression/weigh-ins?limit=&before=` | Pesées, la plus récente d'abord (100 au plus par page) ; `before` invalide → 400 | connecté |
 | GET · PUT · DELETE | `/api/progression/weigh-ins/{day}` | `{weightKg}` (20–400, au dixième) : une pesée par jour, la renvoyer la remplace ; retirer deux fois ne change rien | connecté |
 | GET · PUT · DELETE | `/api/progression/weight-goal?today=` | Objectif suivi et progression (jalons atteints, part du chemin, estimations) ; `{targetKg, milestonesKg}` le remplace, à partir de la dernière pesée (422 sans pesée) ; supprimer n'en suit plus | connecté |
@@ -120,5 +123,11 @@
 | POST | `/api/coach/recommendations/{id}/decision` | `{decision: accept, reject ou postpone, today}` ; accepter une proposition calorique fixe un objectif à partir du lendemain de l'utilisateur (source `coach`, protéines et lipides gardés) ; 409 `coach.recommendation_closed` si elle n'est plus proposée, `coach.target_changed` si l'objectif a changé depuis ; 422 `coach.target_unreachable` si l'objectif serait invalide | connecté |
 | GET | `/api/coach/reports` | Les rapports hebdomadaires des 52 dernières semaines | connecté |
 | GET · PUT | `/api/coach/settings` | `{personality: direct (par défaut), encouraging ou neutral, paceKgPerWeek}` (±1 kg/semaine, `null` = celui de l'objectif nutrition) | connecté |
+| POST | `/api/notifications/check` | Lance les vérifications de l'utilisateur maintenant (à l'ouverture de l'app) → toujours `204` (hors 429) ; rien si les dernières ont moins de 5 minutes, si le programme le vérifie au même moment, pendant les horaires silencieux ou toutes catégories désactivées | connecté |
+| GET | `/api/notifications?limit=&before=&beforeId=` | Notifications, les plus récentes d'abord (50 au plus par page, curseur `createdAt` + `id`) : catégorie, titre, texte, lien PWA, lue ou non | connecté |
+| GET | `/api/notifications/unread` | `{count}` : non lues (le badge de la cloche) | connecté |
+| GET | `/api/notifications/{id}` | Une notification | connecté |
+| POST | `/api/notifications/{id}/read` · `/api/notifications/read-all` | Marque lue (la première fois est gardée) · toutes → `204` | connecté |
+| GET · PUT | `/api/notifications/settings` | `{categories: {low_calories, workout_not_started, missing_weigh_in, goal_reached, record, weekly_report: bool}, quietFrom, quietTo}` (`HH:MM`, heure de l'utilisateur, deux heures différentes ; les deux `null` = pas d'horaires silencieux) ; chaque catégorie une fois, une seule des deux heures ou deux heures égales → 422 `notification.invalid_settings` | connecté |
 | GET | `/api/media/{clé}?expires=&signature=&download=` | Stockage local uniquement (dev, tests) : sert un fichier par lien signé, `Cache-Control: private, no-store` ; absent en production (S3 présigné) | connecté + lien signé |
 | GET | `/api/health` | État de l'API et de ses dépendances : `200` + `status: ok`, ou `503` + `status: degraded` et le détail `checks` | publique |

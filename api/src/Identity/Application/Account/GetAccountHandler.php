@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Identity\Application\Account;
 
+use App\Identity\Domain\Preferences\PreferencesRepository;
+use App\Identity\Domain\Preferences\TimeZone;
 use App\Identity\Domain\User\UserRepository;
 use App\Shared\Application\Bus\Query\QueryHandler;
 
 final readonly class GetAccountHandler implements QueryHandler
 {
-    public function __construct(private UserRepository $users)
+    public function __construct(private UserRepository $users, private PreferencesRepository $preferences)
     {
     }
 
@@ -28,6 +30,7 @@ final readonly class GetAccountHandler implements QueryHandler
             $profile->heightCm,
             $user->isTwoFactorEnabled(),
             $user->hasPassword(),
+            $this->preferences->of($user->id())?->timeZone()->name ?? TimeZone::DEFAULT,
         );
     }
 }

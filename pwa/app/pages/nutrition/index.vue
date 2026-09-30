@@ -8,7 +8,7 @@ import MealBuilderDrawer from '~/features/nutrition/components/MealBuilderDrawer
 import MealSection from '~/features/nutrition/components/MealSection.vue'
 import SaveFavoriteDrawer from '~/features/nutrition/components/SaveFavoriteDrawer.vue'
 import { dayLabel, isDay, localDay, shiftDay } from '~/services/calendar/days'
-import type { Entry, MealSlot } from '~/features/nutrition/nutrition'
+import { slotAt, type Entry, type MealSlot } from '~/features/nutrition/nutrition'
 
 definePageMeta({ title: 'Nutrition' })
 
@@ -48,7 +48,10 @@ async function done(message: string, slot: MealSlot): Promise<void> {
 
 const adding = ref(false)
 const addingTo = ref<MealSlot>('breakfast')
-function add(slot: MealSlot): void {
+const initialQuery = ref('')
+function add(slot: MealSlot, query = ''): void {
+  // A search asked from elsewhere (the palette) fills this opening only.
+  initialQuery.value = query
   addingTo.value = slot
   adding.value = true
 }
@@ -59,6 +62,14 @@ function edit(entry: Entry): void {
   edited.value = entry
   editing.value = true
 }
+
+// The global « + » and the search open the adding panel (?ajouter=aliment[&recherche=…]), then leave the URL clean.
+watch(() => route.query.ajouter, async (value) => {
+  if (value !== 'aliment') return
+  add(slotAt(), typeof route.query.recherche === 'string' ? route.query.recherche : '')
+  const { ajouter: _added, recherche: _searched, ...rest } = route.query
+  await navigateTo({ query: rest }, { replace: true })
+}, { immediate: true })
 
 const building = ref(false)
 
@@ -178,6 +189,7 @@ const shortcuts = [
         :meal-slot="addingTo"
         :log="log"
         :log-favorite="logFavorite"
+        :initial-query="initialQuery"
         @done="done"
       />
       <EntryDrawer

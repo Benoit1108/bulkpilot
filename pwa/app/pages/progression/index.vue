@@ -28,6 +28,10 @@ async function onSaved(): Promise<void> {
   await refresh()
 }
 
+// The global « + » leads here to weigh in: the weight field takes the focus.
+const weighInForm = ref<InstanceType<typeof WeighInForm> | null>(null)
+useAddRequest('pesee', weighInForm)
+
 const links = [
   { to: '/progression/mensurations', title: 'Mensurations', summary: 'Bras, taille, cuisses… et tes mesures perso' },
   { to: '/progression/photos', title: 'Photos', summary: 'Tes sessions, comparées côte à côte' },
@@ -45,6 +49,7 @@ const links = [
     <template v-else>
       <UiCard title="Pesée">
         <WeighInForm
+          ref="weighInForm"
           :latest="summary?.latest ?? null"
           @saved="onSaved"
         />

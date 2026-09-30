@@ -1,6 +1,8 @@
 import { expect, signedInTest as test } from './support/fixtures'
 
 const sections = ['Accueil', 'Nutrition', 'Training', 'Progression', 'Coach'] as const
+/** The home page greets the user in its heading; the others are titled after their section. */
+const heading = (section: string) => (section === 'Accueil' ? /^Bonjour/ : section)
 
 test.describe('app shell', () => {
   test('bottom navigation or rail reaches every section, with a matching document title', async ({ page }) => {
@@ -9,7 +11,7 @@ test.describe('app shell', () => {
 
     for (const section of [...sections.slice(1), 'Accueil']) {
       await nav.getByRole('link', { name: section }).click()
-      await expect(page.getByRole('heading', { level: 1, name: section })).toBeVisible()
+      await expect(page.getByRole('heading', { level: 1, name: heading(section) })).toBeVisible()
       await expect(nav.getByRole('link', { name: section })).toHaveAttribute('aria-current', 'page')
       await expect(page).toHaveTitle(`${section} · BulkPilot`)
     }
@@ -26,7 +28,7 @@ test.describe('app shell', () => {
 
     await expect(page.getByRole('heading', { name: 'Cette page n’existe pas.' })).toBeVisible()
     await page.getByRole('button', { name: 'Retour à l’accueil' }).click()
-    await expect(page.getByRole('heading', { level: 1, name: 'Accueil' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: heading('Accueil') })).toBeVisible()
   })
 })
 

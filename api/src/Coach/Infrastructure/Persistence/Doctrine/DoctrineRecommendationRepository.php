@@ -10,6 +10,7 @@ use App\Coach\Domain\Recommendation\RecommendationId;
 use App\Coach\Domain\Recommendation\RecommendationRepository;
 use App\Coach\Domain\Recommendation\Status;
 use App\Shared\Domain\Identifier\UserId;
+use App\Shared\Infrastructure\Persistence\Doctrine\LatestFirst;
 use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class DoctrineRecommendationRepository implements RecommendationRepository
@@ -62,18 +63,9 @@ final readonly class DoctrineRecommendationRepository implements RecommendationR
         $query = $this->entityManager->createQueryBuilder()
             ->select('r')->from(Recommendation::class, 'r')
             ->where('r.ownerId = :owner')
-            ->setParameter('owner', $userId, 'user_id')
-            ->orderBy('r.createdAt', 'DESC')->addOrderBy('r.id', 'DESC')
-            ->setMaxResults($limit);
-        if (null !== $before && null !== $beforeId) {
-            $query->andWhere('r.createdAt < :before OR (r.createdAt = :before AND r.id < :beforeId)')
-                ->setParameter('before', $before, 'datetimetz_immutable')
-                ->setParameter('beforeId', new RecommendationId($beforeId), 'recommendation_id');
-        } elseif (null !== $before) {
-            $query->andWhere('r.createdAt < :before')->setParameter('before', $before, 'datetimetz_immutable');
-        }
+            ->setParameter('owner', $userId, 'user_id');
 
         /** @var list<Recommendation> */
-        return $query->getQuery()->getResult();
+        return LatestFirst::page($query, 'r', $limit, $before, null === $beforeId ? null : new RecommendationId($beforeId), 'recommendation_id')->getQuery()->getResult();
     }
 }

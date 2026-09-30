@@ -8,8 +8,7 @@ use App\Shared\Application\Coaching\ExerciseStall;
 use App\Shared\Application\Coaching\TrainingReading;
 use App\Shared\Application\Coaching\TrainingReadings;
 use App\Shared\Domain\Identifier\UserId;
-use App\Training\Domain\Program\ProgramRepository;
-use App\Training\Domain\Program\ProgramVersionRepository;
+use App\Training\Application\Program\ActiveProgram;
 use App\Training\Domain\Progression\Stall;
 use App\Training\Domain\Progression\StallDetector;
 use App\Training\Domain\Workout\Workout;
@@ -21,11 +20,8 @@ use App\Training\Domain\Workout\WorkoutRepository;
  */
 final readonly class WorkoutReadings implements TrainingReadings
 {
-    public function __construct(
-        private WorkoutRepository $workouts,
-        private ProgramRepository $programs,
-        private ProgramVersionRepository $versions,
-    ) {
+    public function __construct(private WorkoutRepository $workouts, private ActiveProgram $program)
+    {
     }
 
     public function between(UserId $userId, \DateTimeImmutable $from, \DateTimeImmutable $to): TrainingReading
@@ -37,17 +33,12 @@ final readonly class WorkoutReadings implements TrainingReadings
         $inRange = array_filter($history, static fn (Workout $workout): bool => $workout->startedAt() >= $start);
 
         $beaten = StallDetector::recordsByExercise($history);
-        $records = 0;
-        foreach ($beaten as $byWorkout) {
-            foreach ($inRange as $workout) {
-                $records += $byWorkout[$workout->id()->value] ?? 0;
-            }
-        }
-        $program = $this->programs->activeOf($userId);
+        $byWorkout = StallDetector::recordsByWorkout($beaten);
+        $records = array_sum(array_map(static fn (Workout $workout): int => $byWorkout[$workout->id()->value] ?? 0, $inRange));
 
         return new TrainingReading(
             \count($inRange),
-            null === $program ? null : \count($this->versions->currentOf($program)->days()),
+            $this->program->plannedPerWeek($userId),
             $records,
             array_map(
                 static fn (Stall $stall): ExerciseStall => new ExerciseStall($stall->exerciseName, $stall->sessions, $stall->since),

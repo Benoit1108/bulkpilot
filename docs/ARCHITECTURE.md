@@ -28,7 +28,7 @@ api/src/
 ├── Training/        exercices, programmes versionnés, séances, séries, PR
 ├── Progression/     pesées, mensurations, photos, objectifs de poids
 ├── Coach/           moteur de règles, analyses, recommandations
-├── Notification/    préférences, envoi, horaires silencieux
+├── Notification/    règles, notifications dans l'app, catégories, horaires silencieux (ADR-0029)
 ├── Media/           photos privées : réencodage (GD), stockage local ou S3, liens signés (port Shared `Photos`, ADR-0027)
 ├── Export/          exports et suppression de compte
 └── System/          préoccupations opérationnelles (santé du service) — pas un contexte métier (ADR-0013)
@@ -84,9 +84,14 @@ la commande reste un succès (sinon le client réessaierait et appliquerait l'é
 en `error`. Une réaction qui ne doit pas être perdue est routée vers le transport `async` (retries + file `failed`).
 Ces comportements sont couverts par `tests/Integration/Shared/Infrastructure/Bus/BusWiringTest.php`.
 
-Le transport `async` (Doctrine, table `messenger_messages`) est prêt pour les tâches lourdes
-(rapports, exports, IA, notifications ; les photos sont traitées à l'envoi, ADR-0027). Rien n'y est routé tant qu'aucun message asynchrone n'existe ;
-un service `worker` sera ajouté au compose à ce moment-là.
+Le transport `async` (Doctrine, table `messenger_messages`) porte les tâches différables (les photos sont traitées à
+l'envoi, ADR-0027). Y sont routés, un message par compte, les vérifications des notifications (`CheckAccount`) et les
+analyses nocturnes du Coach (`AnalyseAccount`), envoyées par deux programmes Symfony Scheduler (`notifications`, `coach`,
+toutes les 15 minutes, ADR-0029, rangés en `Presentation/Scheduler` : ils pilotent l'application comme une commande
+console), ainsi que l'événement `NotificationCreated` (le push, après la validation). Le service `worker` du compose
+(même image que `php`, sans serveur web, **un seul**) les consomme :
+`messenger:consume async scheduler_notifications scheduler_coach`. En dev, `docker compose restart worker` après avoir
+changé un handler.
 
 ### Authentification
 

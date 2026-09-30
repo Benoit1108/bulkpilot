@@ -29,6 +29,11 @@ export function shiftDay(day: string, days: number): string {
 const longDay = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
 const longDayWithYear = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 
+/** « mercredi 30 septembre », the day at the top of the home page. */
+export function formatLongDay(day: string): string {
+  return longDay.format(parseDay(day))
+}
+
 /** « Aujourd’hui », « Hier », « Demain », otherwise « lundi 28 septembre » (year when not this one). */
 export function dayLabel(day: string, today: string): string {
   if (day === today) return 'Aujourd’hui'
@@ -52,6 +57,12 @@ export function formatFullDay(day: string): string {
 }
 
 const dayMonth = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long' })
+const time = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' })
+
+/** « 20:05 », a moment's local time. */
+export function formatTime(moment: Date): string {
+  return time.format(moment)
+}
 
 /** « 21 septembre », with the year when it is not the one of `today` (« 21 septembre 2025 »). */
 export function formatDayMonth(day: string, today: string): string {

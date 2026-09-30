@@ -10,6 +10,7 @@ use App\Coach\Domain\Recommendation\CoachMessage;
 use App\Coach\Domain\Rule\Finding;
 use App\Coach\Domain\Rule\Kind;
 use App\Coach\Domain\Settings\Personality;
+use App\Shared\Domain\Text\French;
 
 /**
  * Phrases recommendations from templates (spec §73: develop without an API key). Deterministic, so

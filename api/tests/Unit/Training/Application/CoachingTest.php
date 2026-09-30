@@ -10,6 +10,7 @@ use App\Tests\Support\Training\InMemoryProgramRepository;
 use App\Tests\Support\Training\InMemoryProgramVersionRepository;
 use App\Tests\Support\Training\InMemoryWorkoutRepository;
 use App\Training\Application\Coaching\WorkoutReadings;
+use App\Training\Application\Program\ActiveProgram;
 use App\Training\Domain\Exercise\ExerciseId;
 use App\Training\Domain\Exercise\Measurement;
 use App\Training\Domain\Prescription\ProgressionStrategy;
@@ -76,7 +77,7 @@ final class CoachingTest extends TestCase
 
     private function reading(): TrainingReading
     {
-        return new WorkoutReadings($this->workouts, $this->programs, $this->versions)->between(new UserId(self::ALEX), new \DateTimeImmutable('2026-09-23'), new \DateTimeImmutable('2026-09-29'));
+        return new WorkoutReadings($this->workouts, new ActiveProgram($this->programs, $this->versions))->between(new UserId(self::ALEX), new \DateTimeImmutable('2026-09-23'), new \DateTimeImmutable('2026-09-29'));
     }
 
     public function testTheWeekCountsTheSessionsFinishedInItAndTheRecordsTheyBeat(): void

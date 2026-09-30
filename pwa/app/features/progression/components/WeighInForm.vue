@@ -23,6 +23,9 @@ watch(() => props.latest?.weightKg, (kg, before) => {
 })
 const replacing = computed(() => props.latest?.day === day.value)
 const saved = ref<string | null>(null)
+const weightField = ref<{ focus: () => void } | null>(null)
+/** The global « + » leads to the form: the weight field takes the focus. */
+defineExpose({ focus: () => weightField.value?.focus() })
 
 async function submit(): Promise<void> {
   saved.value = null
@@ -49,6 +52,7 @@ async function submit(): Promise<void> {
     </UiAlert>
     <div class="grid grid-cols-2 gap-3">
       <UiInput
+        ref="weightField"
         v-model="weight"
         label="Poids"
         type="number"

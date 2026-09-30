@@ -28,16 +28,24 @@ framework:
 
         transports:
             # Heavy or deferrable work (reports, exports, photo processing, AI calls, notifications)
-            # and event reactions that must survive a failure. Nothing is routed here yet: add a
-            # routing entry and a `worker` compose service when the first async message appears.
+            # and event reactions that must survive a failure, consumed by the `worker` service
+            # with the schedules (`scheduler_notifications`, `scheduler_coach`, ADR-0029).
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                # 10 s, 30 s, 90 s, then the `failed` transport (docs/DEPLOYMENT.md: replaying it).
                 retry_strategy:
                     max_retries: 3
-                    multiplier: 2
+                    delay: 10000
+                    multiplier: 3
             failed: 'doctrine://default?queue_name=failed'
 
         routing:
+            # One message per account: a failing one is retried alone.
+            App\Notification\Application\Check\CheckAccount: async
+            App\Coach\Application\Analysis\AnalyseAccount: async
+            # Delivered after the commit (ADR-0014), then pushed from the worker: a slow or
+            # failing push is retried there, never in the request that made the notification.
+            App\Notification\Domain\Notification\NotificationCreated: async
 
 when@test:
     framework:

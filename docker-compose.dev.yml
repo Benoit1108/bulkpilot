@@ -6,22 +6,23 @@ services:
     build:
       target: frankenphp_dev
     environment:
+      <<: &dev-environment
+        APP_SECRET: dev-only-not-a-secret
+        APP_ENCRYPTION_KEY: ZGV2LW9ubHktbm90LWEtc2VjcmV0LWtleS0zMmJ5dGU= # gitleaks:allow (readable non-secret key)
+        MAILER_DSN: smtp://mailer:1025
+        DEFAULT_URI: https://localhost
+        MAILER_FROM: no-reply@localhost
+        REGISTRATION_ENABLED: "true"
+        # Deterministic scans for `make e2e`; FOOD_DATABASE=openfoodfacts make up to scan real products.
+        FOOD_DATABASE: ${FOOD_DATABASE:-fake}
+        # Photos on the local disk (var/media), served through signed links.
+        MEDIA_STORAGE: local
+        XDEBUG_MODE: ${XDEBUG_MODE:-off}
       # "https://php" lets containers (e.g. Playwright) reach the app over TLS on the internal network.
       SERVER_NAME: ${SERVER_NAME:-localhost, https://php}
       CADDY_SERVER_EXTRA_DIRECTIVES: tls internal
-      APP_SECRET: dev-only-not-a-secret
-      APP_ENCRYPTION_KEY: ZGV2LW9ubHktbm90LWEtc2VjcmV0LWtleS0zMmJ5dGU= # gitleaks:allow (readable non-secret key)
       PWA_MODE: pwa_dev
       PWA_UPSTREAM: pwa:3000
-      MAILER_DSN: smtp://mailer:1025
-      DEFAULT_URI: https://localhost
-      MAILER_FROM: no-reply@localhost
-      REGISTRATION_ENABLED: "true"
-      # Deterministic scans for `make e2e`; FOOD_DATABASE=openfoodfacts make up to scan real products.
-      FOOD_DATABASE: ${FOOD_DATABASE:-fake}
-      # Photos on the local disk (var/media), served through signed links.
-      MEDIA_STORAGE: local
-      XDEBUG_MODE: ${XDEBUG_MODE:-off}
     volumes:
       - ./api:/app
       - /app/var
@@ -30,6 +31,15 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     tty: true
+
+  # Same sources as php; restart it after changing a handler (`docker compose restart worker`).
+  worker:
+    image: ${IMAGES_PREFIX:-}bulkpilot-php-dev
+    environment:
+      <<: *dev-environment
+    volumes:
+      - ./api:/app
+      - /app/var
 
   pwa:
     build:

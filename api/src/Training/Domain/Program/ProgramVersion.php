@@ -58,6 +58,16 @@ class ProgramVersion extends AggregateRoot
             && array_all($this->days, static fn (TrainingDay $day, int $i): bool => $day->equals($days[$i]));
     }
 
+    /**
+     * The day that follows the last one done, going round: the program is followed in order,
+     * whatever the weekday. The first day when none was done, or when the last one is beyond this
+     * version's days (a revision that has fewer).
+     */
+    public function dayAfter(?int $lastIndex): int
+    {
+        return null === $lastIndex || $lastIndex >= \count($this->days) - 1 ? 0 : $lastIndex + 1;
+    }
+
     public function day(int $index): TrainingDay
     {
         return $this->days[$index] ?? throw InvalidProgram::because(\sprintf('this version has no day %d', $index + 1));

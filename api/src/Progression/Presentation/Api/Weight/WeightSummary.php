@@ -56,6 +56,8 @@ final readonly class WeightSummary
         public ?string $direction,
         #[ApiProperty(description: 'Latest minus first weigh-in.', required: true)]
         public ?float $sinceStartKg,
+        #[ApiProperty(description: 'The last weigh-in of the period minus its first (null with fewer than two): the change over 7 days, 30 days…', required: true)]
+        public ?float $periodChangeKg,
         #[ApiProperty(required: true, readableLink: true, genId: false)]
         public ?WeightGoal $goal,
         #[ApiProperty(description: 'Each weigh-in of the period, with the averages ending that day.', required: true)]
@@ -76,6 +78,7 @@ final readonly class WeightSummary
             $view->kgPerWeek,
             $view->direction?->value,
             $view->sinceStartKg,
+            $view->periodChangeKg,
             null === $view->goal ? null : WeightGoal::of($view->goal),
             array_map(TrendPointOutput::of(...), $view->points),
             array_map(WeekAverageOutput::of(...), $view->weeks),

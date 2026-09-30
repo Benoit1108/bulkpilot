@@ -64,6 +64,9 @@ async function submit(): Promise<void> {
     input.value?.focus()
   }
 }
+
+/** The global « + » leads to the form: the file picker takes the focus. */
+defineExpose({ focus: () => input.value?.focus() })
 </script>
 
 <template>

@@ -61,4 +61,5 @@ export const alex = {
   heightCm: null,
   twoFactorEnabled: false,
   hasPassword: true,
+  timeZone: 'Europe/Paris',
 }

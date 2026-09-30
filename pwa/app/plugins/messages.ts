@@ -4,5 +4,6 @@ import '~/features/nutrition/messages'
 import '~/features/training/messages'
 import '~/features/progression/messages'
 import '~/features/coach/messages'
+import '~/features/notifications/messages'
 
 export default defineNuxtPlugin(() => {})

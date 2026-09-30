@@ -39,6 +39,7 @@ final readonly class GetWeightSummaryHandler implements QueryHandler
             $kgPerWeek,
             WeightTrend::direction($kgPerWeek),
             null === $latest || null === $firstDay ? null : round($latest->kg - $firstDay->kg, 1),
+            \count($points) < 2 ? null : round($points[\count($points) - 1]->kg - $points[0]->kg, 1),
             WeightReadings::progress($goal, $weighIns, $today),
             $points,
             self::weeks($points),

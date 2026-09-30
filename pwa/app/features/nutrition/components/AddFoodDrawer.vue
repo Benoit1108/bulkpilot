@@ -11,6 +11,8 @@ const props = defineProps<{
   mealSlot: MealSlot
   log: (source: LogSource, slot: MealSlot, grams: number) => Promise<void>
   logFavorite: (favoriteId: string, slot: MealSlot) => Promise<void>
+  /** What to search for first (a food found with the global search). */
+  initialQuery?: string
 }>()
 /** What was added and where, for the confirmation shown once the drawer is closed. */
 const emit = defineEmits<{ done: [message: string, slot: MealSlot] }>()
@@ -92,6 +94,7 @@ async function addFavorite(meal: FavoriteMeal): Promise<void> {
       <FoodPicker
         favorites
         scan
+        :initial-query="initialQuery"
         @pick="picked = $event"
         @favorite="addFavorite"
         @scan="scanning = true"

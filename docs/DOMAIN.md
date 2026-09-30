@@ -24,6 +24,7 @@ Langage commun et règles structurantes. Chaque contexte complètera sa section 
 | `DomainException` | Violation d'une règle métier, avec un **code d'erreur stable** (`nutrition.invalid_recipe`) traduit côté présentation. |
 | `Period`, `Days` | Les périodes des graphiques (7 j, 30 j, 3 mois, 6 mois, 1 an, tout) se terminant le jour de l'utilisateur, et le calcul des jours et semaines (lundi). |
 | `MediaId`, port `Photos` | Une photo que Media garde pour un autre contexte (ADR-0027) : `store`, `links`, `delete`, Media vérifiant le propriétaire. |
+| Ports `Notifying` | Ce que les notifications lisent des autres contextes (ADR-0029) : `EatingReadings` (le jour : mangé, cible, dernière saisie), `WeighingReadings` (pesée du jour, habitude, étapes de l'objectif atteintes), `TrainingActivity` (semaine, programme, séance du jour, records récents), `CoachReports` (dernier rapport). |
 | Ports `Coaching` | Ce que le Coach lit des autres contextes (ADR-0028) : `NutritionReadings` (jours saisis, objectif d'un jour), `BodyWeight`, `TrainingReadings` (des chiffres seulement), et `CalorieTargets`, sa seule écriture, sur acceptation (`TargetChanged`, `TargetUnreachable`). |
 
 ## Contextes
@@ -52,6 +53,9 @@ Langage commun et règles structurantes. Chaque contexte complètera sa section 
 
 | Double authentification | TOTP (RFC 6238, 6 chiffres, 30 s, ±1 pas) : graine chiffrée au repos, active seulement après un premier code valide ; un pas de temps n'est jamais accepté deux fois. 10 codes de secours à usage unique. Exige un email vérifié et le mot de passe pour activer, désactiver ou régénérer les codes. |
 | `ExternalIdentity` | Lien « compte Google (sujet stable) → utilisateur ». Jamais l'email comme clé. |
+| `Preferences` (agrégat, phase 7) | Ce que les appareils et les choix de l'utilisateur règlent de l'application, à part du compte : le fuseau et la disposition du tableau de bord ; pas de ligne tant qu'aucun n'est réglé (les valeurs par défaut s'appliquent). Les préférences ne touchent jamais la ligne du compte : le fuseau envoyé en silence par la PWA ne fait jamais échouer une confirmation d'email, un changement de mot de passe ou de 2FA faits en même temps. |
+| `TimeZone` (phase 7) | Fuseau IANA des appareils (`Europe/Paris` tant qu'aucun ne l'a envoyé ; les anciens noms comme `America/Montreal` sont acceptés, à la casse près) : les notifications et l'analyse nocturne du Coach suivent la journée et les heures de l'utilisateur. La PWA l'envoie quand il change. |
+| `DashboardLayout` (phase 7) | L'ordre des widgets du tableau de bord et ceux qui sont affichés (§82) : chacun exactement une fois ; gardé dans les préférences du compte (le même sur tous les appareils). Relu, un ancien réglage garde son ordre : un widget ajouté depuis s'ajoute à la fin, affiché ; un widget retiré disparaît. |
 
 Règles transverses :
 
@@ -65,6 +69,10 @@ Règles transverses :
 - Le **journal de sécurité** (canal `audit`) enregistre inscriptions, vérifications, changements de mot de passe, activation/désactivation de la 2FA et usage des codes de secours, sans donnée sensible.
 
 `UserId` vit dans le noyau partagé (ADR-0015) : chaque contexte référence le propriétaire sans dépendre d'Identity.
+Le port partagé `Accounts` (implémenté par Identity) donne chaque compte et son fuseau pour le travail planifié, ou un
+seul (`clockOf`) pour une vérification à l'ouverture (ADR-0029) ; un fuseau que la base des fuseaux ne connaît plus
+donne le fuseau par défaut. Le fuseau et la disposition du tableau de bord (§82) sont dans un agrégat à part (`Preferences`, table
+`user_preferences`) : les écrire ne concurrence jamais une écriture du compte (mot de passe, 2FA, email, profil). Écritures des préférences limitées à 30 / min par compte (`RATE_LIMIT_PREFERENCE_WRITES`).
 
 ## Nutrition (phase 2)
 
@@ -139,6 +147,12 @@ Limites connues (reportées volontairement) :
 - Records recalculés à la lecture (pas de table de projection) : borné par les 300 dernières séances.
 - Séance en cours sur un autre appareil : proposée « Reprendre / Terminer », sans écran dédié pour résoudre un conflit (409).
 
+Prochaine séance (phase 7) : `GET /api/training/next-workout` — le jour qui suit celui de la dernière séance terminée du
+programme actif (`ProgramVersion::dayAfter`, en boucle ; le premier jour s'il n'y en a pas, ou si la dernière faite est
+au-delà des jours d'une révision qui en a moins), cherchée parmi les 60 dernières séances, quel que soit le jour de la
+semaine ; avec quand ce jour **de la version actuelle** a été commencé pour la dernière fois (`lastDoneAt`, que la PWA
+affiche dans le jour de l'utilisateur) et si une séance est en cours.
+
 Analyses (phase 5) : `GET /api/training/analytics` — séances terminées de la période, fréquence par semaine, séries de
 travail, reps, tonnage, records battus (chacun jugé contre les séances d'avant, sur les 300 dernières), par semaine.
 
@@ -199,9 +213,10 @@ Règles transverses :
 
 Limites connues (reportées volontairement) :
 
-- Pas d'analyse planifiée ni de notification : phase 7.
 - Un seul fournisseur IA (gabarits) ; Claude / OpenAI se brancheront sur `AiProvider`.
-- Le rapport d'une semaine n'est tiré que si le Coach est ouvert après elle ; une semaine sans ouverture n'a pas de rapport.
+- L'analyse tourne aussi chaque nuit, entre 3 h et 3 h 15 (et 4 h et 4 h 15, pour les nuits où 3 h n'existe pas) dans le
+  fuseau du compte (ADR-0029) : le rapport de la semaine est tiré la nuit du dimanche au lundi, sans ouvrir le Coach.
+  Sans worker, il ne l'est qu'à l'ouverture du Coach.
 - L'action du rapport est celle de l'analyse qui le tire (le lundi suivant, en général), pas celle du dimanche.
 - Une recommandation mise de côté (« Plus tard ») garde sa place parmi les 3 : pendant 2 jours, 2 seulement peuvent
   être montrées.
@@ -212,6 +227,34 @@ Limites connues (reportées volontairement) :
 - Le fournisseur est appelé dans la transaction de l'analyse (sans conséquence avec les gabarits ; un vrai
   fournisseur formulera après la validation, ADR-0028).
 
+## Notification (phase 7)
+
+| Élément | Règles |
+| --- | --- |
+| `Notification` (agrégat) | Une catégorie, un titre, un texte, un lien vers la page de la PWA, créée à un instant, lue ou non (lire à nouveau garde la première fois). **Une par clé et par utilisateur, pour toujours** (§77) : la clé dit de quoi elle parle (le jour, la séance, l'étape, la semaine). |
+| `NotificationSettings` (agrégat) | Catégories désactivées (une nouvelle catégorie est active), horaires silencieux `HH:MM` dans l'heure de l'utilisateur, ou aucun (23:00 → 08:00 par défaut ; à cheval sur minuit ; deux heures différentes) ; versionné, modifié par l'utilisateur seul. |
+| `CheckLog` | L'heure de la dernière vérification de chaque compte (table à part) : un tour pris d'une seule instruction, au plus toutes les 5 minutes ; deux vérifications simultanées n'en font qu'une, sans erreur. |
+| `QuietHours` | Rien n'est créé pendant ces heures ; ce qui ne tient plus ensuite n'est pas rattrapé. |
+| Règles (`Checks`) | Dans l'heure locale : **calories très insuffisantes** dès 20:00, moins de 70 % de la cible mangés (1 540 / 2 350 kcal, l’exemple du §130, déclenche), quelque chose saisi ce jour-là mais rien dans la dernière heure ; **séance prévue non commencée** dès 18:00, quand les séances restant à faire cette semaine prennent tous les jours qui restent (aujourd'hui compris) et qu'aucune n'a été commencée aujourd'hui ; **pesée manquante** dès 11:00, pas de pesée aujourd'hui pour qui s'est pesé au moins 3 fois les 7 jours d'avant ; **objectif atteint** : une étape (jalon ou cible) atteinte aujourd'hui ou hier ; **record** : une séance finie depuis 48 h qui en a battu ; **rapport hebdomadaire** : le Coach a tiré celui de la semaine qui vient de finir. |
+| Vérification | À l'ouverture de l'app (`POST /api/notifications/check`, toujours 204) et toutes les 15 minutes par le worker ; rien n'est lu pendant les horaires silencieux, avec toutes les catégories désactivées, ni si la dernière a moins de 5 minutes. Une notification créée lève `NotificationCreated`, poussé par le worker après la validation (`PushSender` : aucun push pour l'instant, §78). |
+
+Règles transverses :
+
+- L'heure et le jour sont ceux du fuseau du compte (envoyé par l'appareil ; Europe/Paris par défaut, et aussi pour un
+  fuseau que la base des fuseaux ne connaîtrait plus).
+- « Les 7 jours d'avant » de la pesée manquante excluent aujourd'hui (l'habitude se juge avant la pesée attendue), alors
+  que « les 7 derniers jours » du Coach l'incluent (la pesée du matin compte dans la tendance).
+- Liens : la pesée manquante ouvre le formulaire de pesée (`/progression?ajouter=pesee`), les calories très
+  insuffisantes l'ajout d'un aliment (`/nutrition?ajouter=aliment`).
+- Écritures (vérifications, lectures, réglages) limitées à 60 / min par compte (`RATE_LIMIT_NOTIFICATION_WRITES`).
+
+Limites connues (reportées volontairement) :
+
+- Pas de push (Web Push) : les notifications restent dans l'application.
+- Une notification n'expire pas et ne se supprime pas ; la liste se lit par pages.
+- Les séances sont rangées dans la semaine d'après leur heure de début comparée au lundi local, mais les séances prévues
+  sont celles du programme actif (ses jours), sans calendrier.
+
 ## Media (phase 5)
 
 | Élément | Règles |
@@ -221,5 +264,6 @@ Limites connues (reportées volontairement) :
 
 ## Événements de domaine prévus
 
-`WeighInRecorded` (émis en phase 5) · `RecommendationDecided` (phase 6) · `DailyNutritionTargetReached` ·
-`WorkoutCompleted` · `GoalChanged`
+`WeighInRecorded` (émis en phase 5) · `RecommendationDecided` (phase 6) · `NotificationCreated` (phase 7, pour le push)
+— les notifications lisent par des ports plutôt que de s'abonner aux événements d'autres contextes (ADR-0029) ·
+`DailyNutritionTargetReached` · `WorkoutCompleted` · `GoalChanged`

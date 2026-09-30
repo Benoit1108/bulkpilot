@@ -80,6 +80,20 @@ final readonly class DoctrineWorkoutRepository implements WorkoutRepository
         return array_reverse($latest);
     }
 
+    public function finishedSince(UserId $userId, \DateTimeImmutable $since): array
+    {
+        /** @var list<Workout> */
+        return $this->finished($userId)->andWhere('w.finishedAt >= :since')->setParameter('since', $since, 'datetimetz_immutable')
+            ->orderBy('w.startedAt')->addOrderBy('w.id')->getQuery()->getResult();
+    }
+
+    public function startedSince(UserId $userId, \DateTimeImmutable $since): array
+    {
+        /** @var list<Workout> */
+        return $this->finished($userId)->andWhere('w.startedAt >= :since')->setParameter('since', $since, 'datetimetz_immutable')
+            ->orderBy('w.startedAt')->addOrderBy('w.id')->getQuery()->getResult();
+    }
+
     private function finished(UserId $userId): QueryBuilder
     {
         return $this->entityManager->createQueryBuilder()

@@ -22,6 +22,7 @@ use App\Identity\Domain\Exception\SessionNotFound;
 use App\Identity\Domain\Session\UserSessionId;
 use App\Identity\Domain\User\Sex;
 use App\Tests\Support\Identity\IdentityTestCase;
+use App\Tests\Support\Identity\InMemoryPreferencesRepository;
 
 final class SignInAndSessionsTest extends IdentityTestCase
 {
@@ -90,7 +91,7 @@ final class SignInAndSessionsTest extends IdentityTestCase
         $user = $this->registerVerified();
 
         new UpdateProfileHandler($this->users, $this->clock)(new UpdateProfile($user->id(), 'Alexandre', new \DateTimeImmutable('2000-01-15'), Sex::Male, 178));
-        $view = new GetAccountHandler($this->users)(new GetAccount($user->id()));
+        $view = new GetAccountHandler($this->users, new InMemoryPreferencesRepository($this->users))(new GetAccount($user->id()));
 
         self::assertSame('alex@example.com', $view->email);
         self::assertTrue($view->emailVerified);

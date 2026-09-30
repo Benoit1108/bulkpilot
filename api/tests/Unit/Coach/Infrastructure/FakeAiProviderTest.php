@@ -11,7 +11,7 @@ use App\Coach\Domain\Rule\Kind;
 use App\Coach\Domain\Rule\Level;
 use App\Coach\Domain\Settings\Personality;
 use App\Coach\Infrastructure\Ai\FakeAiProvider;
-use App\Coach\Infrastructure\Ai\French;
+use App\Shared\Domain\Text\French;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 

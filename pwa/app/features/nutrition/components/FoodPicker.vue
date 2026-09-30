@@ -11,11 +11,12 @@ import { SEARCH_MIN_LENGTH } from '~/features/nutrition/rules'
  * Finds what to log: favourite meals and recent foods first, then as-you-type search over
  * CIQUAL, the user's own foods and recipes. Recipes and favourites can be left out (ingredients).
  */
-const props = withDefaults(defineProps<{ recipes?: boolean, favorites?: boolean, scan?: boolean }>(), { recipes: true, favorites: false, scan: false })
+const props = withDefaults(defineProps<{ recipes?: boolean, favorites?: boolean, scan?: boolean, initialQuery?: string }>(), { recipes: true, favorites: false, scan: false, initialQuery: '' })
 const emit = defineEmits<{ pick: [item: Loggable], favorite: [meal: FavoriteMeal], scan: [] }>()
 
 const api = useApi()
-const query = ref('')
+// A search found elsewhere (the global palette) starts here.
+const query = ref(props.initialQuery)
 const searched = ref('')
 const results = ref<Food[]>([])
 const searching = ref(false)
@@ -53,7 +54,7 @@ watch(trimmed, (value) => {
     return
   }
   timer = setTimeout(() => search(value), 250)
-})
+}, { immediate: true }) // A search asked from elsewhere (the palette) runs as soon as the picker opens.
 
 onBeforeUnmount(() => clearTimeout(timer))
 

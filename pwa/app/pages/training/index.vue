@@ -4,12 +4,12 @@ import { Dumbbell } from 'lucide-vue-next'
 import SyncStatus from '~/features/training/components/SyncStatus.vue'
 import { TRAINING_KEYS } from '~/features/training/cacheKeys'
 import { useWorkoutOutbox } from '~/features/training/outbox'
-import { keepActiveProgram, keepPlans, keptActiveProgram, planFor } from '~/features/training/plans'
+import { keepActiveProgram, keepPlans, keptActiveProgram } from '~/features/training/plans'
+import { useStartWorkout } from '~/features/training/startWorkout'
 import { useWorkoutSession } from '~/features/training/session'
 import type { Program } from '~/features/training/training'
 import type { Workout } from '~/features/training/workout'
 import { asApiError } from '~/services/api/client'
-import { messageFor } from '~/services/api/messages'
 
 definePageMeta({ title: 'Training' })
 
@@ -24,8 +24,7 @@ const active = computed(() => programs.value?.find(program => program.active) ??
 const local = session.workout
 /** A workout the API has in progress but this device does not (another device, cleared data). */
 const elsewhere = ref<Workout | null>(null)
-const starting = ref<number | 'free' | null>(null)
-const startError = ref<string | null>(null)
+const { start: startWorkout, starting, message: startError } = useStartWorkout()
 
 onMounted(async () => {
   await session.load()
@@ -50,19 +49,7 @@ watch(programs, (all) => {
 }, { immediate: true })
 
 async function start(day: number | 'free'): Promise<void> {
-  starting.value = day
-  startError.value = null
-  try {
-    await session.start(day === 'free' || !active.value ? null : await planFor(api, active.value, day))
-    await navigateTo('/training/seance')
-  }
-  catch (caught) {
-    const failure = asApiError(caught)
-    startError.value = ['network', 'server'].includes(failure.kind) ? 'Pas de connexion, et ce jour n’est pas encore gardé sur l’appareil.' : messageFor(failure)
-  }
-  finally {
-    starting.value = null
-  }
+  await startWorkout(active.value, day)
 }
 
 /** Takes over the workout of another device first, then opens it (to go on, or to finish it). */

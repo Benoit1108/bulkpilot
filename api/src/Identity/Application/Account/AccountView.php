@@ -18,6 +18,7 @@ final readonly class AccountView
         public ?int $heightCm,
         public bool $twoFactorEnabled,
         public bool $hasPassword,
+        public string $timeZone,
     ) {
     }
 }

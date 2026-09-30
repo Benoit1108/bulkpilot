@@ -55,11 +55,13 @@ final readonly class Account
         /** False for accounts created with an external provider: a password can be set via the reset flow. */
         #[ApiProperty(required: true)]
         public bool $hasPassword,
+        #[ApiProperty(description: 'The IANA time zone of the devices: scheduled notifications follow it.', required: true)]
+        public string $timeZone,
     ) {
     }
 
     public static function fromView(AccountView $view): self
     {
-        return new self($view->id, $view->email, $view->emailVerified, $view->firstName, $view->birthDate, $view->sex?->value, $view->heightCm, $view->twoFactorEnabled, $view->hasPassword);
+        return new self($view->id, $view->email, $view->emailVerified, $view->firstName, $view->birthDate, $view->sex?->value, $view->heightCm, $view->twoFactorEnabled, $view->hasPassword, $view->timeZone);
     }
 }

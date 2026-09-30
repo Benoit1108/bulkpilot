@@ -8,6 +8,8 @@ export const TRAINING_KEYS = {
   exercise: (id: string) => `training-exercise-${id}`,
   program: (id: string, version: number | null) => `training-program-${id}-${version ?? 'current'}`,
   workout: (id: string) => `training-workout-${id}`,
+  nextWorkout: 'training-next-workout',
+  analytics: (period: string, today: string) => `training-analytics-${period}-${today}`,
 } as const
 
 /** Everything a program change can affect: the list and every version shown. */

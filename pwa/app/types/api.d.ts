@@ -228,6 +228,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/me/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a DashboardLayout resource.
+         * @description Retrieves a DashboardLayout resource.
+         */
+        get: operations["api_medashboard_get"];
+        /**
+         * Replaces the DashboardLayout resource.
+         * @description Replaces the DashboardLayout resource.
+         */
+        put: operations["api_medashboard_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/email-verification": {
         parameters: {
             query?: never;
@@ -780,6 +804,170 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/training/next-workout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a NextWorkout resource.
+         * @description Retrieves a NextWorkout resource.
+         */
+        get: operations["api_trainingnext-workout_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Notification resources.
+         * @description Retrieves the collection of Notification resources.
+         */
+        get: operations["api_notifications_get_collection"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a Notification resource.
+         * @description Retrieves a Notification resource.
+         */
+        get: operations["api_notifications_id_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a Notification resource.
+         * @description Creates a Notification resource.
+         */
+        post: operations["notification_read"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a NotificationInbox resource.
+         * @description Creates a NotificationInbox resource.
+         */
+        post: operations["notifications_check"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a NotificationInbox resource.
+         * @description Creates a NotificationInbox resource.
+         */
+        post: operations["notifications_read_all"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/unread": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a NotificationInbox resource.
+         * @description Retrieves a NotificationInbox resource.
+         */
+        get: operations["api_notificationsunread_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a NotificationSettings resource.
+         * @description Retrieves a NotificationSettings resource.
+         */
+        get: operations["api_notificationssettings_get"];
+        /**
+         * Replaces the NotificationSettings resource.
+         * @description Replaces the NotificationSettings resource.
+         */
+        put: operations["api_notificationssettings_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/nutrition/averages": {
         parameters: {
             query?: never;
@@ -1292,6 +1480,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/me/time-zone": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replaces the TimeZone resource.
+         * @description Replaces the TimeZone resource.
+         */
+        put: operations["api_metime-zone_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/training/analytics": {
         parameters: {
             query?: never;
@@ -1617,6 +1825,8 @@ export interface components {
             heightCm: number | null;
             twoFactorEnabled: boolean;
             hasPassword: boolean;
+            /** @description The IANA time zone of the devices: scheduled notifications follow it. */
+            timeZone: string;
         };
         /** @description Replaces the profile (identity only: body metrics live in Progression). */
         "Account.ProfileInput": {
@@ -1652,6 +1862,8 @@ export interface components {
             heightCm: number | null;
             twoFactorEnabled: boolean;
             hasPassword: boolean;
+            /** @description The IANA time zone of the devices: scheduled notifications follow it. */
+            timeZone: string;
         };
         /** @description The signed-in account. */
         "Account.jsonld_noid": components["schemas"]["HydraItemBaseSchemaWithoutId"] & {
@@ -1666,6 +1878,8 @@ export interface components {
             heightCm: number | null;
             twoFactorEnabled: boolean;
             hasPassword: boolean;
+            /** @description The IANA time zone of the devices: scheduled notifications follow it. */
+            timeZone: string;
         };
         Account_noid: {
             id: string;
@@ -1679,6 +1893,8 @@ export interface components {
             heightCm: number | null;
             twoFactorEnabled: boolean;
             hasPassword: boolean;
+            /** @description The IANA time zone of the devices: scheduled notifications follow it. */
+            timeZone: string;
         };
         "AdherenceOutput.jsonld_noid": {
             /** @description The mean of the parts, 0 to 100; null when nothing was recorded (no day logged, no weigh-in, no session). */
@@ -2134,6 +2350,18 @@ export interface components {
             salt?: number | null;
             barcode?: string | null;
             portions?: components["schemas"]["PortionInput"][];
+        };
+        /** @description Every widget, in the user's order (the default one until arranged). */
+        DashboardLayout: {
+            widgets: components["schemas"]["WidgetOutput"][];
+        };
+        /** @description Arranges the dashboard: every widget exactly once, in order. */
+        "DashboardLayout.DashboardLayoutInput": {
+            widgets?: components["schemas"]["WidgetInput"][];
+        };
+        /** @description Every widget, in the user's order (the default one until arranged). */
+        "DashboardLayout.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            widgets: components["schemas"]["WidgetOutput.jsonld"][];
         };
         DayInput: {
             /** @default  */
@@ -2994,6 +3222,110 @@ export interface components {
             remainingKg: number;
             estimate: components["schemas"]["EstimateOutput_noid"];
         };
+        /** @description The day after the one of the latest workout of the active program (the first day when none); 404 without an active program. */
+        NextWorkout: {
+            programId: string;
+            programName: string;
+            /** @description The current version, the one a workout started now follows. */
+            versionNumber: number;
+            dayIndex: number;
+            dayName: string;
+            exerciseCount: number;
+            /**
+             * Format: date-time
+             * @description When this day of the current version was last started (among the last 60 workouts); the PWA shows it in the user's day.
+             */
+            lastDoneAt: string | null;
+            /** @description A workout is in progress: resume it rather than start another one. */
+            inProgress: boolean;
+        };
+        /** @description The day after the one of the latest workout of the active program (the first day when none); 404 without an active program. */
+        "NextWorkout.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            programId: string;
+            programName: string;
+            /** @description The current version, the one a workout started now follows. */
+            versionNumber: number;
+            dayIndex: number;
+            dayName: string;
+            exerciseCount: number;
+            /**
+             * Format: date-time
+             * @description When this day of the current version was last started (among the last 60 workouts); the PWA shows it in the user's day.
+             */
+            lastDoneAt: string | null;
+            /** @description A workout is in progress: resume it rather than start another one. */
+            inProgress: boolean;
+        };
+        /** @description The notifications, the latest first. */
+        Notification: {
+            id: string;
+            /** @enum {string} */
+            category: "low_calories" | "workout_not_started" | "missing_weigh_in" | "goal_reached" | "record" | "weekly_report";
+            title: string;
+            body: string;
+            /** @description The page of the PWA it leads to. */
+            link: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            readAt: string | null;
+        };
+        /** @description The notifications, the latest first. */
+        "Notification.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            /** @enum {string} */
+            category: "low_calories" | "workout_not_started" | "missing_weigh_in" | "goal_reached" | "record" | "weekly_report";
+            title: string;
+            body: string;
+            /** @description The page of the PWA it leads to. */
+            link: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            readAt: string | null;
+        };
+        /** @description How many notifications are unread (the bell's badge). */
+        NotificationInbox: {
+            count: number;
+        };
+        /** @description How many notifications are unread (the bell's badge). */
+        "NotificationInbox.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            count: number;
+        };
+        /** @description Which notifications the user wants (spec §75) and when to be left alone (spec §76), in their time. */
+        NotificationSettings: {
+            categories: {
+                low_calories: boolean;
+                workout_not_started: boolean;
+                missing_weigh_in: boolean;
+                goal_reached: boolean;
+                record: boolean;
+                weekly_report: boolean;
+            };
+            quietFrom: string | null;
+            quietTo: string | null;
+        };
+        /** @description Which notifications the user wants (spec §75) and when to be left alone (spec §76), in their time. */
+        "NotificationSettings.NotificationSettingsInput": {
+            categories: {
+                [key: string]: boolean;
+            };
+            quietFrom?: string | null;
+            quietTo?: string | null;
+        };
+        /** @description Which notifications the user wants (spec §75) and when to be left alone (spec §76), in their time. */
+        "NotificationSettings.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            categories: {
+                low_calories: boolean;
+                workout_not_started: boolean;
+                missing_weigh_in: boolean;
+                goal_reached: boolean;
+                record: boolean;
+                weekly_report: boolean;
+            };
+            quietFrom: string | null;
+            quietTo: string | null;
+        };
         Nutrients: {
             energyKcal: number;
             protein: number;
@@ -3702,6 +4034,11 @@ export interface components {
             reps: number | null;
             seconds: number | null;
         };
+        /** @description Sets the IANA time zone of the user's devices (the PWA sends its own when it differs), kept in the preferences apart from the account: it never conflicts with an account change; 422 `identity.invalid_time_zone` for an unknown zone. */
+        "TimeZone.TimeZoneInput": {
+            /** @default  */
+            timeZone: string;
+        };
         /** @description Totals of the finished workouts of a period, and of each of its weeks (Monday first). */
         TrainingAnalytics: {
             /** @enum {string} */
@@ -3929,6 +4266,8 @@ export interface components {
             direction: "gaining" | "losing" | "stable" | null;
             /** @description Latest minus first weigh-in. */
             sinceStartKg: number | null;
+            /** @description The last weigh-in of the period minus its first (null with fewer than two): the change over 7 days, 30 days… */
+            periodChangeKg: number | null;
             goal: components["schemas"]["WeightGoal_noid"] | null;
             /** @description Each weigh-in of the period, with the averages ending that day. */
             points: components["schemas"]["TrendPointOutput"][];
@@ -3952,11 +4291,28 @@ export interface components {
             direction: "gaining" | "losing" | "stable" | null;
             /** @description Latest minus first weigh-in. */
             sinceStartKg: number | null;
+            /** @description The last weigh-in of the period minus its first (null with fewer than two): the change over 7 days, 30 days… */
+            periodChangeKg: number | null;
             goal: components["schemas"]["WeightGoal.jsonld_noid"] | null;
             /** @description Each weigh-in of the period, with the averages ending that day. */
             points: components["schemas"]["TrendPointOutput.jsonld"][];
             /** @description Mean weight of each week of the period (Monday first). */
             weeks: components["schemas"]["WeekAverageOutput.jsonld"][];
+        };
+        WidgetInput: {
+            /** @default  */
+            key: string;
+            visible: boolean | null;
+        };
+        WidgetOutput: {
+            /** @enum {string} */
+            key: "weight" | "nutrition" | "meals" | "workout" | "coach" | "goal" | "records" | "report";
+            visible: boolean;
+        };
+        "WidgetOutput.jsonld": {
+            /** @enum {string} */
+            key: "weight" | "nutrition" | "meals" | "workout" | "coach" | "goal" | "records" | "report";
+            visible: boolean;
         };
         /** @description The workout in progress, if any (to resume it after an interruption or on another device). */
         Workout: {
@@ -4768,6 +5124,120 @@ export interface operations {
                         member: components["schemas"]["CoachWeeklyReport.jsonld"][];
                     };
                     "application/json": components["schemas"]["CoachWeeklyReport"][];
+                };
+            };
+        };
+    };
+    api_medashboard_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description DashboardLayout resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["DashboardLayout.jsonld"];
+                    "application/json": components["schemas"]["DashboardLayout"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_medashboard_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The updated DashboardLayout resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["DashboardLayout.DashboardLayoutInput"];
+                "application/json": components["schemas"]["DashboardLayout.DashboardLayoutInput"];
+            };
+        };
+        responses: {
+            /** @description DashboardLayout resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["DashboardLayout.jsonld"];
+                    "application/json": components["schemas"]["DashboardLayout"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -6544,6 +7014,430 @@ export interface operations {
             };
         };
     };
+    "api_trainingnext-workout_get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NextWorkout resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["NextWorkout.jsonld"];
+                    "application/json": components["schemas"]["NextWorkout"];
+                };
+            };
+            /** @description No active program (`training.no_active_program`). */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_notifications_get_collection: {
+        parameters: {
+            query?: {
+                /** @description At most 50. */
+                limit?: number;
+                /** @description Only those made before this time (the createdAt of the last one received, for the next page)… */
+                before?: string;
+                /** @description …and its id (those of one check share their time). */
+                beforeId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Notification collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Notification.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Notification"][];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_notifications_id_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Notification identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Notification resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Notification.jsonld"];
+                    "application/json": components["schemas"]["Notification"];
+                };
+            };
+            /** @description Not found, or not the user's. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    notification_read: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Notification identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Notification resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Notification.jsonld"];
+                    "application/json": components["schemas"]["Notification"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found, or not the user's. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    notifications_check: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NotificationInbox resource created */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    notifications_read_all: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NotificationInbox resource created */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_notificationsunread_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NotificationInbox resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["NotificationInbox.jsonld"];
+                    "application/json": components["schemas"]["NotificationInbox"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_notificationssettings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description NotificationSettings resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["NotificationSettings.jsonld"];
+                    "application/json": components["schemas"]["NotificationSettings"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_notificationssettings_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The updated NotificationSettings resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["NotificationSettings.NotificationSettingsInput"];
+                "application/json": components["schemas"]["NotificationSettings.NotificationSettingsInput"];
+            };
+        };
+        responses: {
+            /** @description NotificationSettings resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["NotificationSettings.jsonld"];
+                    "application/json": components["schemas"]["NotificationSettings"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     api_nutritionaverages_get: {
         parameters: {
             query: {
@@ -7991,6 +8885,85 @@ export interface operations {
                     "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
                     "application/problem+json": components["schemas"]["ConstraintViolation"];
                     "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+        };
+    };
+    "api_metime-zone_put": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The updated TimeZone resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["TimeZone.TimeZoneInput"];
+                "application/json": components["schemas"]["TimeZone.TimeZoneInput"];
+            };
+        };
+        responses: {
+            /** @description TimeZone resource updated */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };

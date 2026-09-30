@@ -2,10 +2,10 @@ import { formatKcal } from '~/features/nutrition/format'
 import { formatKg, formatSignedKg } from '~/features/progression/format'
 import { formatDayMonth, formatFullDay, localDay } from '~/services/calendar/days'
 import { formatNumber } from '~/services/text/numbers'
+import { plural } from '~/services/text/plural'
 import type { AdherencePart, Decision, Recommendation, WeeklyReport } from './coach'
 
 const NBSP = '\u00A0'
-const plural = (count: number, one: string, many: string) => (Math.abs(count) > 1 ? many : one)
 
 /**
  * The thresholds of the adherence, as the server applies them (the API describes them on
