@@ -30,7 +30,7 @@
 | Méthode | Route | Description | Auth |
 | --- | --- | --- | --- |
 | POST | `/api/auth/register` | Crée le compte (si `REGISTRATION_ENABLED`), envoie le lien de vérification, connecte l'appareil → `201 Account` | publique |
-| POST | `/api/auth/sign-in` | Email + mot de passe → `{twoFactorRequired: false, account}` ou `{twoFactorRequired: true, account: null}` | publique |
+| POST | `/api/auth/sign-in` | Email + mot de passe → `{twoFactorRequired: false, account, deletionCancelled}` ou `{twoFactorRequired: true, account: null}` | publique |
 | POST | `/api/auth/sign-in/second-factor` | Code de l'application ou code de secours `{code}` (5 essais / 15 min par compte) → `{account}` | publique (connexion en attente) |
 | GET | `/api/auth/providers` | Fournisseurs externes activés (`google`…) | publique |
 | GET | `/api/auth/oauth/{provider}/start` | Redirection vers le fournisseur (OIDC, PKCE, `state`) ; `?redirect=`, `?login_hint=` | publique |
@@ -41,8 +41,15 @@
 | POST | `/api/auth/password-reset` | Nouveau mot de passe `{token, newPassword}`, déconnecte tous les appareils → `204` | publique |
 | GET | `/api/me` | Compte connecté → `Account` | connecté |
 | PUT | `/api/me/profile` | Profil (prénom, date de naissance `YYYY-MM-DD` stricte, sexe, taille) → `Account` | connecté |
+| POST | `/api/me/deletion` | `{password, code?}` (le code de l'application ou de secours quand la 2FA est active ; mot de passe vide pour un compte Google sans mot de passe, qui doit s'être connecté sur cet appareil dans les 10 minutes, sinon 422 `identity.reauthentication_required`) → `202 {deletionDueAt}` : compte fermé tout de suite (toutes les sessions révoquées, cet appareil déconnecté), effacé définitivement 7 jours plus tard avec ses données et fichiers ; se reconnecter avant annule (`deletionCancelled: true` une fois dans la réponse de connexion, `?suppression_annulee=1` au retour de Google) ; 422 `identity.wrong_current_password` / `identity.invalid_second_factor_code` ; un email à chaque étape | connecté |
 | PUT | `/api/me/time-zone` | `{timeZone}` IANA des appareils (envoyé par la PWA quand il change) → `204` ; 422 `identity.invalid_time_zone` ; gardé dans les préférences, à part du compte (n'entre jamais en conflit avec une écriture du compte) ; relu dans `Account.timeZone` | connecté |
 | GET · PUT | `/api/me/dashboard` | `{widgets: [{key, visible}]}` : l'ordre et l'affichage des widgets du tableau de bord (`weight`, `nutrition`, `meals`, `workout`, `coach`, `goal`, `records`, `report`), chacun une fois (422 `identity.invalid_dashboard_layout`) ; l'ordre par défaut tant qu'il n'est pas réglé ; gardé à part du compte | connecté |
+| GET | `/api/me/data-policy` | Les délais du serveur : `{deletionDelayDays, exportAvailableHours, activityRetentionDays, reauthenticationMinutes}` | connecté |
+| GET | `/api/me/activity?limit=&before=&beforeId=` | Activité du compte : `{id, action (liste fermée, dans l'OpenAPI), details, source (user, coach, system), occurredAt}` ; une confirmation de suppression refusée y paraît (`identity.reauthentication_failed`), la plus récente d'abord (50 au plus par page, curseur date + id) ; gardée `AUDIT_RETENTION_DAYS` jours | connecté |
+| GET | `/api/exports/domains` | Ce qu'un export peut couvrir : `[{key, title, periodFiltered}]`, dans l'ordre (`periodFiltered: false` : toujours complet, comme le compte) | connecté |
+| POST | `/api/exports` | `{from?, to?, domains?}` → `202 Export` : construit par le worker (JSON, CSV, Excel, PDF, photos dans un ZIP) ; une seule en cours (`409 export.in_progress`), 5 par jour (429 ; une demande refusée ne compte pas) ; période prise dans le fuseau de l'utilisateur ; domaine inconnu ou période à l'envers → `422 export.invalid_scope` | connecté |
+| GET | `/api/exports` · `/api/exports/{id}` | Les 10 derniers exports / un export : `{id, status (queued, processing, ready, failed, expired ; un export ouvert depuis 30 minutes passe failed), from, to, domains, requestedAt, readyAt, expiresAt, downloadable}` | connecté |
+| POST | `/api/exports/{id}/download` | `{url}` : un lien signé de 5 minutes vers l'archive (gardée 24 h) ; inscrit le téléchargement à l'activité ; `409 export.not_ready` sinon | connecté |
 | POST | `/api/me/email-verification` | Renvoie un lien (l'ancien meurt) → `204` | connecté |
 | POST | `/api/me/password` | `{currentPassword, newPassword}`, déconnecte les autres appareils → `204` | connecté |
 | POST | `/api/me/two-factor/setup` | `{password}` → `{secret, otpauthUri}` (email vérifié requis) | connecté |

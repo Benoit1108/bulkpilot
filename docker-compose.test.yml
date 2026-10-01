@@ -2,9 +2,7 @@
 # with throwaway data, exactly as it will be deployed. Use `make e2e-prod` (or `make ci`).
 name: bulkpilot-test
 
-services:
-  php:
-    environment:
+x-e2e-environment: &e2e-environment
       APP_SECRET: test-only-not-a-secret-4f1c2b9e8d7a6f5e
       APP_ENCRYPTION_KEY: ZTJlLW9ubHktbm90LWEtc2VjcmV0LWtleS0zMmJ5dGU= # gitleaks:allow (readable non-secret key)
       SERVER_NAME: localhost, https://php
@@ -30,6 +28,11 @@ services:
       S3_ACCESS_KEY: e2e-access-key
       S3_SECRET_KEY: e2e-only-not-a-secret # gitleaks:allow (readable non-secret key)
       S3_PATH_STYLE: "true"
+
+services:
+  php:
+    environment:
+      <<: *e2e-environment
     ports: !reset []
     # The CIQUAL excerpt the E2E tests search (tests/ is not in the production image).
     volumes:
@@ -37,6 +40,28 @@ services:
     depends_on:
       mailer:
         condition: service_healthy
+      s3:
+        condition: service_healthy
+
+  # The exports are made by the worker, as in production (async only: no schedule runs during the tests).
+  worker:
+    command: ["bin/console", "messenger:consume", "async", "--time-limit=3600", "--memory-limit=192M"]
+    environment:
+      <<: *e2e-environment
+      RUN_MIGRATIONS: "0"
+      # Backups to their own bucket on the same gateway; created then restored by `make e2e-prod`.
+      BACKUP_ENABLED: "1"
+      BACKUP_PASSPHRASE: e2e-only-not-a-secret-passphrase-0123456789 # gitleaks:allow
+      BACKUP_S3_ENDPOINT: http://s3:7070
+      BACKUP_S3_BUCKET: bulkpilot-backups
+      # The gateway has one key only: production refuses the photos' key for the backups.
+      ALLOW_SHARED_BACKUP_KEY: "1"
+      BACKUP_S3_ACCESS_KEY: e2e-access-key
+      BACKUP_S3_SECRET_KEY: e2e-only-not-a-secret # gitleaks:allow (readable non-secret key)
+      BACKUP_S3_PATH_STYLE: "true"
+    volumes:
+      - ./api/tests/Fixtures/ciqual:/fixtures/ciqual:ro
+    depends_on:
       s3:
         condition: service_healthy
 
@@ -55,7 +80,7 @@ services:
   # links included. The bucket is a directory of its posix backend, created before it starts.
   s3:
     image: versity/versitygw:v1.8.0
-    entrypoint: ["sh", "-c", "mkdir -p /data/bulkpilot-photos && exec versitygw --access e2e-access-key --secret e2e-only-not-a-secret posix /data"] # gitleaks:allow
+    entrypoint: ["sh", "-c", "mkdir -p /data/bulkpilot-photos /data/bulkpilot-backups && exec versitygw --access e2e-access-key --secret e2e-only-not-a-secret posix /data"] # gitleaks:allow
     tmpfs:
       - /data
     healthcheck:

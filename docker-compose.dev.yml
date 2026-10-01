@@ -17,6 +17,8 @@ services:
         FOOD_DATABASE: ${FOOD_DATABASE:-fake}
         # Photos on the local disk (var/media), served through signed links.
         MEDIA_STORAGE: local
+        # No backup bucket in development (`make e2e-prod` tests backups against its own).
+        BACKUP_ENABLED: "0"
         XDEBUG_MODE: ${XDEBUG_MODE:-off}
       # "https://php" lets containers (e.g. Playwright) reach the app over TLS on the internal network.
       SERVER_NAME: ${SERVER_NAME:-localhost, https://php}
@@ -26,6 +28,8 @@ services:
     volumes:
       - ./api:/app
       - /app/var
+      # Shared with the worker: it writes the exports' archives php then serves.
+      - media:/app/var/media
       - ./api/frankenphp/Caddyfile:/etc/frankenphp/Caddyfile:ro
       - ./api/frankenphp/conf.d/20-app.dev.ini:/usr/local/etc/php/app.conf.d/20-app.dev.ini:ro
     extra_hosts:
@@ -40,6 +44,7 @@ services:
     volumes:
       - ./api:/app
       - /app/var
+      - media:/app/var/media
 
   pwa:
     build:
@@ -81,4 +86,5 @@ services:
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
 volumes:
+  media:
   pwa_node_modules:

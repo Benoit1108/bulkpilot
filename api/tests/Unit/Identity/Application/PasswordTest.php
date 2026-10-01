@@ -32,6 +32,7 @@ final class PasswordTest extends IdentityTestCase
         self::assertFalse($phone->isActive($this->clock->now()));
         self::assertFalse($laptop->isActive($this->clock->now()));
         self::assertSame([PasswordChanged::class], $this->events->publishedClasses());
+        self::assertSame(['identity.password_reset'], $this->audit->actions());
     }
 
     public function testResetRequestsRevealNothingAboutAccounts(): void
@@ -102,6 +103,7 @@ final class PasswordTest extends IdentityTestCase
         self::assertTrue($this->hasher->verify($user->password(), 'a brand new passphrase'));
         self::assertTrue($current->isActive($this->clock->now()));
         self::assertFalse($other->isActive($this->clock->now()));
+        self::assertSame(['identity.password_changed'], $this->audit->actions());
     }
 
     public function testChangingThePasswordRequiresTheCurrentOne(): void
@@ -120,11 +122,11 @@ final class PasswordTest extends IdentityTestCase
 
     private function reset(string $token, string $password): void
     {
-        new ResetPasswordHandler($this->links(), $this->users, $this->hasher, $this->sessionTerminator(), $this->events, $this->clock)(new ResetPassword($token, $password));
+        new ResetPasswordHandler($this->links(), $this->users, $this->hasher, $this->sessionTerminator(), $this->events, $this->audit, $this->clock)(new ResetPassword($token, $password));
     }
 
     private function changePassword(): ChangePasswordHandler
     {
-        return new ChangePasswordHandler($this->users, $this->passwordConfirmation(), $this->hasher, $this->sessionTerminator(), $this->events, $this->clock);
+        return new ChangePasswordHandler($this->users, $this->passwordConfirmation(), $this->hasher, $this->sessionTerminator(), $this->events, $this->audit, $this->clock);
     }
 }

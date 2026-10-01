@@ -79,6 +79,16 @@ framework:
             policy: sliding_window
             limit: '%env(int:RATE_LIMIT_NOTIFICATION_WRITES)%'
             interval: '1 minute'
+        # Keyed by account: exports asked for (each reads every context and builds an archive).
+        export_writes:
+            policy: sliding_window
+            limit: '%env(int:RATE_LIMIT_EXPORT_WRITES)%'
+            interval: '1 day'
+        # Keyed by account: links to a ready export (each one traced).
+        export_downloads:
+            policy: sliding_window
+            limit: 30
+            interval: '1 minute'
         # Global: Open Food Facts asks one application for < 100 product reads a minute.
         open_food_facts:
             policy: sliding_window

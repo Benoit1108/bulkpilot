@@ -38,12 +38,14 @@ final readonly class SignInResult
         public bool $twoFactorRequired,
         #[ApiProperty(required: true, readableLink: true, genId: false)]
         public ?Account $account,
+        #[ApiProperty(description: 'Signing in cancelled the deletion of the account asked for earlier (told once).', required: true)]
+        public bool $deletionCancelled = false,
     ) {
     }
 
-    public static function signedIn(Account $account): self
+    public static function signedIn(Account $account, bool $deletionCancelled = false): self
     {
-        return new self(false, $account);
+        return new self(false, $account, $deletionCancelled);
     }
 
     public static function secondFactorRequired(): self

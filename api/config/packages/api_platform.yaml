@@ -11,6 +11,8 @@ api_platform:
             - '%kernel.project_dir%/src/Training/Presentation/Api'
             - '%kernel.project_dir%/src/Progression/Presentation/Api'
             - '%kernel.project_dir%/src/Coach/Presentation/Api'
+            - '%kernel.project_dir%/src/Export/Presentation/Api'
+            - '%kernel.project_dir%/src/Audit/Presentation/Api'
             - '%kernel.project_dir%/src/Notification/Presentation/Api'
     formats:
         jsonld: ['application/ld+json']

@@ -18,6 +18,8 @@
         <field name="twoFactorEnabledAt" type="datetimetz_immutable" nullable="true"/>
         <field name="lastTotpStep" column="two_factor_last_step" type="bigint" nullable="true"/>
         <field name="recoveryCodeHashes" column="two_factor_recovery_codes" type="json"/>
+        <field name="deletionRequestedAt" type="datetimetz_immutable" nullable="true"/>
+        <field name="deletionDueAt" type="datetimetz_immutable" nullable="true"/>
         <embedded name="profile" class="App\Identity\Domain\User\Profile" column-prefix="profile_"/>
     </entity>
 </doctrine-mapping>

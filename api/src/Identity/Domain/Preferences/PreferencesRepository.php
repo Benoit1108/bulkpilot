@@ -15,7 +15,7 @@ interface PreferencesRepository
 
     /**
      * The time zone of every account (or only that one), by user id: the stored one, or the
-     * default for an account that never set any.
+     * default for an account that never set any. Accounts being deleted are left out.
      *
      * @return array<string, string>
      */

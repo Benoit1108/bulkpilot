@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { daysText, useDataPolicy } from '~/features/data/policy'
 import DeviceList from '~/features/identity/components/DeviceList.vue'
 import EmailStatus from '~/features/identity/components/EmailStatus.vue'
 import PasswordChangeForm from '~/features/identity/components/PasswordChangeForm.vue'
@@ -7,6 +8,8 @@ import TwoFactorSettings from '~/features/identity/components/TwoFactorSettings.
 definePageMeta({ title: 'Compte et sécurité' })
 
 const { account } = useAccount()
+const { data: policy } = useDataPolicy()
+const erasure = computed(() => `Ton compte est fermé tout de suite puis effacé ${policy.value ? `${daysText(policy.value.deletionDelayDays)} plus tard` : 'quelques jours plus tard'}, avec toutes tes données.`)
 </script>
 
 <template>
@@ -37,6 +40,17 @@ const { account } = useAccount()
       </UiCard>
       <UiCard title="Appareils connectés">
         <DeviceList />
+      </UiCard>
+      <UiCard title="Supprimer mon compte">
+        <p class="text-sm text-muted">
+          {{ erasure }}
+        </p>
+        <UiLinkButton
+          to="/reglages/suppression"
+          variant="secondary"
+        >
+          Supprimer mon compte
+        </UiLinkButton>
       </UiCard>
     </template>
   </div>

@@ -32,9 +32,11 @@ final readonly class DoctrinePreferencesRepository implements PreferencesReposit
         $query = $this->entityManager->createQueryBuilder()
             ->select('u.id, p.timeZone')->from(User::class, 'u')
             ->leftJoin(Preferences::class, 'p', 'WITH', 'p.ownerId = u.id')
+            // An account being deleted is closed: no scheduled work runs for it.
+            ->where('u.deletionDueAt IS NULL')
             ->orderBy('u.registeredAt');
         if (null !== $only) {
-            $query->where('u.id = :id')->setParameter('id', $only, 'user_id');
+            $query->andWhere('u.id = :id')->setParameter('id', $only, 'user_id');
         }
         /** @var list<array{id: UserId, timeZone: string|null}> $rows */
         $rows = $query->getQuery()->getResult();

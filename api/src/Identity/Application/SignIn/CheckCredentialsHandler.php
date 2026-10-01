@@ -35,7 +35,8 @@ final readonly class CheckCredentialsHandler implements QueryHandler
             throw InvalidCredentials::create();
         }
         if (!$this->passwordHasher->verify($user->password(), $query->password)) {
-            throw InvalidCredentials::create();
+            // Someone tried the account's password: the processor traces it for the owner.
+            throw InvalidCredentials::forAccount($user->id());
         }
 
         return $user->id();

@@ -6,30 +6,34 @@ namespace App\Identity\Application\Audit;
 
 use App\Identity\Domain\External\ExternalIdentityLinked;
 use App\Identity\Domain\User\EmailVerified;
-use App\Identity\Domain\User\PasswordChanged;
 use App\Identity\Domain\User\RecoveryCodeUsed;
 use App\Identity\Domain\User\TwoFactorDisabled;
 use App\Identity\Domain\User\TwoFactorEnabled;
 use App\Identity\Domain\User\UserRegistered;
+use App\Shared\Application\Audit\AuditTrail;
 use App\Shared\Application\Bus\Event\DomainEventSubscriber;
-use Psr\Log\LoggerInterface;
 
 /**
- * Security journal (spec §101/§105). A queryable audit log arrives in phase 8; until then the
- * dedicated "audit" log channel records who did what, never secrets or personal data.
+ * The account's security events in the audit journal (spec §101, §105): who did what, never a
+ * secret nor the email address. A password change is recorded by the use case, which knows
+ * whether it was changed or reset.
  */
 final readonly class LogSecurityEvent implements DomainEventSubscriber
 {
-    public function __construct(private LoggerInterface $auditLogger)
+    public function __construct(private AuditTrail $audit)
     {
     }
 
-    public function __invoke(UserRegistered|EmailVerified|PasswordChanged|TwoFactorEnabled|TwoFactorDisabled|RecoveryCodeUsed|ExternalIdentityLinked $event): void
+    public function __invoke(UserRegistered|EmailVerified|TwoFactorEnabled|TwoFactorDisabled|RecoveryCodeUsed|ExternalIdentityLinked $event): void
     {
-        $this->auditLogger->info('identity.{event}', [
-            'event' => new \ReflectionClass($event)->getShortName(),
-            'user_id' => $event->userId->value,
-            'occurred_on' => $event->occurredOn()->format(\DATE_ATOM),
-        ]);
+        [$action, $details] = match (true) {
+            $event instanceof UserRegistered => ['identity.registered', []],
+            $event instanceof EmailVerified => ['identity.email_verified', []],
+            $event instanceof TwoFactorEnabled => ['identity.two_factor_enabled', []],
+            $event instanceof TwoFactorDisabled => ['identity.two_factor_disabled', []],
+            $event instanceof RecoveryCodeUsed => ['identity.recovery_code_used', ['remaining' => $event->remaining]],
+            $event instanceof ExternalIdentityLinked => ['identity.external_identity_linked', ['provider' => $event->provider->value]],
+        };
+        $this->audit->record($event->userId, $action, $details, 'user', $event->occurredOn());
     }
 }

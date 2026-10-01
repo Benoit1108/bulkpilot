@@ -17,4 +17,20 @@ interface UserRepository
     public function get(UserId $id): User;
 
     public function findByEmail(EmailAddress $email): ?User;
+
+    /** Null once erased (or never there). */
+    public function find(UserId $id): ?User;
+
+    /**
+     * The account, locked until the transaction ends (a sign-in cancelling its deletion waits,
+     * then finds it erased): null once erased.
+     */
+    public function lockForErasure(UserId $id): ?User;
+
+    /**
+     * The accounts whose deletion delay is over.
+     *
+     * @return list<UserId>
+     */
+    public function dueForErasure(\DateTimeImmutable $now): array;
 }

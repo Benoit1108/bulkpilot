@@ -14,6 +14,7 @@ deptrac:
         - { name: Progression, collectors: [{ type: classNameRegex, value: '#^App\\Progression\\#' }] }
         - { name: Coach, collectors: [{ type: classNameRegex, value: '#^App\\Coach\\#' }] }
         - { name: Notification, collectors: [{ type: classNameRegex, value: '#^App\\Notification\\#' }] }
+        - { name: Audit, collectors: [{ type: classNameRegex, value: '#^App\\Audit\\#' }] }
         - { name: Media, collectors: [{ type: classNameRegex, value: '#^App\\Media\\#' }] }
         - { name: Export, collectors: [{ type: classNameRegex, value: '#^App\\Export\\#' }] }
         # Operational concerns (health checks), not a business context.
@@ -26,6 +27,7 @@ deptrac:
         Progression: [Shared]
         Coach: [Shared]
         Notification: [Shared]
+        Audit: [Shared]
         Media: [Shared]
         Export: [Shared]
         System: [Shared]

@@ -33,3 +33,5 @@ Format : contexte → décision → conséquences. Un ADR accepté n'est pas ré
 | [0027](0027-progress-photos-storage.md) | Photos de progression : stockage privé, métadonnées retirées, liens signés | Accepté |
 | [0028](0028-coach-rules-and-ports.md) | Coach : règles déterministes, ports de lecture, validation explicite | Accepté |
 | [0029](0029-notifications-and-scheduling.md) | Notifications dans l'application, tâches planifiées et worker | Accepté |
+| [0030](0030-personal-data-audit-export-deletion.md) | Données personnelles : audit, export, suppression du compte | Accepté |
+| [0031](0031-database-backups.md) | Sauvegardes de la base : chiffrées, hors du serveur, restaurées chaque semaine | Accepté |

@@ -60,6 +60,14 @@ final class FakePhotos implements Photos
         unset($this->stored[$id->value]);
     }
 
+    public function copyTo(UserId $owner, MediaId $id, string $path): void
+    {
+        if (($this->stored[$id->value] ?? null) !== $owner->value) {
+            throw MediaNotFound::withId($id->value);
+        }
+        file_put_contents($path, 'photo '.$id->value);
+    }
+
     public function delete(UserId $owner, MediaId $id): void
     {
         if (($this->stored[$id->value] ?? null) === $owner->value) {

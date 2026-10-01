@@ -1,0 +1,204 @@
+{
+    "identity.compte": [
+        "Adresse email",
+        "Prénom",
+        "Date de naissance",
+        "Sexe",
+        "Taille (cm)",
+        "Email confirmé le",
+        "Double authentification depuis",
+        "Inscrit le"
+    ],
+    "identity.preferences": [
+        "Fuseau horaire",
+        "Tableau de bord",
+        "Modifiées le"
+    ],
+    "identity.appareils": [
+        "Appareil",
+        "Connecté le",
+        "Dernière activité",
+        "Déconnecté le"
+    ],
+    "identity.connexions_externes": [
+        "Fournisseur",
+        "Liée le"
+    ],
+    "nutrition.journal": [
+        "Jour",
+        "Repas",
+        "Aliment",
+        "Quantité (g)",
+        "Calories (kcal)",
+        "Protéines (g)",
+        "Glucides (g)",
+        "Lipides (g)",
+        "Saisi le"
+    ],
+    "nutrition.objectifs": [
+        "À partir du",
+        "Calories (kcal)",
+        "Protéines (g)",
+        "Glucides (g)",
+        "Lipides (g)",
+        "Source",
+        "Fixé le"
+    ],
+    "nutrition.aliments_perso": [
+        "Nom",
+        "Marque",
+        "Catégorie",
+        "État",
+        "Calories (kcal\/100 g)",
+        "Protéines (g\/100 g)",
+        "Glucides (g\/100 g)",
+        "Lipides (g\/100 g)",
+        "Fibres (g\/100 g)",
+        "Code-barres",
+        "Supprimé le"
+    ],
+    "nutrition.recettes": [
+        "Nom",
+        "Portions",
+        "Poids cuit (g)",
+        "Ingrédients",
+        "Créée le",
+        "Supprimée le"
+    ],
+    "nutrition.repas_favoris": [
+        "Nom",
+        "Aliments",
+        "Créé le"
+    ],
+    "nutrition.repartition": [
+        "Repas",
+        "Part (%)"
+    ],
+    "training.programmes": [
+        "Nom",
+        "Actif",
+        "Version",
+        "Créé le",
+        "Supprimé le"
+    ],
+    "training.versions": [
+        "Programme",
+        "Version",
+        "Jours",
+        "Créée le"
+    ],
+    "training.seances": [
+        "Début",
+        "Fin",
+        "Jour du programme",
+        "Exercices",
+        "Séries",
+        "Tonnage (kg)",
+        "Abandonnée le"
+    ],
+    "training.series": [
+        "Séance du",
+        "Exercice",
+        "Type",
+        "Charge (kg)",
+        "Répétitions",
+        "Durée (s)",
+        "RIR",
+        "Faite à"
+    ],
+    "training.exercices_perso": [
+        "Nom",
+        "Muscle principal",
+        "Type",
+        "Équipement",
+        "Mesure",
+        "Description",
+        "Créé le",
+        "Supprimé le"
+    ],
+    "training.notes": [
+        "Exercice",
+        "Note",
+        "Modifiée le"
+    ],
+    "progression.pesees": [
+        "Jour",
+        "Poids (kg)",
+        "Enregistrée le"
+    ],
+    "progression.objectifs_poids": [
+        "Départ le",
+        "Poids de départ (kg)",
+        "Cible (kg)",
+        "Jalons (kg)",
+        "Fixé le",
+        "Terminé le"
+    ],
+    "progression.mesures_perso": [
+        "Nom",
+        "Créée le",
+        "Archivée le"
+    ],
+    "progression.mensurations": [
+        "Jour",
+        "Mesure",
+        "Valeur (cm)"
+    ],
+    "progression.photos": [
+        "Jour",
+        "Pose",
+        "Largeur (px)",
+        "Hauteur (px)",
+        "Ajoutée le",
+        "Fichier"
+    ],
+    "coach.recommandations": [
+        "Faite le",
+        "Type",
+        "Niveau",
+        "Titre",
+        "Message",
+        "Pourquoi",
+        "Objectif de départ (kcal)",
+        "Changement proposé (kcal)",
+        "Statut",
+        "Décidée le",
+        "Rédigée par"
+    ],
+    "coach.rapports": [
+        "Semaine du",
+        "Poids au début (kg)",
+        "Poids à la fin (kg)",
+        "Calories moyennes (kcal)",
+        "Protéines moyennes (g)",
+        "Jours saisis",
+        "Séances",
+        "Records",
+        "Verdict",
+        "Action"
+    ],
+    "coach.reglages": [
+        "Ton",
+        "Rythme visé (kg\/semaine)",
+        "Modifiés le"
+    ],
+    "notification.notifications": [
+        "Reçue le",
+        "Catégorie",
+        "Titre",
+        "Message",
+        "Lue le"
+    ],
+    "notification.reglages": [
+        "Catégories désactivées",
+        "Horaires silencieux de",
+        "à",
+        "Modifiés le"
+    ],
+    "activity.activite": [
+        "Date",
+        "Action",
+        "Par",
+        "Détails"
+    ]
+}

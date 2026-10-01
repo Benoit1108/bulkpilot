@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Export\Domain\ExportRequest" table="export_requests">
+        <indexes>
+            <index name="export_requests_owner_requested" columns="owner_id,requested_at"/>
+        </indexes>
+        <unique-constraints>
+            <!-- One export being made at a time. Written as PostgreSQL prints it back, so that schema:validate matches. -->
+            <unique-constraint name="export_requests_one_open" columns="owner_id">
+                <options>
+                    <option name="where">((status)::text = ANY (ARRAY[('queued'::character varying)::text, ('processing'::character varying)::text]))</option>
+                </options>
+            </unique-constraint>
+        </unique-constraints>
+
+        <id name="id" type="export_id"/>
+        <field name="ownerId" type="user_id"/>
+        <field name="fromDay" type="date_immutable" nullable="true"/>
+        <field name="toDay" type="date_immutable" nullable="true"/>
+        <field name="domains" type="json"/>
+        <field name="status" length="10" enum-type="App\Export\Domain\ExportStatus"/>
+        <field name="archiveId" type="media_id" nullable="true"/>
+        <field name="requestedAt" type="datetimetz_immutable"/>
+        <field name="readyAt" type="datetimetz_immutable" nullable="true"/>
+        <field name="expiresAt" type="datetimetz_immutable" nullable="true"/>
+    </entity>
+</doctrine-mapping>

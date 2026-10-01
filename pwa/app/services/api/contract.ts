@@ -19,7 +19,8 @@ type Json<C> = C extends { 'application/json': infer B } ? B : never
 export type ResponseOf<P extends keyof paths, M extends HttpMethod> = OperationOf<P, M> extends { responses: infer R }
   ? R extends { 200: { content: infer C } } ? Json<C>
     : R extends { 201: { content: infer C } } ? Json<C>
-      : undefined
+      : R extends { 202: { content: infer C } } ? Json<C>
+        : undefined
   : never
 
 export type RequestBodyOf<P extends keyof paths, M extends HttpMethod> = OperationOf<P, M> extends { requestBody: { content: infer C } }

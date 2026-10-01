@@ -256,6 +256,246 @@
                 }
             }
         },
+        "/api/me/deletion": {
+            "post": {
+                "operationId": "api_medeletion_post",
+                "tags": [
+                    "AccountDeletion"
+                ],
+                "responses": {
+                    "202": {
+                        "description": "AccountDeletion resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountDeletion.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountDeletion"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Creates a AccountDeletion resource.",
+                "description": "Creates a AccountDeletion resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new AccountDeletion resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AccountDeletion.DeletionInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AccountDeletion.DeletionInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/me/activity": {
+            "get": {
+                "operationId": "api_meactivity_get_collection",
+                "tags": [
+                    "Activity"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Activity collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Activity.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Activity.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Activity"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Activity resources.",
+                "description": "Retrieves the collection of Activity resources.",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "At most 50.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 50,
+                            "default": 20
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "Only those before this time (the occurredAt of the last one received, for the next page)\u2026",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "beforeId",
+                        "in": "query",
+                        "description": "\u2026and its id (several can share their time).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
         "/api/nutrition/barcode/scan": {
             "post": {
                 "operationId": "barcode_scan",
@@ -1328,6 +1568,55 @@
                 }
             }
         },
+        "/api/me/data-policy": {
+            "get": {
+                "operationId": "api_medata-policy_get",
+                "tags": [
+                    "DataPolicy"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "DataPolicy resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DataPolicy.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DataPolicy"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a DataPolicy resource.",
+                "description": "Retrieves a DataPolicy resource.",
+                "parameters": []
+            }
+        },
         "/api/auth/email-verification": {
             "post": {
                 "operationId": "api_authemail-verification_post",
@@ -2272,6 +2561,438 @@
                         "name": "id",
                         "in": "path",
                         "description": "ExerciseProgress identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/exports": {
+            "get": {
+                "operationId": "api_exports_get_collection",
+                "tags": [
+                    "Export"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Export collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "Export.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Export.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Export"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Export resources.",
+                "description": "Retrieves the collection of Export resources.",
+                "parameters": []
+            },
+            "post": {
+                "operationId": "export_request",
+                "tags": [
+                    "Export"
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Export resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Export.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Export"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "409": {
+                        "description": "An export is already being made (`export.in_progress`), or: Changed by another request at the same time (`shared.concurrent_update`): send it again.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unknown domain or period ending before it starts (`export.invalid_scope`), or invalid input.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many exports today: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Creates a Export resource.",
+                "description": "Creates a Export resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Export resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Export.ExportInput"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Export.ExportInput"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/exports/{id}": {
+            "get": {
+                "operationId": "api_exports_id_get",
+                "tags": [
+                    "Export"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Export resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Export.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Export"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found, or not the user's.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves a Export resource.",
+                "description": "Retrieves a Export resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Export identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/exports/domains": {
+            "get": {
+                "operationId": "api_exportsdomains_get_collection",
+                "tags": [
+                    "ExportDomain"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ExportDomain collection",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "ExportDomain.jsonld collection.",
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/HydraCollectionBaseSchemaNoPagination"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "member"
+                                            ],
+                                            "properties": {
+                                                "member": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ExportDomain.jsonld"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ExportDomain"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of ExportDomain resources.",
+                "description": "Retrieves the collection of ExportDomain resources.",
+                "parameters": []
+            }
+        },
+        "/api/exports/{id}/download": {
+            "post": {
+                "operationId": "api_exports_iddownload_post",
+                "tags": [
+                    "ExportDownload"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ExportDownload resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExportDownload.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExportDownload"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found, or not the user's.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Not ready, or no longer kept (`export.not_ready`).",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "429": {
+                        "description": "Too many writes: send it again after `Retry-After` seconds.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Creates a ExportDownload resource.",
+                "description": "Creates a ExportDownload resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ExportDownload identifier",
                         "required": true,
                         "deprecated": false,
                         "schema": {
@@ -10539,6 +11260,59 @@
                 ],
                 "description": "The signed-in account."
             },
+            "AccountDeletion": {
+                "type": "object",
+                "description": "Closes the account now (every session revoked, this device signed out) and erases it for good after 7 days, data and files included; signing in again before cancels. Needs the password (`identity.wrong_current_password`); an account without one sends an empty password and must have signed in on this device within 10 minutes (`identity.reauthentication_required`); plus the second factor when it is on (`identity.invalid_second_factor_code`). All 422.",
+                "required": [
+                    "deletionDueAt"
+                ],
+                "properties": {
+                    "deletionDueAt": {
+                        "description": "When the account is erased, unless the user signs in again before.",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "AccountDeletion.DeletionInput": {
+                "type": "object",
+                "description": "Closes the account now (every session revoked, this device signed out) and erases it for good after 7 days, data and files included; signing in again before cancels. Needs the password (`identity.wrong_current_password`); an account without one sends an empty password and must have signed in on this device within 10 minutes (`identity.reauthentication_required`); plus the second factor when it is on (`identity.invalid_second_factor_code`). All 422.",
+                "properties": {
+                    "password": {
+                        "maxLength": 4096,
+                        "default": "",
+                        "type": "string"
+                    },
+                    "code": {
+                        "maxLength": 64,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "AccountDeletion.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "deletionDueAt"
+                        ],
+                        "properties": {
+                            "deletionDueAt": {
+                                "description": "When the account is erased, unless the user signs in again before.",
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "Closes the account now (every session revoked, this device signed out) and erases it for good after 7 days, data and files included; signing in again before cancels. Needs the password (`identity.wrong_current_password`); an account without one sends an empty password and must have signed in on this device within 10 minutes (`identity.reauthentication_required`); plus the second factor when it is on (`identity.invalid_second_factor_code`). All 422."
+            },
             "Account_noid": {
                 "type": "object",
                 "required": [
@@ -10601,6 +11375,143 @@
                         "type": "string"
                     }
                 }
+            },
+            "Activity": {
+                "type": "object",
+                "description": "The account's important actions, the latest first (kept `AUDIT_RETENTION_DAYS` days).",
+                "required": [
+                    "id",
+                    "action",
+                    "details",
+                    "source",
+                    "occurredAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "action": {
+                        "type": "string",
+                        "enum": [
+                            "identity.registered",
+                            "identity.email_verified",
+                            "identity.signed_in",
+                            "identity.sign_in_failed",
+                            "identity.second_factor_rejected",
+                            "identity.reauthentication_failed",
+                            "identity.password_changed",
+                            "identity.password_reset",
+                            "identity.two_factor_enabled",
+                            "identity.two_factor_disabled",
+                            "identity.recovery_code_used",
+                            "identity.recovery_codes_regenerated",
+                            "identity.external_identity_linked",
+                            "identity.session_revoked",
+                            "identity.deletion_scheduled",
+                            "identity.deletion_cancelled",
+                            "identity.account_erased",
+                            "nutrition.target_set",
+                            "coach.recommendation_decided",
+                            "export.requested",
+                            "export.downloaded"
+                        ]
+                    },
+                    "details": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": [
+                                "string",
+                                "number",
+                                "boolean",
+                                "null"
+                            ]
+                        }
+                    },
+                    "source": {
+                        "type": "string",
+                        "enum": [
+                            "user",
+                            "coach",
+                            "system"
+                        ]
+                    },
+                    "occurredAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "Activity.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "action",
+                            "details",
+                            "source",
+                            "occurredAt"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "action": {
+                                "type": "string",
+                                "enum": [
+                                    "identity.registered",
+                                    "identity.email_verified",
+                                    "identity.signed_in",
+                                    "identity.sign_in_failed",
+                                    "identity.second_factor_rejected",
+                                    "identity.reauthentication_failed",
+                                    "identity.password_changed",
+                                    "identity.password_reset",
+                                    "identity.two_factor_enabled",
+                                    "identity.two_factor_disabled",
+                                    "identity.recovery_code_used",
+                                    "identity.recovery_codes_regenerated",
+                                    "identity.external_identity_linked",
+                                    "identity.session_revoked",
+                                    "identity.deletion_scheduled",
+                                    "identity.deletion_cancelled",
+                                    "identity.account_erased",
+                                    "nutrition.target_set",
+                                    "coach.recommendation_decided",
+                                    "export.requested",
+                                    "export.downloaded"
+                                ]
+                            },
+                            "details": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": [
+                                        "string",
+                                        "number",
+                                        "boolean",
+                                        "null"
+                                    ]
+                                }
+                            },
+                            "source": {
+                                "type": "string",
+                                "enum": [
+                                    "user",
+                                    "coach",
+                                    "system"
+                                ]
+                            },
+                            "occurredAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                ],
+                "description": "The account's important actions, the latest first (kept `AUDIT_RETENTION_DAYS` days)."
             },
             "AdherenceOutput.jsonld_noid": {
                 "type": "object",
@@ -12562,6 +13473,69 @@
                 ],
                 "description": "Every widget, in the user's order (the default one until arranged)."
             },
+            "DataPolicy": {
+                "type": "object",
+                "description": "How long things take and are kept: the account deletion, an export, the activity.",
+                "required": [
+                    "deletionDelayDays",
+                    "exportAvailableHours",
+                    "activityRetentionDays",
+                    "reauthenticationMinutes"
+                ],
+                "properties": {
+                    "deletionDelayDays": {
+                        "description": "Days between asking for the deletion and the erasure (signing in meanwhile cancels it).",
+                        "type": "integer"
+                    },
+                    "exportAvailableHours": {
+                        "description": "Hours a ready export can be downloaded.",
+                        "type": "integer"
+                    },
+                    "activityRetentionDays": {
+                        "description": "Days the account's activity is kept.",
+                        "type": "integer"
+                    },
+                    "reauthenticationMinutes": {
+                        "description": "Minutes a sign-in stands for the password of an account without one (to confirm its deletion).",
+                        "type": "integer"
+                    }
+                }
+            },
+            "DataPolicy.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "deletionDelayDays",
+                            "exportAvailableHours",
+                            "activityRetentionDays",
+                            "reauthenticationMinutes"
+                        ],
+                        "properties": {
+                            "deletionDelayDays": {
+                                "description": "Days between asking for the deletion and the erasure (signing in meanwhile cancels it).",
+                                "type": "integer"
+                            },
+                            "exportAvailableHours": {
+                                "description": "Hours a ready export can be downloaded.",
+                                "type": "integer"
+                            },
+                            "activityRetentionDays": {
+                                "description": "Days the account's activity is kept.",
+                                "type": "integer"
+                            },
+                            "reauthenticationMinutes": {
+                                "description": "Minutes a sign-in stands for the password of an account without one (to confirm its deletion).",
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "description": "How long things take and are kept: the account deletion, an export, the activity."
+            },
             "DayInput": {
                 "type": "object",
                 "required": [
@@ -14023,6 +14997,280 @@
                     }
                 ],
                 "description": "Records and one point per finished workout, oldest first."
+            },
+            "Export": {
+                "type": "object",
+                "description": "The last 10 exports, the latest first.",
+                "required": [
+                    "id",
+                    "status",
+                    "from",
+                    "to",
+                    "domains",
+                    "requestedAt",
+                    "readyAt",
+                    "expiresAt",
+                    "downloadable"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "queued",
+                            "processing",
+                            "ready",
+                            "failed",
+                            "expired"
+                        ]
+                    },
+                    "from": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    },
+                    "to": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    },
+                    "domains": {
+                        "description": "The domains covered; empty for all of them.",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "requestedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "readyAt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "expiresAt": {
+                        "description": "When the archive is deleted.",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "downloadable": {
+                        "description": "Ready and not yet deleted: POST \u2026/download gives a link.",
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Export.ExportInput": {
+                "type": "object",
+                "description": "Asks for an export (a period and domains, all by default): a ZIP with JSON, CSV, Excel, a PDF summary and the photos, kept 24 h once ready.",
+                "properties": {
+                    "from": {
+                        "externalDocs": {
+                            "url": "https://schema.org/Date"
+                        },
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "to": {
+                        "externalDocs": {
+                            "url": "https://schema.org/Date"
+                        },
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "domains": {
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Export.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "status",
+                            "from",
+                            "to",
+                            "domains",
+                            "requestedAt",
+                            "readyAt",
+                            "expiresAt",
+                            "downloadable"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": [
+                                    "queued",
+                                    "processing",
+                                    "ready",
+                                    "failed",
+                                    "expired"
+                                ]
+                            },
+                            "from": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date"
+                            },
+                            "to": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date"
+                            },
+                            "domains": {
+                                "description": "The domains covered; empty for all of them.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "requestedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "readyAt": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            },
+                            "expiresAt": {
+                                "description": "When the archive is deleted.",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            },
+                            "downloadable": {
+                                "description": "Ready and not yet deleted: POST \u2026/download gives a link.",
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                ],
+                "description": "The last 10 exports, the latest first."
+            },
+            "ExportDomain": {
+                "type": "object",
+                "description": "The domains an export can pick, in the order they come.",
+                "required": [
+                    "key",
+                    "title",
+                    "periodFiltered"
+                ],
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "periodFiltered": {
+                        "description": "Whether the export's period narrows it (the account and settings are always complete).",
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ExportDomain.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "key",
+                            "title",
+                            "periodFiltered"
+                        ],
+                        "properties": {
+                            "key": {
+                                "type": "string"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "periodFiltered": {
+                                "description": "Whether the export's period narrows it (the account and settings are always complete).",
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                ],
+                "description": "The domains an export can pick, in the order they come."
+            },
+            "ExportDownload": {
+                "type": "object",
+                "description": "A link valid 300 s to download the archive; the download is recorded in the account activity.",
+                "required": [
+                    "id",
+                    "url"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ExportDownload.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "url"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "description": "A link valid 300 s to download the archive; the download is recorded in the account activity."
             },
             "FavoriteMeal": {
                 "type": "object",
@@ -19172,7 +20420,8 @@
                 "description": "Checks email and password; signs the device in, or asks for the second factor.",
                 "required": [
                     "twoFactorRequired",
-                    "account"
+                    "account",
+                    "deletionCancelled"
                 ],
                 "properties": {
                     "twoFactorRequired": {
@@ -19187,6 +20436,10 @@
                                 "type": "null"
                             }
                         ]
+                    },
+                    "deletionCancelled": {
+                        "description": "Signing in cancelled the deletion of the account asked for earlier (told once).",
+                        "type": "boolean"
                     }
                 }
             },
@@ -19233,7 +20486,8 @@
                         "type": "object",
                         "required": [
                             "twoFactorRequired",
-                            "account"
+                            "account",
+                            "deletionCancelled"
                         ],
                         "properties": {
                             "twoFactorRequired": {
@@ -19248,6 +20502,10 @@
                                         "type": "null"
                                     }
                                 ]
+                            },
+                            "deletionCancelled": {
+                                "description": "Signing in cancelled the deletion of the account asked for earlier (told once).",
+                                "type": "boolean"
                             }
                         }
                     }
@@ -21398,6 +22656,10 @@
     "security": [],
     "tags": [
         {
+            "name": "Activity",
+            "description": "\u00ab Activit\u00e9 du compte \u00bb (spec \u00a710, \u00a7105): what happened to the account and who did it, to answer\n\"why did this value change?\"."
+        },
+        {
             "name": "Coach",
             "description": "The Coach (spec \u00a762\u201370): at most three recommendations, the week's adherence, the last weekly\nreport. It never changes anything by itself."
         },
@@ -21412,6 +22674,18 @@
         {
             "name": "CoachWeeklyReport",
             "description": "The report of a finished week (spec \u00a759), as drawn when the week ended."
+        },
+        {
+            "name": "Export",
+            "description": "An export of the user's data (spec \u00a7104, ADR-0030): made by the worker, then downloadable for a day."
+        },
+        {
+            "name": "ExportDomain",
+            "description": "What an export can cover."
+        },
+        {
+            "name": "ExportDownload",
+            "description": "A signed link to a ready export's archive, asked for when the user downloads it (traced)."
         },
         {
             "name": "Account",
@@ -21444,6 +22718,14 @@
         {
             "name": "SignOut",
             "description": "Resource 'SignOut' operations."
+        },
+        {
+            "name": "AccountDeletion",
+            "description": "\u00ab Supprimer mon compte \u00bb (spec \u00a7103, ADR-0030): when the account will be erased."
+        },
+        {
+            "name": "DataPolicy",
+            "description": "The delays that apply to the user's data (spec \u00a7103\u2013105), from the server's configuration, so\nthat the PWA never states one of its own."
         },
         {
             "name": "DashboardLayout",

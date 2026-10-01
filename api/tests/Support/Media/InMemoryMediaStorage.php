@@ -22,6 +22,16 @@ final class InMemoryMediaStorage implements MediaStorage
         $this->files[$key] = $contents;
     }
 
+    public function writeFile(string $key, string $path, string $contentType): void
+    {
+        $this->write($key, (string) file_get_contents($path), $contentType);
+    }
+
+    public function readTo(string $key, string $path): void
+    {
+        file_put_contents($path, $this->files[$key] ?? throw new \RuntimeException(\sprintf('No file "%s".', $key)));
+    }
+
     public function delete(string $key): void
     {
         unset($this->files[$key]);

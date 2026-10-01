@@ -1,9 +1,18 @@
 # Handlers are bound to their Messenger bus by marker interface in Kernel::build(),
 # so Application code needs no framework attribute (see docs/ARCHITECTURE.md).
+parameters:
+    # How long a ready export stays downloadable: ExportRequest::KEPT_HOURS (a test keeps them equal).
+    app.export_available_hours: 24
+
 services:
     _defaults:
         autowire: true
         autoconfigure: true
+
+    # Every context's personal data, for the export and the account's erasure (ADR-0030).
+    _instanceof:
+        App\Shared\Application\PersonalData\PersonalData:
+            tags: ['app.personal_data']
 
     App\:
         resource: '../src/'
@@ -16,6 +25,13 @@ services:
 
     # Contexts keep photos through the shared port; Media implements it (ADR-0027).
     App\Shared\Application\Media\Photos: '@App\Media\Application\PhotoLibrary'
+    App\Shared\Application\Media\Archives: '@App\Media\Application\ArchiveLibrary'
+    App\Export\Application\ExportDomains:
+        arguments:
+            $sources: !tagged_iterator app.personal_data
+    App\Identity\Application\Deletion\EraseAccountHandler:
+        arguments:
+            $sources: !tagged_iterator app.personal_data
     App\Media\Application\MediaStorage:
         factory: ['@App\Media\Infrastructure\Storage\MediaStorageFactory', 'create']
         arguments: ['%env(MEDIA_STORAGE)%']
@@ -37,6 +53,18 @@ services:
     App\Shared\Application\Notifying\CoachReports: '@App\Coach\Application\Notifying\LatestReport'
     App\Notification\Application\Port\PushSender: '@App\Notification\Infrastructure\Push\NullPushSender'
 
+    # Backups (ADR-0031): PostgreSQL's own tools, libsodium, a bucket of their own.
+    App\Shared\Application\PersonalData\ErasedAccounts: '@App\System\Application\Backup\BackupErasureLog'
+    App\System\Application\Backup\BackupErasureLog:
+        arguments:
+            $enabled: '%env(bool:BACKUP_ENABLED)%'
+    App\System\Application\Backup\DatabaseDump: '@App\System\Infrastructure\Backup\PostgresDatabaseDump'
+    App\System\Application\Backup\BackupCipher: '@App\System\Infrastructure\Backup\SodiumBackupCipher'
+    App\System\Application\Backup\BackupStore:
+        factory: ['@App\System\Infrastructure\Backup\BackupStoreFactory', 'create']
+    App\System\Domain\Backup\Retention:
+        arguments: ['%env(int:BACKUP_RETENTION_DAYS)%']
+
     App\System\Application\Health\GetHealthHandler:
         arguments:
             $checks: !tagged_iterator app.health_check
@@ -51,3 +79,9 @@ services:
             - { db_table: sessions, lock_mode: 0 }
 
     Psr\Log\LoggerInterface $auditLogger: '@monolog.logger.audit'
+
+    # The journal of important actions (ADR-0030): every context records through the shared port.
+    App\Shared\Application\Audit\AuditTrail: '@App\Audit\Application\RecordingAuditTrail'
+    App\Audit\Application\Retention\PurgeAuditEventsHandler:
+        arguments:
+            $retentionDays: '%env(int:AUDIT_RETENTION_DAYS)%'

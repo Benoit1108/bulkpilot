@@ -12,6 +12,8 @@ services:
       target: frankenphp_prod
       additional_contexts:
         pwa: ./pwa
+      args:
+        POSTGRES_VERSION: ${POSTGRES_VERSION:-18}
     restart: unless-stopped
     environment: &php-environment
       SERVER_NAME: ${SERVER_NAME:-localhost}
@@ -60,10 +62,22 @@ services:
   worker:
     image: ${IMAGES_PREFIX:-}bulkpilot-php:${IMAGE_TAG:-latest}
     restart: unless-stopped
-    command: ["bin/console", "messenger:consume", "async", "scheduler_notifications", "scheduler_coach", "--time-limit=3600", "--memory-limit=192M"]
-    environment:
+    # Every transport but `failed` (replayed by hand, docs/DEPLOYMENT.md): a new schedule is consumed without editing this.
+    command: ["bin/console", "messenger:consume", "--all", "--exclude-receivers=failed", "--time-limit=3600", "--memory-limit=192M"]
+    environment: &worker-environment
       <<: *php-environment
       RUN_MIGRATIONS: "0"
+      # Nightly encrypted database backups to a bucket of their own (ADR-0031): on in production.
+      # Only the worker holds these secrets, never the web server.
+      BACKUP_ENABLED: ${BACKUP_ENABLED:-1}
+      BACKUP_PASSPHRASE: ${BACKUP_PASSPHRASE:-}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-30}
+      BACKUP_S3_ENDPOINT: ${BACKUP_S3_ENDPOINT:-}
+      BACKUP_S3_REGION: ${BACKUP_S3_REGION:-us-east-1}
+      BACKUP_S3_BUCKET: ${BACKUP_S3_BUCKET:-}
+      BACKUP_S3_ACCESS_KEY: ${BACKUP_S3_ACCESS_KEY:-}
+      BACKUP_S3_SECRET_KEY: ${BACKUP_S3_SECRET_KEY:-}
+      BACKUP_S3_PATH_STYLE: ${BACKUP_S3_PATH_STYLE:-false}
     # The image's check calls the web server, which the worker does not run: check the consumer
     # itself is the container's process (the entrypoint execs it).
     healthcheck:

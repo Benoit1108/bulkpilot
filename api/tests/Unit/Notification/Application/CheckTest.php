@@ -200,11 +200,11 @@ final class CheckTest extends TestCase
 
     public function testARetriedCheckMakesNothingTwice(): void
     {
-        new CheckAccountHandler($this->checker())(new CheckAccount($this->alex, 'Europe/Paris'));
+        new CheckAccountHandler($this->checker(), $this->accounts)(new CheckAccount($this->alex, 'Europe/Paris'));
         $this->deliver();
         // The worker gets the same message again (a retry, or a second worker), minutes later.
         $this->clock->modify('+10 minutes');
-        new CheckAccountHandler($this->checker())(new CheckAccount($this->alex, 'Europe/Paris'));
+        new CheckAccountHandler($this->checker(), $this->accounts)(new CheckAccount($this->alex, 'Europe/Paris'));
         $this->deliver();
 
         self::assertSame(['low_calories:2026-09-30'], $this->keys());
@@ -267,7 +267,7 @@ final class CheckTest extends TestCase
 
     public function testAScheduledCheckRunsInTheZoneItCarries(): void
     {
-        new CheckAccountHandler($this->checker())(new CheckAccount($this->alex, 'Europe/Paris'));
+        new CheckAccountHandler($this->checker(), $this->accounts)(new CheckAccount($this->alex, 'Europe/Paris'));
 
         self::assertSame(['low_calories:2026-09-30'], $this->keys());
         self::assertSame([], $this->keys(self::SAM));

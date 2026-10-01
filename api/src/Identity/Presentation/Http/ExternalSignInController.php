@@ -97,7 +97,10 @@ final readonly class ExternalSignInController
             return $this->toPwa('/connexion', ['second_factor' => '1', 'redirect' => $redirect]);
         }
 
-        $this->deviceSignIn->signIn($userId);
+        if ($this->deviceSignIn->signIn($userId)) {
+            // Told once, on the page the user lands on.
+            return new RedirectResponse($redirect.(str_contains($redirect, '?') ? '&' : '?').'suppression_annulee=1');
+        }
 
         return $this->toPwa($redirect);
     }

@@ -68,3 +68,16 @@ export function formatTime(moment: Date): string {
 export function formatDayMonth(day: string, today: string): string {
   return (day.slice(0, 4) === today.slice(0, 4) ? dayMonth : fullDay).format(parseDay(day))
 }
+
+/** « Aujourd’hui à 20:05 », « Hier à 08:30 », or the day (and its year when not this one) and the time. */
+export function formatMoment(at: string, now = new Date()): string {
+  const moment = momentLabel(at, now)
+  return `${moment.charAt(0).toUpperCase()}${moment.slice(1)}`
+}
+
+/** The same within a sentence: « aujourd’hui à 09:58 », « lundi 21 septembre à 09:00 ». */
+export function momentLabel(at: string, now = new Date()): string {
+  const moment = new Date(at)
+  const day = dayLabel(localDay(moment), localDay(now))
+  return `${day.charAt(0).toLowerCase()}${day.slice(1)} à ${formatTime(moment)}`
+}

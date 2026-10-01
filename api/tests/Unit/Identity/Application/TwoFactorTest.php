@@ -11,6 +11,7 @@ use App\Identity\Application\TwoFactor\DisableTwoFactorHandler;
 use App\Identity\Application\TwoFactor\RecoveryCodes;
 use App\Identity\Application\TwoFactor\RegenerateRecoveryCodes;
 use App\Identity\Application\TwoFactor\RegenerateRecoveryCodesHandler;
+use App\Identity\Application\TwoFactor\SecondFactorCheck;
 use App\Identity\Application\TwoFactor\StartTwoFactorSetup;
 use App\Identity\Application\TwoFactor\StartTwoFactorSetupHandler;
 use App\Identity\Application\TwoFactor\VerifySecondFactor;
@@ -132,7 +133,7 @@ final class TwoFactorTest extends IdentityTestCase
     public function testRecoveryCodesCanBeReplacedWithThePassword(): void
     {
         $user = $this->enable($this->registerVerified());
-        $regenerate = new RegenerateRecoveryCodesHandler($this->users, $this->passwordConfirmation(), new RecoveryCodes(new FakeKeyedHasher()));
+        $regenerate = new RegenerateRecoveryCodesHandler($this->users, $this->passwordConfirmation(), new RecoveryCodes(new FakeKeyedHasher()), $this->audit, $this->clock);
 
         $regenerate(new RegenerateRecoveryCodes($user->id(), self::PASSWORD, ['ccccc-33333']));
 
@@ -189,7 +190,7 @@ final class TwoFactorTest extends IdentityTestCase
 
     private function verify(User $user, string $code): void
     {
-        new VerifySecondFactorHandler($this->users, $this->cipher, $this->totp, new RecoveryCodes(new FakeKeyedHasher()), $this->events, $this->clock)(new VerifySecondFactor($user->id(), $code));
+        new VerifySecondFactorHandler($this->users, new SecondFactorCheck($this->cipher, $this->totp, new RecoveryCodes(new FakeKeyedHasher())), $this->events, $this->clock)(new VerifySecondFactor($user->id(), $code));
     }
 
     private function expectInvalid(\Closure $attempt, string $case): void

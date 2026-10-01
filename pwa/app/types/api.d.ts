@@ -64,6 +64,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/me/deletion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a AccountDeletion resource.
+         * @description Creates a AccountDeletion resource.
+         */
+        post: operations["api_medeletion_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Activity resources.
+         * @description Retrieves the collection of Activity resources.
+         */
+        get: operations["api_meactivity_get_collection"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/nutrition/barcode/scan": {
         parameters: {
             query?: never;
@@ -252,6 +292,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/me/data-policy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a DataPolicy resource.
+         * @description Retrieves a DataPolicy resource.
+         */
+        get: operations["api_medata-policy_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/email-verification": {
         parameters: {
             query?: never;
@@ -398,6 +458,90 @@ export interface paths {
         get: operations["api_exercises_idprogress_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of Export resources.
+         * @description Retrieves the collection of Export resources.
+         */
+        get: operations["api_exports_get_collection"];
+        put?: never;
+        /**
+         * Creates a Export resource.
+         * @description Creates a Export resource.
+         */
+        post: operations["export_request"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exports/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a Export resource.
+         * @description Retrieves a Export resource.
+         */
+        get: operations["api_exports_id_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exports/domains": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of ExportDomain resources.
+         * @description Retrieves the collection of ExportDomain resources.
+         */
+        get: operations["api_exportsdomains_get_collection"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exports/{id}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a ExportDownload resource.
+         * @description Creates a ExportDownload resource.
+         */
+        post: operations["api_exports_iddownload_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1881,6 +2025,28 @@ export interface components {
             /** @description The IANA time zone of the devices: scheduled notifications follow it. */
             timeZone: string;
         };
+        /** @description Closes the account now (every session revoked, this device signed out) and erases it for good after 7 days, data and files included; signing in again before cancels. Needs the password (`identity.wrong_current_password`); an account without one sends an empty password and must have signed in on this device within 10 minutes (`identity.reauthentication_required`); plus the second factor when it is on (`identity.invalid_second_factor_code`). All 422. */
+        AccountDeletion: {
+            /**
+             * Format: date-time
+             * @description When the account is erased, unless the user signs in again before.
+             */
+            deletionDueAt: string;
+        };
+        /** @description Closes the account now (every session revoked, this device signed out) and erases it for good after 7 days, data and files included; signing in again before cancels. Needs the password (`identity.wrong_current_password`); an account without one sends an empty password and must have signed in on this device within 10 minutes (`identity.reauthentication_required`); plus the second factor when it is on (`identity.invalid_second_factor_code`). All 422. */
+        "AccountDeletion.DeletionInput": {
+            /** @default  */
+            password: string;
+            code?: string | null;
+        };
+        /** @description Closes the account now (every session revoked, this device signed out) and erases it for good after 7 days, data and files included; signing in again before cancels. Needs the password (`identity.wrong_current_password`); an account without one sends an empty password and must have signed in on this device within 10 minutes (`identity.reauthentication_required`); plus the second factor when it is on (`identity.invalid_second_factor_code`). All 422. */
+        "AccountDeletion.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /**
+             * Format: date-time
+             * @description When the account is erased, unless the user signs in again before.
+             */
+            deletionDueAt: string;
+        };
         Account_noid: {
             id: string;
             email: string;
@@ -1895,6 +2061,32 @@ export interface components {
             hasPassword: boolean;
             /** @description The IANA time zone of the devices: scheduled notifications follow it. */
             timeZone: string;
+        };
+        /** @description The account's important actions, the latest first (kept `AUDIT_RETENTION_DAYS` days). */
+        Activity: {
+            id: string;
+            /** @enum {string} */
+            action: "identity.registered" | "identity.email_verified" | "identity.signed_in" | "identity.sign_in_failed" | "identity.second_factor_rejected" | "identity.reauthentication_failed" | "identity.password_changed" | "identity.password_reset" | "identity.two_factor_enabled" | "identity.two_factor_disabled" | "identity.recovery_code_used" | "identity.recovery_codes_regenerated" | "identity.external_identity_linked" | "identity.session_revoked" | "identity.deletion_scheduled" | "identity.deletion_cancelled" | "identity.account_erased" | "nutrition.target_set" | "coach.recommendation_decided" | "export.requested" | "export.downloaded";
+            details: {
+                [key: string]: string | number | boolean | null;
+            };
+            /** @enum {string} */
+            source: "user" | "coach" | "system";
+            /** Format: date-time */
+            occurredAt: string;
+        };
+        /** @description The account's important actions, the latest first (kept `AUDIT_RETENTION_DAYS` days). */
+        "Activity.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            /** @enum {string} */
+            action: "identity.registered" | "identity.email_verified" | "identity.signed_in" | "identity.sign_in_failed" | "identity.second_factor_rejected" | "identity.reauthentication_failed" | "identity.password_changed" | "identity.password_reset" | "identity.two_factor_enabled" | "identity.two_factor_disabled" | "identity.recovery_code_used" | "identity.recovery_codes_regenerated" | "identity.external_identity_linked" | "identity.session_revoked" | "identity.deletion_scheduled" | "identity.deletion_cancelled" | "identity.account_erased" | "nutrition.target_set" | "coach.recommendation_decided" | "export.requested" | "export.downloaded";
+            details: {
+                [key: string]: string | number | boolean | null;
+            };
+            /** @enum {string} */
+            source: "user" | "coach" | "system";
+            /** Format: date-time */
+            occurredAt: string;
         };
         "AdherenceOutput.jsonld_noid": {
             /** @description The mean of the parts, 0 to 100; null when nothing was recorded (no day logged, no weigh-in, no session). */
@@ -2363,6 +2555,28 @@ export interface components {
         "DashboardLayout.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
             widgets: components["schemas"]["WidgetOutput.jsonld"][];
         };
+        /** @description How long things take and are kept: the account deletion, an export, the activity. */
+        DataPolicy: {
+            /** @description Days between asking for the deletion and the erasure (signing in meanwhile cancels it). */
+            deletionDelayDays: number;
+            /** @description Hours a ready export can be downloaded. */
+            exportAvailableHours: number;
+            /** @description Days the account's activity is kept. */
+            activityRetentionDays: number;
+            /** @description Minutes a sign-in stands for the password of an account without one (to confirm its deletion). */
+            reauthenticationMinutes: number;
+        };
+        /** @description How long things take and are kept: the account deletion, an export, the activity. */
+        "DataPolicy.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** @description Days between asking for the deletion and the erasure (signing in meanwhile cancels it). */
+            deletionDelayDays: number;
+            /** @description Hours a ready export can be downloaded. */
+            exportAvailableHours: number;
+            /** @description Days the account's activity is kept. */
+            activityRetentionDays: number;
+            /** @description Minutes a sign-in stands for the password of an account without one (to confirm its deletion). */
+            reauthenticationMinutes: number;
+        };
         DayInput: {
             /** @default  */
             name: string;
@@ -2712,6 +2926,82 @@ export interface components {
             id: string;
             records: components["schemas"]["RecordOutput.jsonld"][];
             sessions: components["schemas"]["SessionOutput.jsonld"][];
+        };
+        /** @description The last 10 exports, the latest first. */
+        Export: {
+            id: string;
+            /** @enum {string} */
+            status: "queued" | "processing" | "ready" | "failed" | "expired";
+            /** Format: date */
+            from: string | null;
+            /** Format: date */
+            to: string | null;
+            /** @description The domains covered; empty for all of them. */
+            domains: string[];
+            /** Format: date-time */
+            requestedAt: string;
+            /** Format: date-time */
+            readyAt: string | null;
+            /**
+             * Format: date-time
+             * @description When the archive is deleted.
+             */
+            expiresAt: string | null;
+            /** @description Ready and not yet deleted: POST …/download gives a link. */
+            downloadable: boolean;
+        };
+        /** @description Asks for an export (a period and domains, all by default): a ZIP with JSON, CSV, Excel, a PDF summary and the photos, kept 24 h once ready. */
+        "Export.ExportInput": {
+            from?: string | null;
+            to?: string | null;
+            domains?: string[];
+        };
+        /** @description The last 10 exports, the latest first. */
+        "Export.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            /** @enum {string} */
+            status: "queued" | "processing" | "ready" | "failed" | "expired";
+            /** Format: date */
+            from: string | null;
+            /** Format: date */
+            to: string | null;
+            /** @description The domains covered; empty for all of them. */
+            domains: string[];
+            /** Format: date-time */
+            requestedAt: string;
+            /** Format: date-time */
+            readyAt: string | null;
+            /**
+             * Format: date-time
+             * @description When the archive is deleted.
+             */
+            expiresAt: string | null;
+            /** @description Ready and not yet deleted: POST …/download gives a link. */
+            downloadable: boolean;
+        };
+        /** @description The domains an export can pick, in the order they come. */
+        ExportDomain: {
+            key: string;
+            title: string;
+            /** @description Whether the export's period narrows it (the account and settings are always complete). */
+            periodFiltered: boolean;
+        };
+        /** @description The domains an export can pick, in the order they come. */
+        "ExportDomain.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            key: string;
+            title: string;
+            /** @description Whether the export's period narrows it (the account and settings are always complete). */
+            periodFiltered: boolean;
+        };
+        /** @description A link valid 300 s to download the archive; the download is recorded in the account activity. */
+        ExportDownload: {
+            id: string;
+            url: string;
+        };
+        /** @description A link valid 300 s to download the archive; the download is recorded in the account activity. */
+        "ExportDownload.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            id: string;
+            url: string;
         };
         /** @description Favourite meals, by name, with their current values. */
         FavoriteMeal: {
@@ -3994,6 +4284,8 @@ export interface components {
         SignIn: {
             twoFactorRequired: boolean;
             account: components["schemas"]["Account_noid"] | null;
+            /** @description Signing in cancelled the deletion of the account asked for earlier (told once). */
+            deletionCancelled: boolean;
         };
         /** @description Completes a pending sign-in with an authenticator code or a recovery code. */
         "SignIn.SecondFactorInput": {
@@ -4011,6 +4303,8 @@ export interface components {
         "SignIn.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
             twoFactorRequired: boolean;
             account: components["schemas"]["Account.jsonld_noid"] | null;
+            /** @description Signing in cancelled the deletion of the account asked for earlier (told once). */
+            deletionCancelled: boolean;
         };
         /** @description Enabled external sign-in providers. */
         SignInProviders: {
@@ -4664,6 +4958,118 @@ export interface operations {
             };
         };
     };
+    api_medeletion_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new AccountDeletion resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["AccountDeletion.DeletionInput"];
+                "application/json": components["schemas"]["AccountDeletion.DeletionInput"];
+            };
+        };
+        responses: {
+            /** @description AccountDeletion resource created */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["AccountDeletion.jsonld"];
+                    "application/json": components["schemas"]["AccountDeletion"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_meactivity_get_collection: {
+        parameters: {
+            query?: {
+                /** @description At most 50. */
+                limit?: number;
+                /** @description Only those before this time (the occurredAt of the last one received, for the next page)… */
+                before?: string;
+                /** @description …and its id (several can share their time). */
+                beforeId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Activity collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Activity.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Activity"][];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     barcode_scan: {
         parameters: {
             query?: never;
@@ -5242,6 +5648,38 @@ export interface operations {
             };
         };
     };
+    "api_medata-policy_get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description DataPolicy resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["DataPolicy.jsonld"];
+                    "application/json": components["schemas"]["DataPolicy"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     "api_authemail-verification_post": {
         parameters: {
             query?: never;
@@ -5748,6 +6186,237 @@ export interface operations {
             };
             /** @description Not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_exports_get_collection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Export collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["Export.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["Export"][];
+                };
+            };
+        };
+    };
+    export_request: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The new Export resource */
+        requestBody: {
+            content: {
+                "application/ld+json": components["schemas"]["Export.ExportInput"];
+                "application/json": components["schemas"]["Export.ExportInput"];
+            };
+        };
+        responses: {
+            /** @description Export resource created */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Export.jsonld"];
+                    "application/json": components["schemas"]["Export"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An export is already being made (`export.in_progress`), or: Changed by another request at the same time (`shared.concurrent_update`): send it again. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unknown domain or period ending before it starts (`export.invalid_scope`), or invalid input. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many exports today: send it again after `Retry-After` seconds. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_exports_id_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Export identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Export resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Export.jsonld"];
+                    "application/json": components["schemas"]["Export"];
+                };
+            };
+            /** @description Not found, or not the user's. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_exportsdomains_get_collection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ExportDomain collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
+                        member: components["schemas"]["ExportDomain.jsonld"][];
+                    };
+                    "application/json": components["schemas"]["ExportDomain"][];
+                };
+            };
+        };
+    };
+    api_exports_iddownload_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description ExportDownload identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ExportDownload resource created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ExportDownload.jsonld"];
+                    "application/json": components["schemas"]["ExportDownload"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found, or not the user's. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not ready, or no longer kept (`export.not_ready`). */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description An error occurred */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ConstraintViolation.jsonld"];
+                    "application/problem+json": components["schemas"]["ConstraintViolation"];
+                    "application/json": components["schemas"]["ConstraintViolation"];
+                };
+            };
+            /** @description Too many writes: send it again after `Retry-After` seconds. */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };

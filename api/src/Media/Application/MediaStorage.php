@@ -11,6 +11,16 @@ interface MediaStorage
 {
     public function write(string $key, string $contents, string $contentType): void;
 
+    /** Writes a local file as it is, streamed (an export's archive may weigh hundreds of MB). */
+    public function writeFile(string $key, string $path, string $contentType): void;
+
+    /**
+     * Copies the stored file to a local one, streamed.
+     *
+     * @throws \RuntimeException the file is missing or unreadable
+     */
+    public function readTo(string $key, string $path): void;
+
     /** Deleting a missing file changes nothing. */
     public function delete(string $key): void;
 

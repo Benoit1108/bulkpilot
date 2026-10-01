@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Audit\Domain\AuditEvent" table="audit_events">
+        <indexes>
+            <index name="audit_events_owner_created" columns="owner_id,created_at"/>
+            <index name="audit_events_created" columns="created_at"/>
+        </indexes>
+
+        <id name="id" type="audit_event_id"/>
+        <field name="ownerId" type="user_id" nullable="true"/>
+        <field name="pseudonym" length="64" nullable="true"/>
+        <field name="action" length="60"/>
+        <field name="details" type="json"/>
+        <field name="source" length="10"/>
+        <field name="createdAt" type="datetimetz_immutable"/>
+    </entity>
+</doctrine-mapping>

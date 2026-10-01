@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { hasQuietHours, notificationTime } from '~/features/notifications/notifications'
+import { hasQuietHours } from '~/features/notifications/notifications'
+import { formatMoment } from '~/services/calendar/days'
 import { CHECK_INTERVAL_MS, createNotificationSync } from '~/features/notifications/sync'
 import { apiError, createFakeApi } from '../support/fakeApi'
 
@@ -96,9 +97,9 @@ describe('notification sync', () => {
 describe('notification wording', () => {
   it('says when it arrived', () => {
     const now = new Date(2026, 8, 30, 21, 0)
-    expect(notificationTime(new Date(2026, 8, 30, 20, 5).toISOString(), now)).toBe('Aujourd’hui à 20:05')
-    expect(notificationTime(new Date(2026, 8, 29, 8, 30).toISOString(), now)).toBe('Hier à 08:30')
-    expect(notificationTime(new Date(2026, 8, 21, 9, 0).toISOString(), now)).toBe('Lundi 21 septembre à 09:00')
+    expect(formatMoment(new Date(2026, 8, 30, 20, 5).toISOString(), now)).toBe('Aujourd’hui à 20:05')
+    expect(formatMoment(new Date(2026, 8, 29, 8, 30).toISOString(), now)).toBe('Hier à 08:30')
+    expect(formatMoment(new Date(2026, 8, 21, 9, 0).toISOString(), now)).toBe('Lundi 21 septembre à 09:00')
   })
 
   it('knows no quiet hours by their missing ends', () => {

@@ -127,16 +127,26 @@ vitest: ## Frontend unit & component tests, with coverage thresholds
 	$(PWA) pnpm test:coverage
 
 ## —— End-to-end ————————————————————————————————————————————————
-.PHONY: e2e e2e-prod
+.PHONY: e2e e2e-prod backup-test
 e2e: ## Playwright against the running dev stack (quick feedback; Nuxt DevTools overlay is present)
 	$(DC_DEV) exec -T php bin/console nutrition:catalogue:import tests/Fixtures/ciqual --no-debug -q
 	$(DC_DEV) --profile e2e run --rm e2e
 
 e2e-prod: ## Build the production image and run Playwright against it on a throwaway stack
 	@trap '$(DC_TEST) down --volumes --remove-orphans' EXIT; \
-	$(DC_TEST) up $(UP_FLAGS) --wait php database mailer s3 s3-tls && \
+	$(DC_TEST) up $(UP_FLAGS) --wait php worker database mailer s3 s3-tls && \
 	$(DC_TEST) exec -T php bin/console nutrition:catalogue:import /fixtures/ciqual -q && \
-	CI=1 $(DC_TEST) --profile e2e run --rm e2e
+	CI=1 $(DC_TEST) --profile e2e run --rm e2e && \
+	$(MAKE) --no-print-directory backup-test
+
+backup-test: ## On the running E2E stack: back the database up to its bucket, then restore it and check it (ADR-0031)
+	$(DC_TEST) exec -T worker bin/console app:backup:create --no-debug
+	# The E2E tests created accounts: a restore without them is no restore.
+	$(DC_TEST) exec -T worker bin/console app:backup:verify --min-accounts=1 --no-debug
+	# And a backup that cannot be read must fail the check (here: another passphrase).
+	@if $(DC_TEST) exec -T -e BACKUP_PASSPHRASE=not-the-passphrase-it-was-made-with-0123456789 worker bin/console app:backup:verify --no-debug -q; then \
+		echo 'app:backup:verify accepted a backup it cannot decrypt' >&2; exit 1; \
+	else echo 'An unreadable backup is refused, as it should be.'; fi
 
 ## —— CI ————————————————————————————————————————————————————————
 # Same steps as .github/workflows/ci.yml, on throwaway stacks that never touch dev data.

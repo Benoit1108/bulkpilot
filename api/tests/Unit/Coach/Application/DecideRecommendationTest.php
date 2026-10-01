@@ -23,9 +23,9 @@ use App\Coach\Domain\Rule\Kind;
 use App\Coach\Domain\Rule\Level;
 use App\Shared\Application\Coaching\TargetChanged;
 use App\Shared\Application\Coaching\TargetUnreachable;
+use App\Tests\Support\Audit\SpyAuditTrail;
 use App\Tests\Support\Coach\CoachTestCase;
 use App\Tests\Support\Coach\InMemoryRecommendationRepository;
-use Monolog\Logger;
 
 final class DecideRecommendationTest extends CoachTestCase
 {
@@ -125,16 +125,16 @@ final class DecideRecommendationTest extends CoachTestCase
         $event = $this->events->published[0];
         self::assertInstanceOf(RecommendationDecided::class, $event);
 
-        (new LogRecommendationDecision(new Logger('audit', [$this->audit])))($event);
+        $audit = new SpyAuditTrail();
+        (new LogRecommendationDecision($audit))($event);
 
-        self::assertTrue($this->audit->hasInfoThatContains('coach.recommendation_decided'));
-        self::assertSame([
-            'user_id' => self::ALEX,
-            'recommendation_id' => $recommendation->id()->value,
-            'kind' => 'calories.increase',
-            'status' => 'rejected',
-            'occurred_on' => '2026-09-29T08:00:00+00:00',
-        ], $this->audit->getRecords()[0]->context);
+        self::assertSame([[
+            'user' => self::ALEX,
+            'action' => 'coach.recommendation_decided',
+            'details' => ['kind' => 'calories.increase', 'status' => 'rejected'],
+            'source' => 'user',
+            'at' => '2026-09-29T08:00:00+00:00',
+        ]], $audit->recorded);
     }
 
     public function testTheHistoryShowsTheStatusAsOfNowTheLatestFirst(): void

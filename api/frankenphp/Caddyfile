@@ -19,6 +19,10 @@
 (pwa_static) {
 	root * /app/pwa
 
+	# What the page may load (ADR-0027, spec §101): its own scripts and those inline ones built with
+	# it (by hash), photos from the bucket, nothing framed, no plugin, forms to itself only.
+	header Content-Security-Policy "default-src 'self'; script-src 'self' {$CSP_SCRIPT_HASHES}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: {$CSP_MEDIA_SOURCES}; connect-src 'self' {$CSP_MEDIA_SOURCES}; font-src 'self'; worker-src 'self'; manifest-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
+
 	# Hashed build assets: cached forever when they exist, a plain 404 otherwise
 	# (never index.html, which would be cached as a broken script after a deploy).
 	@nuxt path /_nuxt/*

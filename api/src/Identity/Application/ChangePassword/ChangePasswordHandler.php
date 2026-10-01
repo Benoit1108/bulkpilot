@@ -9,6 +9,7 @@ use App\Identity\Application\Session\SessionTerminator;
 use App\Identity\Application\SignIn\PasswordConfirmation;
 use App\Identity\Domain\User\PasswordPolicy;
 use App\Identity\Domain\User\UserRepository;
+use App\Shared\Application\Audit\AuditTrail;
 use App\Shared\Application\Bus\Command\CommandHandler;
 use App\Shared\Application\Bus\Event\EventBus;
 use Psr\Clock\ClockInterface;
@@ -24,6 +25,7 @@ final readonly class ChangePasswordHandler implements CommandHandler
         private PasswordHasher $passwordHasher,
         private SessionTerminator $sessions,
         private EventBus $eventBus,
+        private AuditTrail $audit,
         private ClockInterface $clock,
     ) {
     }
@@ -38,6 +40,7 @@ final readonly class ChangePasswordHandler implements CommandHandler
         $user->changePassword($this->passwordHasher->hash($command->newPassword), $now);
         $this->users->save($user);
         $this->sessions->terminateAll($user->id(), except: $command->currentSessionId, now: $now);
+        $this->audit->record($user->id(), 'identity.password_changed', [], 'user', $now);
 
         $this->eventBus->publish(...$user->pullDomainEvents());
     }

@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Identity\Domain\User;
+
+use App\Shared\Domain\Event\DomainEvent;
+use App\Shared\Domain\Identifier\UserId;
+
+/**
+ * The user signed in again during the delay: the account is kept.
+ */
+final readonly class AccountDeletionCancelled implements DomainEvent
+{
+    public function __construct(public UserId $userId, private \DateTimeImmutable $occurredOn)
+    {
+    }
+
+    public function occurredOn(): \DateTimeImmutable
+    {
+        return $this->occurredOn;
+    }
+}

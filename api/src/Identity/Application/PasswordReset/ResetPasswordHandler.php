@@ -10,6 +10,7 @@ use App\Identity\Application\Token\OneTimeLinks;
 use App\Identity\Domain\Token\TokenPurpose;
 use App\Identity\Domain\User\PasswordPolicy;
 use App\Identity\Domain\User\UserRepository;
+use App\Shared\Application\Audit\AuditTrail;
 use App\Shared\Application\Bus\Command\CommandHandler;
 use App\Shared\Application\Bus\Event\EventBus;
 use Psr\Clock\ClockInterface;
@@ -25,6 +26,7 @@ final readonly class ResetPasswordHandler implements CommandHandler
         private PasswordHasher $passwordHasher,
         private SessionTerminator $sessions,
         private EventBus $eventBus,
+        private AuditTrail $audit,
         private ClockInterface $clock,
     ) {
     }
@@ -39,6 +41,7 @@ final readonly class ResetPasswordHandler implements CommandHandler
         $user->changePassword($this->passwordHasher->hash($command->newPassword), $now);
         $this->users->save($user);
         $this->sessions->terminateAll($user->id(), except: null, now: $now);
+        $this->audit->record($user->id(), 'identity.password_reset', [], 'user', $now);
 
         $this->eventBus->publish(...$user->pullDomainEvents());
     }

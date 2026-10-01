@@ -22,7 +22,7 @@ final readonly class LocalMediaController
     {
     }
 
-    #[Route(SignedLocalUrls::PATH.'{key}', name: 'media_local', requirements: ['key' => '[0-9a-f-]{36}(-thumbnail)?\.webp'], methods: ['GET'], env: ['dev', 'test'])]
+    #[Route(SignedLocalUrls::PATH.'{key}', name: 'media_local', requirements: ['key' => LocalMediaStorage::KEY], methods: ['GET'], env: ['dev', 'test'])]
     public function __invoke(string $key, Request $request): BinaryFileResponse
     {
         $download = $request->query->getString('download');
@@ -34,7 +34,7 @@ final readonly class LocalMediaController
             throw new NotFoundHttpException();
         }
 
-        $response = new BinaryFileResponse($path, headers: ['Content-Type' => 'image/webp', 'X-Content-Type-Options' => 'nosniff']);
+        $response = new BinaryFileResponse($path, headers: ['Content-Type' => str_ends_with($key, '.zip') ? 'application/zip' : 'image/webp', 'X-Content-Type-Options' => 'nosniff']);
         $response->headers->set('Cache-Control', 'private, no-store');
         if ('' !== $download) {
             $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $download);

@@ -96,6 +96,9 @@ final class ScheduleTest extends KernelTestCase
         $eating = new FakeEatingReadings();
         $eating->days[self::ALEX] = new DayEating(1000.0, 2350, new \DateTimeImmutable('2026-09-30 10:30:00 UTC'));
         $container->set(EatingReadings::class, $eating);
+        $accounts = new FakeAccounts();
+        $accounts->add(self::ALEX, 'Europe/Paris');
+        $container->set(Accounts::class, $accounts);
         /** @var InMemoryTransport $async */
         $async = $container->get('messenger.transport.async');
         $bus = $container->get('command.bus');

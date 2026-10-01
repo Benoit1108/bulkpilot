@@ -35,7 +35,10 @@ final class InMemoryPreferencesRepository implements PreferencesRepository
 
     public function timeZones(?UserId $only = null): array
     {
-        $users = null === $only ? $this->users->users : array_filter($this->users->users, static fn (User $user): bool => $user->id()->equals($only));
+        $users = array_filter(
+            $this->users->users,
+            static fn (User $user): bool => !$user->isDeletionScheduled() && (null === $only || $user->id()->equals($only)),
+        );
 
         return array_map(fn (User $user): string => ($this->preferences[$user->id()->value] ?? null)?->timeZone()->name ?? TimeZone::DEFAULT, $users);
     }

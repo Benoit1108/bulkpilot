@@ -13,6 +13,11 @@ framework:
                     - doctrine_transaction
             # Reads: one handler per query, no transaction.
             query.bus: ~
+            # Long work (an export, ADR-0030): no transaction around it; it writes through short commands.
+            job.bus:
+                middleware:
+                    - doctrine_ping_connection
+                    - doctrine_close_connection
             # Domain events: zero or many subscribers, delivered after the current command
             # committed; each delivery runs in its own transaction so subscribers' writes are flushed.
             event.bus:
@@ -27,9 +32,10 @@ framework:
         failure_transport: failed
 
         transports:
-            # Heavy or deferrable work (reports, exports, photo processing, AI calls, notifications)
-            # and event reactions that must survive a failure, consumed by the `worker` service
-            # with the schedules (`scheduler_notifications`, `scheduler_coach`, ADR-0029).
+            # Heavy or deferrable work (exports, notifications, erasures) and event reactions that must
+            # survive a failure. The `worker` service consumes it with every schedule's transport
+            # (`messenger:consume --all --exclude-receivers=failed`: notifications, coach, identity,
+            # export, audit, backups; ADR-0029, ADR-0030, ADR-0031).
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 # 10 s, 30 s, 90 s, then the `failed` transport (docs/DEPLOYMENT.md: replaying it).
@@ -43,9 +49,17 @@ framework:
             # One message per account: a failing one is retried alone.
             App\Notification\Application\Check\CheckAccount: async
             App\Coach\Application\Analysis\AnalyseAccount: async
+            # Reads every context and builds an archive: never in the request (ADR-0030).
+            App\Export\Application\GenerateExport: async # a job: no transaction around it
+            App\Identity\Application\Deletion\EraseAccount: async
             # Delivered after the commit (ADR-0014), then pushed from the worker: a slow or
             # failing push is retried there, never in the request that made the notification.
             App\Notification\Domain\Notification\NotificationCreated: async
+            # Files deleted after their records' erasure or expiry: retried until done, kept in
+            # `failed` otherwise (the record is gone, the event is the only trace of the key).
+            App\Media\Domain\MediaFileErased: async
+            App\Export\Domain\ExportExpired: async
+            App\Identity\Application\Deletion\AccountErased: async
 
 when@test:
     framework:

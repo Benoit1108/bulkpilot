@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Media\Infrastructure\Storage;
 
 use App\Media\Application\MediaStorage;
+use App\Shared\Infrastructure\Storage\S3Clients;
 use AsyncAws\S3\S3Client;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -42,15 +43,8 @@ final readonly class MediaStorageFactory
         };
     }
 
-    /** An empty endpoint is Amazon's own; another provider gives its URL. */
     private function client(string $endpoint): S3Client
     {
-        return new S3Client(array_filter([
-            'endpoint' => '' === $endpoint ? null : $endpoint,
-            'region' => $this->region,
-            'accessKeyId' => $this->accessKey,
-            'accessKeySecret' => $this->secretKey,
-            'pathStyleEndpoint' => $this->pathStyle ? 'true' : 'false',
-        ], static fn (?string $value): bool => null !== $value));
+        return S3Clients::make($endpoint, $this->region, $this->accessKey, $this->secretKey, $this->pathStyle);
     }
 }

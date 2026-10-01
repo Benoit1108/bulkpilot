@@ -30,7 +30,7 @@ final readonly class RevokeDeviceSessionProcessor implements ProcessorInterface
             throw SessionNotFound::create();
         }
 
-        $this->commandBus->dispatch(new RevokeUserSession($this->currentUser->id(), $sessionId));
+        $this->commandBus->dispatch(new RevokeUserSession($this->currentUser->id(), $sessionId, fromDeviceList: true));
 
         return null;
     }

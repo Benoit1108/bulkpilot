@@ -5,5 +5,6 @@ import '~/features/training/messages'
 import '~/features/progression/messages'
 import '~/features/coach/messages'
 import '~/features/notifications/messages'
+import '~/features/data/messages'
 
 export default defineNuxtPlugin(() => {})

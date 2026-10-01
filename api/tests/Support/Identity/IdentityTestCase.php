@@ -15,6 +15,7 @@ use App\Identity\Domain\Session\UserSession;
 use App\Identity\Domain\Session\UserSessionId;
 use App\Identity\Domain\User\User;
 use App\Shared\Domain\Identifier\UserId;
+use App\Tests\Support\Audit\SpyAuditTrail;
 use App\Tests\Support\Shared\SequentialUuidGenerator;
 use App\Tests\Support\Shared\SpyEventBus;
 use PHPUnit\Framework\TestCase;
@@ -33,6 +34,7 @@ abstract class IdentityTestCase extends TestCase
     protected FakePasswordHasher $hasher;
     protected SpyIdentityMailer $mailer;
     protected SpyEventBus $events;
+    protected SpyAuditTrail $audit;
     protected SequentialUuidGenerator $uuids;
     protected SequentialSecretGenerator $secrets;
     protected MockClock $clock;
@@ -46,6 +48,7 @@ abstract class IdentityTestCase extends TestCase
         $this->hasher = new FakePasswordHasher();
         $this->mailer = new SpyIdentityMailer();
         $this->events = new SpyEventBus();
+        $this->audit = new SpyAuditTrail();
         $this->uuids = new SequentialUuidGenerator();
         $this->secrets = new SequentialSecretGenerator();
         $this->clock = new MockClock('2026-09-28 10:00:00');

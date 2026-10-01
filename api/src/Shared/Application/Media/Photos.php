@@ -38,6 +38,13 @@ interface Photos
      */
     public function linksFor(UserId $owner, array $downloadNames): array;
 
+    /**
+     * Writes the stored image (re-encoded, no metadata) to a local file, for an export.
+     *
+     * @throws MediaNotFound also when it belongs to someone else
+     */
+    public function copyTo(UserId $owner, MediaId $id, string $path): void;
+
     /** Deletes the photo and its thumbnail for good; deleting it again changes nothing. */
     public function delete(UserId $owner, MediaId $id): void;
 

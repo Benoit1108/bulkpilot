@@ -81,7 +81,9 @@ final class NightlyAnalysesTest extends CoachTestCase
 
     public function testTheNightlyAnalysisRunsOnceThatDay(): void
     {
-        $nightly = new AnalyseAccountHandler($this->handler());
+        $accounts = new FakeAccounts();
+        $accounts->add($this->alex->value, 'Europe/Paris');
+        $nightly = new AnalyseAccountHandler($this->handler(), $accounts);
 
         $nightly(new AnalyseAccount($this->alex, new \DateTimeImmutable(self::TODAY)));
         $offered = \count($this->recommendations->openOf($this->alex));
@@ -90,5 +92,12 @@ final class NightlyAnalysesTest extends CoachTestCase
         self::assertGreaterThan(0, $offered);
         self::assertCount($offered, $this->recommendations->openOf($this->alex));
         self::assertTrue($this->settings->ofOrDefault($this->alex, $this->clock->now())->hasAnalysed(new \DateTimeImmutable(self::TODAY)));
+    }
+
+    public function testAQueuedAnalysisOfAnAccountClosedSinceDoesNothing(): void
+    {
+        new AnalyseAccountHandler($this->handler(), new FakeAccounts())(new AnalyseAccount($this->alex, new \DateTimeImmutable(self::TODAY)));
+
+        self::assertSame([], $this->recommendations->openOf($this->alex), 'its deletion is pending, or it is gone: nothing more is made for it');
     }
 }

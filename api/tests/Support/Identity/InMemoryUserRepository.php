@@ -35,4 +35,21 @@ final class InMemoryUserRepository implements UserRepository
 
         return null;
     }
+
+    public function find(UserId $id): ?User
+    {
+        return $this->users[$id->value] ?? null;
+    }
+
+    public function lockForErasure(UserId $id): ?User
+    {
+        return $this->find($id);
+    }
+
+    public function dueForErasure(\DateTimeImmutable $now): array
+    {
+        $due = array_filter($this->users, static fn (User $user): bool => $user->isDueForErasure($now));
+
+        return array_values(array_map(static fn (User $user): UserId => $user->id(), $due));
+    }
 }

@@ -17,6 +17,8 @@ use App\Identity\Domain\User\Profile;
 use App\Identity\Domain\User\Sex;
 use App\Identity\Domain\User\User;
 use App\Identity\Domain\User\UserRepository;
+use App\Shared\Application\Accounts\AccountClock;
+use App\Shared\Application\Accounts\Accounts;
 use App\Shared\Domain\Identifier\UserId;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -53,6 +55,24 @@ final class PersistenceTest extends KernelTestCase
         self::assertSame([], $loaded->pullDomainEvents(), 'events are not persisted');
         self::assertTrue($loaded->id()->equals($users->findByEmail(new EmailAddress('ALEX@example.com'))?->id() ?? new UserId(self::USER)));
         self::assertNull($users->findByEmail(new EmailAddress('nobody@example.com')));
+    }
+
+    public function testAccountsBeingDeletedAreDueAfterTheDelayAndLeftOutOfScheduledWork(): void
+    {
+        $users = self::getContainer()->get(UserRepository::class);
+        $closing = $this->user(self::USER, 'alex@example.com');
+        $closing->scheduleDeletion($this->now);
+        $kept = $this->user('0199a0b1-7c3e-7d4a-9b2f-000000000002', 'sam@example.com');
+        $users->save($closing);
+        $users->save($kept);
+        $this->flushAndClear();
+
+        self::assertSame([], $users->dueForErasure($this->now->modify('+7 days -1 second')));
+        self::assertSame([self::USER], array_map(static fn (UserId $id): string => $id->value, $users->dueForErasure($this->now->modify('+7 days'))));
+        self::assertSame('2026-10-05T10:00:00+00:00', $users->get(new UserId(self::USER))->deletionDueAt()?->format(\DATE_ATOM));
+        $accounts = self::getContainer()->get(Accounts::class);
+        self::assertSame(['0199a0b1-7c3e-7d4a-9b2f-000000000002'], array_map(static fn (AccountClock $account): string => $account->userId->value, $accounts->all()));
+        self::assertNull($accounts->clockOf(new UserId(self::USER)));
     }
 
     public function testActiveSessionsAreListedMostRecentFirst(): void
@@ -92,6 +112,11 @@ final class PersistenceTest extends KernelTestCase
         $stored = $tokens->find($verification->id());
         self::assertNotNull($stored);
         self::assertSame($user->value, $stored->consume(TokenPurpose::EmailVerification, 'b', $this->now)->value);
+    }
+
+    private function user(string $id, string $email): User
+    {
+        return User::register(new UserId($id), new EmailAddress($email), new HashedPassword('$argon2id$hash'), new Profile('Alex', $this->now), $this->now);
     }
 
     private function flushAndClear(): void

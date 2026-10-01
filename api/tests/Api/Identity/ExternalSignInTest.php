@@ -123,6 +123,33 @@ final class ExternalSignInTest extends IdentityApiTestCase
         self::assertResponseIsSuccessful();
     }
 
+    public function testAnAccountWithoutAPasswordIsDeletedAfterAFreshSignInAndSigningInAgainKeepsIt(): void
+    {
+        $this->completeFlow('oauth@example.com', '/training');
+
+        $this->call('POST', '/api/me/deletion', ['password' => '']);
+        self::assertResponseStatusCodeSame(202, 'just signed in with the provider');
+        $this->call('GET', '/api/me');
+        self::assertResponseStatusCodeSame(401);
+
+        self::assertSame('/training?suppression_annulee=1', $this->completeFlow('oauth@example.com', '/training'), 'told once, on the page it lands on');
+        $this->call('GET', '/api/me');
+        self::assertResponseIsSuccessful();
+        $this->call('POST', '/api/auth/sign-out');
+        self::assertSame('/training', $this->completeFlow('oauth@example.com', '/training'));
+    }
+
+    public function testAnAccountWithoutAPasswordSignedInLongAgoMustSignInAgainToDelete(): void
+    {
+        $this->completeFlow('oauth@example.com');
+        $this->client->getContainer()->get(\Doctrine\DBAL\Connection::class)->executeStatement("UPDATE user_sessions SET opened_at = opened_at - INTERVAL '11 minutes'");
+
+        $this->call('POST', '/api/me/deletion', ['password' => '']);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertProblemCode('identity.reauthentication_required');
+    }
+
     public function testTrickRedirectsAreNeverFollowed(): void
     {
         foreach (['//evil.example', '/\\evil.example', "/\t/evil.example", '/%09/evil.example'] as $i => $redirect) {

@@ -38,6 +38,7 @@ Langage commun et règles structurantes. Chaque contexte complètera sa section 
 | Coach | 6 | Moteur de règles, analyses, recommandations expliquées (max. 3), historique des décisions |
 | Notification | 7 | Catégories activables, horaires silencieux, déduplication contextuelle |
 | Media | 5/8 | Stockage privé des fichiers, URLs signées courte durée |
+| Audit | 8 | Journal en ajout seul des actions importantes, « Activité du compte », rétention, pseudonymisation |
 | Export | 8 | Exports CSV/Excel/PDF/JSON/photos, suppression de compte |
 | System | 0 | Opérationnel, non métier : santé du service (ADR-0013) |
 
@@ -45,7 +46,7 @@ Langage commun et règles structurantes. Chaque contexte complètera sa section 
 
 | Concept | Règle |
 | --- | --- |
-| `User` (agrégat) | Email unique (normalisé en minuscules), mot de passe haché, email vérifié ou non, `Profile`. |
+| `User` (agrégat) | Email unique (normalisé en minuscules), mot de passe haché, email vérifié ou non, `Profile`. Suppression demandée : fermé tout de suite (sessions révoquées, exclu du travail planifié), effacé 7 jours plus tard (`AccountDeletionScheduled`) sauf reconnexion (`AccountDeletionCancelled`, ADR-0030). |
 | `Profile` | Prénom (1–50), date de naissance (13–120 ans), sexe (femme/homme, pour les formules énergétiques), taille (100–250 cm). Le poids appartient à Progression. |
 | `PasswordPolicy` | 12 à 4096 caractères, sans règle de composition (NIST 800-63B). |
 | `UserSession` | Un appareil connecté : libellé grossier (« Firefox · Android »), activité enregistrée au plus toutes les 5 min, révocable. Révoquer = l'appareil est refusé à sa requête suivante. |
@@ -255,12 +256,33 @@ Limites connues (reportées volontairement) :
 - Les séances sont rangées dans la semaine d'après leur heure de début comparée au lundi local, mais les séances prévues
   sont celles du programme actif (ses jours), sans calendrier.
 
+## Audit (phase 8)
+
+| Élément | Règles |
+| --- | --- |
+| `AuditEvent` | Une action importante, telle qu'elle a eu lieu : le propriétaire, l'action (`context.quoi`, ex. `nutrition.target_set`), ce qui a changé (jamais un secret ni l'email), la source (`user`, `coach`, `system`), la date. Jamais modifié ; écrit tout de suite, dans la transaction d'une commande ou après la validation par un abonné (ADR-0030). Les actions forment une liste fermée (`Action`) : une action inconnue est refusée. |
+| `AuditTrail` (port partagé) | Chaque contexte y inscrit ses actions : connexions, échecs sur un compte existant, second facteur refusé, mot de passe changé ou réinitialisé, email confirmé, 2FA, codes de secours, appareil déconnecté, compte Google lié ; objectif fixé (kcal avant/après, macros, origine) ; décision sur une recommandation ; exports ; suppression du compte. Gardé pour l'utilisateur et écrit dans le canal de logs `audit` pour l'opérateur. |
+| Activité du compte | `GET /api/me/activity` : les événements de l'utilisateur, le plus récent d'abord, curseur `(date, id)`. |
+| Échecs d'authentification | Mauvais mot de passe à la connexion, second facteur refusé, confirmation de la suppression refusée : inscrits par une commande à part (`RecordAuthenticationFailure`), après le refus. |
+| Rétention | `AUDIT_RETENTION_DAYS` (365) : purge quotidienne par le worker. |
+| Effacement | À la suppression du compte, les événements restent (l'action, la source, la date) sous un pseudonyme (HMAC de l'identifiant, clé dérivée du secret de l'application), sans détails ; le canal de l'opérateur nomme aussi l'effacement par ce pseudonyme. |
+
+## Export (phase 8)
+
+| Élément | Règles |
+| --- | --- |
+| `PersonalData` (port partagé) | Ce que chaque contexte garde d'un utilisateur : son titre (aucun : rien à exporter), si la période le restreint, ses tables (`Dataset` : titre français, colonnes, lignes ; les moments en date-heure), ses fichiers (photos), et son effacement définitif, le contexte du compte en dernier (ADR-0030). Un nouveau contexte est exporté et effacé sans autre changement ; une nouvelle table sans colonne propriétaire fait échouer un test tant qu'elle ne dit pas comment elle est effacée. Jamais un secret (empreinte de mot de passe, secret TOTP, codes de secours, jetons, identifiants de session). Les catalogues partagés ne sont à personne. |
+| `ExportRequest` (agrégat) | Une période facultative (jours inclus) et des domaines (`identity`, `nutrition`, `training`, `progression`, `coach`, `notification`, `activity` ; tous par défaut) ; `queued` → `processing` → `ready` (archive gardée 24 h, puis `expired` et supprimée) ou `failed` ; ouvert depuis 30 minutes (un worker mort) : `failed`. Une seule en cours par utilisateur ; 5 par jour, une demande refusée ne comptant pas. La période est celle des jours de l'utilisateur (son fuseau) ; l'objectif nutritionnel en vigueur au début de la période est exporté avec ceux fixés pendant. |
+| Archive | Un ZIP privé construit par le worker : `donnees.json`, un CSV par table non vide (noms français, BOM, `;`, virgule décimale, moments dans le fuseau de l'utilisateur, formules neutralisées), `bulkpilot.xlsx` (une feuille par table, vraies dates, en-tête figé), `synthese.pdf` (résumé et premières lignes, à la française), `photos/` ; les codes en mots français. Écrite sur le disque partie par partie et envoyée en flux : jamais entière en mémoire. Construite hors transaction (bus des travaux), son résultat inscrit par des commandes courtes. Téléchargée par un lien signé de 5 minutes ; demande et téléchargement inscrits à l'audit. |
+
 ## Media (phase 5)
 
 | Élément | Règles |
 | --- | --- |
-| `MediaFile` (agrégat) | Un fichier gardé pour son propriétaire : l'image réencodée (WebP, 2 048 px au plus) et sa miniature (480 px), sous des clés opaques (l'identifiant, ni le nom d'origine ni l'utilisateur). |
-| `PhotoLibrary` | Implémente le port `Photos` : vérifie le type réel, la taille et les pixels avant de décoder, refuse les animations, réencode (GD) sans métadonnées, écrit, signe des liens de 5 minutes, supprime pour de bon. |
+| `MediaFile` (agrégat) | Un fichier gardé pour son propriétaire, sous une clé opaque (l'identifiant, ni le nom d'origine ni l'utilisateur) : une photo (l'image réencodée, WebP, 2 048 px au plus, et sa miniature, 480 px) ou une archive d'export (`{id}.zip`). |
+| `PhotoLibrary` | Implémente le port `Photos` : vérifie le type réel, la taille et les pixels avant de décoder, refuse les animations, réencode (GD) sans métadonnées, écrit, signe des liens de 5 minutes, copie l'image gardée dans un export, supprime pour de bon. |
+| `ArchiveLibrary` | Implémente le port `Archives` : garde une archive, la lie à son propriétaire, la supprime. |
+| Effacement | À la suppression du compte, tous les fichiers du propriétaire : les enregistrements dans la transaction, les fichiers une fois celle-ci validée (`MediaFileErased`). |
 
 ## Événements de domaine prévus
 

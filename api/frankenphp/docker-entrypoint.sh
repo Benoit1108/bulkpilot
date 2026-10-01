@@ -30,6 +30,57 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		done
 		# Presigned links are bearer links to private photos: only over TLS.
 		case "${S3_PUBLIC_ENDPOINT:-$S3_ENDPOINT}" in http://*) echo 'The S3 endpoint the browser reaches must be https:// in production.' >&2; exit 1 ;; esac
+		# Automatic, encrypted, off-server backups (spec §106, ADR-0031): the worker makes them, and
+		# only it holds their secrets (a break-in through the web server cannot delete them).
+		if [ "$2" = 'messenger:consume' ]; then
+			if [ "$BACKUP_ENABLED" != '1' ]; then
+				echo 'BACKUP_ENABLED must be 1 in production: the database is backed up every night (ADR-0031).' >&2
+				exit 1
+			fi
+			for required in BACKUP_S3_BUCKET BACKUP_S3_ACCESS_KEY BACKUP_S3_SECRET_KEY BACKUP_PASSPHRASE; do
+				if [ -z "$(printenv "$required")" ]; then
+					echo "$required must be provided in production." >&2
+					exit 1
+				fi
+			done
+			if [ "${#BACKUP_PASSPHRASE}" -lt 32 ]; then
+				echo 'BACKUP_PASSPHRASE must be at least 32 characters (openssl rand -base64 32).' >&2
+				exit 1
+			fi
+			if [ "$BACKUP_S3_BUCKET" = "$S3_BUCKET" ] && [ "${BACKUP_S3_ENDPOINT}" = "${S3_ENDPOINT}" ]; then
+				echo 'BACKUP_S3_BUCKET must not be the photos bucket.' >&2
+				exit 1
+			fi
+			# The E2E gateway has a single key (ALLOW_SHARED_BACKUP_KEY=1 there only).
+			if [ "$BACKUP_S3_ACCESS_KEY" = "$S3_ACCESS_KEY" ] && [ "${ALLOW_SHARED_BACKUP_KEY:-0}" != '1' ]; then
+				echo 'BACKUP_S3_ACCESS_KEY must not be the photos key: each bucket has credentials of its own.' >&2
+				exit 1
+			fi
+		elif [ -n "$BACKUP_PASSPHRASE" ] || [ -n "$BACKUP_S3_SECRET_KEY" ]; then
+			echo 'The backup secrets belong to the worker only (docker-compose.yml): remove them from this container.' >&2
+			exit 1
+		fi
+	fi
+
+	# Content-Security-Policy of the production PWA (Caddyfile, pwa_static): its inline scripts by
+	# their hashes (computed at build), photos and exports from the bucket's own origin.
+	if [ -f /etc/frankenphp/csp-script-hashes ]; then
+		CSP_SCRIPT_HASHES="$(cat /etc/frankenphp/csp-script-hashes)"
+		export CSP_SCRIPT_HASHES
+	fi
+	media_endpoint="${S3_PUBLIC_ENDPOINT:-$S3_ENDPOINT}"
+	if [ "$MEDIA_STORAGE" = 's3' ]; then
+		if [ -z "$media_endpoint" ]; then
+			CSP_MEDIA_SOURCES="https://${S3_BUCKET}.s3.${S3_REGION:-us-east-1}.amazonaws.com"
+		else
+			media_origin="$(printf '%s' "$media_endpoint" | sed -E 's#^(https?://[^/]+).*#\1#')"
+			if [ "${S3_PATH_STYLE:-false}" = 'true' ]; then
+				CSP_MEDIA_SOURCES="$media_origin"
+			else
+				CSP_MEDIA_SOURCES="$(printf '%s' "$media_origin" | sed -E "s#^(https?://)#\1${S3_BUCKET}.#")"
+			fi
+		fi
+		export CSP_MEDIA_SOURCES
 	fi
 
 	if [ -z "$(ls -A 'vendor/' 2>/dev/null)" ]; then

@@ -1,5 +1,4 @@
 import type { ResponseOf } from '~/services/api/contract'
-import { dayLabel, formatTime, localDay } from '~/services/calendar/days'
 
 export type AppNotification = ResponseOf<'/api/notifications', 'get'>[number]
 export type NotificationSettings = ResponseOf<'/api/notifications/settings', 'get'>
@@ -27,10 +26,3 @@ export const NOTIFICATION_KEYS = {
   list: 'notifications',
   settings: 'notifications-settings',
 } as const
-
-/** « Aujourd’hui à 20:05 », « Hier à 08:30 », or the day (and its year when not this one) and the time. */
-export function notificationTime(at: string, now = new Date()): string {
-  const moment = new Date(at)
-  const day = dayLabel(localDay(moment), localDay(now))
-  return `${day.charAt(0).toUpperCase()}${day.slice(1)} à ${formatTime(moment)}`
-}

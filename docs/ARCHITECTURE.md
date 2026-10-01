@@ -22,7 +22,8 @@ Symfony calcule, décide, valide et orchestre. L'IA (phase 6) reformule des anal
 
 ```text
 api/src/
-├── Shared/          noyau partagé minimal (identifiants, événements, bus, périodes, port `Photos`)
+├── Shared/          noyau partagé minimal (identifiants, événements, bus, périodes, ports `Photos`, `Archives`,
+│                    `PersonalData`, `ErasedAccounts`, `AuditTrail`, `Accounts`, lectures du Coach et des notifications)
 ├── Identity/        comptes, profils, sessions, 2FA
 ├── Nutrition/       aliments, recettes, repas, journal, objectifs
 ├── Training/        exercices, programmes versionnés, séances, séries, PR
@@ -30,8 +31,9 @@ api/src/
 ├── Coach/           moteur de règles, analyses, recommandations
 ├── Notification/    règles, notifications dans l'app, catégories, horaires silencieux (ADR-0029)
 ├── Media/           photos privées : réencodage (GD), stockage local ou S3, liens signés (port Shared `Photos`, ADR-0027)
-├── Export/          exports et suppression de compte
-└── System/          préoccupations opérationnelles (santé du service) — pas un contexte métier (ADR-0013)
+├── Audit/           journal des actions importantes, « Activité du compte », pseudonymisation (ADR-0030)
+├── Export/          exports des données personnelles (la suppression du compte est dans Identity, ADR-0030)
+└── System/          préoccupations opérationnelles (santé du service, sauvegardes) — pas un contexte métier (ADR-0013, ADR-0031)
 ```
 
 Chaque contexte suit les mêmes couches :
@@ -73,6 +75,7 @@ handlers suffixés `Handler`, événements au passé (`WeightRecorded`). Pas de 
 | `command.bus` | écritures, un handler | ping/close connexion, **transaction Doctrine** |
 | `query.bus` | lectures, un handler, retourne un résultat | — |
 | `event.bus` | événements de domaine, 0..n abonnés | livrés **après** le commit de la commande, **chaque livraison dans sa propre transaction** |
+| `job.bus` | travaux longs (`Job` / `JobHandler` : un export, une sauvegarde) | ping/close connexion, **pas de transaction** : le travail écrit par des commandes courtes |
 
 Les handlers ne portent aucun attribut framework : ils implémentent `CommandHandler`, `QueryHandler`
 ou `DomainEventSubscriber`, et `Kernel::build()` les rattache au bon bus (y compris les services de test).
@@ -85,12 +88,14 @@ en `error`. Une réaction qui ne doit pas être perdue est routée vers le trans
 Ces comportements sont couverts par `tests/Integration/Shared/Infrastructure/Bus/BusWiringTest.php`.
 
 Le transport `async` (Doctrine, table `messenger_messages`) porte les tâches différables (les photos sont traitées à
-l'envoi, ADR-0027). Y sont routés, un message par compte, les vérifications des notifications (`CheckAccount`) et les
-analyses nocturnes du Coach (`AnalyseAccount`), envoyées par deux programmes Symfony Scheduler (`notifications`, `coach`,
-toutes les 15 minutes, ADR-0029, rangés en `Presentation/Scheduler` : ils pilotent l'application comme une commande
-console), ainsi que l'événement `NotificationCreated` (le push, après la validation). Le service `worker` du compose
-(même image que `php`, sans serveur web, **un seul**) les consomme :
-`messenger:consume async scheduler_notifications scheduler_coach`. En dev, `docker compose restart worker` après avoir
+l'envoi, ADR-0027). Y sont routés, un message par compte, les vérifications des notifications (`CheckAccount`), les
+analyses nocturnes du Coach (`AnalyseAccount`) et les effacements de comptes (`EraseAccount`), les exports
+(`GenerateExport`, un travail), et les réactions qui ne doivent pas se perdre : `NotificationCreated` (le push),
+`MediaFileErased` et `ExportExpired` (les fichiers à supprimer), `AccountErased` (retenu à côté des sauvegardes). Six
+programmes Symfony Scheduler (`notifications`, `coach`, `identity`, `export`, `audit`, `backups`, ADR-0029 à 0031),
+rangés en `Presentation/Scheduler` (ils pilotent l'application comme une commande console), les envoient. Le service
+`worker` du compose (même image que `php`, sans serveur web, **un seul**) consomme tout :
+`messenger:consume --all --exclude-receivers=failed`. En dev, `docker compose restart worker` après avoir
 changé un handler.
 
 ### Authentification

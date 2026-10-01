@@ -6,6 +6,7 @@ namespace App\Media\Application;
 
 use App\Media\Domain\MediaFile;
 use App\Media\Domain\MediaFileRepository;
+use App\Media\Domain\MediaKind;
 use App\Shared\Application\Media\MediaNotFound;
 use App\Shared\Application\Media\PhotoLinks;
 use App\Shared\Application\Media\Photos;
@@ -34,9 +35,10 @@ final readonly class PhotoLibrary implements Photos
     {
         $encoded = $this->encoder->encode($path);
         $file = MediaFile::photo($id, $owner, $encoded->width, $encoded->height, \strlen($encoded->image), $this->clock->now());
+        [$key, $thumbnailKey] = MediaFile::keysOf($id);
         try {
-            $this->storage->write($file->key(), $encoded->image, $file->contentType());
-            $this->storage->write($file->thumbnailKey(), $encoded->thumbnail, $file->contentType());
+            $this->storage->write($key, $encoded->image, $file->contentType());
+            $this->storage->write($thumbnailKey, $encoded->thumbnail, $file->contentType());
         } catch (\Throwable $failure) {
             $this->forget($id);
 
@@ -57,7 +59,7 @@ final readonly class PhotoLibrary implements Photos
         $expiresAt = $this->expiry();
         $links = [];
         foreach ($this->files->findMany(array_map(static fn (string $id): MediaId => new MediaId($id), array_keys($downloadNames))) as $file) {
-            if ($file->belongsTo($owner)) {
+            if ($file->isOwnedAs($owner, MediaKind::Photo)) {
                 $links[$file->id()->value] = $this->signed($file, $downloadNames[$file->id()->value] ?? 'photo.webp', $expiresAt);
             }
         }
@@ -68,12 +70,18 @@ final readonly class PhotoLibrary implements Photos
     public function delete(UserId $owner, MediaId $id): void
     {
         $file = $this->files->find($id);
-        if (null === $file || !$file->belongsTo($owner)) {
+        if (null === $file || !$file->isOwnedAs($owner, MediaKind::Photo)) {
             return;
         }
-        $this->storage->delete($file->key());
-        $this->storage->delete($file->thumbnailKey());
+        foreach ($file->keys() as $key) {
+            $this->storage->delete($key);
+        }
         $this->files->remove($file);
+    }
+
+    public function copyTo(UserId $owner, MediaId $id, string $path): void
+    {
+        $this->storage->readTo($this->owned($owner, $id)->key(), $path);
     }
 
     public function forget(MediaId $id): void
@@ -92,7 +100,7 @@ final readonly class PhotoLibrary implements Photos
     {
         return new PhotoLinks(
             $this->storage->temporaryUrl($file->key(), $expiresAt),
-            $this->storage->temporaryUrl($file->thumbnailKey(), $expiresAt),
+            $this->storage->temporaryUrl((string) $file->thumbnailKey(), $expiresAt),
             $this->storage->temporaryUrl($file->key(), $expiresAt, $downloadName),
             $expiresAt,
         );
@@ -101,7 +109,7 @@ final readonly class PhotoLibrary implements Photos
     private function owned(UserId $owner, MediaId $id): MediaFile
     {
         $file = $this->files->find($id);
-        if (null === $file || !$file->belongsTo($owner)) {
+        if (null === $file || !$file->isOwnedAs($owner, MediaKind::Photo)) {
             throw MediaNotFound::withId($id->value);
         }
 

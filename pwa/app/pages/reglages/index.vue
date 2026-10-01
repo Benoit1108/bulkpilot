@@ -46,6 +46,8 @@ const sections = computed(() => account.value
       { to: '/reglages/compte', title: 'Compte et sécurité', summary: securitySummary.value, summaryTestId: 'security-summary' },
       { to: '/coach/reglages', title: 'Coach', summary: 'Le ton du Coach et le rythme visé' },
       { to: '/notifications/reglages', title: 'Notifications', summary: 'Ce qui t’est signalé et les horaires silencieux' },
+      { to: '/reglages/donnees', title: 'Mes données', summary: 'Exporter tout ou partie de tes données' },
+      { to: '/reglages/activite', title: 'Activité du compte', summary: 'Connexions et changements importants' },
     ]
   : [])
 

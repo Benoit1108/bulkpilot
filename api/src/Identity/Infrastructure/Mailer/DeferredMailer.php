@@ -9,6 +9,7 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
 use Symfony\Component\Mime\Email;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -17,6 +18,9 @@ use Symfony\Contracts\Service\ResetInterface;
  *  - response times no longer depend on whether an email was sent (no account enumeration
  *    through a password-reset request that takes longer for existing accounts);
  *  - an SMTP hiccup does not fail the user's request; it is logged, and links can be re-requested.
+ *
+ * In the worker, after each message handled (its transaction committed): the worker runs for an
+ * hour, and its services are reset between messages. A failed message sends nothing.
  *
  * Holds per-request state, cleared after sending and by kernel.reset (FrankenPHP worker mode).
  */
@@ -36,6 +40,7 @@ final class DeferredMailer implements ResetInterface
 
     #[AsEventListener(event: KernelEvents::TERMINATE)]
     #[AsEventListener(event: 'console.terminate')]
+    #[AsEventListener(event: WorkerMessageHandledEvent::class)]
     public function flush(): void
     {
         $queue = $this->queue;

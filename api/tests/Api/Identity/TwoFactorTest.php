@@ -18,7 +18,7 @@ final class TwoFactorTest extends IdentityApiTestCase
 
         $this->signIn();
         self::assertResponseIsSuccessful();
-        self::assertJsonEquals(['twoFactorRequired' => true, 'account' => null]);
+        self::assertJsonEquals(['twoFactorRequired' => true, 'account' => null, 'deletionCancelled' => false]);
         $this->call('GET', '/api/me');
         self::assertResponseStatusCodeSame(401, 'the password alone does not sign in');
 

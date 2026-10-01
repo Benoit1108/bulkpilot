@@ -7,6 +7,7 @@ namespace App\Media\Infrastructure\Persistence\Doctrine;
 use App\Media\Domain\MediaFile;
 use App\Media\Domain\MediaFileRepository;
 use App\Shared\Domain\Identifier\MediaId;
+use App\Shared\Domain\Identifier\UserId;
 use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class DoctrineMediaFileRepository implements MediaFileRepository
@@ -28,6 +29,12 @@ final readonly class DoctrineMediaFileRepository implements MediaFileRepository
     public function find(MediaId $id): ?MediaFile
     {
         return $this->entityManager->find(MediaFile::class, $id);
+    }
+
+    public function ofOwner(UserId $ownerId): array
+    {
+        /** @var list<MediaFile> */
+        return $this->entityManager->getRepository(MediaFile::class)->findBy(['ownerId' => $ownerId]);
     }
 
     public function findMany(array $ids): array

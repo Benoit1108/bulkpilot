@@ -12,6 +12,9 @@ import { useStartWorkout } from '~/features/training/startWorkout'
  */
 const open = ref(false)
 const api = useApi()
+const route = useRoute()
+// In the settings nothing is added, and the floating button would cover their last lines.
+const inSettings = computed(() => route.path.startsWith('/reglages'))
 const session = useWorkoutSession()
 const { start, pending: starting, message: startError } = useStartWorkout()
 
@@ -41,7 +44,7 @@ async function train(action: QuickAction): Promise<void> {
 <template>
   <button
     type="button"
-    :class="`${HEADER_BUTTON} max-md:fixed max-md:right-4 max-md:bottom-above-nav max-md:z-20 max-md:size-14 max-md:border-transparent max-md:bg-accent-fill max-md:text-accent-contrast max-md:shadow-raised`"
+    :class="[`${HEADER_BUTTON} max-md:fixed max-md:right-4 max-md:bottom-above-nav max-md:z-20 max-md:size-14 max-md:border-transparent max-md:bg-accent-fill max-md:text-accent-contrast max-md:shadow-raised`, { 'max-md:hidden': inSettings }]"
     aria-haspopup="dialog"
     aria-label="Ajouter"
     title="Ajouter"

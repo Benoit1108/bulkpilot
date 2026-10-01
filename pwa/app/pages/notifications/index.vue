@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Bell } from 'lucide-vue-next'
 import { useNotificationsBadge } from '~/features/notifications/badge'
-import { CATEGORIES, NOTIFICATION_KEYS, notificationTime, type AppNotification } from '~/features/notifications/notifications'
+import { CATEGORIES, NOTIFICATION_KEYS, type AppNotification } from '~/features/notifications/notifications'
+import { formatMoment } from '~/services/calendar/days'
 
 definePageMeta({ title: 'Notifications' })
 
@@ -132,7 +133,7 @@ async function readAll(): Promise<void> {
               </span>
               <span class="text-sm">{{ notification.body }}</span>
               <span class="text-sm text-muted">
-                {{ notificationTime(notification.createdAt) }}<template v-if="!notification.readAt"> · <span aria-hidden="true">Non lue</span></template>
+                {{ formatMoment(notification.createdAt) }}<template v-if="!notification.readAt"> · <span aria-hidden="true">Non lue</span></template>
               </span>
             </span>
           </component>

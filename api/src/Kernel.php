@@ -7,6 +7,7 @@ namespace App;
 use App\Identity\Application\Port\ExternalIdentityProvider;
 use App\Shared\Application\Bus\Command\CommandHandler;
 use App\Shared\Application\Bus\Event\DomainEventSubscriber;
+use App\Shared\Application\Bus\Job\JobHandler;
 use App\Shared\Application\Bus\Query\QueryHandler;
 use App\System\Application\Health\HealthCheck;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -26,6 +27,8 @@ class Kernel extends BaseKernel
     {
         $container->registerForAutoconfiguration(CommandHandler::class)
             ->addTag('messenger.message_handler', ['bus' => 'command.bus']);
+        $container->registerForAutoconfiguration(JobHandler::class)
+            ->addTag('messenger.message_handler', ['bus' => 'job.bus']);
         $container->registerForAutoconfiguration(QueryHandler::class)
             ->addTag('messenger.message_handler', ['bus' => 'query.bus']);
         $container->registerForAutoconfiguration(DomainEventSubscriber::class)

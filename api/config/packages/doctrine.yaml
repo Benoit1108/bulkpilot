@@ -38,9 +38,11 @@ doctrine:
             custom_measure_id: App\Progression\Infrastructure\Persistence\Doctrine\Type\CustomMeasureIdType
             measurement_day_id: App\Progression\Infrastructure\Persistence\Doctrine\Type\MeasurementDayIdType
             media_id: App\Shared\Infrastructure\Persistence\Doctrine\MediaIdType
+            export_id: App\Export\Infrastructure\Persistence\Doctrine\Type\ExportIdType
             progress_photo_id: App\Progression\Infrastructure\Persistence\Doctrine\Type\ProgressPhotoIdType
             recommendation_id: App\Coach\Infrastructure\Persistence\Doctrine\Type\RecommendationIdType
             weekly_report_id: App\Coach\Infrastructure\Persistence\Doctrine\Type\WeeklyReportIdType
+            audit_event_id: App\Audit\Infrastructure\Persistence\Doctrine\Type\AuditEventIdType
             notification_id: App\Notification\Infrastructure\Persistence\Doctrine\Type\NotificationIdType
 
     orm:
@@ -77,11 +79,21 @@ doctrine:
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Media/Infrastructure/Persistence/Doctrine/Mapping'
                 prefix: 'App\Media\Domain'
+            Export:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Export/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Export\Domain'
             Coach:
                 type: xml
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Coach/Infrastructure/Persistence/Doctrine/Mapping'
                 prefix: 'App\Coach\Domain'
+            Audit:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Audit/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Audit\Domain'
             Notification:
                 type: xml
                 is_bundle: false

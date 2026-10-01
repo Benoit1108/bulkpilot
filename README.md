@@ -65,4 +65,5 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 | 5 | Progression : pesées (moyennes 7/30 j, tendance), objectif et jalons avec estimation, mensurations et mesures perso, photos privées (sessions, comparaison), graphiques, calories face au poids, statistiques d’entraînement | ✅ |
 | 6 | Coach : règles déterministes (calories, protéines, journal, pesées, séances, stagnation, records), 3 recommandations expliquées à valider, historique, adhérence, rapport hebdomadaire, personnalité, fournisseur IA abstrait (gabarits) | ✅ |
 | 7 | Dashboard : widgets personnalisables (jour, semaine, mois), Quick Actions, recherche ⌘K, notifications dans l’app (catégories, horaires silencieux), analyse nocturne du Coach | ✅ |
-| 8–10 | Export/Sécurité, Qualité, Production | — |
+| 8 | Export / sécurité : exports (JSON, CSV, Excel, PDF, photos), suppression du compte après 7 jours, journal d’activité, sauvegardes chiffrées vérifiées | ✅ |
+| 9–10 | Qualité, Production | — |

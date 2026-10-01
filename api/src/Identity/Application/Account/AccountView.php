@@ -19,6 +19,8 @@ final readonly class AccountView
         public bool $twoFactorEnabled,
         public bool $hasPassword,
         public string $timeZone,
+        /** Closed, erased on that day unless the user signs in again; null otherwise. */
+        public ?\DateTimeImmutable $deletionDueAt = null,
     ) {
     }
 }

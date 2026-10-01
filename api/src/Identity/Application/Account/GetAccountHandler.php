@@ -31,6 +31,7 @@ final readonly class GetAccountHandler implements QueryHandler
             $user->isTwoFactorEnabled(),
             $user->hasPassword(),
             $this->preferences->of($user->id())?->timeZone()->name ?? TimeZone::DEFAULT,
+            $user->deletionDueAt(),
         );
     }
 }

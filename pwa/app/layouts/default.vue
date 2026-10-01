@@ -104,6 +104,7 @@ useEventListener('keydown', (event) => {
         aria-labelledby="page-title"
       >
         <ShellConnectivityBanner />
+        <ShellDeletionCancelledNotice />
         <slot />
       </main>
     </div>

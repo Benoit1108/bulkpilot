@@ -20,6 +20,7 @@ use App\Identity\Domain\Exception\InvalidCredentials;
 use App\Identity\Domain\Exception\InvalidProfile;
 use App\Identity\Domain\Exception\SessionNotFound;
 use App\Identity\Domain\Session\UserSessionId;
+use App\Identity\Domain\User\EmailAddress;
 use App\Identity\Domain\User\Sex;
 use App\Tests\Support\Identity\IdentityTestCase;
 use App\Tests\Support\Identity\InMemoryPreferencesRepository;
@@ -37,15 +38,20 @@ final class SignInAndSessionsTest extends IdentityTestCase
     {
         $this->register();
 
+        $accounts = [];
         foreach ([['nobody@example.com', self::PASSWORD], ['alex@example.com', 'wrong password'], ['not an email', 'x']] as [$email, $password]) {
             try {
                 $this->checkCredentials($email, $password);
                 self::fail('Expected InvalidCredentials');
             } catch (InvalidCredentials $e) {
                 self::assertSame('identity.invalid_credentials', $e->errorCode());
+                $accounts[] = $e->account?->value;
             }
         }
         self::assertSame(2, $this->hasher->dummyVerifications, 'unknown users still cost a hash verification');
+        // Only the account whose password was tried is named, for its owner's activity (never to the client).
+        self::assertSame([null, $this->users->findByEmail(new EmailAddress('alex@example.com'))?->id()->value, null], $accounts);
+        self::assertSame([], $this->audit->actions(), 'a query writes nothing: the sign-in records the failure');
     }
 
     public function testDevicesAreListedMostRecentFirstWithTheCurrentOneFlagged(): void
@@ -53,7 +59,7 @@ final class SignInAndSessionsTest extends IdentityTestCase
         $user = $this->register();
         $laptop = new UserSessionId($this->uuids->generate());
         $phone = new UserSessionId($this->uuids->generate());
-        $open = new OpenUserSessionHandler($this->sessions, $this->clock);
+        $open = new OpenUserSessionHandler($this->sessions, $this->users, $this->events, $this->audit, $this->clock);
         $open(new OpenUserSession($laptop, $user->id(), 'Firefox · Linux'));
         $this->clock->sleep(600);
         $open(new OpenUserSession($phone, $user->id(), 'Safari · iOS'));
@@ -62,6 +68,8 @@ final class SignInAndSessionsTest extends IdentityTestCase
 
         self::assertSame(['Safari · iOS', 'Firefox · Linux'], array_map(static fn ($view) => $view->deviceLabel, $views));
         self::assertSame([false, true], array_map(static fn ($view) => $view->current, $views));
+        self::assertSame(['identity.signed_in', 'identity.signed_in'], $this->audit->actions());
+        self::assertSame(['device' => 'Safari · iOS'], $this->audit->recorded[1]['details']);
     }
 
     public function testADeviceCanBeSignedOutButOnlyByItsOwner(): void
@@ -69,7 +77,7 @@ final class SignInAndSessionsTest extends IdentityTestCase
         $alex = $this->register('alex@example.com');
         $sam = $this->register('sam@example.com');
         $samSession = $this->openSession($sam);
-        $revoke = new RevokeUserSessionHandler($this->sessions, $this->clock);
+        $revoke = new RevokeUserSessionHandler($this->sessions, $this->audit, $this->clock);
 
         try {
             $revoke(new RevokeUserSession($alex->id(), $samSession->id()));
@@ -78,8 +86,9 @@ final class SignInAndSessionsTest extends IdentityTestCase
         }
         self::assertTrue($samSession->isActive($this->clock->now()));
 
-        $revoke(new RevokeUserSession($sam->id(), $samSession->id()));
+        $revoke(new RevokeUserSession($sam->id(), $samSession->id(), fromDeviceList: true));
         self::assertFalse($samSession->isActive($this->clock->now()));
+        self::assertSame(['identity.session_revoked'], $this->audit->actions());
         self::assertSame([], new ListActiveSessionsHandler($this->sessions, $this->clock)(new ListActiveSessions($sam->id(), null)));
 
         $this->expectException(SessionNotFound::class);

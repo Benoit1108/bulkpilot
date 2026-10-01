@@ -31,9 +31,8 @@ use App\Nutrition\Domain\Target\NutritionTargetId;
 use App\Nutrition\Domain\Target\NutritionTargetSet;
 use App\Nutrition\Domain\Target\Sex;
 use App\Nutrition\Domain\Target\TargetSource;
+use App\Tests\Support\Audit\SpyAuditTrail;
 use App\Tests\Support\Nutrition\NutritionTestCase;
-use Monolog\Handler\TestHandler;
-use Monolog\Logger;
 
 final class TargetsTest extends NutritionTestCase
 {
@@ -112,28 +111,27 @@ final class TargetsTest extends NutritionTestCase
         $this->set('2026-09-20', new MacroTargets(2800, 150, 360, 80), null);
     }
 
-    public function testEveryTargetChangeIsAudited(): void
+    public function testEveryTargetChangeIsAuditedWithWhereItCameFrom(): void
     {
-        $handler = new TestHandler();
+        $audit = new SpyAuditTrail();
         $this->set('2026-09-28', new MacroTargets(2800, 150, 360, 80), null);
         $event = $this->events->published[0];
         self::assertInstanceOf(NutritionTargetSet::class, $event);
 
-        new LogTargetChange(new Logger('audit', [$handler]))($event);
+        new LogTargetChange($audit)($event);
 
-        self::assertTrue($handler->hasInfoThatContains('nutrition.target_set'));
-        self::assertSame([
-            'user_id' => self::ALEX,
-            'target_id' => $event->targetId->value,
-            'effective_from' => '2026-09-28',
-            'previous_kcal' => null,
-            'kcal' => 2800,
-            'protein_g' => 150,
-            'carbohydrate_g' => 360,
-            'fat_g' => 80,
-            'source' => 'manual',
-            'occurred_on' => '2026-09-28T10:00:01+00:00',
-        ], $handler->getRecords()[0]->context);
+        self::assertSame([[
+            'user' => self::ALEX,
+            'action' => 'nutrition.target_set',
+            'details' => [
+                'previous_kcal' => null,
+                'kcal' => 2800,
+                'effective_from' => '2026-09-28',
+                'origin' => 'manual',
+            ],
+            'source' => 'user',
+            'at' => '2026-09-28T10:00:01+00:00',
+        ]], $audit->recorded);
     }
 
     public function testTheMealSplitDefaultsThenFollowsTheUser(): void

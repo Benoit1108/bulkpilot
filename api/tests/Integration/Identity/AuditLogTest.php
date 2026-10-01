@@ -10,12 +10,13 @@ use App\Identity\Application\Register\RegisterUser;
 use App\Identity\Application\VerifyEmail\VerifyEmail;
 use App\Identity\Infrastructure\Mailer\DeferredMailer;
 use App\Shared\Application\Bus\Command\CommandBus;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
 use Symfony\Component\Mime\Email;
 
 /**
- * The security journal records who did what, never secrets or personal data.
+ * The audit journal records who did what, for the operator and the user, never secrets or personal data.
  */
 final class AuditLogTest extends KernelTestCase
 {
@@ -34,10 +35,11 @@ final class AuditLogTest extends KernelTestCase
 
         $records = self::getContainer()->get('monolog.handler.audit_test')->getRecords();
 
-        self::assertSame(
-            ['UserRegistered', 'EmailVerified', 'PasswordChanged'],
-            array_map(static fn ($record): mixed => $record->context['event'] ?? null, $records),
-        );
+        $actions = ['identity.registered', 'identity.email_verified', 'identity.password_reset'];
+        self::assertSame($actions, array_map(static fn ($record): string => $record->message, $records));
+        // Kept for the user too (« Activité du compte »), the latest first.
+        $rows = self::getContainer()->get(Connection::class)->fetchFirstColumn('SELECT action FROM audit_events WHERE owner_id = ? ORDER BY created_at DESC, action', [$userId]);
+        self::assertEqualsCanonicalizing($actions, $rows);
         foreach ($records as $record) {
             self::assertSame($userId, $record->context['user_id']);
             $serialized = json_encode([$record->message, $record->context], \JSON_THROW_ON_ERROR);

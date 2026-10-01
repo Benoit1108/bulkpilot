@@ -24,6 +24,34 @@ final readonly class S3MediaStorage implements MediaStorage
         $this->client->putObject(['Bucket' => $this->bucket, 'Key' => $key, 'Body' => $contents, 'ContentType' => $contentType])->resolve();
     }
 
+    public function writeFile(string $key, string $path, string $contentType): void
+    {
+        $body = fopen($path, 'r');
+        if (false === $body) {
+            throw new \RuntimeException(\sprintf('Cannot read "%s".', $path));
+        }
+        try {
+            $this->client->putObject(['Bucket' => $this->bucket, 'Key' => $key, 'Body' => $body, 'ContentLength' => (int) filesize($path), 'ContentType' => $contentType])->resolve();
+        } finally {
+            fclose($body);
+        }
+    }
+
+    public function readTo(string $key, string $path): void
+    {
+        $target = fopen($path, 'w');
+        if (false === $target) {
+            throw new \RuntimeException(\sprintf('Cannot write "%s".', $path));
+        }
+        try {
+            foreach ($this->client->getObject(['Bucket' => $this->bucket, 'Key' => $key])->getBody()->getChunks() as $chunk) {
+                fwrite($target, $chunk);
+            }
+        } finally {
+            fclose($target);
+        }
+    }
+
     public function delete(string $key): void
     {
         $this->client->deleteObject(['Bucket' => $this->bucket, 'Key' => $key])->resolve();

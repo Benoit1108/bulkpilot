@@ -7,10 +7,21 @@ FROM dunglas/frankenphp:1.12-php8.5-trixie AS frankenphp_base
 
 WORKDIR /app
 
+# The PostgreSQL client of the server's major version, from PostgreSQL's own repository (Debian
+# ships an older one): backups are dumped and test-restored with it (ADR-0031).
+ARG POSTGRES_VERSION=18
+
 # hadolint ignore=DL3008
-RUN apt-get update && apt-get install -y --no-install-recommends \
-	acl \
-	&& rm -rf /var/lib/apt/lists/*
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends acl ca-certificates curl; \
+	install -d /usr/share/postgresql-common/pgdg; \
+	curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc; \
+	. /etc/os-release; \
+	echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt ${VERSION_CODENAME}-pgdg main" > /etc/apt/sources.list.d/pgdg.list; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends "postgresql-client-${POSTGRES_VERSION}"; \
+	rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
 	install-php-extensions \
@@ -103,8 +114,9 @@ RUN --mount=type=cache,target=/root/.composer/cache \
 	composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
 
 COPY --link . ./
-RUN rm -Rf frankenphp/
 COPY --from=pwa_build --link /pwa/.output/public /app/pwa
+# The PWA's inline scripts, allowed by their hashes in the Content-Security-Policy (entrypoint).
+RUN php frankenphp/csp-hashes.php /app/pwa > /etc/frankenphp/csp-script-hashes && rm -Rf frankenphp/
 
 RUN set -eux; \
 	mkdir -p var/cache var/log var/share; \

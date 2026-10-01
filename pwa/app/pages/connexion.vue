@@ -2,6 +2,7 @@
 import { safeRedirect } from '~/features/identity/access'
 import ExternalSignIn from '~/features/identity/components/ExternalSignIn.vue'
 import { messageForCode } from '~/services/api/messages'
+import { formatFullDay, isDay } from '~/services/calendar/days'
 
 definePageMeta({ title: 'Connexion', layout: 'auth', public: true, guestOnly: true })
 
@@ -16,6 +17,16 @@ const step = ref<'password' | 'second-factor'>(route.query.second_factor === '1'
 const useRecoveryCode = ref(false)
 const redirectTarget = computed(() => safeRedirect(route.query.redirect))
 const externalError = computed(() => (typeof route.query.oauth_error === 'string' ? messageForCode(route.query.oauth_error) : null))
+// Arriving from « Supprimer mon compte »: when it happens, and how to undo it.
+const deletionNotice = computed(() => {
+  const due = route.query.suppression
+  if (typeof due !== 'string') return null
+  const when = isDay(due) ? ` le ${formatFullDay(due)}` : ''
+  return `Ton compte sera supprimé${when} et tous tes appareils sont déconnectés. Te reconnecter d’ici là annule la suppression.`
+})
+// Said first: the focus goes to it (a region inserted with its text is not always read).
+const deletionBanner = ref<HTMLElement | null>(null)
+onMounted(() => deletionBanner.value?.focus())
 
 async function done(): Promise<void> {
   await navigateTo(redirectTarget.value)
@@ -62,6 +73,16 @@ function toggleRecoveryCode(): void {
     novalidate
     @submit.prevent="submitPassword"
   >
+    <div
+      v-if="deletionNotice"
+      ref="deletionBanner"
+      tabindex="-1"
+      class="focus:outline-none focus-visible:outline-2 focus-visible:outline-accent"
+    >
+      <UiAlert tone="info">
+        {{ deletionNotice }}
+      </UiAlert>
+    </div>
     <UiAlert
       v-if="message || externalError"
       tone="error"

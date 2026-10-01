@@ -7,6 +7,7 @@ namespace App\Tests\Support\Media;
 use App\Media\Domain\MediaFile;
 use App\Media\Domain\MediaFileRepository;
 use App\Shared\Domain\Identifier\MediaId;
+use App\Shared\Domain\Identifier\UserId;
 
 final class InMemoryMediaFileRepository implements MediaFileRepository
 {
@@ -26,6 +27,11 @@ final class InMemoryMediaFileRepository implements MediaFileRepository
     public function find(MediaId $id): ?MediaFile
     {
         return $this->files[$id->value] ?? null;
+    }
+
+    public function ofOwner(UserId $ownerId): array
+    {
+        return array_values(array_filter($this->files, static fn (MediaFile $file): bool => $file->belongsTo($ownerId)));
     }
 
     public function findMany(array $ids): array
