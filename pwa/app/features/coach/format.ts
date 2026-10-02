@@ -64,11 +64,12 @@ export function reportAdherence(report: WeeklyReport): string {
   return report.adherence.score === null ? '—' : `${report.adherence.score} sur 100`
 }
 
-/** « 3/3 séances · 4 records ». */
+/** « 4 séances (3 prévues) · 4 records ». */
 export function reportTraining(report: WeeklyReport): string {
+  const done = `${report.sessions} ${plural(report.sessions, 'séance', 'séances')}`
   const sessions = report.plannedSessions === null
-    ? `${report.sessions} ${plural(report.sessions, 'séance', 'séances')}`
-    : `${report.sessions}/${report.plannedSessions} ${plural(report.plannedSessions, 'séance', 'séances')}`
+    ? done
+    : `${done} (${report.plannedSessions} ${plural(report.plannedSessions, 'prévue', 'prévues')})`
   const records = report.records === 0 ? 'aucun record' : `${report.records} ${plural(report.records, 'record', 'records')}`
   return `${sessions} · ${records}`
 }

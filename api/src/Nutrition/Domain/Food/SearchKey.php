@@ -20,15 +20,13 @@ final class SearchKey
      */
     public static function words(string $key): array
     {
-        $words = array_values(array_unique(array_filter(explode(' ', $key), static fn (string $word): bool => mb_strlen($word) >= self::MIN_WORD_LENGTH)));
-
-        return \array_slice($words, 0, self::MAX_WORDS);
+        return \array_slice(array_unique(array_filter(explode(' ', $key), static fn (string $word): bool => mb_strlen($word) >= self::MIN_WORD_LENGTH)), 0, self::MAX_WORDS);
     }
 
     public static function of(string ...$parts): string
     {
-        $text = mb_strtolower(implode(' ', array_filter($parts, static fn (string $part): bool => '' !== $part)));
-        $text = strtr($text, ['œ' => 'oe', 'æ' => 'ae', 'ß' => 'ss']);
+        // Empty parts leave only spaces, collapsed below; ligatures (œ, æ, ß) become two letters.
+        $text = mb_strtolower(implode(' ', $parts));
         $ascii = transliterator_transliterate('Any-Latin; Latin-ASCII', $text);
 
         return trim((string) preg_replace('/\s+/', ' ', false === $ascii ? $text : $ascii));

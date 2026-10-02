@@ -67,6 +67,73 @@ final class MealBuilderTest extends TestCase
         }
     }
 
+    public function testTheSpecExampleGivesExactlyTheseGrams(): void
+    {
+        // Kitchen-scale grams fitted on the macros in kcal: a change in the fit changes them.
+        $proposals = new MealBuilder()->propose(new MacroGoal(820, 42, 105, 25), [
+            $this->food('Poulet, filet, cuit', 141, 30.1, 0, 2),
+            $this->food('Riz blanc, cuit', 146, 2.9, 31.6, 0.5),
+            $this->food('Huile de tournesol', 900, 0, 0, 100),
+            $this->food('Eau', 0, 0, 0, 0),
+        ]);
+
+        self::assertSame([['Poulet, filet, cuit 110', 'Riz blanc, cuit 330', 'Huile de tournesol 21']], self::describe($proposals));
+        self::assertEqualsWithDelta(4.1851, $proposals[0]->gap, 0.0001);
+        self::assertEqualsWithDelta(825.9, $proposals[0]->totals->energyKcal, 0.001);
+    }
+
+    public function testOnlyTheFirstSixCandidatesOfARoleAreTried(): void
+    {
+        $habits = array_map(fn (int $n): Food => $this->food('Blanc d’oeuf '.$n, 48, 11, 0.7, 0.2), range(1, MealBuilder::CANDIDATES_PER_ROLE));
+        $egg = $this->food('Oeuf', 140, 12.5, 0.7, 9.8);
+        $rice = $this->food('Riz', 146, 2.9, 31.6, 0.5);
+        $goal = new MacroGoal(820, 42, 105, 25);
+
+        // A seventh protein that fits far better is not tried: the user's habits come first.
+        self::assertNotContains('Oeuf', self::mains(new MealBuilder()->propose($goal, [...$habits, $egg, $rice])));
+        self::assertSame('Oeuf', self::mains(new MealBuilder()->propose($goal, [$egg, $rice, ...$habits]))[0]);
+    }
+
+    public function testAGoalOfOneHundredKcalIsStillBuilt(): void
+    {
+        // 50 g of chicken and 50 g of milk: 93.5 kcal.
+        $foods = [$this->food('Poulet', 141, 30.1, 0, 2), $this->food('Lait', 46, 3.2, 4.8, 1.5)];
+
+        self::assertNotEmpty(new MealBuilder()->propose(new MacroGoal(MealBuilder::MIN_GOAL_KCAL, 15, 5, 2), $foods));
+        self::assertSame([], new MealBuilder()->propose(new MacroGoal(99, 15, 5, 2), $foods), 'just under: nearly reached');
+    }
+
+    public function testEachRoleHasItsRangeAndRounding(): void
+    {
+        self::assertSame([[50.0, 400.0], [40.0, 500.0], [5.0, 40.0], [50.0, 300.0]], array_map(static fn (FoodRole $role): array => $role->gramRange(), [FoodRole::Protein, FoodRole::Carbohydrate, FoodRole::Fat, FoodRole::Side]));
+        self::assertSame([5.0, 5.0, 1.0, 5.0], array_map(static fn (FoodRole $role): float => $role->rounding(), [FoodRole::Protein, FoodRole::Carbohydrate, FoodRole::Fat, FoodRole::Side]));
+    }
+
+    /**
+     * @return iterable<string, array{NutritionFacts, ?FoodRole}>
+     */
+    public static function roleEdges(): iterable
+    {
+        yield 'exactly 35 % from protein' => [new NutritionFacts(100, 8.75, 16.25, 0), FoodRole::Protein];
+        yield 'exactly 70 % from fat' => [new NutritionFacts(90, 0, 6.75, 7), FoodRole::Fat];
+        yield 'exactly 55 % from carbohydrate' => [new NutritionFacts(100, 0, 13.75, 5), FoodRole::Carbohydrate];
+        yield 'exactly 20 kcal' => [new NutritionFacts(20, 0, 5, 0), FoodRole::Carbohydrate];
+        yield 'calories without macros' => [new NutritionFacts(25, 0, 0, 0), null];
+    }
+
+    #[DataProvider('roleEdges')]
+    public function testTheRoleThresholdsAreInclusive(NutritionFacts $facts, ?FoodRole $role): void
+    {
+        self::assertSame($role, FoodRole::of($facts));
+    }
+
+    public function testAGoalAlreadyExceededIsZeroNotNegative(): void
+    {
+        $goal = new MacroGoal(-50, 10, 10, -3);
+
+        self::assertSame([0.0, 0.0], [$goal->energyKcal, $goal->fat]);
+    }
+
     public function testProposalsAreAlternativesAroundDifferentMainFoods(): void
     {
         $proposals = new MealBuilder()->propose(new MacroGoal(900, 50, 110, 25), [
@@ -136,6 +203,16 @@ final class MealBuilderTest extends TestCase
         self::assertSame(0.0, $goal->protein, 'protein already covered');
         self::assertSame(100.0, $goal->carbohydrate);
         self::assertSame(20.0, $goal->fat);
+    }
+
+    /**
+     * @param list<MealProposal> $proposals
+     *
+     * @return list<string> the main food of each
+     */
+    private static function mains(array $proposals): array
+    {
+        return array_map(static fn (MealProposal $proposal): string => $proposal->portions[0]->food->name(), $proposals);
     }
 
     /**

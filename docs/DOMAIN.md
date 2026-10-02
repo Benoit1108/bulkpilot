@@ -154,8 +154,9 @@ au-delà des jours d'une révision qui en a moins), cherchée parmi les 60 derni
 semaine ; avec quand ce jour **de la version actuelle** a été commencé pour la dernière fois (`lastDoneAt`, que la PWA
 affiche dans le jour de l'utilisateur) et si une séance est en cours.
 
-Analyses (phase 5) : `GET /api/training/analytics` — séances terminées de la période, fréquence par semaine, séries de
-travail, reps, tonnage, records battus (chacun jugé contre les séances d'avant, sur les 300 dernières), par semaine.
+Analyses (phase 5) : `GET /api/training/analytics` — séances terminées de la période (toutes, sans plafond),
+fréquence par semaine, séries de travail, reps, tonnage, records battus (chacun jugé contre les séances d'avant : les
+300 dernières, ou la période entière quand elle en compte plus), par semaine.
 
 ## Progression (phase 5)
 
@@ -183,8 +184,9 @@ Limites connues (reportées volontairement) :
 - Adhérence (§58) et rapport hebdomadaire (§59) : faits par le Coach (phase 6) ; le tableau de bord (phase 7) les reprendra.
 - Les pesées et mensurations ne se saisissent pas hors ligne (contrairement aux séances).
 - Une photo ne se corrige pas (jour, pose) : la supprimer et la reprendre.
-- Analyses d'entraînement (`GET /api/training/analytics`) : calculées sur les 300 dernières séances au plus
-  (`WorkoutRepository::HISTORY_LIMIT`) ; au-delà, « Tout » et « 1 an » ne comptent que celles-là.
+- Analyses d'entraînement (`GET /api/training/analytics`) : les totaux comptent toutes les séances de la période ;
+  quand elle en compte plus de 300 (`WorkoutRepository::HISTORY_LIMIT`), ses premières séances ne sont jugées, pour les
+  records, que contre la période elle-même (« Tout » reste exact).
 - Les séances sont rangées dans leur semaine d'après leur heure de début en UTC : une séance commencée juste après minuit
   heure locale, un lundi, peut tomber dans la semaine précédente (les pesées et les repas, eux, suivent le jour de
   l'utilisateur).

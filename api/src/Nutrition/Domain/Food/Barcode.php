@@ -48,7 +48,8 @@ final readonly class Barcode
         $gtin = str_pad($digits, 14, '0', \STR_PAD_LEFT);
 
         return match (true) {
-            8 === \strlen($digits), str_starts_with($gtin, '000000') => substr($gtin, 6),
+            // An EAN-8 is padded with six zeros, like a GTIN-14 that only holds one.
+            str_starts_with($gtin, '000000') => substr($gtin, 6),
             str_starts_with($gtin, '0') => substr($gtin, 1),
             default => $gtin,
         };

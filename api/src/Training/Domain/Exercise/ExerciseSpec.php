@@ -68,7 +68,8 @@ final readonly class ExerciseSpec
             return null;
         }
         // Only https: the link is opened from the app, never embedded.
-        if (mb_strlen($url) > self::MAX_MEDIA_URL_LENGTH || false === filter_var($url, \FILTER_VALIDATE_URL) || 'https' !== parse_url($url, \PHP_URL_SCHEME)) {
+        // An https URL is ASCII: its length is its bytes.
+        if (\strlen($url) > self::MAX_MEDIA_URL_LENGTH || false === filter_var($url, \FILTER_VALIDATE_URL) || 'https' !== parse_url($url, \PHP_URL_SCHEME)) {
             throw InvalidExercise::because('a media link is an https URL of at most 500 characters');
         }
 

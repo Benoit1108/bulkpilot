@@ -1,25 +1,6 @@
-import type { Page } from '@playwright/test'
 import { expectAccessible } from './support/accessibility'
-import { expect, test } from './support/fixtures'
-
-const JSON_HEADERS = { Accept: 'application/json' }
-
-/** A finished workout with one set, straight through the API (the workout page has its own test). */
-async function workout(page: Page, exerciseId: string, startedAt: Date, loadKg: number): Promise<string> {
-  const id = crypto.randomUUID()
-  const at = (minutes: number) => new Date(startedAt.getTime() + minutes * 60_000).toISOString()
-  const calls: Array<[string, string, Record<string, unknown>]> = [
-    ['put', `/api/workouts/${id}`, { startedAt: at(0) }],
-    ['put', `/api/workouts/${id}/exercises/0`, { exerciseId }],
-    ['put', `/api/workouts/${id}/sets/${crypto.randomUUID()}`, { exerciseIndex: 0, kind: 'normal', loadKg, reps: 8, doneAt: at(10) }],
-    ['post', `/api/workouts/${id}/finish`, { finishedAt: at(45) }],
-  ]
-  for (const [method, url, data] of calls) {
-    const response = await page.request[method as 'put' | 'post'](url, { data, headers: JSON_HEADERS })
-    expect(response.ok(), await response.text()).toBe(true)
-  }
-  return id
-}
+import { expect, JSON_HEADERS, test } from './support/fixtures'
+import { workout } from './support/seed'
 
 test.describe('notifications', () => {
   test('a new account has none yet, and chooses what it is told and when', async ({ page, account: _account }) => {

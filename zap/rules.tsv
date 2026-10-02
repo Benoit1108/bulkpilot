@@ -1,0 +1,1 @@
+# ZAP rules: id <TAB> IGNORE|WARN|FAIL <TAB> why. Every IGNORE says why the alert does not apply.

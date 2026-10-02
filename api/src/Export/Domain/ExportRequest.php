@@ -43,13 +43,16 @@ class ExportRequest extends AggregateRoot
      */
     public static function request(ExportId $id, UserId $owner, ?\DateTimeImmutable $from, ?\DateTimeImmutable $to, array $domains, \DateTimeImmutable $now): self
     {
+        // Days, not hours: the same day at two hours is a one-day period.
+        $from = $from?->setTime(0, 0);
+        $to = $to?->setTime(0, 0);
         if (null !== $from && null !== $to && $from > $to) {
             throw InvalidExport::because('the period ends before it starts');
         }
-        $domains = array_values(array_unique($domains));
+        $domains = array_unique($domains);
         sort($domains);
 
-        return new self($id, $owner, $from?->setTime(0, 0), $to?->setTime(0, 0), $domains, ExportStatus::Queued, null, $now, null, null);
+        return new self($id, $owner, $from, $to, $domains, ExportStatus::Queued, null, $now, null, null);
     }
 
     /** The worker takes it; a redelivered message finds it taken and leaves it. */

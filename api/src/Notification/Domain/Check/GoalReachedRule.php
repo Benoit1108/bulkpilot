@@ -18,7 +18,7 @@ final readonly class GoalReachedRule implements Rule
 
     public function evaluate(Situation $situation): array
     {
-        $since = $situation->now->setTime(0, 0)->modify(\sprintf('-%d day', self::RECENT_DAYS))->format('Y-m-d');
+        $since = $situation->now->modify(\sprintf('-%d day', self::RECENT_DAYS))->format('Y-m-d');
         $drafts = [];
         foreach ($situation->reachedSteps as $step) {
             if ($step->reachedOn->format('Y-m-d') < $since) {

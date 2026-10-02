@@ -44,20 +44,34 @@ final readonly class GoalProgress
             $steps[] = new StepProgress($kg, $i === \count($goal->milestones()), $reached);
         }
 
-        $reached = array_values(array_filter($steps, static fn (StepProgress $step): bool => null !== $step->reachedOn));
-        $next = array_values(array_filter($steps, static fn (StepProgress $step): bool => null === $step->reachedOn))[0] ?? null;
+        // Steps are reached in order: the reached ones come first, then the next one.
+        $lastReached = null;
+        $next = null;
+        foreach ($steps as $step) {
+            if (null !== $step->reachedOn) {
+                $lastReached = $step;
+            } elseif (null === $next) {
+                $next = $step;
+            }
+        }
         $share = ($latest->kg - $goal->startKg()) / ($goal->targetKg() - $goal->startKg());
         $toTarget = round($goal->targetKg() - $latest->kg, 1);
-        $toNext = null === $next ? null : round($next->kg - $latest->kg, 1);
 
         return new self(
             $goal,
             $steps,
             (int) round(max(0.0, min(1.0, $share)) * 100),
-            round($latest->kg - ([] === $reached ? $goal->startKg() : $reached[\count($reached) - 1]->kg), 1),
-            null === $next || null === $toNext ? null : new NextStep($next, $toNext, Estimate::toward($toNext, $kgPerWeek, $goal->direction())),
+            round($latest->kg - ($lastReached->kg ?? $goal->startKg()), 1),
+            null === $next ? null : self::nextStep($next, $latest, $kgPerWeek, $goal),
             $toTarget,
             Estimate::toward($toTarget, $kgPerWeek, $goal->direction()),
         );
+    }
+
+    private static function nextStep(StepProgress $next, DayWeight $latest, ?float $kgPerWeek, WeightGoal $goal): NextStep
+    {
+        $left = round($next->kg - $latest->kg, 1);
+
+        return new NextStep($next, $left, Estimate::toward($left, $kgPerWeek, $goal->direction()));
     }
 }

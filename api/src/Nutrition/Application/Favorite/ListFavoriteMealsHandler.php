@@ -20,10 +20,12 @@ final readonly class ListFavoriteMealsHandler implements QueryHandler
     public function __invoke(ListFavoriteMeals $query): array
     {
         $views = [];
-        foreach ($this->favorites->favoritesOf($query->userId) as $favorite) {
+        $favorites = $this->favorites->favoritesOf($query->userId);
+        $foods = $this->items->foodsOf($query->userId, $favorites);
+        foreach ($favorites as $favorite) {
             $items = [];
             foreach ($favorite->items() as $item) {
-                $food = $this->items->snapshot($query->userId, $item);
+                $food = $this->items->snapshot($query->userId, $item, $foods);
                 $items[] = new FavoriteItemView($food->name, $item->grams, $food->per100Grams->scale($item->grams / 100), null !== $item->recipeId);
             }
             $views[] = new FavoriteMealView(

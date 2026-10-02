@@ -85,7 +85,7 @@ describe('training home', () => {
     })
 
     const wrapper = await openHome()
-    expect(wrapper.text()).toContain('Hors ligne\u00A0: le programme tel que gardé sur le téléphone.')
+    expect(wrapper.text()).toContain('Hors ligne\u00A0: le programme tel que gardé sur cet appareil.')
     await button(wrapper, 'Démarrer Pull').trigger('click')
     await settle()
 
@@ -186,7 +186,7 @@ describe('history', () => {
     const detail = await mountSuspended(WorkoutDetailPage, { route: '/training/seances/w2' })
     await settle()
 
-    expect(detail.text()).toContain('Séance terminée\u00A0! Elle est gardée sur le téléphone')
+    expect(detail.text()).toContain('Séance terminée\u00A0! Elle est gardée sur cet appareil')
   })
 
   it('offers a retry for another workout the device cannot load', async () => {

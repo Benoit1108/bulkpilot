@@ -18,6 +18,6 @@ final readonly class ListWeeklyReportsHandler implements QueryHandler
      */
     public function __invoke(ListWeeklyReports $query): array
     {
-        return array_map(WeeklyReportView::of(...), $this->reports->latestOf($query->userId, ListWeeklyReports::LIMIT));
+        return array_map(WeeklyReportView::of(...), $this->reports->latestOf($query->userId, max(1, min(ListWeeklyReports::MAX, $query->limit)), $query->before));
     }
 }

@@ -12,6 +12,9 @@ export const TRAINING_KEYS = {
   analytics: (period: string, today: string) => `training-analytics-${period}-${today}`,
 } as const
 
+/** The finished workouts read at a time (the history's pages; its first one is shared with the search). */
+export const HISTORY_PAGE = 20
+
 /** Everything a program change can affect: the list and every version shown. */
 export function isProgramKey(key: string): boolean {
   return key === TRAINING_KEYS.programs || key.startsWith('training-program-')

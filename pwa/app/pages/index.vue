@@ -12,7 +12,7 @@ import RecordsWidget from '~/features/dashboard/components/RecordsWidget.vue'
 import ReportWidget from '~/features/dashboard/components/ReportWidget.vue'
 import WeightWidget from '~/features/dashboard/components/WeightWidget.vue'
 import WorkoutWidget from '~/features/dashboard/components/WorkoutWidget.vue'
-import { isKnownWidget, VIEWS, type DashboardView, type WidgetKey } from '~/features/dashboard/dashboard'
+import { isKnownWidget, VIEWS, WIDGET_LABELS, type DashboardView, type WidgetKey } from '~/features/dashboard/dashboard'
 import { SHOWN_WIDGETS } from '~/features/dashboard/data'
 import { useDashboardLayout } from '~/features/dashboard/layout'
 import { formatLongDay } from '~/services/calendar/days'
@@ -42,6 +42,8 @@ const HIDDEN_IN: Partial<Record<WidgetKey, DashboardView[]>> = { meals: ['week',
 // A widget of a newer server this app does not know is kept in the layout, not shown.
 const shown = computed(() => (layout.value?.widgets ?? []).filter(widget => isKnownWidget(widget) && widget.visible && !HIDDEN_IN[widget.key]?.includes(view.value)))
 provide(SHOWN_WIDGETS, computed(() => shown.value.map(widget => widget.key)))
+/** Before the layout arrives: the default widgets as empty cards, so the page does not jump twice. */
+const placeholders = computed(() => (Object.keys(WIDGET_LABELS) as WidgetKey[]).filter(key => !HIDDEN_IN[key]?.includes(view.value)))
 
 /** A first visit: nothing set up yet, « Pour commencer » says what to do instead of eight empty widgets. */
 const steps = ref<{ left: number, total: number } | null>(null)
@@ -134,13 +136,25 @@ async function customized(saved: boolean): Promise<void> {
         />
       </div>
     </template>
-    <p
+    <div
       v-else
-      class="text-sm text-muted"
-      role="status"
+      class="grid gap-4 md:grid-cols-2"
+      aria-busy="true"
     >
-      Chargement…
-    </p>
+      <p
+        class="sr-only"
+        role="status"
+      >
+        Chargement…
+      </p>
+      <UiCard
+        v-for="key in placeholders"
+        :key="key"
+        :title="WIDGET_LABELS[key]"
+      >
+        <div class="min-h-28" />
+      </UiCard>
+    </div>
     <UiStatus
       :message="notice"
       @dismiss="notice = null"

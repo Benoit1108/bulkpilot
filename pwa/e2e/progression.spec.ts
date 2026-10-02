@@ -21,10 +21,16 @@ test.describe('progression', () => {
     await weighInsOfTheLastWeeks(page)
     await page.goto('/progression')
     await expect(page.getByRole('textbox', { name: 'Poids' })).toHaveValue('49,1')
+    // Spec §112: the averages are worked out again from the new weigh-in.
+    const figure = (label: string) => page.locator('dt', { hasText: label }).locator('xpath=following-sibling::dd')
+    await expect(figure('Moyenne 7 jours')).toHaveText('aucune pesée ces 7 derniers jours')
+    await expect(figure('Moyenne 30 jours')).toHaveText('48,6 kg')
 
     await page.getByRole('textbox', { name: 'Poids' }).fill('49,6')
     await page.getByRole('button', { name: 'Enregistrer la pesée' }).click()
     await expect(page.getByText('Pesée du jour enregistrée : 49,6 kg.')).toBeVisible()
+    await expect(figure('Moyenne 7 jours')).toHaveText('49,6 kg')
+    await expect(figure('Moyenne 30 jours')).toHaveText('48,8 kg')
     await expect(page.getByText('en hausse (+0,53 kg/semaine)')).toBeVisible()
     await expect(page.getByText('Aucun objectif de poids')).toBeVisible()
     await expectAccessible(page)

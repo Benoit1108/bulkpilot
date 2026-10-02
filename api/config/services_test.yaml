@@ -14,3 +14,12 @@ services:
     App\Shared\Application\Bus\Command\CommandBus:
         alias: App\Shared\Infrastructure\Bus\MessengerCommandBus
         public: true
+
+    # Counts the SQL statements of a request: the query budgets of the API tests (docs/TESTING.md).
+    App\Tests\Support\Database\QueryCounter:
+        public: true
+        tags: [doctrine.middleware]
+
+    # Demo data (spec §134, ADR-0032): the dataset of the performance tests.
+    App\Dev\Demo\:
+        resource: '../dev/Demo/'

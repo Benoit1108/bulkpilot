@@ -13,7 +13,7 @@ interface WeeklyReportRepository
     public function has(UserId $userId, \DateTimeImmutable $weekStart): bool;
 
     /**
-     * @return list<WeeklyReport> the latest week first
+     * @return list<WeeklyReport> the latest week first, before that week if any
      */
-    public function latestOf(UserId $userId, int $limit): array;
+    public function latestOf(UserId $userId, int $limit, ?\DateTimeImmutable $before = null): array;
 }

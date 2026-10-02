@@ -1,6 +1,8 @@
 import { test as base, expect, type Browser, type BrowserContext, type Page } from '@playwright/test'
 
 export const PASSWORD = 'correct horse battery'
+/** API calls of the specs (setup through the API) answer plain JSON. */
+export const JSON_HEADERS = { Accept: 'application/json' }
 
 export interface TestAccount {
   email: string

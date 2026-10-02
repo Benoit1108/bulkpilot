@@ -1,7 +1,7 @@
 import { NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
 import { SEARCH_MIN_LENGTH } from '~/features/nutrition/rules'
 import type { Food } from '~/features/nutrition/nutrition'
-import { TRAINING_KEYS } from '~/features/training/cacheKeys'
+import { HISTORY_PAGE, TRAINING_KEYS } from '~/features/training/cacheKeys'
 import { exerciseResults, foodResults, GROUPS, programResults, recipeResults, searchPages, shortcutResults, workoutResults, type SearchResult } from './sources'
 
 /** The wait after the last key before the foods are asked for (the rest is filtered on the device). */
@@ -27,7 +27,7 @@ export function useSearch(query: Ref<string>) {
     recipes: useAsyncData(NUTRITION_KEYS.recipes, () => api.get('/api/recipes')),
     exercises: useAsyncData(TRAINING_KEYS.exercises, () => api.get('/api/exercises')),
     programs: useAsyncData(TRAINING_KEYS.programs, () => api.get('/api/programs')),
-    workouts: useAsyncData(TRAINING_KEYS.history, () => api.get('/api/workouts', { query: { limit: 50 } })),
+    workouts: useAsyncData(TRAINING_KEYS.history, () => api.get('/api/workouts', { query: { limit: HISTORY_PAGE } })),
   }
   async function refreshLists(): Promise<void> {
     await Promise.allSettled(Object.values(lists).map(list => list.refresh()))

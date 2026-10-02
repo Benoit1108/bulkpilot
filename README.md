@@ -14,7 +14,7 @@ Prérequis : Docker (Compose v2.24+) et `make`. Aucun PHP ni Node sur la machine
 make up        # construit et démarre la stack → https://localhost
 make qa        # toutes les vérifications statiques et tous les tests
 make e2e       # Playwright contre la stack de dev
-make e2e-prod  # Playwright contre l'image de production (stack jetable)
+make e2e-prod  # Playwright contre l'image de production (stack jetable) ; make ci-prod ajoute sauvegarde, ZAP, Lighthouse
 make ci        # pipeline complet, comme GitHub Actions (stacks jetables)
 make help      # toutes les commandes
 ```
@@ -49,7 +49,7 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 ## Documentation
 
 - [Architecture](docs/ARCHITECTURE.md) · [Domaine](docs/DOMAIN.md) · [API](docs/API.md)
-- [Développement](docs/DEVELOPMENT.md) · [Tests](docs/TESTING.md) · [Déploiement](docs/DEPLOYMENT.md)
+- [Développement](docs/DEVELOPMENT.md) · [Tests](docs/TESTING.md) · [Critères d’acceptation](docs/ACCEPTANCE.md) · [Déploiement](docs/DEPLOYMENT.md)
 - [Sécurité](SECURITY.md) · [Contribuer](CONTRIBUTING.md) · [Décisions (ADR)](docs/adr/)
 
 ## Avancement
@@ -66,4 +66,5 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 | 6 | Coach : règles déterministes (calories, protéines, journal, pesées, séances, stagnation, records), 3 recommandations expliquées à valider, historique, adhérence, rapport hebdomadaire, personnalité, fournisseur IA abstrait (gabarits) | ✅ |
 | 7 | Dashboard : widgets personnalisables (jour, semaine, mois), Quick Actions, recherche ⌘K, notifications dans l’app (catégories, horaires silencieux), analyse nocturne du Coach | ✅ |
 | 8 | Export / sécurité : exports (JSON, CSV, Excel, PDF, photos), suppression du compte après 7 jours, journal d’activité, sauvegardes chiffrées vérifiées | ✅ |
-| 9–10 | Qualité, Production | — |
+| 9 | Qualité : matrice d’accès et scan ZAP, budgets SQL, index et charge (k6), Lighthouse, hors ligne, gabarits responsive, mutation testing, données de démo, critères d’acceptation | ✅ |
+| 10 | Production | — |

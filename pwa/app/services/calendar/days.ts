@@ -51,6 +51,13 @@ export function formatShortDay(day: string): string {
   return shortDay.format(parseDay(day))
 }
 
+const monthYear = new Intl.DateTimeFormat('fr-FR', { month: 'short', year: 'numeric' })
+
+/** « oct. 2023 »: under a chart that spans years, where the day of the month means little. */
+export function formatMonthYear(day: string): string {
+  return monthYear.format(parseDay(day))
+}
+
 /** « 12 septembre 2026 ». */
 export function formatFullDay(day: string): string {
   return fullDay.format(parseDay(day))

@@ -7,7 +7,12 @@ namespace App\Coach\Presentation\Api;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Response;
+use App\Coach\Application\Report\ListWeeklyReports;
 use App\Coach\Application\Report\WeeklyReportView;
+use App\Shared\Presentation\Api\OpenApi\Problems;
 
 /**
  * The report of a finished week (spec §59), as drawn when the week ended.
@@ -17,9 +22,14 @@ use App\Coach\Application\Report\WeeklyReportView;
     operations: [
         new GetCollection(
             uriTemplate: '/coach/reports',
-            description: 'The reports of the last 52 weeks, the latest first.',
+            description: 'The weekly reports, the latest first, a page at a time.',
             paginationEnabled: false,
             provider: WeeklyReportProvider::class,
+            parameters: [
+                'limit' => new QueryParameter(description: 'At most '.ListWeeklyReports::MAX.'.', schema: ['type' => 'integer', 'minimum' => 1, 'maximum' => ListWeeklyReports::MAX, 'default' => ListWeeklyReports::PAGE]),
+                'before' => new QueryParameter(description: 'Only the weeks before this one (the weekStart of the last report received, for the next page).', schema: ['type' => 'string', 'format' => 'date']),
+            ],
+            openapi: new Operation(responses: ['400' => new Response(Problems::INVALID_QUERY)]),
         ),
     ],
 )]

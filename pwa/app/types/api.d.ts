@@ -2324,7 +2324,7 @@ export interface components {
             /** @description Kg a week, signed; null to follow the one the nutrition target was estimated for. */
             paceKgPerWeek: number | null;
         };
-        /** @description The reports of the last 52 weeks, the latest first. */
+        /** @description The weekly reports, the latest first, a page at a time. */
         CoachWeeklyReport: {
             /** Format: date */
             weekStart: string;
@@ -2352,7 +2352,7 @@ export interface components {
             /** @description What the Coach asked for most, in the imperative; null to carry on with the plan. */
             action: string | null;
         };
-        /** @description The reports of the last 52 weeks, the latest first. */
+        /** @description The weekly reports, the latest first, a page at a time. */
         "CoachWeeklyReport.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
             /** Format: date */
             weekStart: string;
@@ -5513,7 +5513,12 @@ export interface operations {
     };
     api_coachreports_get_collection: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description At most 52. */
+                limit?: number;
+                /** @description Only the weeks before this one (the weekStart of the last report received, for the next page). */
+                before?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -5530,6 +5535,17 @@ export interface operations {
                         member: components["schemas"]["CoachWeeklyReport.jsonld"][];
                     };
                     "application/json": components["schemas"]["CoachWeeklyReport"][];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };

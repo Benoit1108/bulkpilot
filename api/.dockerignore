@@ -31,4 +31,8 @@ deptrac*.yaml
 phpstan*.neon
 phpunit*.xml
 config/services_test.yaml
+config/services_dev.yaml
 migrations/.gitignore
+
+# Dev and test tooling (demo data, ADR-0032): never in the production image.
+/dev/

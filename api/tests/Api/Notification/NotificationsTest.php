@@ -235,4 +235,83 @@ final class NotificationsTest extends TrainingApiTestCase
             self::assertProblemCode('notification.invalid_settings');
         }
     }
+
+    public function testSomeoneWhoUsuallyWeighsIsRemindedLateInTheMorning(): void
+    {
+        $this->register();
+        foreach (['2026-09-25', '2026-09-27', '2026-09-29'] as $day) {
+            $this->call('PUT', '/api/progression/weigh-ins/'.$day, ['weightKg' => 60.2]);
+            self::assertResponseIsSuccessful();
+        }
+        // 11:30 in Paris: three weigh-ins the week before, none today.
+        self::mockTime('2026-09-30 09:30:00');
+        $this->check();
+
+        $reminders = array_values(array_filter($this->inbox(), static fn (array $notification): bool => 'missing_weigh_in' === $notification['category']));
+        self::assertCount(1, $reminders);
+        self::assertSame('/progression?ajouter=pesee', $reminders[0]['link']);
+
+        // Weighed in: nothing more the next check (and the reminder is not repeated).
+        $this->call('PUT', '/api/progression/weigh-ins/2026-09-30', ['weightKg' => 60.4]);
+        self::mockTime('2026-09-30 10:00:00');
+        $this->check();
+        self::assertCount(1, array_filter($this->inbox(), static fn (array $notification): bool => 'missing_weigh_in' === $notification['category']));
+    }
+
+    public function testAMilestoneReachedIsTold(): void
+    {
+        $this->register();
+        $this->call('PUT', '/api/progression/weigh-ins/2026-09-20', ['weightKg' => 60.0]);
+        $this->call('PUT', '/api/progression/weight-goal', ['targetKg' => 63.0, 'milestonesKg' => [61.0]]);
+        self::assertResponseIsSuccessful();
+        $this->call('PUT', '/api/progression/weigh-ins/2026-09-30', ['weightKg' => 61.1]);
+        self::mockTime('2026-09-30 09:30:00');
+        $this->check();
+
+        $reached = array_values(array_filter($this->inbox(), static fn (array $notification): bool => 'goal_reached' === $notification['category']));
+        self::assertCount(1, $reached);
+        self::assertSame('/progression/objectif', $reached[0]['link']);
+    }
+
+    public function testASessionTheWeekStillNeedsIsRemindedInTheEvening(): void
+    {
+        $this->register();
+        // Five sessions planned a week, none done since Monday: from Wednesday, every day left is needed.
+        $bench = $this->exerciseId('developpe couche barre');
+        $days = array_map(static fn (string $name): array => ['name' => $name, 'blocks' => [['exercises' => [self::planned($bench)]]]], ['A', 'B', 'C', 'D', 'E']);
+        $program = self::string($this->call('POST', '/api/programs', ['name' => 'Cinq jours', 'days' => $days])->toArray(), 'id');
+        $this->call('POST', '/api/programs/'.$program.'/activate');
+        self::assertResponseIsSuccessful();
+
+        // 17:59 in Paris: not yet.
+        self::mockTime('2026-09-30 15:59:00');
+        $this->check();
+        self::assertNotContains('workout_not_started', self::categories($this->inbox()));
+
+        self::mockTime('2026-09-30 16:30:00');
+        $this->check();
+        $reminders = array_values(array_filter($this->inbox(), static fn (array $notification): bool => 'workout_not_started' === $notification['category']));
+        self::assertCount(1, $reminders);
+        self::assertSame('/training', $reminders[0]['link']);
+    }
+
+    public function testTheWeeklyReportIsToldOnceDrawn(): void
+    {
+        $this->register();
+        // Something to report on last week, then the Coach opened this week draws its report.
+        $this->call('PUT', '/api/progression/weigh-ins/2026-09-23', ['weightKg' => 60.0]);
+        self::assertResponseIsSuccessful();
+        $this->call('POST', '/api/coach/analysis', ['today' => '2026-09-30']);
+        self::assertResponseIsSuccessful();
+        self::assertSame('2026-09-21', self::string($this->getJson('/api/coach/reports'), '0.weekStart'));
+
+        $this->check();
+
+        $told = array_values(array_filter($this->inbox(), static fn (array $notification): bool => 'weekly_report' === $notification['category']));
+        self::assertCount(1, $told);
+        self::assertSame('/coach/rapports', $told[0]['link']);
+        self::mockTime('2026-09-30 09:00:00');
+        $this->check();
+        self::assertCount(1, array_filter($this->inbox(), static fn (array $notification): bool => 'weekly_report' === $notification['category']), 'told once');
+    }
 }

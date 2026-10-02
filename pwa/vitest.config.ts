@@ -22,6 +22,8 @@ export default defineConfig({
           // Spies and stubbed globals never leak from one test into the next.
           restoreMocks: true,
           unstubGlobals: true,
+          // The same time zone on every machine (a laptop in Paris, CI in UTC): dates read the same.
+          env: { TZ: 'Europe/Paris' },
         },
       }),
     ],

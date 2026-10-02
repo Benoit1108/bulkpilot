@@ -196,6 +196,11 @@ final class PersistenceTest extends KernelTestCase
         self::assertSame('Continue ton programme.', $latest[0]->action());
         self::assertSame($this->report(self::ALEX, '2026-09-21')->figures()->toArray(), $latest[0]->figures()->toArray());
         self::assertSame(57, $latest[0]->adherence()->score(), '(14 + 14 + 100 + 100) / 4: one day on target of 7');
+
+        // A page at a time: the weeks before the last one received.
+        $page = $reports->latestOf($alex, 1, new \DateTimeImmutable('2026-09-21'));
+        self::assertSame(['2026-09-14'], array_map(static fn (WeeklyReport $report): string => $report->weekStart()->format('Y-m-d'), $page));
+        self::assertSame([], $reports->latestOf($alex, 1, new \DateTimeImmutable('2026-09-14')));
     }
 
     public function testAWeekHasOneReport(): void

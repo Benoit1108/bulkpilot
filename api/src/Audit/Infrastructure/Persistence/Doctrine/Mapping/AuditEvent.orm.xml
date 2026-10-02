@@ -4,7 +4,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="App\Audit\Domain\AuditEvent" table="audit_events">
         <indexes>
-            <index name="audit_events_owner_created" columns="owner_id,created_at"/>
+            <index name="audit_events_owner_created" columns="owner_id,created_at,id"/>
             <index name="audit_events_created" columns="created_at"/>
         </indexes>
 

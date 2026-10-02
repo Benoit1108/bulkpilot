@@ -42,6 +42,23 @@ Projet privé : contacter directement le mainteneur. Ne pas ouvrir d'issue publi
 - Secrets : aucun dans le dépôt (`.env.example` sans valeur sensible), scan `gitleaks` en CI,
   audit des dépendances Composer/pnpm en CI, Dependabot hebdomadaire.
 - Aucun appel direct du frontend vers la base, l'IA, Open Food Facts ou le stockage privé : tout passe par Symfony.
+- **Content-Security-Policy** : la page de l'app ne charge qu'elle-même (scripts en ligne par empreinte, aucun style en ligne,
+  photos depuis le bucket), n'est encadrée nulle part ; les réponses de l'API (données) ne peuvent rien charger
+  (`default-src 'none'`, erreurs comprises). `Cross-Origin-Resource-Policy: same-origin`. Vérifié sur l'image de production,
+  ainsi qu'une navigation sans aucune violation de la politique (`pwa/e2e/security.spec.ts`).
+- **Tests de sécurité (phase 9)** :
+  - matrice d'accès tirée de l'OpenAPI (`api/tests/Api/Security/AccessMatrixTest.php`) : chaque opération répond 401
+    déconnectée (sauf la liste publique justifiée), 403 depuis un autre site, et 404 sur la ressource d'un autre
+    utilisateur, dont les données restent intactes ; une route ajoutée échoue tant qu'elle n'est pas classée, et les
+    contrôleurs hors spec aussi ;
+  - chaque limiteur d'écriture par compte répond 429 avec `Retry-After` ;
+  - envois de fichiers piégés refusés avant décodage (SVG, HTML, bombe de pixels, animation, taille), polyglotte réencodé
+    sans sa charge, métadonnées GPS retirées ;
+  - cookie de session `Secure`, `HttpOnly`, `SameSite=Lax`, erreurs sans trace, sur l'image de production ;
+  - **OWASP ZAP** en CI (`make zap`, appelé par `make e2e-prod`) : analyse passive de l'app et de chaque opération de
+    l'API connectée (cookie d'un compte créé pour l'occasion) ; échec sur toute alerte moyenne ou haute non justifiée
+    dans `zap/rules.tsv`. L'analyse active (attaques) n'est pas en CI : à lancer avant une mise en production
+    (`zap-api-scan.py` sans `-S`, sur une stack jetable).
 
 ## Prévu
 
@@ -51,9 +68,8 @@ Projet privé : contacter directement le mainteneur. Ne pas ouvrir d'issue publi
 | Lier / délier un fournisseur externe depuis les Réglages | à la demande |
 | Rotation de `APP_ENCRYPTION_KEY` (préfixe de version `v1:` prévu) | 10 |
 | Vérification des mots de passe compromis (k-anonymity HIBP), re-hash à la connexion si l'algorithme évolue | à décider |
-| Contrôle d'accès par propriétaire sur chaque nouvelle ressource, tests d'isolation | chaque phase |
+| Contrôle d'accès par propriétaire : couvert d'office par la matrice d'accès (une route non classée fait échouer les tests) | fait (9) |
 | Photos en bucket privé, URLs signées courte durée | 5/8 |
 | Données minimales envoyées aux providers IA, provider journalisé | 6 |
 | Audit des actions sensibles, export et suppression de compte | 8 |
-| Content-Security-Policy (l'`index.html` généré contient un script inline : hashes ou nonces nécessaires) | 7 |
 | Désactiver l'API admin Caddy (`localhost:2019`) ou la restreindre, en prévision des appels sortants (IA, Open Food Facts) | 3 |

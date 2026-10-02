@@ -103,6 +103,24 @@ final class WeightTest extends ProgressionApiTestCase
         self::assertResponseStatusCodeSame(400);
     }
 
+    public function testAWeighInIsInTheAveragesAndTheChartAtOnce(): void
+    {
+        // Spec §112, « ajouter une pesée »: the average is computed again, the chart has the point.
+        $this->register();
+        $this->weigh($this->daysAgo(3), 60.0);
+        $this->weigh($this->daysAgo(10), 59.0);
+        $before = $this->getJson('/api/progression/weight?period=30d&today='.$this->daysAgo(0));
+        self::assertSame([60.0, 59.5, 2], [self::number($before, 'average7Kg'), self::number($before, 'average30Kg'), \count(self::array($before, 'points'))]);
+
+        $this->weigh($this->daysAgo(1), 62.0);
+
+        $after = $this->getJson('/api/progression/weight?period=30d&today='.$this->daysAgo(0));
+        self::assertSame(61.0, self::number($after, 'average7Kg'), '(60 + 62) / 2');
+        self::assertSame(60.33, self::number($after, 'average30Kg'), '(59 + 60 + 62) / 3');
+        self::assertSame(['day' => $this->daysAgo(1), 'weightKg' => 62.0], self::array($after, 'latest'));
+        self::assertCount(3, self::array($after, 'points'));
+    }
+
     public function testAGoalWithMilestonesStartsFromTheLatestWeighIn(): void
     {
         $this->register();

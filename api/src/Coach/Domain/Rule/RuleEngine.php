@@ -21,7 +21,7 @@ final class RuleEngine
     public static function findings(Facts $facts): array
     {
         $rules = [new CalorieRule(), new ProteinRule(), new StallRule(), new SessionsRule(), new JournalRule(), new WeighInRule(), new RecordsRule()];
-        $findings = array_values(array_filter(array_map(static fn (Rule $rule): ?Finding => $rule->evaluate($facts), $rules)));
+        $findings = array_filter(array_map(static fn (Rule $rule): ?Finding => $rule->evaluate($facts), $rules));
         usort($findings, static fn (Finding $a, Finding $b): int => Kind::compare($a->level, $a->kind, $b->level, $b->kind));
 
         return $findings;

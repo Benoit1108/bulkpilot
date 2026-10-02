@@ -25,7 +25,7 @@ final class StallDetector
      * @param array<string, int> $beaten  records each workout beat, by workout id, those with the exercise only ({@see RecordBook::beatenInOrder})
      * @param \DateTimeImmutable $end     the end of the day judged
      */
-    public static function stallOf(array $history, array $beaten, string $name, \DateTimeImmutable $end): ?Stall
+    private static function stallOf(array $history, array $beaten, string $name, \DateTimeImmutable $end): ?Stall
     {
         $sessions = array_values(array_filter($history, static fn (Workout $workout): bool => isset($beaten[$workout->id()->value])));
         $last = end($sessions);

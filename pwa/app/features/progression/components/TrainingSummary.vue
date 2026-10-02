@@ -3,7 +3,7 @@ import type { ChartSeries } from '~/components/ui/LineChart.vue'
 import { formatShortDay } from '~/services/calendar/days'
 import { formatNumber } from '~/services/text/numbers'
 import type { components } from '~/types/api'
-import { DATA_TABLE } from '~/components/ui/classes'
+import { TEXT_LINK, DATA_TABLE } from '~/components/ui/classes'
 
 /**
  * The training of the period (spec §57): sessions and their frequency, working sets, reps,
@@ -86,7 +86,7 @@ const summary = computed(() => `${tonnage(props.analytics.totals.tonnageKg)} sou
     </UiLineChart>
     <NuxtLink
       to="/training/exercices"
-      class="inline-flex min-h-tap items-center self-start font-semibold text-accent-ink"
+      :class="[TEXT_LINK, 'self-start']"
     >
       La force et les records de chaque exercice
     </NuxtLink>

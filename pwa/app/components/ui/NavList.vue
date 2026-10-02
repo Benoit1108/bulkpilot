@@ -7,9 +7,18 @@ export interface NavListItem {
   summary?: string
   /** Test hook on the summary line. */
   summaryTestId?: string
+  /** What `keep` knows the item by (a paged list moves the focus to the first item it added). */
+  id?: string
 }
 
-defineProps<{ label: string, items: readonly NavListItem[] }>()
+const props = defineProps<{
+  label: string
+  items: readonly NavListItem[]
+  /** Paged lists (usePagedList): each item's element, focusable from script. */
+  keep?: (id: string, element: unknown) => void
+}>()
+/** The item's element for `keep`, when the list keeps them. */
+const keeper = (item: NavListItem) => (props.keep && item.id ? (element: unknown) => props.keep!(item.id!, element) : undefined)
 </script>
 
 <template>
@@ -18,6 +27,8 @@ defineProps<{ label: string, items: readonly NavListItem[] }>()
       <li
         v-for="item in items"
         :key="item.to"
+        :ref="keeper(item)"
+        :tabindex="keep ? -1 : undefined"
       >
         <NuxtLink
           :to="item.to"

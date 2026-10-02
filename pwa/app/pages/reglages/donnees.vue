@@ -81,7 +81,7 @@ const { downloading, message: downloadError, fetchArchive } = useExportDownload(
       <p
         v-else
         role="status"
-        class="text-muted"
+        class="min-h-28 text-muted"
       >
         Chargement…
       </p>

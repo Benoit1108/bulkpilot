@@ -5,7 +5,8 @@ name: bulkpilot-test
 x-e2e-environment: &e2e-environment
       APP_SECRET: test-only-not-a-secret-4f1c2b9e8d7a6f5e
       APP_ENCRYPTION_KEY: ZTJlLW9ubHktbm90LWEtc2VjcmV0LWtleS0zMmJ5dGU= # gitleaks:allow (readable non-secret key)
-      SERVER_NAME: localhost, https://php
+      # app.e2e.test: the same site under a dotted name, for clients that only send SNI for one (ZAP's Java).
+      SERVER_NAME: localhost, https://php, https://app.e2e.test
       CADDY_SERVER_EXTRA_DIRECTIVES: tls internal
       # Links in emails must open in the Playwright browser.
       DEFAULT_URI: https://php
@@ -33,6 +34,9 @@ services:
   php:
     environment:
       <<: *e2e-environment
+    networks:
+      default:
+        aliases: [app.e2e.test]
     ports: !reset []
     # The CIQUAL excerpt the E2E tests search (tests/ is not in the production image).
     volumes:
@@ -96,4 +100,77 @@ services:
     command: ["caddy", "reverse-proxy", "--from", "https://s3-tls", "--to", "s3:7070", "--internal-certs"]
     depends_on:
       s3:
+        condition: service_healthy
+
+  # OWASP ZAP baseline against this stack (`make zap`, run by `make e2e-prod`): see zap/scan.sh.
+  zap:
+    profiles: [zap]
+    image: zaproxy/zap-stable@sha256:781a2bdaea47324e7bab583e2263f21d257b0aee61ed51521a5be45f5f5081ef
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    entrypoint: ["sh", "/zap/wrk/scan.sh"]
+    environment:
+      HOME: /tmp
+      ZAP_TARGET: https://app.e2e.test
+      # `make zap-active` sets 1: ZAP then attacks the API (never in CI, never against real data).
+      ZAP_ACTIVE: ${ZAP_ACTIVE:-0}
+    volumes:
+      - ./zap:/zap/wrk
+    depends_on:
+      php:
+        condition: service_healthy
+
+  # `make perf` (docs/TESTING.md): years of demo data seeded through the use cases by the *dev*
+  # image (the command does not exist in the production one, ADR-0032), then k6 against the
+  # production image.
+  seed:
+    profiles: [perf]
+    image: ${IMAGES_PREFIX:-}bulkpilot-php-dev
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    entrypoint: ["sh", "-c"]
+    # The code and vendor/ of the checkout (`make perf` installs vendor/ first when it is missing),
+    # never its cache or logs: var/ is a throwaway tmpfs, so a running dev stack is left alone.
+    # One process per account, side by side: years of history each take a few minutes.
+    command:
+      - |
+        [ -f vendor/autoload.php ] || { echo 'api/vendor/ is missing: run composer install first (make perf does).' >&2; exit 1; }
+        # What the processes share is built once: the container's cache, the exercise library.
+        bin/console cache:warmup --no-debug -q && bin/console training:library:import --no-debug -q || exit 1
+        pids=''
+        for number in $$(seq 1 $${PERF_ACCOUNTS:-5}); do
+          php -d memory_limit=512M bin/console app:demo:seed --years=$${PERF_YEARS:-3} --number=$$number --no-debug --no-ansi -q & pids="$$pids $$!"
+        done
+        for pid in $$pids; do wait $$pid || exit 1; done
+    environment:
+      <<: *e2e-environment
+      PERF_ACCOUNTS: ${PERF_ACCOUNTS:-5}
+      PERF_YEARS: ${PERF_YEARS:-3}
+      APP_ENV: dev
+      APP_DEBUG: "0"
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-app}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-18}&charset=utf8
+      MAILER_DSN: null://null
+      MEDIA_STORAGE: local
+      BACKUP_ENABLED: "0"
+    volumes:
+      - ./api:/app
+      - type: tmpfs
+        target: /app/var
+        tmpfs:
+          mode: 01777
+    depends_on:
+      database:
+        condition: service_healthy
+
+  k6:
+    profiles: [perf]
+    image: grafana/k6@sha256:e66db15b860113878fa74670e31f5e274830b7b6e42c8bff28b2f2d86a257603 # v2.3.0
+    command: ["run", "--quiet", "/scripts/scenario.js"]
+    environment:
+      BASE_URL: https://php
+      DURATION: ${PERF_DURATION:-60s}
+      ACCOUNTS: ${PERF_ACCOUNTS:-5}
+      K6_P95_MS: ${K6_P95_MS:-300}
+    volumes:
+      - ./k6:/scripts:ro
+    depends_on:
+      php:
         condition: service_healthy

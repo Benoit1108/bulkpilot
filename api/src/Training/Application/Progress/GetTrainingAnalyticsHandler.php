@@ -7,12 +7,14 @@ namespace App\Training\Application\Progress;
 use App\Shared\Application\Bus\Query\QueryHandler;
 use App\Shared\Domain\Calendar\Days;
 use App\Training\Domain\Progression\StallDetector;
-use App\Training\Domain\Workout\Workout;
 use App\Training\Domain\Workout\WorkoutRepository;
 use App\Training\Domain\Workout\WorkoutSet;
 
 final readonly class GetTrainingAnalyticsHandler implements QueryHandler
 {
+    /** "Everything" starts here: long before any workout. */
+    private const string EARLIEST = '2000-01-01';
+
     public function __construct(private WorkoutRepository $workouts)
     {
     }
@@ -21,10 +23,14 @@ final readonly class GetTrainingAnalyticsHandler implements QueryHandler
     {
         $today = $query->today->setTime(0, 0);
         $from = $query->period->firstDay($today);
-        // The last sessions (a few years of training), the oldest first: each session's records
-        // are judged against every one before it, the period only picks which ones count.
-        $history = array_reverse($this->workouts->historyOf($query->userId, WorkoutRepository::HISTORY_LIMIT));
-        $inPeriod = array_values(array_filter($history, static fn (Workout $workout): bool => null === $from || $workout->startedAt() >= $from));
+        // Every session of the period, however many (the oldest first): the totals are exact.
+        $inPeriod = $this->workouts->startedSince($query->userId, $from ?? new \DateTimeImmutable(self::EARLIEST));
+        // Each session's records are judged against every one before it: the last sessions when the
+        // period holds fewer (a recent period lies within them), the period itself otherwise ("all"
+        // is then exact; a long period judges its first sessions against the period only).
+        $history = \count($inPeriod) >= WorkoutRepository::HISTORY_LIMIT
+            ? $inPeriod
+            : array_reverse($this->workouts->historyOf($query->userId, WorkoutRepository::HISTORY_LIMIT));
         $records = StallDetector::recordsByWorkout(StallDetector::recordsByExercise($history));
 
         $first = $from ?? ($inPeriod[0] ?? null)?->startedAt()->setTime(0, 0);

@@ -25,10 +25,19 @@ final readonly class DoctrineWeeklyReportRepository implements WeeklyReportRepos
         return null !== $this->find($userId, $weekStart);
     }
 
-    public function latestOf(UserId $userId, int $limit): array
+    public function latestOf(UserId $userId, int $limit, ?\DateTimeImmutable $before = null): array
     {
+        $query = $this->entityManager->createQueryBuilder()
+            ->select('r')->from(WeeklyReport::class, 'r')
+            ->where('r.ownerId = :owner')->setParameter('owner', $userId, 'user_id')
+            ->orderBy('r.weekStart', 'DESC')
+            ->setMaxResults($limit);
+        if (null !== $before) {
+            $query->andWhere('r.weekStart < :before')->setParameter('before', $before->setTime(0, 0), 'date_immutable');
+        }
+
         /** @var list<WeeklyReport> */
-        return $this->entityManager->getRepository(WeeklyReport::class)->findBy(['ownerId' => $userId], ['weekStart' => 'DESC'], $limit);
+        return $query->getQuery()->getResult();
     }
 
     private function find(UserId $userId, \DateTimeImmutable $weekStart): ?WeeklyReport

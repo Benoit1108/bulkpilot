@@ -3,6 +3,7 @@ parameters:
     paths:
         - bin/
         - config/
+        - dev/
         - public/
         - src/
         - tests/

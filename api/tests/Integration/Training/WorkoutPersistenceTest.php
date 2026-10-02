@@ -22,6 +22,7 @@ use App\Training\Domain\Workout\WorkoutId;
 use App\Training\Domain\Workout\WorkoutRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class WorkoutPersistenceTest extends KernelTestCase
@@ -114,6 +115,36 @@ final class WorkoutPersistenceTest extends KernelTestCase
         $read = $this->workouts->getVisibleTo($workout->id(), $this->alex);
         self::assertSame([[15.0, 10]], array_map(static fn ($set): array => [$set->loadKg, $set->reps], $read->sets()));
         self::assertSame(['d001'], array_map(static fn (Workout $found): string => substr($found->id()->value, -4), $this->workouts->historyWith($this->alex, [new ExerciseId('00000000-0000-7000-8000-0000000000e9')])), 'found by an exercise added on the go');
+    }
+
+    public function testTwoDevicesWritingTheSameWorkoutAtOnceDoNotBothWinAndTheRetryDoes(): void
+    {
+        // Spec §118, ADR-0024: the device that writes second, on a workout changed meanwhile, is
+        // refused (409 through the bus); sending again, it wins (last write wins).
+        $workout = $this->workout('00000000-0000-7000-8000-00000000d001', '-1 hour');
+        $this->workouts->save($workout);
+        $this->entityManager->flush();
+        $connection = $this->entityManager->getConnection();
+        $this->entityManager->clear();
+
+        $loaded = $this->workouts->getVisibleTo($workout->id(), $this->alex);
+        // The phone's set reaches the server while the laptop holds the workout as it was.
+        $connection->executeStatement('UPDATE workouts SET version = version + 1 WHERE id = ?', [$workout->id()->value]);
+        $loaded->recordSet(new SetId('00000000-0000-7000-8000-000000000501'), 0, SetKind::Normal, 80, 8, null, null, $this->now->modify('-30 minutes'), $this->now);
+        try {
+            $this->entityManager->flush();
+            self::fail('a write on a workout changed meanwhile is refused');
+        } catch (OptimisticLockException) {
+        }
+        // The next request (the device sending again) has an entity manager of its own.
+        self::getContainer()->get('doctrine')->resetManager();
+
+        $again = $this->workouts->getVisibleTo($workout->id(), $this->alex);
+        $again->recordSet(new SetId('00000000-0000-7000-8000-000000000501'), 0, SetKind::Normal, 80, 8, null, null, $this->now->modify('-30 minutes'), $this->now);
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        self::assertSame([80.0], array_map(static fn ($set): ?float => $set->loadKg, $this->workouts->getVisibleTo($workout->id(), $this->alex)->sets()), 'the retry wins');
     }
 
     public function testOneWorkoutAtATimeEvenWhenRacing(): void

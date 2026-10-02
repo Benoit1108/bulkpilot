@@ -168,7 +168,7 @@ class Workout extends AggregateRoot
      */
     public function setsOf(int $exerciseIndex): array
     {
-        $sets = array_values(array_filter($this->sets, static fn (WorkoutSet $set): bool => $set->exerciseIndex === $exerciseIndex));
+        $sets = array_filter($this->sets, static fn (WorkoutSet $set): bool => $set->exerciseIndex === $exerciseIndex);
         usort($sets, static fn (WorkoutSet $a, WorkoutSet $b): int => $a->doneAt <=> $b->doneAt);
 
         return $sets;

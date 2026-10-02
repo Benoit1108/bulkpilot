@@ -16,6 +16,8 @@ const props = defineProps<{ history: History, during: string }>()
 
 /** Beyond this many days logged, a line through every day is a scribble. */
 const DAILY_LIMIT = 62
+/** Beyond about six months, the days' dots hide the weekly line: the weeks alone are drawn. */
+const DOTS_LIMIT = 183
 
 const kcal = (value: number) => `${formatNumber(value, 0)}\u00A0kcal`
 const grams = (value: number) => `${formatNumber(value, 0)}\u00A0g`
@@ -41,10 +43,8 @@ const nutrients = computed<Nutrient[]>(() => [
 function series(nutrient: Nutrient): ChartSeries[] {
   const days = props.history.days.map(day => ({ x: day.day, y: nutrient.day(day) }))
   if (!weekly.value) return [{ name: nutrient.title, variant: 'line', tone: 'accent', points: days }]
-  return [
-    { name: 'Moyenne de la semaine', variant: 'line', tone: 'accent', points: props.history.weeks.map(week => ({ x: week.week, y: nutrient.week(week) })) },
-    { name: 'Chaque jour', variant: 'dots', tone: 'muted', points: days },
-  ]
+  const weeks: ChartSeries = { name: 'Moyenne de la semaine', variant: 'line', tone: 'accent', points: props.history.weeks.map(week => ({ x: week.week, y: nutrient.week(week) })) }
+  return logged.value > DOTS_LIMIT ? [weeks] : [weeks, { name: 'Chaque jour', variant: 'dots', tone: 'muted', points: days }]
 }
 const marks = (nutrient: Nutrient): ChartMark[] => (props.history.target ? [{ y: nutrient.target(props.history.target), label: `Objectif ${nutrient.format(nutrient.target(props.history.target))}` }] : [])
 const summary = (nutrient: Nutrient) => (nutrient.average === null

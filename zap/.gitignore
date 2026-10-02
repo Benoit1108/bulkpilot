@@ -1,0 +1,5 @@
+# Everything a scan writes: its reports (uploaded by the CI), its log and the spec it scanned.
+report/
+*.out
+*.html
+zap.yaml

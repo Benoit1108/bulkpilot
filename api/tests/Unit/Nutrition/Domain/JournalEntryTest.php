@@ -70,6 +70,13 @@ final class JournalEntryTest extends TestCase
         return new LoggedFood(null, 'Riz', FoodState::Raw, new NutritionFacts(356, 7.4, 78.6, 0.7)->reference());
     }
 
+    public function testAQuantityIsKeptToTheTenthOfAGram(): void
+    {
+        $food = new LoggedFood(null, 'Riz', FoodState::Raw, new NutritionFacts(356, 7.4, 78.6, 0.7)->reference());
+
+        self::assertSame(12.4, $this->log($food, 12.36)->grams());
+    }
+
     private function log(LoggedFood $food, float $grams): JournalEntry
     {
         return JournalEntry::log(

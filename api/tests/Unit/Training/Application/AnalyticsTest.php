@@ -57,6 +57,20 @@ final class AnalyticsTest extends TestCase
         return new GetTrainingAnalyticsHandler($this->workouts)(new GetTrainingAnalytics(new UserId(self::ALEX), $period, new \DateTimeImmutable('2026-09-29')));
     }
 
+    public function testEverythingCountsEverySessionBeyondTheHistoryOfRecords(): void
+    {
+        // More sessions than records are judged on (WorkoutRepository::HISTORY_LIMIT = 300).
+        $day = new \DateTimeImmutable('2025-08-01');
+        for ($i = 0; $i < 305; ++$i) {
+            $this->workout($day->modify(\sprintf('+%d days', $i))->format('Y-m-d'), [[50.0, 10]]);
+        }
+
+        $totals = $this->analytics(Period::All)->totals;
+
+        self::assertSame(305, $totals->sessions);
+        self::assertSame(305 * 500.0, $totals->tonnageKg);
+    }
+
     public function testThePeriodSumsTheWorkingSetsAndCountsTheRecordsBeaten(): void
     {
         $this->workout('2026-08-01', [[60.0, 10]]);

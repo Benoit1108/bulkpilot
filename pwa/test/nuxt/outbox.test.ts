@@ -184,6 +184,7 @@ describe('the sync status', () => {
   it('says quietly that changes wait, after a moment, and when all is sent', async () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
     let online = false
+    const onLine = vi.spyOn(navigator, 'onLine', 'get').mockImplementation(() => online)
     fake.on('PUT /api/workouts/{id}', () => {
       if (!online) throw offline()
       return {}
@@ -194,14 +195,47 @@ describe('the sync status', () => {
     expect(wrapper.text()).not.toContain('gardée')
 
     await vi.advanceTimersByTimeAsync(2_000)
-    expect(wrapper.text()).toContain('1\u00A0modification gardée sur le téléphone, envoyée au retour du réseau.')
-    expect(wrapper.get('[role="status"]').text()).toBe('Hors ligne\u00A0: tes séries sont gardées sur le téléphone.')
+    expect(wrapper.text()).toContain('Hors ligne\u00A0: 1\u00A0modification gardée sur cet appareil, envoyée au retour du réseau.')
+    expect(wrapper.get('[role="status"]').text()).toBe('Hors ligne\u00A0: tes séries sont gardées sur cet appareil.')
 
     online = true
     await flush()
     await flushPromises()
-    expect(wrapper.text()).not.toContain('gardée sur le téléphone,')
+    expect(wrapper.text()).not.toContain('gardée sur cet appareil')
     expect(wrapper.get('[role="status"]').text()).toBe('Tout est envoyé.')
+    // Said on screen too, for a moment.
+    const shown = () => wrapper.findAll('p:not([role="status"])').map(line => line.text())
+    expect(shown()).toContain('Tout est envoyé.')
+    await vi.advanceTimersByTimeAsync(3_000)
+    expect(shown()).not.toContain('Tout est envoyé.')
+    onLine.mockRestore()
+  })
+
+  it('does not say offline when only the server is slow', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+    fake.on('PUT /api/workouts/{id}', () => {
+      throw offline()
+    })
+    const wrapper = await mountSuspended(SyncStatus)
+    await useWorkoutOutbox().queue(start)
+    await vi.advanceTimersByTimeAsync(3_000)
+
+    expect(wrapper.text()).toContain('Pas encore envoyé\u00A0: 1\u00A0modification gardée sur cet appareil.')
+    expect(wrapper.get('[role="status"]').text()).toBe('Pas encore envoyé\u00A0: gardé sur cet appareil.')
+  })
+
+  it('keeps the changes without speaking of a session when the app was opened offline', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+    releaseDevice()
+    const wrapper = await mountSuspended(SyncStatus)
+    // The account could not be read: not known, not signed out.
+    useState('account').value = undefined
+    await useWorkoutOutbox().queue(start)
+    await vi.advanceTimersByTimeAsync(3_000)
+
+    expect(wrapper.text()).toContain('1\u00A0modification gardée sur cet appareil')
+    expect(wrapper.text()).not.toContain('Session expirée')
+    useState('account').value = null
   })
 
   it('asks to sign in again when the session ended', async () => {
@@ -212,6 +246,7 @@ describe('the sync status', () => {
     await vi.advanceTimersByTimeAsync(3_000)
 
     expect(wrapper.text()).toContain('Session expirée\u00A0: 1\u00A0modification attend ta reconnexion pour être envoyée.')
+    expect(wrapper.get('[role="status"]').text()).toBe('Session expirée\u00A0: reconnecte-toi pour envoyer 1\u00A0modification.')
   })
 
   it('shows what was refused, without taking the focus, and lets the user retry or give up', async () => {

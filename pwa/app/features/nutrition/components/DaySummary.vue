@@ -64,15 +64,16 @@ function macroText(value: number, max: number | null): string {
         <dt class="text-sm font-semibold">
           {{ macro.label }}
         </dt>
-        <dd class="text-sm text-muted tabular-nums">
-          {{ macroText(macro.value, macro.target) }}
+        <!-- The bar is part of the value: a definition list holds only terms and their values. -->
+        <dd class="flex flex-col gap-1 text-sm text-muted tabular-nums">
+          <span>{{ macroText(macro.value, macro.target) }}</span>
+          <UiProgressBar
+            :label="macro.label"
+            :value="macro.value"
+            :max="macro.target"
+            :value-text="macroText(macro.value, macro.target)"
+          />
         </dd>
-        <UiProgressBar
-          :label="macro.label"
-          :value="macro.value"
-          :max="macro.target"
-          :value-text="macroText(macro.value, macro.target)"
-        />
       </div>
     </dl>
 

@@ -11,6 +11,8 @@ export PLAYWRIGHT_VERSION := $(shell sed -n 's/.*"@playwright\/test": "\([0-9.]*
 DC_DEV  := docker compose -f docker-compose.yml -f docker-compose.dev.yml
 DC_CI   := docker compose -p bulkpilot-ci -f docker-compose.yml -f docker-compose.dev.yml
 DC_TEST := docker compose -f docker-compose.yml -f docker-compose.test.yml
+# The load test's own throwaway stack, so that it can run beside the E2E one.
+DC_PERF := docker compose -p bulkpilot-perf -f docker-compose.yml -f docker-compose.test.yml
 
 # Where QA commands run; `ci-qa` points them at its throwaway stack.
 DC  ?= $(DC_DEV)
@@ -25,7 +27,7 @@ help: ## List available targets
 	@grep -hE '^[a-zA-Z_:-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[35m%-18s\033[0m %s\n", $$1, $$2}'
 
 ## —— Development ————————————————————————————————————————————————
-.PHONY: up down restart logs sh-php sh-pwa composer db-migrate ciqual db-diff cert
+.PHONY: up down restart logs sh-php sh-pwa composer db-migrate demo ciqual db-diff cert
 up: ## Build and start the dev stack (https://localhost)
 	$(DC_DEV) up $(UP_FLAGS) --wait
 
@@ -49,6 +51,9 @@ sh-pwa: ## Shell in the Nuxt container
 
 db-migrate: ## Run Doctrine migrations
 	$(PHP) bin/console doctrine:migrations:migrate --no-interaction
+
+demo: ## Seed the demo account (dev only), e.g. make demo ARGS="--years=1" — see docs/DEVELOPMENT.md
+	$(PHP) bin/console app:demo:seed --no-debug $(ARGS)
 
 ciqual: ## Import (or refresh) the CIQUAL food table from the official ANSES download
 	$(PHP) bin/console nutrition:catalogue:import --no-debug
@@ -81,7 +86,10 @@ openapi-check: ## Fail if the committed OpenAPI spec or error codes are out of d
 
 ## —— Quality (runs against the dev stack) ———————————————————————————
 .PHONY: qa composer-validate php-cs php-cs-fix phpstan deptrac schema-validate phpunit pwa-lint pwa-typecheck vitest
-qa: composer-validate php-cs phpstan deptrac schema-validate phpunit openapi-check pwa-lint pwa-typecheck vitest ## Every static check and test suite (same list as CI)
+qa: composer-validate php-cs phpstan deptrac schema-validate phpunit openapi-check acceptance-check pwa-lint pwa-typecheck vitest ## Every static check and test suite (same list as CI)
+
+acceptance-check: ## Every test docs/ACCEPTANCE.md cites exists (tools/check_acceptance.py)
+	docker run --rm -v "$(CURDIR)":/repo:ro -w /repo python:3.13-alpine@sha256:2dd78ad5cf13a0b68f5134dc49aa9950203a8cf4b7463431b9f3b398287c5059 python3 tools/check_acceptance.py
 
 composer-validate:
 	$(PHP) composer validate --strict
@@ -113,6 +121,14 @@ phpunit: ## PHP tests (unit, integration, api) + coverage gate on Domain/Applica
 	$(PHP) php -d pcov.enabled=1 vendor/bin/phpunit --coverage-clover var/coverage/clover.xml
 	$(PHP) php tests/coverage-gate.php var/coverage/clover.xml 95
 
+.PHONY: infection acceptance-check
+# Mutation testing against the unit suite: every Domain (MSI ≥ 98 %, api/infection.json5), then the
+# Coach, Notification and Training use cases (a ratchet, api/infection.application.json5).
+INFECTION = php -d pcov.enabled=1 vendor/bin/infection --no-progress --show-mutations=0
+infection: ## Mutation testing: every Domain (MSI ≥ 98 %), then the Coach/Notification/Training use cases (ratchet)
+	$(PHP) $(INFECTION)
+	$(PHP) $(INFECTION) --configuration=infection.application.json5
+
 pwa-lint: ## ESLint (incl. formatting)
 	$(PWA) pnpm lint
 
@@ -127,17 +143,28 @@ vitest: ## Frontend unit & component tests, with coverage thresholds
 	$(PWA) pnpm test:coverage
 
 ## —— End-to-end ————————————————————————————————————————————————
-.PHONY: e2e e2e-prod backup-test
+.PHONY: e2e e2e-prod backup-test zap zap-active perf lighthouse
 e2e: ## Playwright against the running dev stack (quick feedback; Nuxt DevTools overlay is present)
 	$(DC_DEV) exec -T php bin/console nutrition:catalogue:import tests/Fixtures/ciqual --no-debug -q
 	$(DC_DEV) --profile e2e run --rm e2e
 
+# The production stack the E2E steps run against (Playwright, backups, ZAP, Lighthouse).
+E2E_STACK = $(DC_TEST) up $(UP_FLAGS) --wait php worker database mailer s3 s3-tls && \
+	$(DC_TEST) exec -T php bin/console nutrition:catalogue:import /fixtures/ciqual -q
+
 e2e-prod: ## Build the production image and run Playwright against it on a throwaway stack
 	@trap '$(DC_TEST) down --volumes --remove-orphans' EXIT; \
-	$(DC_TEST) up $(UP_FLAGS) --wait php worker database mailer s3 s3-tls && \
-	$(DC_TEST) exec -T php bin/console nutrition:catalogue:import /fixtures/ciqual -q && \
-	CI=1 $(DC_TEST) --profile e2e run --rm e2e && \
-	$(MAKE) --no-print-directory backup-test
+	$(E2E_STACK) && \
+	CI=1 $(DC_TEST) --profile e2e run --rm e2e
+
+lighthouse: ## On the running E2E stack: Lighthouse (mobile) on key pages, median of 3 runs, PWA installable; reports in pwa/lighthouse-report
+	CI=1 PLAYWRIGHT_ARGS=--config=playwright.lighthouse.config.ts $(DC_TEST) --profile e2e run --rm e2e
+
+zap: ## On the running E2E stack: OWASP ZAP baseline of the app and its API (signed in), failing on any unjustified Medium/High alert
+	$(DC_TEST) --profile zap run --rm zap
+
+zap-active: ## Outside CI, on a running E2E stack: ZAP active scan of the API (attacks it: never against real data)
+	ZAP_ACTIVE=1 $(DC_TEST) --profile zap run --rm zap
 
 backup-test: ## On the running E2E stack: back the database up to its bucket, then restore it and check it (ADR-0031)
 	$(DC_TEST) exec -T worker bin/console app:backup:create --no-debug
@@ -148,13 +175,37 @@ backup-test: ## On the running E2E stack: back the database up to its bucket, th
 		echo 'app:backup:verify accepted a backup it cannot decrypt' >&2; exit 1; \
 	else echo 'An unreadable backup is refused, as it should be.'; fi
 
+perf: ## On a throwaway production stack: seed demo accounts with years of data, then k6 (p95 < K6_P95_MS, no error)
+	@trap '$(DC_PERF) down --volumes --remove-orphans' EXIT; \
+	$(if $(UP_FLAGS),$(DC_DEV) build php &&) \
+	{ [ -f api/vendor/autoload.php ] || $(DC_DEV) run --rm --no-deps --entrypoint composer php install --prefer-dist --no-progress --no-interaction -q; } && \
+	POSTGRES_PORT=0 MAILPIT_PORT=0 $(DC_PERF) up $(UP_FLAGS) --wait php worker database mailer s3 s3-tls && \
+	$(DC_PERF) --profile perf run --rm seed && \
+	$(DC_PERF) --profile perf run --rm k6
+
 ## —— CI ————————————————————————————————————————————————————————
-# Same steps as .github/workflows/ci.yml, on throwaway stacks that never touch dev data.
-.PHONY: ci ci-qa
-ci: ci-qa e2e-prod ## Full pipeline locally: QA on the dev image, then E2E on the prod image
+# Same steps as .github/workflows/ci.yml, on throwaway stacks that never touch dev data. They run one
+# after the other: the load test and Lighthouse measure time, which a busy machine would skew (the
+# CI runs them as separate jobs, each on its own runner).
+.PHONY: ci ci-qa ci-mutation ci-prod
+ci: ci-qa ci-mutation ci-prod perf ## Full pipeline locally: QA and mutation testing on the dev image, then E2E (+ backups, ZAP, Lighthouse) and the load test on the prod image
+
+ci-prod: ## On one throwaway production stack: Playwright, then the backup check, OWASP ZAP and Lighthouse
+	@trap '$(DC_TEST) down --volumes --remove-orphans' EXIT; \
+	$(E2E_STACK) && \
+	CI=1 $(DC_TEST) --profile e2e run --rm e2e && \
+	$(MAKE) --no-print-directory backup-test && \
+	$(MAKE) --no-print-directory zap && \
+	$(MAKE) --no-print-directory lighthouse
 
 ci-qa: ## `make qa` on an isolated dev stack (random host ports)
 	@trap '$(DC_CI) down --volumes --remove-orphans' EXIT; \
 	POSTGRES_PORT=0 MAILPIT_PORT=0 HTTP_PORT=0 HTTPS_PORT=0 HTTP3_PORT=0 $(DC_CI) up $(UP_FLAGS) --wait \
 		|| { $(DC_CI) logs --tail=80 php; exit 1; } && \
 	$(MAKE) --no-print-directory qa DC='$(DC_CI)'
+
+ci-mutation: ## `make infection` in a one-off php container: the unit suite needs no database, web server or PWA
+	$(if $(UP_FLAGS),$(DC_CI) build php &&) \
+	$(DC_CI) run --rm --no-deps --entrypoint sh php -c \
+		'[ -n "$$(ls -A vendor 2>/dev/null)" ] || composer install --prefer-dist --no-progress --no-interaction -q; \
+		$(INFECTION) && $(INFECTION) --configuration=infection.application.json5'

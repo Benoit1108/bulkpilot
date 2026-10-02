@@ -13,6 +13,8 @@ export interface EntryChange {
  *
  * `journal` is the day shown only once it *is* that day: when the key changes, Nuxt keeps the
  * previous day's data until the new one arrives, and editing it would write to the wrong day.
+ * That previous day is `previous`: shown inert while the next one loads, so the page keeps its
+ * height instead of collapsing to a loading line and growing back (layout shift).
  */
 export function useNutritionDay(day: Ref<string>) {
   const api = useApi()
@@ -23,6 +25,7 @@ export function useNutritionDay(day: Ref<string>) {
   )
 
   const journal = computed<NutritionDay | null>(() => (data.value?.day === day.value ? data.value : null))
+  const previous = computed<NutritionDay | null>(() => (data.value && data.value.day !== day.value ? data.value : null))
 
   /**
    * Shows the day the server answered with (or reloads it: an entry moved away, a load in flight),
@@ -60,5 +63,5 @@ export function useNutritionDay(day: Ref<string>) {
     await changed(null)
   }
 
-  return { journal, status, error, refresh, log, logMany, logFavorite, correct, remove }
+  return { journal, previous, status, error, refresh, log, logMany, logFavorite, correct, remove }
 }

@@ -1,0 +1,28 @@
+{
+    // Mutation testing of the use cases with business decisions (docs/TESTING.md): Coach (one
+    // analysis a day, offers, decisions), Notification (checks, quiet hours, dedup) and Training
+    // (planning, readings). Run against the unit suite and its in-memory doubles. A ratchet: the
+    // thresholds are the score measured when it was added (phase 9), to raise as escaped mutants
+    // are killed (target 90 %); the Domain run (infection.json5) keeps its own 98 %.
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "src/Coach/Application",
+            "src/Notification/Application",
+            "src/Training/Application"
+        ]
+    },
+    "timeout": 20,
+    "threads": "max",
+    "tmpDir": "var/infection-application",
+    "logs": {
+        "text": "var/infection-application/infection.log",
+        "summary": "var/infection-application/summary.log"
+    },
+    "testFramework": "phpunit",
+    "testFrameworkOptions": "--testsuite=unit",
+    "initialTestsPhpOptions": "-d pcov.enabled=1 -d memory_limit=1G",
+    "mutators": {"@default": true},
+    "minMsi": 75,
+    "minCoveredMsi": 75
+}

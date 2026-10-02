@@ -23,7 +23,9 @@ reference; the architecture is summarised in docs/ARCHITECTURE.md and decisions 
 ## Definition of Done
 
 Tests written and green, PHPStan max / Deptrac / PHP CS Fixer / ESLint / vue-tsc green, OpenAPI spec and TS types
-regenerated, docs updated, E2E green on the production image (`make e2e-prod`). Never skip or weaken a test or rule.
+regenerated, docs updated, E2E green on the production image with its backup, ZAP and Lighthouse checks
+(`make ci-prod`; `make e2e-prod` is Playwright alone), mutation and load tests green (`make ci`). Never skip or weaken
+a test or rule.
 
 ## End of every phase
 

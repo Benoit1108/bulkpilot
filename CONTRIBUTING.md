@@ -9,7 +9,7 @@
 
 ```bash
 make qa
-make e2e-prod
+make ci-prod
 ```
 
 ## Definition of Done

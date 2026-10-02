@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TEXT_LINK } from '~/components/ui/classes'
 import { ChevronLeft } from 'lucide-vue-next'
 
 defineProps<{ to: string, label: string }>()
@@ -7,7 +8,7 @@ defineProps<{ to: string, label: string }>()
 <template>
   <NuxtLink
     :to="to"
-    class="inline-flex min-h-tap items-center gap-1 font-semibold text-accent-ink no-underline"
+    :class="[TEXT_LINK, 'gap-1 no-underline']"
   >
     <ChevronLeft
       :size="18"

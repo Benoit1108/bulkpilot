@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TEXT_LINK } from '~/components/ui/classes'
 import { ExternalLink } from 'lucide-vue-next'
 import ExerciseForm from '~/features/training/components/ExerciseForm.vue'
 import ExerciseRecords from '~/features/training/components/ExerciseRecords.vue'
@@ -110,7 +111,7 @@ async function destroy(): Promise<void> {
           :href="exercise.mediaUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="mt-2 inline-flex min-h-tap items-center gap-1 font-semibold text-accent-ink"
+          :class="[TEXT_LINK, 'mt-2 gap-1']"
         >
           Voir le mouvement
           <ExternalLink

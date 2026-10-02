@@ -98,7 +98,7 @@ describe('nutrition page', () => {
     expect(navigate.mock.calls.filter(([to]) => !(to as { path?: string }).path), 'no day navigation').toEqual([])
   })
 
-  it('never shows the previous day under the new day\'s label', async () => {
+  it('keeps the previous day on screen, inert, while the next one loads', async () => {
     let answer: (value: unknown) => void = () => {}
     fake.on('GET /api/nutrition/days/{day}', (_, params) => {
       if (params!.path!.day === TODAY) return day(TODAY, [entry('lunch', 150)])
@@ -112,11 +112,16 @@ describe('nutrition page', () => {
     await useRouter().push(`/nutrition?jour=${shiftDay(TODAY, -1)}`)
     await flushPromises()
 
-    expect(wrapper.find('[data-testid="meal-lunch"]').exists(), 'not today\'s meals while yesterday loads').toBe(false)
+    // Today's meals stay (the page keeps its height) but can't be used: nothing is written to the wrong day.
+    const shown = wrapper.get('[data-testid="meal-lunch"]')
+    expect(shown.text()).toContain('Riz')
+    expect(shown.element.closest('[inert]'), 'inert while yesterday loads').not.toBeNull()
+    expect(shown.element.closest('[aria-busy="true"]')).not.toBeNull()
     expect(wrapper.text()).toContain('Chargement…')
     answer(day(shiftDay(TODAY, -1)))
     await flushPromises()
     expect(wrapper.get('[data-testid="meal-lunch"]').text()).not.toContain('Riz')
+    expect(wrapper.get('[data-testid="meal-lunch"]').element.closest('[inert]')).toBeNull()
   })
 
   it('offers a retry when the day cannot be loaded', async () => {

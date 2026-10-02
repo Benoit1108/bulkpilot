@@ -17,7 +17,7 @@ final readonly class ProteinRule implements Rule
     public function evaluate(Facts $facts): ?Finding
     {
         $average = $facts->week->averageProtein();
-        if (null === $facts->target || 0 === $facts->target->proteinGrams || null === $average || $facts->week->logged() < self::MIN_LOGGED_DAYS) {
+        if (null === $facts->target || null === $average || $facts->week->logged() < self::MIN_LOGGED_DAYS) {
             return null;
         }
         if ($average >= $facts->target->proteinGrams * IntakeFacts::PROTEIN_SHARE) {

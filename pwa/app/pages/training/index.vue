@@ -102,7 +102,7 @@ const shortcuts = [
         v-if="offline"
         class="mb-3 text-sm text-muted"
       >
-        Hors ligne&nbsp;: le programme tel que gardé sur le téléphone.
+        Hors ligne&nbsp;: le programme tel que gardé sur cet appareil.
       </p>
       <UiAlert
         v-if="startError"
@@ -148,6 +148,15 @@ const shortcuts = [
         {{ programs.length ? 'Mes programmes' : 'Créer un programme' }}
       </UiLinkButton>
     </UiCard>
+    <!-- About a program card's room while the programs load: the buttons below do not jump. -->
+    <p
+      v-else
+      class="min-h-56 text-muted"
+      role="status"
+      aria-busy="true"
+    >
+      Chargement…
+    </p>
     <UiButton
       v-if="!local && !elsewhere"
       variant="secondary"

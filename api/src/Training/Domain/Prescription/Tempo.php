@@ -21,7 +21,7 @@ final readonly class Tempo
             $phases = [];
         }
         // "3110" is common shorthand for 3-1-1-0.
-        if (1 === \count($phases) && 1 === preg_match('/^[0-9X]{4}$/', $phases[0])) {
+        if (1 === \count($phases)) {
             $phases = str_split($phases[0]);
         }
         if (4 !== \count($phases) || [] !== array_filter($phases, static fn (string $phase): bool => 1 !== preg_match('/^(X|[0-9]|10)$/', $phase))) {

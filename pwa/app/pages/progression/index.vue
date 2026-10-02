@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TEXT_LINK } from '~/components/ui/classes'
 import { Scale, Target } from 'lucide-vue-next'
 import GoalCard from '~/features/progression/components/GoalCard.vue'
 import WeighInForm from '~/features/progression/components/WeighInForm.vue'
@@ -81,7 +82,7 @@ const links = [
           <NuxtLink
             v-if="summary.goal"
             to="/progression/objectif"
-            class="inline-flex min-h-tap items-center text-sm font-semibold text-accent-ink"
+            :class="[TEXT_LINK, 'text-sm']"
           >
             Modifier<span class="sr-only"> l’objectif</span>
           </NuxtLink>
@@ -107,9 +108,12 @@ const links = [
           description="Enregistre d’abord une pesée&nbsp;: elle sert de point de départ à l’objectif."
         />
       </UiCard>
+      <!-- About the summary's room is kept while it loads: the list below barely moves (layout shift). -->
       <p
         v-else
-        class="text-muted"
+        class="min-h-128 text-muted"
+        role="status"
+        aria-busy="true"
       >
         Chargement…
       </p>

@@ -12,6 +12,12 @@ defineProps<{
   linkLabel?: string
   loading: boolean
   failed: boolean
+  /**
+   * The room kept while loading, about the height of the widget once loaded — its empty state for a
+   * new account: the widgets below do not jump when the data arrives (layout shift). Literal
+   * classes, so Tailwind sees them.
+   */
+  reserve?: 'min-h-28' | 'min-h-40'
 }>()
 const emit = defineEmits<{ retry: [] }>()
 </script>
@@ -38,6 +44,7 @@ const emit = defineEmits<{ retry: [] }>()
     <p
       v-else-if="loading"
       class="text-sm text-muted"
+      :class="reserve ?? 'min-h-28'"
     >
       Chargement…
     </p>

@@ -23,9 +23,12 @@ final class InMemoryWeeklyReportRepository implements WeeklyReportRepository
         return isset($this->reports[self::key($userId, $weekStart)]);
     }
 
-    public function latestOf(UserId $userId, int $limit): array
+    public function latestOf(UserId $userId, int $limit, ?\DateTimeImmutable $before = null): array
     {
-        $reports = array_values(array_filter($this->reports, static fn (WeeklyReport $report): bool => $report->ownerId()->equals($userId)));
+        $reports = array_values(array_filter(
+            $this->reports,
+            static fn (WeeklyReport $report): bool => $report->ownerId()->equals($userId) && (null === $before || $report->weekStart() < $before->setTime(0, 0)),
+        ));
         usort($reports, static fn (WeeklyReport $a, WeeklyReport $b): int => $b->weekStart() <=> $a->weekStart());
 
         return \array_slice($reports, 0, $limit);

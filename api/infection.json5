@@ -1,0 +1,125 @@
+{
+    // Mutation testing of the business rules (docs/TESTING.md): every Domain is mutated and only the
+    // unit suite runs against the mutants (pure PHP, no kernel: fast and deterministic).
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "src/Audit/Domain",
+            "src/Coach/Domain",
+            "src/Export/Domain",
+            "src/Identity/Domain",
+            "src/Media/Domain",
+            "src/Notification/Domain",
+            "src/Nutrition/Domain",
+            "src/Progression/Domain",
+            "src/Shared/Domain",
+            "src/System/Domain",
+            "src/Training/Domain"
+        ]
+    },
+    "timeout": 20,
+    "threads": "max",
+    "tmpDir": "var/infection",
+    "logs": {
+        "text": "var/infection/infection.log",
+        "summary": "var/infection/summary.log",
+        "html": "var/infection/infection.html"
+    },
+    "testFramework": "phpunit",
+    "testFrameworkOptions": "--testsuite=unit",
+    "initialTestsPhpOptions": "-d pcov.enabled=1 -d memory_limit=1G",
+    "mutators": {
+        "@default": true,
+        // Equivalent mutants, each kept out by Class::method (never a whole class, never a regex that
+        // would silently match a future line elsewhere), with its reason.
+        //
+        // MealBuilder::fit is a coordinate descent: its start point and its number of iterations
+        // converge to the same kitchen-scale grams (the lines are listed one by one in `fit`
+        // below, the overshoot check stays mutated).
+        // WeightTrend::rollingMeans only compares days with each other: the origin they are counted
+        // from, and its value without weigh-ins, change nothing.
+        // A set of a counted exercise always has its reps and a timed one its seconds (WorkoutSet):
+        // the `?? 0` of ProgressionAdvisor and RecordBook only satisfies the nullable type, as does
+        // MealSplit's for a complete split.
+        "IncrementInteger": {"ignore": [
+            "App\\Nutrition\\Domain\\Builder\\MealBuilder::fit",
+            "App\\Progression\\Domain\\Weight\\WeightTrend::rollingMeans",
+            "App\\Training\\Domain\\Progression\\ProgressionAdvisor::suggest::41",
+            "App\\Training\\Domain\\Progression\\ProgressionAdvisor::suggest::43",
+            "App\\Training\\Domain\\Progression\\ProgressionAdvisor::timed",
+            "App\\Training\\Domain\\Progression\\RecordBook::performances::136",
+            "App\\Nutrition\\Domain\\Target\\MealSplit::shareOf"
+        ]},
+        "DecrementInteger": {"ignore": [
+            "App\\Nutrition\\Domain\\Builder\\MealBuilder::fit",
+            "App\\Progression\\Domain\\Weight\\WeightTrend::rollingMeans",
+            "App\\Training\\Domain\\Progression\\ProgressionAdvisor::suggest::41",
+            "App\\Training\\Domain\\Progression\\ProgressionAdvisor::suggest::43",
+            "App\\Training\\Domain\\Progression\\ProgressionAdvisor::timed",
+            "App\\Training\\Domain\\Progression\\RecordBook::performances::136",
+            "App\\Nutrition\\Domain\\Target\\MealSplit::shareOf"
+        ]},
+        // The fitting loop (line 123): one iteration more converges to the same grams. Its other
+        // comparisons are listed by line under GreaterThan: a food in a meal always brings some
+        // macro (no 0 denominator, line 138), and the overshoot check (line 149) only differs at
+        // kcal exactly equal to the float limit, which kitchen-scale grams never meet.
+        "LessThan": {"ignore": ["App\\Nutrition\\Domain\\Builder\\MealBuilder::fit::123"]},
+        // Least squares: the deviations of x add up to 0, so Σ(x − x̄)(y − ȳ) equals Σ(x ± x̄)(y ± ȳ)
+        // and any ȳ: the mean of y (line 54) and the signs around it (line 58) change nothing.
+        "Minus": {"ignore": ["App\\Progression\\Domain\\Weight\\WeightTrend::kgPerWeek::58"]},
+        "Division": {"ignore": ["App\\Progression\\Domain\\Weight\\WeightTrend::kgPerWeek::54"]},
+        // Keys are never read: the lists are iterated (or counted) only.
+        "UnwrapArrayValues": {"ignore": [
+            "App\\Training\\Domain\\Progression\\ProgressionAdvisor::suggest",
+            "App\\Training\\Domain\\Progression\\ProgressionAdvisor::rirsOf",
+            "App\\Training\\Domain\\Progression\\RecordBook::performances"
+        ]},
+        // `isset` of a map entry set to false is still true: the mains already taken stay taken.
+        "TrueValue": {"ignore": ["App\\Nutrition\\Domain\\Builder\\MealBuilder::varied"]},
+        // A goal is at least 0.5 kg from its start, and a speed of 0 is "not moving": the strict
+        // comparisons below never meet equality.
+        // A tie keeps the record already held, of the same value: counts and bests are the same.
+        "GreaterThan": {
+            "ignore": [
+                "App\\Nutrition\\Domain\\Builder\\MealBuilder::fit::138",
+                "App\\Nutrition\\Domain\\Builder\\MealBuilder::fit::149",
+                "App\\Training\\Domain\\Progression\\RecordBook::beatenInOrder::76",
+                "App\\Training\\Domain\\Progression\\RecordBook::performances::126",
+                "App\\Progression\\Domain\\Goal\\WeightGoal::set",
+                "App\\Progression\\Domain\\Goal\\WeightGoal::direction",
+                "App\\Progression\\Domain\\Goal\\Estimate::toward"
+            ]
+        },
+        // PHP reads a digit string as the same number with or without the (int) cast PHPStan wants.
+        "CastInt": {"ignore": ["App\\Nutrition\\Domain\\Food\\Barcode::hasValidCheckDigit"]},
+        // Columns kept for the database alone (search keys, the muscles of an exercise, the key of
+        // a workout's exercises, the first deletion time): no domain method reads them, the
+        // repository queries do, in the integration suite this run leaves out.
+        "Coalesce": {
+            "ignore": [
+                "App\\Nutrition\\Domain\\Food\\Food::__construct",
+                "App\\Nutrition\\Domain\\Food\\Food::refreshFromProduct",
+                "App\\Nutrition\\Domain\\Food\\Food::edit",
+                // A split is complete from its construction; `?? 0` guards rows hydrated by Doctrine
+                // before a meal slot was added (kept on purpose, no domain path reaches it).
+                "App\\Nutrition\\Domain\\Target\\MealSplit::shareOf"
+            ]
+        },
+        "Concat": {"ignore": ["App\\Training\\Domain\\Exercise\\Exercise::describe", "App\\Training\\Domain\\Workout\\Workout::keyOf"]},
+        "ConcatOperandRemoval": {"ignore": ["App\\Training\\Domain\\Exercise\\Exercise::describe", "App\\Training\\Domain\\Workout\\Workout::keyOf"]},
+        "ArrayItemRemoval": {"ignore": ["App\\Training\\Domain\\Exercise\\Exercise::describe"]},
+        "UnwrapArrayUnique": {"ignore": ["App\\Training\\Domain\\Workout\\Workout::keyOf"]},
+        "AssignCoalesce": {
+            "ignore": [
+                "App\\Nutrition\\Domain\\Food\\Food::delete",
+                "App\\Nutrition\\Domain\\Recipe\\Recipe::delete",
+                "App\\Progression\\Domain\\Measurement\\CustomMeasure::archive",
+                "App\\Training\\Domain\\Exercise\\Exercise::delete",
+                "App\\Training\\Domain\\Program\\Program::archive",
+                "App\\Training\\Domain\\Workout\\Workout::discard"
+            ]
+        }
+    },
+    "minMsi": 98,
+    "minCoveredMsi": 98
+}

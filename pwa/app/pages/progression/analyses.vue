@@ -23,6 +23,7 @@ const { data: training, error: trainingError, refresh: refreshTraining } = useAs
 
 <template>
   <div class="flex max-w-reading flex-col gap-4">
+    <!-- Each chart keeps about its room while it loads: the cards below do not jump (layout shift). -->
     <ShellBackLink
       to="/progression"
       label="Progression"
@@ -41,6 +42,14 @@ const { data: training, error: trainingError, refresh: refreshTraining } = useAs
         :weights="weight.weeks"
         :intakes="intake.weeks"
       />
+      <p
+        v-else
+        class="min-h-120 text-muted"
+        role="status"
+        aria-busy="true"
+      >
+        Chargement…
+      </p>
     </UiCard>
     <UiCard title="Nutrition">
       <UiLoadError
@@ -52,6 +61,14 @@ const { data: training, error: trainingError, refresh: refreshTraining } = useAs
         :history="intake"
         :during="during"
       />
+      <p
+        v-else
+        class="min-h-120 text-muted"
+        role="status"
+        aria-busy="true"
+      >
+        Chargement…
+      </p>
     </UiCard>
     <UiCard title="Entraînement">
       <UiLoadError
@@ -63,6 +80,14 @@ const { data: training, error: trainingError, refresh: refreshTraining } = useAs
         :analytics="training"
         :during="during"
       />
+      <p
+        v-else
+        class="min-h-120 text-muted"
+        role="status"
+        aria-busy="true"
+      >
+        Chargement…
+      </p>
     </UiCard>
   </div>
 </template>

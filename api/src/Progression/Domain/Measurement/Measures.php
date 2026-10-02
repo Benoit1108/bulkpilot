@@ -25,7 +25,7 @@ final readonly class Measures
     {
         $custom = array_filter($this->custom, static fn (CustomMeasure $measure): bool => !$measure->isArchived());
 
-        return [...array_map(static fn (BodyPart $part): string => $part->value, BodyPart::cases()), ...array_values(array_map(static fn (CustomMeasure $measure): string => $measure->key(), $custom))];
+        return [...array_map(static fn (BodyPart $part): string => $part->value, BodyPart::cases()), ...array_map(static fn (CustomMeasure $measure): string => $measure->key(), $custom)];
     }
 
     /**

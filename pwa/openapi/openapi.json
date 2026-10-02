@@ -1366,11 +1366,60 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 },
                 "summary": "Retrieves the collection of CoachWeeklyReport resources.",
                 "description": "Retrieves the collection of CoachWeeklyReport resources.",
-                "parameters": []
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "At most 52.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 52,
+                            "default": 12
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "Only the weeks before this one (the weekStart of the last report received, for the next page).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
             }
         },
         "/api/me/dashboard": {
@@ -12467,7 +12516,7 @@
             },
             "CoachWeeklyReport": {
                 "type": "object",
-                "description": "The reports of the last 52 weeks, the latest first.",
+                "description": "The weekly reports, the latest first, a page at a time.",
                 "required": [
                     "weekStart",
                     "startKg",
@@ -12714,7 +12763,7 @@
                         }
                     }
                 ],
-                "description": "The reports of the last 52 weeks, the latest first."
+                "description": "The weekly reports, the latest first, a page at a time."
             },
             "CoachWeeklyReport.jsonld_noid": {
                 "allOf": [

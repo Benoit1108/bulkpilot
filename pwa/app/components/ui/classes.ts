@@ -18,7 +18,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
 export const buttonClass = (variant: ButtonVariant) => `${BUTTON} ${VARIANTS[variant]}`
 
 /** A link in running text or under a list ("Créer un aliment", "Voir le mouvement"), tall enough to tap. */
-export const TEXT_LINK = 'inline-flex min-h-tap items-center font-semibold text-accent-ink'
+export const TEXT_LINK = 'inline-flex min-h-tap min-w-tap items-center justify-center font-semibold text-accent-ink'
 
 /** A one-tap choice (set kind, RIR): a radio hidden inside its label, filled once checked. */
 const CHIP_BASE = 'inline-flex min-h-tap min-w-tap cursor-pointer items-center justify-center rounded-md border border-line bg-surface-raised font-semibold has-checked:border-accent-fill has-checked:bg-accent-fill has-checked:text-accent-contrast has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent'
@@ -31,7 +31,7 @@ export const CHIP_NUMBER = `${CHIP_BASE} p-0 tabular-nums`
  * and ticked, so the choice does not rest on colour alone. Positioned, so that the hidden radio stays
  * inside its own pill (a click or a scroll to it lands on the right one).
  */
-export const PILL = 'relative inline-flex min-h-tap cursor-pointer items-center rounded-full border border-line bg-surface-raised px-3 text-sm font-semibold has-checked:border-2 has-checked:border-accent has-checked:bg-accent-soft has-checked:px-[11px] has-checked:text-accent-ink has-checked:before:me-1 has-checked:before:content-["✓"_/_""] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent'
+export const PILL = 'relative inline-flex min-h-tap min-w-tap cursor-pointer items-center justify-center rounded-full border border-line bg-surface-raised px-3 text-sm font-semibold has-checked:border-2 has-checked:border-accent has-checked:bg-accent-soft has-checked:px-[11px] has-checked:text-accent-ink has-checked:before:me-1 has-checked:before:content-["✓"_/_""] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent'
 
 /** A table of figures (the values under a chart): a line under each row, figures to the right. */
 export const DATA_TABLE = 'mt-2 w-full border-collapse tabular-nums [&_:is(td,th)]:border-b [&_:is(td,th)]:border-line [&_:is(td,th)]:py-1 [&_:is(td,th)]:text-right [&_:is(td,th):first-child]:text-left'
@@ -40,7 +40,7 @@ export const DATA_TABLE = 'mt-2 w-full border-collapse tabular-nums [&_:is(td,th
 export const LIST_ROW = 'flex min-h-tap w-full cursor-pointer flex-col items-start gap-1 border-t border-line bg-transparent px-0 py-2 text-left text-inherit'
 
 export const fieldClass = {
-  root: 'flex flex-col gap-1',
+  root: 'flex min-w-0 flex-col gap-1',
   label: 'text-sm font-semibold',
   hint: 'text-sm text-muted',
   error: 'text-sm text-danger',

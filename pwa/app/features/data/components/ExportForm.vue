@@ -74,7 +74,7 @@ async function submit(): Promise<void> {
   >
     <p class="text-sm text-muted">
       {{ EXPORT_CONTENTS }}
-      <template v-if="policy">
+      <template v-if="policy?.exportAvailableHours">
         Une fois prête, l’archive reste téléchargeable {{ hoursText(policy.exportAvailableHours) }}.
       </template>
     </p>
@@ -88,9 +88,10 @@ async function submit(): Promise<void> {
       <legend class="mb-1 font-semibold">
         Période (facultative)
       </legend>
+      <!-- Its line is kept while the domains load: the fields below do not move when it appears. -->
       <p
-        v-if="periodHint"
-        class="text-sm text-muted sm:col-span-2"
+        v-if="periodHint || !domains"
+        class="min-h-10 text-sm text-muted sm:col-span-2"
       >
         {{ periodHint }}
       </p>
@@ -118,6 +119,8 @@ async function submit(): Promise<void> {
     <fieldset
       v-else
       class="m-0 flex flex-col border-0 p-0"
+      :class="{ 'min-h-88': !domains }"
+      :aria-busy="!domains || undefined"
     >
       <legend class="mb-1 font-semibold">
         Données

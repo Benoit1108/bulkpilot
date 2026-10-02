@@ -11,7 +11,8 @@ final class SearchKey
 {
     public static function of(string $text): string
     {
-        $text = strtr(mb_strtolower($text), ['œ' => 'oe', 'æ' => 'ae']);
+        // Ligatures (œ, æ) become two letters.
+        $text = mb_strtolower($text);
         $ascii = transliterator_transliterate('Any-Latin; Latin-ASCII', $text);
 
         return trim((string) preg_replace('/[^a-z0-9]+/', ' ', false === $ascii ? $text : $ascii));
@@ -22,6 +23,6 @@ final class SearchKey
      */
     public static function words(string $query): array
     {
-        return \array_slice(array_values(array_unique(array_filter(explode(' ', self::of($query)), static fn (string $word): bool => '' !== $word))), 0, 6);
+        return \array_slice(array_unique(array_filter(explode(' ', self::of($query)), static fn (string $word): bool => '' !== $word)), 0, 6);
     }
 }

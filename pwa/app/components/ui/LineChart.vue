@@ -2,6 +2,7 @@
 import ChartLegend from './ChartLegend.vue'
 import ChartMarks from './ChartMarks.vue'
 import { useChartCursor } from './chartCursor'
+import { formatMonthYear } from '~/services/calendar/days'
 import { DASHES, dayNumber, dayTicks, FILLS, linePath, niceTicks, scale, STROKES, textWidth, tickCount, type ChartMark as Mark, type ChartSeries as Series } from './chart'
 
 /**
@@ -43,8 +44,11 @@ const yTicks = computed(() => {
   const values = props.series.flatMap(line => line.points.map(point => point.y))
   return values.length ? niceTicks(Math.min(...values), Math.max(...values)) : []
 })
-/** Room on the left for the longest value label, as few pixels as it takes. */
-const pad = computed(() => ({ top: 12, right: 12, bottom: 28, left: Math.max(28, ...yTicks.value.map(tick => textWidth(props.formatY(tick)))) + 10 }))
+/** Room on the left for the longest value label, as few pixels as it takes; on top, for a mark's label. */
+const pad = computed(() => ({ top: props.marks.length ? 24 : 12, right: 12, bottom: 28, left: Math.max(28, ...yTicks.value.map(tick => textWidth(props.formatY(tick)))) + 10 }))
+/** Over more than a year the axis says month and year: « 2 oct. » would come back every year. */
+const YEAR_DAYS = 366
+const formatTick = computed(() => (domain.value && dayNumber(domain.value[1]) - dayNumber(domain.value[0]) > YEAR_DAYS ? formatMonthYear : props.formatX))
 const bottom = computed(() => props.height - pad.value.bottom)
 const x = computed(() => {
   const [first, last] = domain.value ? domain.value.map(dayNumber) : [0, 1]
@@ -57,10 +61,13 @@ const drawn = computed(() => props.series.map((line) => {
   const places = line.points.map(point => ({ x: x.value(dayNumber(point.x)), y: y.value(point.y) }))
   return { ...line, tone: line.tone ?? 'accent', places, path: linePath(places), dots: line.variant === 'dots' || places.length === 1 }
 }))
+/** Dots under the lines (a mean over many days stays readable), and smaller when there are many. */
+const DENSE = 120
+const layers = computed(() => [...drawn.value].sort((a, b) => Number(b.dots) - Number(a.dots)).map(line => ({ ...line, dense: line.places.length > DENSE })))
 const xTicks = computed(() => {
   if (!domain.value) return []
   const [first, last] = domain.value
-  const count = tickCount(width.value - pad.value.left - pad.value.right, textWidth(props.formatX(first)) + 8)
+  const count = tickCount(width.value - pad.value.left - pad.value.right, textWidth(formatTick.value(first)) + 8)
   const ticks = dayTicks(first, last, count)
   const anchor = (i: number) => (ticks.length === 1 ? 'middle' : i === 0 ? 'start' : i === ticks.length - 1 ? 'end' : 'middle')
   return ticks.map((day, i) => ({ day, at: x.value(dayNumber(day)), anchor: anchor(i) }))
@@ -139,7 +146,7 @@ const helpId = useId()
             :y="height - 8"
             :text-anchor="tick.anchor"
             class="fill-muted text-xs"
-          >{{ formatX(tick.day) }}</text>
+          >{{ formatTick(tick.day) }}</text>
           <ChartMarks
             :marks="marks"
             :range="[yTicks[0] ?? -Infinity, yTicks.at(-1) ?? Infinity]"
@@ -150,7 +157,7 @@ const helpId = useId()
             :bottom="bottom"
           />
           <template
-            v-for="line in drawn"
+            v-for="line in layers"
             :key="line.name"
           >
             <path
@@ -168,8 +175,8 @@ const helpId = useId()
                 :key="i"
                 :cx="at.x"
                 :cy="at.y"
-                r="3"
-                :class="FILLS[line.tone]"
+                :r="line.dense ? 1.5 : 3"
+                :class="[FILLS[line.tone], { 'opacity-60': line.dense }]"
               />
             </template>
           </template>

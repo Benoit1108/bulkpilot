@@ -110,6 +110,16 @@ describe('exporting one’s data', () => {
     wrapper.unmount()
   })
 
+  it('says nothing of a duration the server did not give', async () => {
+    // A failing server answering without the field: no « téléchargeable undefined heure ».
+    fake.on('GET /api/me/data-policy', () => ({ ...DATA_POLICY, exportAvailableHours: undefined }))
+    clearNuxtData('data-policy')
+    const wrapper = await open(DataPage)
+    expect(wrapper.text()).not.toContain('undefined')
+    expect(wrapper.text()).not.toContain('reste téléchargeable')
+    wrapper.unmount()
+  })
+
   it('looks again until it is ready, says so, then stops', async () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
     let state: 'queued' | 'ready' = 'queued'

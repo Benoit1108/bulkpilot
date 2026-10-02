@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { LIST_ROW } from '~/components/ui/classes'
 import type { components } from '~/types/api'
 import type { Measurement } from '~/features/training/training'
 import { formatRecord } from '~/features/training/workout'
@@ -18,7 +19,7 @@ function summary(session: Session): string {
   ].filter(Boolean).join(' · ')
 }
 const recent = computed(() => [...props.progress.sessions].reverse().slice(0, 5))
-const ROW = 'flex flex-wrap justify-between gap-x-3 gap-y-1 border-t border-line py-2'
+const ROW = 'flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-t border-line py-2'
 </script>
 
 <template>
@@ -51,15 +52,15 @@ const ROW = 'flex flex-wrap justify-between gap-x-3 gap-y-1 border-t border-line
         <li
           v-for="session in recent"
           :key="session.workoutId"
-          :class="ROW"
         >
+          <!-- The whole row opens the session: a large target, the date and what was done read together. -->
           <NuxtLink
             :to="`/training/seances/${session.workoutId}`"
-            class="font-semibold text-accent-ink"
+            :class="[LIST_ROW, 'flex-row! flex-wrap items-baseline! justify-between gap-x-3 no-underline']"
           >
-            {{ dateFormat.format(new Date(session.date)) }}
+            <span class="font-semibold text-accent-ink">{{ dateFormat.format(new Date(session.date)) }}</span>
+            <span class="text-sm text-muted">{{ summary(session) }}</span>
           </NuxtLink>
-          <span class="text-sm text-muted">{{ summary(session) }}</span>
         </li>
       </ul>
     </template>

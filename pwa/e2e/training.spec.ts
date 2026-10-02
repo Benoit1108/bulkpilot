@@ -1,25 +1,6 @@
 import { expectAccessible } from './support/accessibility'
-import type { Page } from '@playwright/test'
 import { expect, test } from './support/fixtures'
-
-async function exerciseId(page: Page, query: string): Promise<string> {
-  const response = await page.request.get(`/api/exercises?q=${encodeURIComponent(query)}`, { headers: { Accept: 'application/json' } })
-  const [first] = await response.json() as Array<{ id: string }>
-  return first!.id
-}
-
-/** A one-day program, straight through the API (its editor has its own test). */
-async function program(page: Page): Promise<void> {
-  const planned = (id: string, override: Record<string, unknown> = {}) => ({ exerciseId: id, sets: 2, repMin: 8, repMax: 12, targetRir: 2, restSeconds: 60, ...override })
-  const response = await page.request.post('/api/programs', {
-    headers: { Accept: 'application/json' },
-    data: { name: 'Full Body', days: [{ name: 'Full A', blocks: [
-      { exercises: [planned(await exerciseId(page, 'developpe couche barre'))] },
-      { exercises: [planned(await exerciseId(page, 'elevations laterales halteres'), { sets: 1, restSeconds: 0 }), planned(await exerciseId(page, 'gainage planche'), { sets: 1, repMin: 30, repMax: 60 })] },
-    ] }] },
-  })
-  expect(response.status(), await response.text()).toBe(201)
-}
+import { program } from './support/seed'
 
 // The exercise library is imported when the API container starts.
 test.describe('training', () => {
@@ -133,10 +114,10 @@ test.describe('training', () => {
     await context.setOffline(true)
     await page.getByRole('button', { name: 'Une répétition de plus' }).click()
     await page.getByRole('button', { name: 'Valider la série' }).click()
-    await expect(page.getByText('1 modification gardée sur le téléphone, envoyée au retour du réseau.')).toBeVisible()
+    await expect(page.getByText('Hors ligne : 1 modification gardée sur cet appareil, envoyée au retour du réseau.')).toBeVisible()
     await expect(page.getByRole('heading', { level: 2, name: 'Élévations latérales aux haltères' })).toBeVisible()
     await context.setOffline(false)
-    await expect(page.getByText('gardée sur le téléphone')).toBeHidden()
+    await expect(page.getByText('gardée sur cet appareil')).toBeHidden()
 
     await page.reload()
     await expect(page.getByRole('heading', { level: 2, name: 'Élévations latérales aux haltères' }), 'the workout is still on the device').toBeVisible()

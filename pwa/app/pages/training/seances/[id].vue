@@ -44,7 +44,7 @@ const setsOf = (index: number): WorkoutSet[] => (workout.value?.sets ?? []).filt
       v-if="missing && !workout"
       tone="info"
     >
-      Séance terminée&nbsp;! Elle est gardée sur le téléphone et sera enregistrée dès le retour du réseau.
+      Séance terminée&nbsp;! Elle est gardée sur cet appareil et sera enregistrée dès le retour du réseau.
     </UiAlert>
     <UiLoadError
       v-else-if="error && !workout"

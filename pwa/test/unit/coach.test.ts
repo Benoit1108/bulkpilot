@@ -28,7 +28,7 @@ describe('coach figures', () => {
     expect(reportWeight(report({ startKg: null, endKg: null, changeKg: null }))).toBe('Pas de pesée cette semaine')
     expect(reportNutrition(report())).toBe('2\u202F310\u00A0kcal/j · 98\u00A0g de protéines/j (6 jours saisis)')
     expect(reportNutrition(report({ averageKcal: null, averageProtein: null, loggedDays: 0 }))).toBe('Rien de saisi cette semaine')
-    expect(reportTraining(report())).toBe('3/3 séances · 4 records')
+    expect(reportTraining(report())).toBe('3 séances (3 prévues) · 4 records')
     expect(reportTraining(report({ sessions: 1, plannedSessions: null, records: 0 }))).toBe('1 séance · aucun record')
   })
 

@@ -26,5 +26,6 @@ logs
 # Playwright
 /test-results/
 /playwright-report/
+/lighthouse-report/
 /blob-report/
 /coverage/

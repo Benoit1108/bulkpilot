@@ -69,7 +69,7 @@ const keyboard = computed(() => props.inputmode ?? (props.type === 'number' ? 'd
         :id="id"
         ref="field"
         v-model="model"
-        class="h-tap min-w-0 flex-1 bg-transparent px-3 text-base focus:outline-none"
+        class="h-tap w-0 min-w-0 flex-1 bg-transparent px-3 text-base focus:outline-none"
         :type="nativeType"
         :autocomplete="autocomplete"
         :inputmode="keyboard"

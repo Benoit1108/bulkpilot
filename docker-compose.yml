@@ -132,7 +132,7 @@ services:
       - |
         corepack pnpm install --frozen-lockfile --ignore-scripts --reporter=silent || exit 1
         corepack pnpm exec playwright test $$PLAYWRIGHT_ARGS; status=$$?
-        chown -R "$$HOST_UID:$$HOST_GID" test-results playwright-report 2>/dev/null
+        chown -R "$$HOST_UID:$$HOST_GID" test-results playwright-report lighthouse-report 2>/dev/null
         exit $$status
 
 volumes:

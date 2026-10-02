@@ -44,6 +44,18 @@ final class GdImageEncoderTest extends TestCase
         self::assertSame([300, 400], [$encoded->width, $encoded->height]);
     }
 
+    public function testAPolyglotKeepsNothingButThePicture(): void
+    {
+        $polyglot = Images::file((string) file_get_contents(Images::jpeg(64, 48)).'<?php system($_GET["c"]); ?><script>alert(1)</script>', 'jpg');
+
+        $encoded = new GdImageEncoder()->encode($polyglot);
+
+        foreach ([$encoded->image, $encoded->thumbnail] as $webp) {
+            self::assertStringNotContainsString('<?php', $webp);
+            self::assertStringNotContainsString('<script', $webp);
+        }
+    }
+
     /**
      * @param \Closure(): string $file
      */
@@ -60,6 +72,16 @@ final class GdImageEncoderTest extends TestCase
     }
 
     /**
+     * A PNG that only claims its size: decoding it would allocate width × height pixels.
+     */
+    private static function pngHeader(int $width, int $height): string
+    {
+        $chunk = static fn (string $type, string $data): string => pack('N', \strlen($data)).$type.$data.pack('N', crc32($type.$data));
+
+        return "\x89PNG\r\n\x1a\n".$chunk('IHDR', pack('NNCCCCC', $width, $height, 8, 2, 0, 0, 0)).$chunk('IEND', '');
+    }
+
+    /**
      * @return iterable<string, array{\Closure(): string, string}>
      */
     public static function refused(): iterable
@@ -69,6 +91,9 @@ final class GdImageEncoderTest extends TestCase
         yield 'an empty file' => [static fn (): string => Images::file('', 'jpg'), 'at most'];
         yield 'an animated PNG' => [static fn (): string => Images::png(10, 10, animated: true), 'still image'];
         yield 'too many pixels' => [static fn (): string => Images::png(8001, 2), 'pixels a side'];
+        yield 'an SVG, which can carry scripts' => [static fn (): string => Images::file('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>', 'jpg'), 'JPEG, PNG or WebP'];
+        yield 'an HTML page named like a photo' => [static fn (): string => Images::file('<!doctype html><script>alert(1)</script>', 'png'), 'JPEG, PNG or WebP'];
+        yield 'a pixel bomb under the side limit' => [static fn (): string => Images::file(self::pngHeader(5000, 5000), 'png'), 'megapixels'];
         yield 'too heavy' => [static fn (): string => Images::file("\xFF\xD8\xFF".str_repeat('a', GdImageEncoder::MAX_BYTES), 'jpg'), 'at most 15 MB'];
     }
 }

@@ -27,11 +27,21 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml exec pwa pnpm add
 
 make db-diff && make db-migrate              # après un changement de mapping
 make ciqual                                  # importe / rafraîchit la table CIQUAL (téléchargement Anses)
+make demo                                    # compte de démo : 3 ans d'historique (ARGS="--years=1", "--days=30", "--accounts=3")
 FOOD_DATABASE=openfoodfacts make up          # scanner de vrais produits (défaut en dev : base factice)
 make openapi                                 # après un changement de ressource API
 make php-cs-fix                              # formatage PHP
 docker compose … exec pwa pnpm lint:fix      # formatage front
 ```
+
+## Données de démonstration
+
+`make demo` crée le compte **`demo@bulkpilot.local`**, mot de passe **`demo-bulkpilot-2026`** (spec §134, ADR-0032) :
+3 ans d'historique, construits jour après jour par les vrais cas d'usage (horloge déplacée) — aliments perso,
+recettes, favoris, objectifs nutritionnels, journal quotidien, pesées, mensurations du dimanche, objectif de poids,
+programme PPL (révisé à mi-parcours), environ 4 séances par semaine, analyses du Coach le lundi, notifications.
+Compte une seule fois par adresse (`ARGS="--email=autre@bulkpilot.local"` pour un deuxième) ; environ 3 minutes en
+dev pour 3 ans. La commande n'existe qu'en `dev` et `test` et refuse de tourner en production.
 
 ## Ajouter un use case (backend)
 

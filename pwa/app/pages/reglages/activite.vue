@@ -25,7 +25,7 @@ const rows = computed(() => items.value.map(entry => ({ entry, label: activityLa
     />
     <p class="text-muted">
       Les actions importantes sur ton compte et tes objectifs, pour savoir quand et pourquoi une valeur a changé.
-      <template v-if="policy">
+      <template v-if="policy?.activityRetentionDays">
         Elles sont gardées {{ daysText(policy.activityRetentionDays) }}.
       </template>
     </p>

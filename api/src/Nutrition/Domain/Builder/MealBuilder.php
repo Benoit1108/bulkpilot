@@ -110,13 +110,13 @@ final class MealBuilder
      */
     private static function fit(MacroGoal $goal, array $combination): ?MealProposal
     {
-        $factors = [NutrientAmounts::KCAL_PER_GRAM_PROTEIN, NutrientAmounts::KCAL_PER_GRAM_CARBOHYDRATE, NutrientAmounts::KCAL_PER_GRAM_FAT];
-        $target = [$factors[0] * $goal->protein, $factors[1] * $goal->carbohydrate, $factors[2] * $goal->fat];
+        $target = self::inKcal($goal->protein, $goal->carbohydrate, $goal->fat);
         $perGram = [];
         $grams = [];
         foreach ($combination as $i => [$food, $role]) {
             $facts = $food->facts();
-            $perGram[$i] = [$factors[0] * $facts->protein / 100, $factors[1] * $facts->carbohydrate / 100, $factors[2] * $facts->fat / 100];
+            // Facts are per 100 g.
+            $perGram[$i] = self::inKcal($facts->protein / 100, $facts->carbohydrate / 100, $facts->fat / 100);
             $grams[$i] = $role->gramRange()[0];
         }
 
@@ -147,6 +147,16 @@ final class MealBuilder
         $proposal = MealProposal::for($goal, $portions);
 
         return $proposal->totals->energyKcal > $goal->energyKcal * self::MAX_OVERSHOOT ? null : $proposal;
+    }
+
+    /**
+     * Protein, carbohydrate and fat in the kcal they bring.
+     *
+     * @return array{float, float, float}
+     */
+    private static function inKcal(float $protein, float $carbohydrate, float $fat): array
+    {
+        return [NutrientAmounts::KCAL_PER_GRAM_PROTEIN * $protein, NutrientAmounts::KCAL_PER_GRAM_CARBOHYDRATE * $carbohydrate, NutrientAmounts::KCAL_PER_GRAM_FAT * $fat];
     }
 
     /**

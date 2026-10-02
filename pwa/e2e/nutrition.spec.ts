@@ -1,5 +1,6 @@
 import { expectAccessible } from './support/accessibility'
 import { expect, registerThroughApi, test, uniqueEmail } from './support/fixtures'
+import { dayAgo } from './support/seed'
 
 /** A random valid EAN-13 in the in-store range (GS1 prefix 29). */
 function inStoreCode(): string {
@@ -149,7 +150,7 @@ test.describe('nutrition', () => {
 
   test('the meal builder fills what is left of the day, and a proposal is logged in one tap', async ({ page, account: _account }) => {
     const created = await page.request.post('/api/nutrition/targets', {
-      data: { effectiveFrom: new Intl.DateTimeFormat('sv-SE').format(new Date()), energyKcal: 2500, proteinGrams: 150, carbohydrateGrams: 300, fatGrams: 75 },
+      data: { effectiveFrom: dayAgo(0), energyKcal: 2500, proteinGrams: 150, carbohydrateGrams: 300, fatGrams: 75 },
       headers: { Accept: 'application/json' },
     })
     expect(created.status(), await created.text()).toBe(201)

@@ -12,10 +12,11 @@ use App\Shared\Domain\Identifier\UserId;
  */
 final readonly class ListWeeklyReports implements Query
 {
-    /** A year of weeks. */
-    public const int LIMIT = 52;
+    /** A page by default, a year of weeks at most. */
+    public const int PAGE = 12;
+    public const int MAX = 52;
 
-    public function __construct(public UserId $userId)
+    public function __construct(public UserId $userId, public int $limit = self::PAGE, public ?\DateTimeImmutable $before = null)
     {
     }
 }

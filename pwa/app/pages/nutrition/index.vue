@@ -19,7 +19,8 @@ const day = computed(() => (isDay(route.query.jour) ? route.query.jour : today.v
 const label = computed(() => dayLabel(day.value, today.value))
 const isToday = computed(() => day.value >= today.value)
 
-const { journal, status, error, refresh, log, logMany, logFavorite, correct, remove } = useNutritionDay(day)
+const { journal, previous, status, error, refresh, log, logMany, logFavorite, correct, remove } = useNutritionDay(day)
+const shownDay = computed(() => journal.value ?? previous.value)
 
 const dayLabelElement = ref<HTMLElement | null>(null)
 async function goTo(target: string): Promise<void> {
@@ -147,21 +148,27 @@ const shortcuts = [
       </UiButton>
     </UiAlert>
     <p
-      v-else-if="!journal"
-      class="text-muted"
+      class="sr-only"
       role="status"
     >
-      Chargement…
+      {{ journal ? '' : 'Chargement…' }}
     </p>
-
-    <template v-if="journal">
+    <!-- While the next day loads, the previous one stays, inert: the page keeps its height (no layout
+         shift) and nothing can be written to the wrong day. The very first load keeps about a day's room. -->
+    <div
+      v-if="shownDay"
+      class="flex flex-col gap-4"
+      :class="{ 'opacity-60': !journal }"
+      :inert="!journal || undefined"
+      :aria-busy="!journal || undefined"
+    >
       <DaySummary
-        :day="journal"
+        :day="shownDay"
         @build="building = true"
       />
       <div class="grid gap-3 lg:grid-cols-2">
         <MealSection
-          v-for="meal in journal.meals"
+          v-for="meal in shownDay.meals"
           :key="meal.slot"
           :meal="meal"
           @add="add"
@@ -169,7 +176,12 @@ const shortcuts = [
           @favorite="saveFavorite"
         />
       </div>
-    </template>
+    </div>
+    <div
+      v-else-if="!error"
+      class="min-h-144"
+      aria-busy="true"
+    />
 
     <AveragesCard :today="today" />
 

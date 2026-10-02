@@ -17,6 +17,7 @@ final class DayWindow
     {
         $day = $day->setTime(0, 0);
 
-        return $day <= $now->setTime(0, 0)->modify(\sprintf('+%d day', self::LATEST_DAYS_AHEAD)) && $day >= new \DateTimeImmutable(self::EARLIEST_DAY);
+        // A day is midnight: up to the device's tomorrow, whatever the hour now.
+        return $day <= $now->modify(\sprintf('+%d day', self::LATEST_DAYS_AHEAD)) && $day >= new \DateTimeImmutable(self::EARLIEST_DAY);
     }
 }

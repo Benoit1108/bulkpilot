@@ -2,7 +2,7 @@ import { counted } from '~/services/text/plural'
 
 interface Paged {
   id: string
-  createdAt: string
+  createdAt?: string
 }
 
 /**
@@ -14,7 +14,12 @@ interface Paged {
 export function usePagedList<T extends Paged>(
   key: string,
   fetchPage: (cursor: { before?: string, beforeId?: string }) => Promise<T[]>,
-  options: { size: number, noun: [one: string, many?: string] },
+  options: {
+    size: number
+    noun: [one: string, many?: string]
+    /** Where the next page starts; by default the time and the id of the last item shown. */
+    cursor?: (last: T) => { before?: string, beforeId?: string }
+  },
 ) {
   const { data: firstPage, status, error, refresh } = useAsyncData(key, () => fetchPage({}))
   const more = ref<T[]>([]) as Ref<T[]>
@@ -43,7 +48,7 @@ export function usePagedList<T extends Paged>(
     const asked = version
     let added: T[] | null = null
     await loading.run(async () => {
-      const page = await fetchPage({ before: last?.createdAt, beforeId: last?.id })
+      const page = await fetchPage(last ? (options.cursor?.(last) ?? { before: last.createdAt, beforeId: last.id }) : {})
       if (asked !== version) return
       more.value.push(...page)
       hasMore.value = page.length === options.size

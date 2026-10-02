@@ -1,0 +1,9 @@
+# Dev-only services, never in the production image (.dockerignore).
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # Demo data (spec §134): `make demo` (ADR-0032).
+    App\Dev\Demo\:
+        resource: '../dev/Demo/'

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TEXT_LINK } from '~/components/ui/classes'
 import MeasurementsForm from '~/features/progression/components/MeasurementsForm.vue'
 import MeasuresChart from '~/features/progression/components/MeasuresChart.vue'
 import { isMeasurementDerived, PROGRESSION_KEYS, type Period } from '~/features/progression/progression'
@@ -48,7 +49,7 @@ async function onSaved(): Promise<void> {
         />
         <NuxtLink
           to="/progression/mesures"
-          class="inline-flex min-h-tap items-center self-start text-sm font-semibold text-accent-ink"
+          :class="[TEXT_LINK, 'self-start text-sm']"
         >
           Ajouter ou retirer des mesures perso
         </NuxtLink>
