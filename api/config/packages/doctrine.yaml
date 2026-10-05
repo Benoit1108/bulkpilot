@@ -2,8 +2,9 @@ doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
         profiling_collect_backtrace: '%kernel.debug%'
-        # The HTTP session table is owned by PdoSessionHandler, not by the ORM mapping.
-        schema_filter: '~^(?!sessions$)~'
+        # Tables written by plain SQL, not by the ORM mapping: the HTTP sessions (PdoSessionHandler) and the
+        # monitoring's heartbeats (DoctrineBeats); their migrations create them.
+        schema_filter: '~^(?!(sessions|system_heartbeats)$)~'
         types:
             user_id: App\Shared\Infrastructure\Persistence\Doctrine\UserIdType
             user_session_id: App\Identity\Infrastructure\Persistence\Doctrine\Type\UserSessionIdType

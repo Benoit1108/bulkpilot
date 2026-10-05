@@ -2,7 +2,8 @@
 
 ## Signaler une vulnérabilité
 
-Projet privé : contacter directement le mainteneur. Ne pas ouvrir d'issue publique.
+Le dépôt est public, l'application ne l'est pas. Signaler une vulnérabilité **en privé** : onglet *Security* du dépôt →
+*Report a vulnerability* (signalement privé GitHub). Ne pas ouvrir d'issue publique.
 
 ## Mesures en place
 
@@ -59,6 +60,24 @@ Projet privé : contacter directement le mainteneur. Ne pas ouvrir d'issue publi
     l'API connectée (cookie d'un compte créé pour l'occasion) ; échec sur toute alerte moyenne ou haute non justifiée
     dans `zap/rules.tsv`. L'analyse active (attaques) n'est pas en CI : à lancer avant une mise en production
     (`zap-api-scan.py` sans `-S`, sur une stack jetable).
+
+- **Production (phase 10, ADR-0033)** :
+  - aucun port ouvert sur Internet : SSH, l'application et Uptime Kuma ne sont joignables que par le tailnet Tailscale ;
+    la politique d'accès n'admet que les appareils du propriétaire (et le SSH de la CI) et ne laisse rien sortir du
+    serveur ; les en-têtes d'identité `Tailscale-User-*` ne sont pas journalisés ;
+  - l'image est construite une fois par la CI, attestée (provenance), testée sur ce digest puis signée (cosign sans
+    clé) ; le serveur refuse toute image non signée par le workflow `ci.yml` de ce dépôt sur `main`, et la production
+    toute image qui n'a pas tourné en staging ;
+  - chaque clé de la CI ne peut lancer qu'une commande (`bulkpilot-gate` : `deploy <commit>` ou `status`, pour son
+    seul environnement) ; scripts et fichier compose du serveur possédés par root ; production derrière un relecteur
+    obligatoire ;
+  - staging isolé : ses secrets, ses buckets, sa base, son propre nom d'hôte (cookies jamais partagés) ; `TRUSTED_HOSTS`
+    et `TRUSTED_PROXIES` limités à l'hôte public et au sous-réseau du proxy ;
+  - hôte : mises à jour de sécurité automatiques, SSH par clé seulement, pare-feu rejoué au démarrage ;
+  - sauvegardes chiffrées hors du serveur, bucket verrouillé 30 jours, secrets réservés au worker ;
+  - sous-traitants : Oracle (hébergement, UE), Cloudflare R2 (photos et sauvegardes chiffrées, juridiction UE),
+    Brevo (emails), Sentry (erreurs nettoyées des données personnelles, région UE), healthchecks.io (battements
+    seulement : aucune donnée de compte), Tailscale (réseau ; le trafic est chiffré de bout en bout).
 
 ## Prévu
 

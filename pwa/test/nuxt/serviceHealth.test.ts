@@ -43,7 +43,31 @@ describe('connectivity banner', () => {
     await flushPromises()
 
     expect(health).toHaveBeenCalledTimes(2)
-    expect(wrapper.get('[role="status"]').text()).toBe('')
+    expect(wrapper.get('[role="status"]').text(), 'the way back is said once').toBe('Service rétabli.')
+    expect(wrapper.find('button').exists()).toBe(false)
+  })
+
+  it('checks again by itself while the service restarts, then stops', async () => {
+    vi.useFakeTimers()
+    try {
+      health.mockRejectedValueOnce(degraded).mockRejectedValueOnce(degraded).mockResolvedValue({ status: 'ok', checks: {} })
+      const wrapper = await mountSuspended(ConnectivityBanner)
+      await flushPromises()
+      expect(health).toHaveBeenCalledTimes(1)
+
+      await vi.advanceTimersByTimeAsync(20_000)
+      expect(health).toHaveBeenCalledTimes(2)
+      await vi.advanceTimersByTimeAsync(20_000)
+      expect(health).toHaveBeenCalledTimes(3)
+      expect(wrapper.get('[role="status"]').text()).toBe('Service rétabli.')
+
+      await vi.advanceTimersByTimeAsync(60_000)
+      expect(health, 'no polling once it is back').toHaveBeenCalledTimes(3)
+      wrapper.unmount()
+    }
+    finally {
+      vi.useRealTimers()
+    }
   })
 })
 

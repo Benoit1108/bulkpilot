@@ -66,6 +66,18 @@
   }
 
   /*
+   * On iPhone and iPad (iOS only knows -webkit-touch-callout), the root size follows the system's
+   * text size (Réglages → Luminosité et affichage → Taille du texte): installed on the home screen,
+   * the app has no Safari « aA » menu to enlarge it otherwise (WCAG 1.4.4). Every size is in rem;
+   * the body keeps its own font family and line height.
+   */
+  @supports (font: -apple-system-body) and (-webkit-touch-callout: none) {
+    html {
+      font: -apple-system-body;
+    }
+  }
+
+  /*
    * Under md the bottom navigation, the « + » button and the toasts stay over the page: a control
    * reached with the keyboard is scrolled clear of them, never hidden underneath (WCAG 2.4.11).
    */

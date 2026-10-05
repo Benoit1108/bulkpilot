@@ -49,7 +49,7 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 ## Documentation
 
 - [Architecture](docs/ARCHITECTURE.md) · [Domaine](docs/DOMAIN.md) · [API](docs/API.md)
-- [Développement](docs/DEVELOPMENT.md) · [Tests](docs/TESTING.md) · [Critères d’acceptation](docs/ACCEPTANCE.md) · [Déploiement](docs/DEPLOYMENT.md)
+- [Développement](docs/DEVELOPMENT.md) · [Tests](docs/TESTING.md) · [Critères d’acceptation](docs/ACCEPTANCE.md) · [Déploiement](docs/DEPLOYMENT.md) · [Supervision](docs/MONITORING.md)
 - [Sécurité](SECURITY.md) · [Contribuer](CONTRIBUTING.md) · [Décisions (ADR)](docs/adr/)
 
 ## Avancement
@@ -67,4 +67,4 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 | 7 | Dashboard : widgets personnalisables (jour, semaine, mois), Quick Actions, recherche ⌘K, notifications dans l’app (catégories, horaires silencieux), analyse nocturne du Coach | ✅ |
 | 8 | Export / sécurité : exports (JSON, CSV, Excel, PDF, photos), suppression du compte après 7 jours, journal d’activité, sauvegardes chiffrées vérifiées | ✅ |
 | 9 | Qualité : matrice d’accès et scan ZAP, budgets SQL, index et charge (k6), Lighthouse, hors ligne, gabarits responsive, mutation testing, données de démo, critères d’acceptation | ✅ |
-| 10 | Production | — |
+| 10 | Production (gratuite au départ) : VM Oracle Always Free derrière Tailscale, image construite une fois par la CI, testée puis signée (GHCR), PostgreSQL sur la VM et sauvegardes chiffrées, Cloudflare R2, Brevo, staging automatique puis production approuvée à la main avec retour arrière automatique, Sentry, Uptime Kuma et healthchecks.io | ✅ |

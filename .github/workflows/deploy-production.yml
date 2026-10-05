@@ -1,0 +1,70 @@
+# Production, by hand only, once staging has been checked (spec §144: … → staging → validation →
+# production). The `production` environment holds the production key and requires the owner's
+# approval (Settings → Environments → production: required reviewer, branch main only). The server
+# deploys the image digest that succeeded in staging for this commit (nothing else is accepted),
+# backs production up first and rolls a failed release back.
+name: Deploy to production
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Full commit id (40 characters) that runs in staging
+        required: true
+        type: string
+      skip_backup:
+        description: No backup before deploying (only when the running worker cannot make one, docs/DEPLOYMENT.md)
+        type: boolean
+        default: false
+      confirm_skip_backup:
+        description: Type « sans sauvegarde » to confirm skip_backup
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  production:
+    name: Promote to production
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: production
+      url: ${{ vars.PRODUCTION_URL }}
+    env:
+      SHA: ${{ inputs.sha }}
+      SKIP_BACKUP: ${{ inputs.skip_backup }}
+      CONFIRM: ${{ inputs.confirm_skip_backup }}
+      SERVER: ${{ vars.DEPLOY_SSH_TARGET }}
+    steps:
+      - name: A full commit id, and a deliberate skip_backup
+        run: |
+          [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "expected a full commit id, got: $SHA" >&2; exit 1; }
+          if [[ "$SKIP_BACKUP" == true && "$CONFIRM" != 'sans sauvegarde' ]]; then
+            echo 'skip_backup needs confirm_skip_backup = « sans sauvegarde »' >&2; exit 1
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/actions
+      - uses: ./.github/actions/server
+        with:
+          tailscale-oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          tailscale-oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
+          known-hosts: ${{ vars.DEPLOY_KNOWN_HOSTS }}
+      - name: Deploy (backup first, rolled back automatically if it does not come up)
+        # The gate on the server receives the literal request.
+        run: |
+          option=''
+          [[ "$SKIP_BACKUP" == true ]] && option=' --skip-backup'
+          # shellcheck disable=SC2029
+          ssh "$SERVER" "deploy $SHA$option"
+      - name: Summary
+        run: echo "### Production runs \`$SHA\`" >> "$GITHUB_STEP_SUMMARY"

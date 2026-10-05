@@ -36,6 +36,10 @@ const userMessages: Record<ApiErrorKind, string> = {
   server: 'Une erreur est survenue. Réessaie dans un instant.',
 }
 
+/** The proxy answers these while the API restarts (a deployment): not the user's network. */
+const RESTARTING = 'Le service redémarre (mise à jour). Réessaie dans une minute.'
+const RESTARTING_STATUSES = [502, 503, 504]
+
 function kindFromStatus(status: number): ApiErrorKind {
   if (status === 401) return 'unauthenticated'
   if (status === 403) return 'forbidden'
@@ -70,10 +74,13 @@ export function apiErrorFromResponse(status: number, body: unknown, traceId: str
   const title = typeof problem.title === 'string' ? problem.title : null
   const code = typeof problem.code === 'string' ? problem.code : null
 
+  // A 503 with a code is a dependency of ours being down (its message comes from the code).
+  const restarting = RESTARTING_STATUSES.includes(status) && code === null
+
   return new ApiError(
     kind,
     status,
-    userMessages[kind],
+    restarting ? RESTARTING : userMessages[kind],
     `HTTP ${status}${title ? ` ${title}` : ''}${detail ? `: ${detail}` : ''}`,
     code,
     readViolations(problem),

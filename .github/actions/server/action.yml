@@ -1,0 +1,36 @@
+# Joins the tailnet as an ephemeral CI node and prepares SSH to the server (docs/DEPLOYMENT.md, « 4. GitHub »).
+# The server accepts SSH from the tailnet only; its host key is pinned; the key may only run the
+# server's gate for its environment (the staging key in the staging environment, the production key
+# in the production one).
+name: Reach the server
+description: Tailscale (OAuth client, tag:ci) and SSH to the deploy user
+inputs:
+  tailscale-oauth-client-id:
+    required: true
+  tailscale-oauth-secret:
+    required: true
+  ssh-key:
+    description: The environment's CI key (its public key is in the server's authorized_keys, behind bulkpilot-gate)
+    required: true
+  known-hosts:
+    description: The server's host key line, as `ssh-keyscan <host>` prints it from the tailnet
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: tailscale/github-action@d1b6cd204f8dceda5b3eaad7f1f767be390056cd # v4.2.0
+      with:
+        oauth-client-id: ${{ inputs.tailscale-oauth-client-id }}
+        oauth-secret: ${{ inputs.tailscale-oauth-secret }}
+        tags: tag:ci
+    - name: SSH key and pinned host key
+      shell: bash
+      env:
+        SSH_KEY: ${{ inputs.ssh-key }}
+        KNOWN_HOSTS: ${{ inputs.known-hosts }}
+      run: |
+        install -d -m 700 ~/.ssh
+        printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
+        printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+        printf 'Host *\n  StrictHostKeyChecking yes\n  ServerAliveInterval 30\n' > ~/.ssh/config

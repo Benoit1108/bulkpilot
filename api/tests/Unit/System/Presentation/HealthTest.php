@@ -12,7 +12,7 @@ final class HealthTest extends TestCase
 {
     public function testAHealthyReportIsOk(): void
     {
-        $health = Health::fromReport(new HealthReport(['database' => true]));
+        $health = Health::fromReport(new HealthReport(['database' => true]), false);
 
         self::assertSame('ok', $health->status);
         self::assertSame(['database' => 'up'], $health->checks);
@@ -20,7 +20,7 @@ final class HealthTest extends TestCase
 
     public function testADownCheckIsReportedDegraded(): void
     {
-        $health = Health::fromReport(new HealthReport(['database' => false, 'storage' => true]));
+        $health = Health::fromReport(new HealthReport(['database' => false, 'storage' => true]), false);
 
         self::assertSame('degraded', $health->status);
         self::assertSame(['database' => 'down', 'storage' => 'up'], $health->checks);

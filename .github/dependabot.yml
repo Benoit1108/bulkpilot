@@ -18,8 +18,9 @@ updates:
   - package-ecosystem: docker
     directories: [/api, /pwa]
     schedule: { interval: weekly }
+  # The server's compose files too (postgres, tailscale, Uptime Kuma are pinned by digest there).
   - package-ecosystem: docker-compose
-    directory: /
+    directories: [/, /deploy]
     schedule: { interval: weekly }
   - package-ecosystem: github-actions
     directory: /

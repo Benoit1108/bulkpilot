@@ -80,7 +80,8 @@ CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile", "--watch" ]
 # PWA build: static Nuxt SPA, served by Caddy in production.
 # Requires the "pwa" build context (see docker-compose.yml).
 #--------------------------------------------------------------------------
-FROM node:24-alpine AS pwa_build
+# The build's output is plain files: built once on the runner's own platform, not emulated per target.
+FROM --platform=$BUILDPLATFORM node:24-alpine AS pwa_build
 
 WORKDIR /pwa
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -92,6 +93,10 @@ RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
 	pnpm install --frozen-lockfile --ignore-scripts
 
 COPY --from=pwa --link . ./
+# The commit the PWA was built from: its error reports name the code that really runs (a PWA left
+# open across a deployment still runs the previous one).
+ARG APP_RELEASE=dev
+ENV NUXT_PUBLIC_RELEASE=${APP_RELEASE}
 # The build fails when the app outgrows its size budget (pwa/bundle-budget.json, ADR-0025).
 RUN pnpm nuxt prepare && pnpm generate && node scripts/bundle-budget.mjs
 
@@ -101,6 +106,11 @@ RUN pnpm nuxt prepare && pnpm generate && node scripts/bundle-budget.mjs
 FROM frankenphp_base AS frankenphp_prod
 
 ENV APP_ENV=prod
+# The commit the image was built from (CI: `sha-<commit>`): shown by the error reports and the
+# deployment scripts, `dev` for a local build.
+ARG APP_RELEASE=dev
+ENV APP_RELEASE=${APP_RELEASE}
+LABEL org.opencontainers.image.revision=${APP_RELEASE}
 ARG USER=app
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"

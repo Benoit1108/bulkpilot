@@ -1,11 +1,25 @@
+parameters:
+    # The session cookie's name where SESSION_COOKIE_NAME is not set (development, tests).
+    session_cookie_name: sid
+
 framework:
     secret: '%env(APP_SECRET)%'
+
+    # Behind a TLS-terminating proxy (production: Tailscale, docs/DEPLOYMENT.md): the client's
+    # address, scheme and host come from its X-Forwarded-* headers, trusted only from these
+    # addresses (the server's compose network, which only the proxy reaches) and for these host
+    # names (the public one). Empty (development, tests): nothing is trusted, any host is served.
+    trusted_proxies: '%env(default::TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-host']
+    trusted_hosts: '%env(default::TRUSTED_HOSTS)%'
 
     # Sessions live in PostgreSQL (table `sessions`): they survive restarts and deployments,
     # and one device session per sign-in is tracked in `user_sessions` (ADR-0008).
     session:
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
-        name: sid
+        # One name per environment on the server (deploy/compose.yaml): production and staging
+        # never share a session cookie.
+        name: '%env(default:session_cookie_name:SESSION_COOKIE_NAME)%'
         cookie_secure: auto
         cookie_httponly: true
         cookie_samesite: lax

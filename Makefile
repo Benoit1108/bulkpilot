@@ -86,7 +86,10 @@ openapi-check: ## Fail if the committed OpenAPI spec or error codes are out of d
 
 ## —— Quality (runs against the dev stack) ———————————————————————————
 .PHONY: qa composer-validate php-cs php-cs-fix phpstan deptrac schema-validate phpunit pwa-lint pwa-typecheck vitest
-qa: composer-validate php-cs phpstan deptrac schema-validate phpunit openapi-check acceptance-check pwa-lint pwa-typecheck vitest ## Every static check and test suite (same list as CI)
+qa: composer-validate php-cs phpstan deptrac schema-validate migrations-check phpunit openapi-check acceptance-check pwa-lint pwa-typecheck vitest ## Every static check and test suite (same list as CI)
+
+migrations-check: ## New migrations only expand the schema (expand/contract, tools/check_migrations.py)
+	docker run --rm -v "$(CURDIR)":/repo:ro -w /repo python:3.13-alpine@sha256:2dd78ad5cf13a0b68f5134dc49aa9950203a8cf4b7463431b9f3b398287c5059 python3 tools/check_migrations.py
 
 acceptance-check: ## Every test docs/ACCEPTANCE.md cites exists (tools/check_acceptance.py)
 	docker run --rm -v "$(CURDIR)":/repo:ro -w /repo python:3.13-alpine@sha256:2dd78ad5cf13a0b68f5134dc49aa9950203a8cf4b7463431b9f3b398287c5059 python3 tools/check_acceptance.py
@@ -183,12 +186,48 @@ perf: ## On a throwaway production stack: seed demo accounts with years of data,
 	$(DC_PERF) --profile perf run --rm seed && \
 	$(DC_PERF) --profile perf run --rm k6
 
+## —— Production (docs/DEPLOYMENT.md) —————————————————————————————————————
+SHELLCHECK := docker run --rm -v "$(CURDIR):/mnt" -w /mnt koalaman/shellcheck:v0.11.0@sha256:61862eba1fcf09a484ebcc6feea46f1782532571a34ed51fedf90dd25f925a8d --source-path=SCRIPTDIR -x
+ACTIONLINT := docker run --rm -v "$(CURDIR):/repo" -w /repo rhysd/actionlint:1.7.7@sha256:887a259a5a534f3c4f36cb02dca341673c6089431057242cdc931e9f133147e9 -color=false
+# The server over the tailnet. ADMIN: the VM's sudo user; DEPLOY: the deploy user (your own key, a normal shell).
+ADMIN ?= ubuntu@bulkpilot
+SERVER ?= deploy@bulkpilot
+.PHONY: shellcheck deploy-test server-update server-deploy server-logs server-ssh server-status
+
+shellcheck: ## Lint every shell script (server scripts, entrypoint, ZAP, the composite action's steps) and the GitHub workflows
+	$(SHELLCHECK) deploy/*.sh deploy/test/*.sh zap/*.sh api/frankenphp/docker-entrypoint.sh
+	@# actionlint does not read composite actions: their `run:` blocks are checked here.
+	@mkdir -p var && awk '/^ *run: \|/{on=1; ind=-1; next} on{ if (ind<0) { match($$0,/^ */); ind=RLENGTH } if (length($$0) && substr($$0,1,ind) !~ /^ +$$/) { on=0; next } print substr($$0,ind+1) }' .github/actions/server/action.yml | { echo '#!/usr/bin/env bash'; cat; } > var/composite-action.sh
+	$(SHELLCHECK) var/composite-action.sh
+	@rm -f var/composite-action.sh
+	$(ACTIONLINT)
+
+deploy-test: shellcheck ## The server scripts end to end on a throwaway local "server": signature gate, staging before production, rollbacks, restore, backups, prune, the SSH gate
+	deploy/test/deploy-test.sh
+
+server-update: ## Install this checkout's deploy/ on the server (scripts, compose file, timers): bootstrap.sh again, as root
+	scp -r deploy "$(ADMIN):"
+	ssh -t "$(ADMIN)" sudo ./deploy/bootstrap.sh
+
+server-deploy: ## By hand, without GitHub: deploy commit SHA (signed by CI) to ENV, staging first then production
+	@test -n "$(SHA)" && test -n "$(ENV)" || { echo 'usage: make server-deploy SHA=<full commit> ENV=staging|production' >&2; exit 1; }
+	ssh "$(SERVER)" /opt/bulkpilot/bin/deploy.sh "$(SHA)" "$(ENV)"
+
+server-logs: ## Follow the logs of ENV (production by default) on the server, e.g. make server-logs SERVICE=worker
+	ssh -t "$(SERVER)" /opt/bulkpilot/bin/bp.sh $(or $(ENV),production) logs -f --tail=200 $(SERVICE)
+
+server-status: ## What runs on the server: each environment's commit and its services
+	ssh "$(SERVER)" 'for env in production staging; do echo "== $$env: $$(cat /opt/bulkpilot/state/$$env.current 2>/dev/null || echo nothing)"; /opt/bulkpilot/bin/bp.sh $$env ps 2>/dev/null; done'
+
+server-ssh: ## A shell on the server as the deploy user
+	ssh -t "$(SERVER)"
+
 ## —— CI ————————————————————————————————————————————————————————
 # Same steps as .github/workflows/ci.yml, on throwaway stacks that never touch dev data. They run one
 # after the other: the load test and Lighthouse measure time, which a busy machine would skew (the
 # CI runs them as separate jobs, each on its own runner).
 .PHONY: ci ci-qa ci-mutation ci-prod
-ci: ci-qa ci-mutation ci-prod perf ## Full pipeline locally: QA and mutation testing on the dev image, then E2E (+ backups, ZAP, Lighthouse) and the load test on the prod image
+ci: ci-qa ci-mutation ci-prod perf deploy-test ## Full pipeline locally: QA and mutation testing on the dev image, then E2E (+ backups, ZAP, Lighthouse), the load test and the deployment scripts on the prod image
 
 ci-prod: ## On one throwaway production stack: Playwright, then the backup check, OWASP ZAP and Lighthouse
 	@trap '$(DC_TEST) down --volumes --remove-orphans' EXIT; \

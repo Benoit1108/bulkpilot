@@ -10,6 +10,7 @@ use App\Shared\Application\Bus\Event\DomainEventSubscriber;
 use App\Shared\Application\Bus\Job\JobHandler;
 use App\Shared\Application\Bus\Query\QueryHandler;
 use App\System\Application\Health\HealthCheck;
+use App\System\Application\Health\Monitor;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -35,6 +36,8 @@ class Kernel extends BaseKernel
             ->addTag('messenger.message_handler', ['bus' => 'event.bus']);
         $container->registerForAutoconfiguration(HealthCheck::class)
             ->addTag('app.health_check');
+        $container->registerForAutoconfiguration(Monitor::class)
+            ->addTag('app.health_monitor');
         $container->registerForAutoconfiguration(ExternalIdentityProvider::class)
             ->addTag('app.identity_provider');
     }

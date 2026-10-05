@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Tests\Unit\System\Presentation;
 
 use App\System\Application\Backup\Backups;
+use App\System\Application\Monitoring\Heartbeats;
 use App\System\Domain\Backup\Retention;
 use App\System\Presentation\Cli\CreateBackupCommand;
 use App\System\Presentation\Cli\VerifyBackupCommand;
 use App\Tests\Support\System\FakeDatabaseDump;
 use App\Tests\Support\System\InMemoryBackupStore;
+use App\Tests\Support\System\InMemoryBeats;
 use App\Tests\Support\System\RecordingLogger;
+use App\Tests\Support\System\RecordingPings;
 use App\Tests\Support\System\ReversingBackupCipher;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
@@ -31,7 +34,8 @@ final class BackupCommandsTest extends TestCase
     {
         $this->database = new FakeDatabaseDump();
         $this->store = new InMemoryBackupStore();
-        $this->backups = new Backups($this->database, new ReversingBackupCipher(), $this->store, new Retention(30), new MockClock('2026-09-30 02:30:00+00:00'), new RecordingLogger());
+        $clock = new MockClock('2026-09-30 02:30:00+00:00');
+        $this->backups = new Backups($this->database, new ReversingBackupCipher(), $this->store, new Retention(30), $clock, new RecordingLogger(), new Heartbeats(new InMemoryBeats(), new RecordingPings(), $clock, new RecordingLogger()));
     }
 
     public function testABackupThenItsCheckSucceed(): void

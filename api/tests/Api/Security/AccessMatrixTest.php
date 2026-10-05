@@ -27,6 +27,7 @@ final class AccessMatrixTest extends TrainingApiTestCase
     /** Reachable signed out, and why. */
     private const array PUBLIC = [
         'GET /api/health' => 'the container and uptime checks',
+        'GET /api/client-config' => 'the PWA reads its deployment settings before anyone signs in (nothing secret)',
         'GET /api/auth/providers' => 'the sign-in page lists the external providers',
         'POST /api/auth/register' => 'signing up',
         'POST /api/auth/sign-in' => 'signing in',

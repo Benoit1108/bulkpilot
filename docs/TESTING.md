@@ -15,6 +15,7 @@
 | PWA | Lighthouse 13 (`pwa/lighthouse`) + Chrome (`Page.getInstallabilityErrors`) | `pwa/lighthouse` | **image de production** : application installable, performance ≥ 85, accessibilité ≥ 95, bonnes pratiques ≥ 95 (mobile, médiane de 3 mesures) sur connexion, accueil, journal, séance, progression, Coach |
 | Mutation | Infection (`api/infection.json5`, `api/infection.application.json5`) | `api/src/*/Domain`, `api/src/{Coach,Notification,Training}/Application` | suite `unit` contre chaque mutant : MSI ≥ **98 %** sur les Domain ; cliquet à 75 % sur les cas d'usage (mesuré à l'ajout, cible 90 %) (`make infection`, job CI `mutation`) |
 | Acceptation | `docs/ACCEPTANCE.md` | — | chaque critère d'une fonctionnalité renvoie au test qui le prouve |
+| Supervision | PHPUnit + Vitest | `api/tests/**/System/**`, `pwa/test/unit/monitoring.test.ts` | ce qui part au signalement d'erreurs est nettoyé (SDK Sentry avec un faux transport côté API, rapporteur maison côté PWA), battements, moniteurs de `/api/health?scope=monitoring`, pings Uptime Kuma (docs/MONITORING.md) |
 | Responsive | Playwright (`e2e/responsive.spec.ts`) | `pwa/e2e` | **image de production** : chaque page à 320, 390, 768 et 1280 px, compte rempli |
 
 ## Seuils de couverture

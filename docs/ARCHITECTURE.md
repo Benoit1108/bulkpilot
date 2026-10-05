@@ -33,7 +33,7 @@ api/src/
 ├── Media/           photos privées : réencodage (GD), stockage local ou S3, liens signés (port Shared `Photos`, ADR-0027)
 ├── Audit/           journal des actions importantes, « Activité du compte », pseudonymisation (ADR-0030)
 ├── Export/          exports des données personnelles (la suppression du compte est dans Identity, ADR-0030)
-└── System/          préoccupations opérationnelles (santé du service, sauvegardes) — pas un contexte métier (ADR-0013, ADR-0031)
+└── System/          préoccupations opérationnelles (santé du service, sauvegardes, supervision) — pas un contexte métier (ADR-0013, ADR-0031, docs/MONITORING.md)
 ```
 
 Chaque contexte suit les mêmes couches :
@@ -135,6 +135,8 @@ Le kernel reste en mémoire entre les requêtes. Règles :
 
 En dev, le worker redémarre quand `src/` ou `config/` changent ; après un changement de `vendor/`, `make restart`.
 Le healthcheck du conteneur interroge PHP (`/api/health` sur un listener interne), un worker bloqué est donc détecté.
+La supervision externe (Uptime Kuma) lit `/api/health?scope=monitoring`, qui ajoute le battement du planificateur, l'âge
+des sauvegardes et l'espace disque sans toucher à la sonde de disponibilité (docs/MONITORING.md).
 Vérifié par `tests/Api/Identity/WorkerModeTest.php` : deux utilisateurs alternent 20 fois sur un même kernel,
 avec seulement le `services_resetter` entre deux requêtes (ce que fait la boucle du worker) ; aucun jeton ne survit au reset.
 Un service qui garde un état par requête l'annonce et implémente `ResetInterface` (ex. `DeferredMailer`).
@@ -201,3 +203,14 @@ pwa/app/
   `offline.client.ts` lie l'appareil au compte connecté (données d'un autre compte effacées), puis vide la file.
 - **Connectivité** : `ShellConnectivityBanner` n'apparaît que si le serveur est injoignable ou dégradé ; le détail est dans Réglages › À propos.
 - **Mises à jour** : le service worker ne s'active qu'après validation (« Mettre à jour » / « Plus tard ») ; vérification horaire.
+
+## Production
+
+Une VM arm64 (Oracle Cloud Always Free) privée derrière Tailscale, sans port ouvert sur Internet (ADR-0033) :
+`tailscale serve` termine le HTTPS et relaie vers Caddy en HTTP sur la boucle locale (`SERVER_NAME=:80`,
+`TRUSTED_PROXIES`), un projet compose par environnement (`deploy/compose.yaml` : php, worker, PostgreSQL ; staging a
+en plus son propre nœud Tailscale), Uptime Kuma à part (`deploy/ops.compose.yaml`). L'image de chaque commit est
+construite une fois par la CI (amd64 et arm64, GHCR), testée sur ce digest puis signée ; le serveur la tire par digest,
+vérifie la signature, la lance en staging puis promeut ce même digest en production par `deploy/deploy.sh` (sauvegarde
+avant, retour automatique à l'image précédente en cas d'échec). La CI n'atteint le serveur que par une commande
+filtrée (`deploy/gate.sh`). Mode d'emploi : docs/DEPLOYMENT.md.

@@ -1,0 +1,54 @@
+# Staging, automatically, for every commit of main whose CI passed (spec §144: GitHub → CI → staging).
+# CI built the multi-arch image once, ran every test on it and signed it; the server pulls it by
+# digest and checks that signature (deploy.sh). The staging key may only run `deploy <commit>` for
+# staging on the server (its forced command, bulkpilot-gate). See ADR-0033 and docs/DEPLOYMENT.md.
+name: Release to staging
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  staging:
+    name: Deploy to staging
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: staging
+      url: ${{ vars.STAGING_URL }}
+    env:
+      SHA: ${{ github.event.workflow_run.head_sha }}
+      SERVER: ${{ vars.DEPLOY_SSH_TARGET }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/actions
+      - uses: ./.github/actions/server
+        with:
+          tailscale-oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          tailscale-oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
+          known-hosts: ${{ vars.DEPLOY_KNOWN_HOSTS }}
+      - name: Deploy to staging (rolled back automatically if it does not come up)
+        # The gate on the server receives the literal request.
+        run: |
+          # shellcheck disable=SC2029
+          ssh "$SERVER" "deploy $SHA"
+      - name: Summary
+        run: |
+          {
+            echo "### Staging runs \`$SHA\`"
+            echo
+            echo "Check it, then promote it: Actions → *Deploy to production* → Run workflow, with this commit."
+          } >> "$GITHUB_STEP_SUMMARY"

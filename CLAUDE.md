@@ -24,7 +24,8 @@ reference; the architecture is summarised in docs/ARCHITECTURE.md and decisions 
 
 Tests written and green, PHPStan max / Deptrac / PHP CS Fixer / ESLint / vue-tsc green, OpenAPI spec and TS types
 regenerated, docs updated, E2E green on the production image with its backup, ZAP and Lighthouse checks
-(`make ci-prod`; `make e2e-prod` is Playwright alone), mutation and load tests green (`make ci`). Never skip or weaken
+(`make ci-prod`; `make e2e-prod` is Playwright alone), mutation and load tests green, server scripts green on a throwaway server (`make deploy-test`; all of it is `make ci`).
+Migrations only expand the schema; dropping or tightening waits one release and says `// contract:` (`make qa`). Never skip or weaken
 a test or rule.
 
 ## End of every phase

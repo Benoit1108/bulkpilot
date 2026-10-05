@@ -1,0 +1,19 @@
+# Errors of the API reported to Sentry or GlitchTip (docs/MONITORING.md), in production only and
+# only when SENTRY_DSN is set. Nothing personal leaves: no request bodies, cookies, headers, query
+# strings, IP or e-mail (SentryEventScrubber), the user is an opaque id; expected 4xx are dropped.
+when@prod:
+    sentry:
+        dsn: '%env(SENTRY_DSN)%'
+        # The worker's failed messages and the console commands' errors are captured too.
+        messenger:
+            enabled: true
+            capture_soft_fails: false
+        # No performance tracing (no spans, no SQL sent): errors only.
+        tracing:
+            enabled: false
+        options:
+            environment: '%env(SENTRY_ENVIRONMENT)%'
+            release: '%env(APP_RELEASE)%'
+            send_default_pii: false
+            max_request_body_size: none
+            before_send: App\System\Infrastructure\Monitoring\SentryEventScrubber

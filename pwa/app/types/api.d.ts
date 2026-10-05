@@ -124,6 +124,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/client-config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a ClientConfig resource.
+         * @description Retrieves a ClientConfig resource.
+         */
+        get: operations["api_client-config_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/coach": {
         parameters: {
             query?: never;
@@ -2140,6 +2160,24 @@ export interface components {
         BlockInput: {
             exercises?: components["schemas"]["PlannedExerciseInput"][];
         };
+        /** @description Settings of this deployment the PWA reads at start (error reporting); nothing secret. */
+        ClientConfig: {
+            /** @description production, staging or dev. */
+            environment: string;
+            /** @description Where the PWA reports its errors (a Sentry-compatible DSN); null to report none. */
+            errorReportingDsn: string | null;
+            /** @description The version deployed (git commit). */
+            release: string;
+        };
+        /** @description Settings of this deployment the PWA reads at start (error reporting); nothing secret. */
+        "ClientConfig.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** @description production, staging or dev. */
+            environment: string;
+            /** @description Where the PWA reports its errors (a Sentry-compatible DSN); null to report none. */
+            errorReportingDsn: string | null;
+            /** @description The version deployed (git commit). */
+            release: string;
+        };
         /** @description What the Coach offers now, as of its last analysis. */
         Coach: {
             /** Format: date */
@@ -3171,21 +3209,27 @@ export interface components {
             /** Format: date */
             reachedOn: string | null;
         };
-        /** @description Readiness of the API and its dependencies. Answers 503 with the same body when degraded. */
+        /** @description Readiness of the API and its dependencies (the container probe); with `scope=monitoring`, also the worker, the backups and the disk (Uptime Kuma). Answers 503 with the same body when degraded. */
         Health: {
             /** @enum {string} */
             status: "ok" | "degraded";
             checks: {
                 [key: string]: "up" | "down";
             };
+            monitors: {
+                [key: string]: "ok" | "late" | "unknown" | "low" | "disabled" | "pending";
+            } | null;
         };
-        /** @description Readiness of the API and its dependencies. Answers 503 with the same body when degraded. */
+        /** @description Readiness of the API and its dependencies (the container probe); with `scope=monitoring`, also the worker, the backups and the disk (Uptime Kuma). Answers 503 with the same body when degraded. */
         "Health.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
             /** @enum {string} */
             status: "ok" | "degraded";
             checks: {
                 [key: string]: "up" | "down";
             };
+            monitors: {
+                [key: string]: "ok" | "late" | "unknown" | "low" | "disabled" | "pending";
+            } | null;
         };
         HydraCollectionBaseSchema: components["schemas"]["HydraCollectionBaseSchemaNoPagination"] & {
             /**
@@ -5119,6 +5163,38 @@ export interface operations {
             };
         };
     };
+    "api_client-config_get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ClientConfig resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["ClientConfig.jsonld"];
+                    "application/json": components["schemas"]["ClientConfig"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     api_coach_get: {
         parameters: {
             query?: {
@@ -6852,7 +6928,10 @@ export interface operations {
     };
     api_health_get: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description `readiness` (default) or `monitoring`. */
+                scope?: "readiness" | "monitoring";
+            };
             header?: never;
             path?: never;
             cookie?: never;

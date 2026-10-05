@@ -12,6 +12,19 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		# Verification and reset emails must actually leave, with links that work.
 		case "$MAILER_DSN" in null://*) echo 'MAILER_DSN must be a real transport in production.' >&2; exit 1 ;; esac
 		case "$DEFAULT_URI" in *://localhost*) echo 'DEFAULT_URI must be the public URL in production.' >&2; exit 1 ;; esac
+		# Email links and OAuth redirects carry secrets: the public URL is HTTPS, even when TLS ends
+		# before this container (tailscale serve, docs/DEPLOYMENT.md).
+		case "$DEFAULT_URI" in https://*) ;; *) echo 'DEFAULT_URI must be an https:// URL in production.' >&2; exit 1 ;; esac
+		# Plain HTTP here only behind a TLS-terminating proxy whose headers are trusted: otherwise
+		# Symfony would see http:// and the session cookie would lose its Secure flag.
+		case "$SERVER_NAME" in
+			:80|http://*)
+				if [ -z "$TRUSTED_PROXIES" ]; then
+					echo 'SERVER_NAME serves plain HTTP: TRUSTED_PROXIES must name the TLS proxy in front (docs/DEPLOYMENT.md).' >&2
+					exit 1
+				fi
+				;;
+		esac
 		# The fake product database ships in the image for E2E runs only (docker-compose.test.yml).
 		if [ "$FOOD_DATABASE" = 'fake' ] && [ "$ALLOW_FAKE_PROVIDERS" != '1' ]; then
 			echo 'FOOD_DATABASE=fake is for tests: set it to openfoodfacts in production.' >&2
@@ -32,7 +45,9 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		case "${S3_PUBLIC_ENDPOINT:-$S3_ENDPOINT}" in http://*) echo 'The S3 endpoint the browser reaches must be https:// in production.' >&2; exit 1 ;; esac
 		# Automatic, encrypted, off-server backups (spec §106, ADR-0031): the worker makes them, and
 		# only it holds their secrets (a break-in through the web server cannot delete them).
-		if [ "$2" = 'messenger:consume' ]; then
+		# The worker, and the backup commands run in its image (deploy/restore.sh, the pre-deployment backup).
+		case "$2" in messenger:consume|app:backup:*) backup_role=1 ;; *) backup_role=0 ;; esac
+		if [ "$backup_role" = 1 ]; then
 			if [ "$BACKUP_ENABLED" != '1' ]; then
 				echo 'BACKUP_ENABLED must be 1 in production: the database is backed up every night (ADR-0031).' >&2
 				exit 1
@@ -81,6 +96,17 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 			fi
 		fi
 		export CSP_MEDIA_SOURCES
+	fi
+
+	# The PWA posts its error reports to the host of its DSN (docs/MONITORING.md): allowed in connect-src.
+	# Only a well-formed https DSN: anything else would end up verbatim in the policy (key included).
+	if [ -n "${PWA_SENTRY_DSN:-}" ]; then
+		if ! printf '%s' "$PWA_SENTRY_DSN" | grep -Eq '^https://[A-Za-z0-9]+@[A-Za-z0-9.-]+(:[0-9]+)?/[0-9]+$'; then
+			echo 'PWA_SENTRY_DSN must look like https://<key>@<host>/<project> (docs/MONITORING.md).' >&2
+			exit 1
+		fi
+		CSP_REPORTING_SOURCES="$(printf '%s' "$PWA_SENTRY_DSN" | sed -E 's#^https://[^@]+@([^/]+)/.*#https://\1#')"
+		export CSP_REPORTING_SOURCES
 	fi
 
 	if [ -z "$(ls -A 'vendor/' 2>/dev/null)" ]; then

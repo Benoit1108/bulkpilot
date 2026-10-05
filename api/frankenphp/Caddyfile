@@ -21,7 +21,7 @@
 
 	# What the page may load (ADR-0027, spec §101): its own scripts and those inline ones built with
 	# it (by hash), photos from the bucket, nothing framed, no plugin, forms to itself only.
-	header Content-Security-Policy "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' {$CSP_SCRIPT_HASHES}; style-src 'self'; img-src 'self' data: blob: {$CSP_MEDIA_SOURCES}; connect-src 'self' {$CSP_MEDIA_SOURCES}; font-src 'self'; worker-src 'self'; manifest-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
+	header Content-Security-Policy "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' {$CSP_SCRIPT_HASHES}; style-src 'self'; img-src 'self' data: blob: {$CSP_MEDIA_SOURCES}; connect-src 'self' {$CSP_MEDIA_SOURCES} {$CSP_REPORTING_SOURCES}; font-src 'self'; worker-src 'self'; manifest-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
 
 	# Hashed build assets: cached forever when they exist, a plain 404 otherwise
 	# (never index.html, which would be cached as a broken script after a deploy).
@@ -63,6 +63,10 @@ http://127.0.0.1:2080 {
 		format filter {
 			request>headers>Cookie delete
 			request>headers>Authorization delete
+			# Added by `tailscale serve`: who is signed in to the tailnet (an email address).
+			request>headers>Tailscale-User-Login delete
+			request>headers>Tailscale-User-Name delete
+			request>headers>Tailscale-User-Profile-Pic delete
 			resp_headers>Set-Cookie delete
 			# One-time link secrets and OAuth codes travel in query strings.
 			request>uri query {

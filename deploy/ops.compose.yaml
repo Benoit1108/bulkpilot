@@ -1,0 +1,26 @@
+# What watches the environments from inside the server (docs/MONITORING.md, ADR-0033): Uptime Kuma.
+# Installed and started by bootstrap.sh as the compose project `bulkpilot-ops`. It uses the host's
+# network so that it reaches the tailnet names (HTTPS probes through Tailscale, as the iPhone does),
+# and listens on the loopback interface only; `tailscale serve` publishes it to the tailnet (:10000),
+# where the ACL lets in the owner's devices only. Nothing pushes to it: the heartbeats go to
+# healthchecks.io, outside the VM.
+name: bulkpilot-ops
+
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:2@sha256:c74379ac4509ce2d2c2633f509e67003ee2e45b6e995c5e43fc101f45a0e1fbe
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      UPTIME_KUMA_HOST: 127.0.0.1
+      UPTIME_KUMA_PORT: "3001"
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    volumes:
+      - uptime_kuma_data:/app/data
+
+volumes:
+  uptime_kuma_data:

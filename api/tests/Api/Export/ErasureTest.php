@@ -34,6 +34,7 @@ final class ErasureTest extends TrainingApiTestCase
         'doctrine_migration_versions' => 'the schema\'s history',
         'messenger_messages' => 'queued work: an erasure left in `failed` is replayed or dropped by the operator (docs/DEPLOYMENT.md)',
         'sessions' => 'HTTP sessions: those naming the user are deleted with the account (checked below)',
+        'system_heartbeats' => 'when the worker and the backups last ran: about the service, nobody\'s data',
         'training_program_versions' => 'owned through training_programs (checked below)',
         'users' => 'the account itself (checked below)',
     ];

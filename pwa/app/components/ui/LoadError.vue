@@ -1,5 +1,9 @@
 <script setup lang="ts">
-/** A list or page that could not be loaded (offline at the gym…), with a way to try again. */
+/**
+ * A list or page that could not be loaded, with a way to try again. The default text blames
+ * neither the network nor the server: offline and an update restarting the service look alike here
+ * (the connectivity banner says which).
+ */
 withDefaults(defineProps<{
   message?: string
   /**
@@ -7,7 +11,7 @@ withDefaults(defineProps<{
    * other, and the focus stays put.
    */
   focusOnMount?: boolean
-}>(), { message: 'Impossible de charger ces données. Vérifie ta connexion.', focusOnMount: true })
+}>(), { message: 'Impossible de charger ces données. Réessaie dans un instant.', focusOnMount: true })
 const emit = defineEmits<{ retry: [] }>()
 </script>
 

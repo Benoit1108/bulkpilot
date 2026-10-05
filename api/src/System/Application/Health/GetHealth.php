@@ -11,4 +11,10 @@ use App\Shared\Application\Bus\Query\Query;
  */
 final readonly class GetHealth implements Query
 {
+    /**
+     * @param bool $monitoring the monitors too (Uptime Kuma), not only readiness (the container probe)
+     */
+    public function __construct(public bool $monitoring = false)
+    {
+    }
 }

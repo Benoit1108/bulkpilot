@@ -173,7 +173,7 @@ test.describe('production serving', () => {
     const response = await request.get('/api/health', { headers: { Accept: 'application/json' } })
 
     expect(response.status()).toBe(200)
-    expect(await response.json()).toEqual({ status: 'ok', checks: { database: 'up' } })
+    expect(await response.json()).toEqual({ status: 'ok', checks: { database: 'up' }, monitors: null })
   })
 
   test('web app manifest is installable', async ({ request }) => {

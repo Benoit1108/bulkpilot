@@ -10,8 +10,9 @@ final readonly class GetHealthHandler implements QueryHandler
 {
     /**
      * @param iterable<HealthCheck> $checks
+     * @param iterable<Monitor>     $monitors
      */
-    public function __construct(private iterable $checks)
+    public function __construct(private iterable $checks, private iterable $monitors = [])
     {
     }
 
@@ -22,6 +23,13 @@ final readonly class GetHealthHandler implements QueryHandler
             $results[$check->name()] = $check->isHealthy();
         }
 
-        return new HealthReport($results);
+        $statuses = [];
+        if ($query->monitoring) {
+            foreach ($this->monitors as $monitor) {
+                $statuses = [...$statuses, ...$monitor->statuses()];
+            }
+        }
+
+        return new HealthReport($results, $statuses);
     }
 }

@@ -36,3 +36,4 @@ Format : contexte → décision → conséquences. Un ADR accepté n'est pas ré
 | [0030](0030-personal-data-audit-export-deletion.md) | Données personnelles : audit, export, suppression du compte | Accepté |
 | [0031](0031-database-backups.md) | Sauvegardes de la base : chiffrées, hors du serveur, restaurées chaque semaine | Accepté |
 | [0032](0032-demo-data-and-performance-checks.md) | Données de démonstration et contrôles de performance | Accepté |
+| [0033](0033-free-production-platform.md) | Plateforme de production gratuite : une VM Ampere derrière Tailscale | Accepté |

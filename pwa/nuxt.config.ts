@@ -41,6 +41,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       appName,
+      // The commit this bundle was built from (NUXT_PUBLIC_RELEASE at build time, the image's
+      // APP_RELEASE): what an installed app really runs, which the API's release may not be.
+      release: 'dev',
     },
   },
   compatibilityDate: '2026-09-01',

@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace App\System\Application\Backup;
 
 use App\Shared\Application\File\TemporaryFile;
+use App\System\Application\Monitoring\Heartbeats;
 use App\System\Domain\Backup\BackupKey;
 use App\System\Domain\Backup\ErasureMarker;
 use App\System\Domain\Backup\Retention;
+use App\System\Domain\Monitoring\Beat;
 use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * The database's backups (spec §106, ADR-0031): dumped, encrypted and sent away every night, the
  * past ones deleted after the retention (never the latest), and a test restore every week. Every
- * failure is logged as an error (the monitoring, phase 10) and thrown: nothing half-done is quiet.
+ * failure is logged as an error and thrown, and each outcome is told to the monitoring (a heartbeat
+ * when it went well, docs/MONITORING.md): nothing half-done is quiet.
  */
 final readonly class Backups
 {
@@ -29,6 +32,7 @@ final readonly class Backups
         private Retention $retention,
         private ClockInterface $clock,
         private LoggerInterface $logger,
+        private Heartbeats $heartbeats,
     ) {
     }
 
@@ -50,12 +54,14 @@ final readonly class Backups
             $deleted = $this->deleteExpired($now);
         } catch (BackupFailed|\RuntimeException $failure) {
             $this->logger->error('system.backup_failed', ['key' => $key->value, 'reason' => $failure->getMessage()]);
+            $this->heartbeats->failed(Beat::Backup, $failure->getMessage());
 
             throw $failure instanceof BackupFailed ? $failure : BackupFailed::because($failure->getMessage(), $failure);
         } finally {
             TemporaryFile::remove($dump, $encrypted);
         }
         $this->logger->info('system.backup_created', ['key' => $key->value, 'deleted' => $deleted]);
+        $this->heartbeats->beat(Beat::Backup);
 
         return new BackupCreated($key->value, $deleted);
     }
@@ -77,6 +83,7 @@ final readonly class Backups
             $check = $this->restore($latest);
         } catch (BackupFailed $failure) {
             $this->logger->error('system.backup_verification_failed', ['key' => $key, 'reason' => $failure->getMessage()]);
+            $this->heartbeats->failed(Beat::BackupVerify, $failure->getMessage());
 
             throw $failure;
         }
@@ -87,6 +94,7 @@ final readonly class Backups
             'rows' => $check->rows,
             'erased_to_reapply' => $check->erasedToReapply,
         ]);
+        $this->heartbeats->beat(Beat::BackupVerify);
 
         return new VerifiedBackup($latest->value, $check);
     }

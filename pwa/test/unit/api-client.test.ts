@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { asApiError, createApiClient } from '~/services/api/client'
-import { ApiError } from '~/services/api/errors'
+import { ApiError, apiErrorFromResponse } from '~/services/api/errors'
 
 function jsonResponse(status: number, body: unknown, headers: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(body), {
@@ -148,6 +148,17 @@ describe('api client', () => {
     expect(onUnauthenticated).not.toHaveBeenCalled()
     await expect(client.get('/api/me')).rejects.toMatchObject({ kind: 'unauthenticated' })
     expect(onUnauthenticated).toHaveBeenCalledOnce()
+  })
+})
+
+describe('apiErrorFromResponse', () => {
+  it('says the service restarts on a gateway error, not that the network is down', () => {
+    for (const status of [502, 503, 504]) {
+      expect(apiErrorFromResponse(status, null).userMessage).toBe('Le service redémarre (mise à jour). Réessaie dans une minute.')
+    }
+    // A dependency of ours down: its own code says so.
+    expect(apiErrorFromResponse(503, { code: 'nutrition.product_database_unavailable' }).userMessage).toBe('Une erreur est survenue. Réessaie dans un instant.')
+    expect(apiErrorFromResponse(500, null).userMessage).toBe('Une erreur est survenue. Réessaie dans un instant.')
   })
 })
 

@@ -22,6 +22,7 @@ security:
     # Deny by default: everything under /api needs a signed-in user unless listed here.
     access_control:
         - { path: ^/api/health$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/client-config$, roles: PUBLIC_ACCESS }
         - { path: ^/api/docs, roles: PUBLIC_ACCESS }
         - { path: ^/api/auth/, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: ROLE_USER }

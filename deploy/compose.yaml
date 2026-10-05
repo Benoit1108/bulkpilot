@@ -1,0 +1,203 @@
+# One environment (production or staging) of BulkPilot on the server (docs/DEPLOYMENT.md, ADR-0033).
+# Installed by bootstrap.sh in /opt/bulkpilot/bin (owned by root: a release cannot change it) and run
+# by deploy.sh only, as the compose project `bulkpilot-<env>`, with the environment's settings:
+#   BULKPILOT_ENV=production BULKPILOT_IMAGE_REF=ghcr.io/…@sha256:… docker compose -f compose.yaml --env-file env/production.env …
+# The image is CI's, pulled by digest and signature-checked (deploy.sh): the one staging ran goes to production.
+# Nothing is published on a public interface: TLS ends at `tailscale serve` (production, on the host)
+# or at the staging environment's own Tailscale node (`tailscale` service, profile own-node), which
+# proxy to plain HTTP here.
+name: ${BULKPILOT_PROJECT:-bulkpilot}-${BULKPILOT_ENV:?production or staging}
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "5"
+
+# Staging may not starve production: limits on staging only (production: no limit).
+x-limits: &limits
+  mem_limit: ${BULKPILOT_MEM_LIMIT:-0}
+  cpus: ${BULKPILOT_CPUS:-0}
+
+services:
+  php:
+    image: ${BULKPILOT_IMAGE_REF:?the image to run, repository@sha256:digest}
+    restart: unless-stopped
+    logging: *logging
+    <<: *limits
+    environment: &php-environment
+      # Plain HTTP inside: TLS ends at the Tailscale proxy, which reaches this container from the
+      # compose network's gateway only (production: through the loopback port; staging: the
+      # tailscale service). The scheme and host the browser used are restored for Symfony (secure
+      # cookie, same-origin check, absolute URLs), trusted from that subnet alone.
+      SERVER_NAME: ":80"
+      TRUSTED_PROXIES: 127.0.0.1,${BULKPILOT_SUBNET:?set by deploy.sh}
+      # Requests name the public host (forced below) or the container itself (the healthcheck).
+      TRUSTED_HOSTS: ^(${PUBLIC_HOST:?the host name the browser uses, e.g. bulkpilot.tail1234.ts.net}|127\.0\.0\.1|localhost)$$
+      CADDY_SERVER_EXTRA_DIRECTIVES: |
+        request_header X-Forwarded-Proto https
+        request_header X-Forwarded-Host ${PUBLIC_HOST}
+      # Production and staging never share a session cookie, even on one browser.
+      SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME:-sid_${BULKPILOT_ENV}}
+      APP_SECRET: ${APP_SECRET:?}
+      APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY:?}
+      DEFAULT_URI: https://${PUBLIC_HOST}
+      MAILER_DSN: ${MAILER_DSN:?}
+      MAILER_FROM: ${MAILER_FROM:?}
+      REGISTRATION_ENABLED: ${REGISTRATION_ENABLED:-false}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      FOOD_DATABASE: openfoodfacts
+      OPEN_FOOD_FACTS_USER_AGENT: ${OPEN_FOOD_FACTS_USER_AGENT:?}
+      # Progress photos: a private bucket of their own (ADR-0027), Cloudflare R2 by default.
+      MEDIA_STORAGE: s3
+      S3_ENDPOINT: ${S3_ENDPOINT:?}
+      S3_PUBLIC_ENDPOINT: ${S3_PUBLIC_ENDPOINT:-}
+      S3_REGION: ${S3_REGION:-auto}
+      S3_BUCKET: ${S3_BUCKET:?}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY:?}
+      S3_SECRET_KEY: ${S3_SECRET_KEY:?}
+      S3_PATH_STYLE: ${S3_PATH_STYLE:-true}
+      # The database of the `database` service below, or a managed one (EXTERNAL_DATABASE=1 and a
+      # full DATABASE_URL in the env file).
+      DATABASE_URL: ${DATABASE_URL:-postgresql://app:${POSTGRES_PASSWORD:-}@database:5432/app?serverVersion=18&charset=utf8}
+      # Error reports (docs/MONITORING.md): off while empty.
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_ENVIRONMENT: ${BULKPILOT_ENV}
+      PWA_SENTRY_DSN: ${PWA_SENTRY_DSN:-}
+      AUDIT_RETENTION_DAYS: ${AUDIT_RETENTION_DAYS:-365}
+      # /api/health?scope=monitoring watches the worker's backups (the worker makes them).
+      BACKUPS_MONITORED: "1"
+    depends_on:
+      database:
+        condition: service_healthy
+        required: false
+    networks: [default]
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    # Reached by the host's `tailscale serve` (production) or deploy.sh's smoke test only: the
+    # loopback interface of the server, never the Internet.
+    ports:
+      - "127.0.0.1:${BULKPILOT_PORT:?set by deploy.sh}:80"
+
+  # Schedules, exports, erasures and the nightly encrypted backups (ADR-0029, ADR-0031). Only the
+  # worker holds the backup secrets.
+  worker:
+    image: ${BULKPILOT_IMAGE_REF:?}
+    restart: unless-stopped
+    logging: *logging
+    <<: *limits
+    command: ["bin/console", "messenger:consume", "--all", "--exclude-receivers=failed", "--time-limit=3600", "--memory-limit=192M"]
+    environment:
+      <<: *php-environment
+      RUN_MIGRATIONS: "0"
+      BACKUP_ENABLED: "1"
+      BACKUP_PASSPHRASE: ${BACKUP_PASSPHRASE:?}
+      # Longer than the bucket's lock (30 days on production): a deletion is never refused by it.
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-31}
+      BACKUP_S3_ENDPOINT: ${BACKUP_S3_ENDPOINT:?}
+      BACKUP_S3_REGION: ${BACKUP_S3_REGION:-auto}
+      BACKUP_S3_BUCKET: ${BACKUP_S3_BUCKET:?}
+      BACKUP_S3_ACCESS_KEY: ${BACKUP_S3_ACCESS_KEY:?}
+      BACKUP_S3_SECRET_KEY: ${BACKUP_S3_SECRET_KEY:?}
+      BACKUP_S3_PATH_STYLE: ${BACKUP_S3_PATH_STYLE:-true}
+      # healthchecks.io checks (docs/MONITORING.md), outside the VM: a missing ping raises the alert. Off while empty.
+      HEARTBEAT_URL_SCHEDULER: ${HEARTBEAT_URL_SCHEDULER:-}
+      HEARTBEAT_URL_BACKUP: ${HEARTBEAT_URL_BACKUP:-}
+      HEARTBEAT_URL_BACKUP_VERIFY: ${HEARTBEAT_URL_BACKUP_VERIFY:-}
+    # The consumer itself proves it runs: it touches var/worker.alive at every loop (WorkerRunningEvent).
+    healthcheck:
+      test: ["CMD-SHELL", "test -n \"$$(find var/worker.alive -mmin -2 2>/dev/null)\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+      start_interval: 2s
+    depends_on:
+      php:
+        condition: service_healthy
+    networks: [default]
+
+  # PostgreSQL on the server, one per environment (ADR-0033: not a managed free tier). Its data lives
+  # in a named volume; its durability comes from the worker's encrypted nightly dumps off the server.
+  database:
+    profiles: [local-db]
+    image: postgres:18-alpine@sha256:77f585114c32fbca283dc835b0596f4e52b51b4c6662d7810b2f4084f60a1873
+    restart: unless-stopped
+    logging: *logging
+    <<: *limits
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+    # Sized for a share of an Ampere A1 VM with 24 GB (two environments side by side); see ADR-0033.
+    command:
+      - postgres
+      - -c
+      - shared_buffers=${POSTGRES_SHARED_BUFFERS:-1GB}
+      - -c
+      - effective_cache_size=${POSTGRES_EFFECTIVE_CACHE_SIZE:-4GB}
+      - -c
+      - work_mem=16MB
+      - -c
+      - maintenance_work_mem=256MB
+      - -c
+      - max_connections=60
+      - -c
+      - wal_compression=on
+      - -c
+      - random_page_cost=1.1
+    shm_size: 256mb
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "app", "-U", "app"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+      start_interval: 1s
+    networks: [default]
+    volumes:
+      - database_data:/var/lib/postgresql
+
+  # Staging's own node on the tailnet (bulkpilot-staging.<tailnet>.ts.net): another host name than
+  # production, so the two never share cookies (ADR-0033). It terminates HTTPS and proxies to php.
+  tailscale:
+    profiles: [own-node]
+    image: tailscale/tailscale:v1.90.6@sha256:8eb8b450a85856807e8a216c4697333e15f8701cb6d344bed851bf6aa6a9605c
+    restart: unless-stopped
+    logging: *logging
+    hostname: ${TS_HOSTNAME:-bulkpilot-staging}
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY:-}
+      TS_EXTRA_ARGS: --advertise-tags=tag:server
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_USERSPACE: "true"
+      TS_SERVE_CONFIG: /config/serve.json
+    configs:
+      - source: serve
+        target: /config/serve.json
+    volumes:
+      - tailscale_state:/var/lib/tailscale
+    depends_on:
+      php:
+        condition: service_healthy
+    networks: [default]
+
+configs:
+  serve:
+    content: |
+      {"TCP": {"443": {"HTTPS": true}},
+       "Web": {"$${TS_CERT_DOMAIN}:443": {"Handlers": {"/": {"Proxy": "http://php:80"}}}}}
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: ${BULKPILOT_SUBNET:?}
+
+volumes:
+  caddy_data:
+  caddy_config:
+  database_data:
+  tailscale_state:

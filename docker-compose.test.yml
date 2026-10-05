@@ -34,6 +34,8 @@ services:
   php:
     environment:
       <<: *e2e-environment
+      # A reporting endpoint that does not exist: e2e/errorReporting.spec.ts catches what would be sent.
+      PWA_SENTRY_DSN: https://e2ekey@errors.test/1
     networks:
       default:
         aliases: [app.e2e.test]

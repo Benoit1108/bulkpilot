@@ -11,10 +11,13 @@ use App\System\Application\Backup\Backups;
 use App\System\Application\Backup\CreateBackup;
 use App\System\Application\Backup\RunScheduledBackups;
 use App\System\Application\Backup\VerifyBackup;
+use App\System\Application\Monitoring\Heartbeats;
 use App\System\Domain\Backup\Retention;
 use App\Tests\Support\System\FakeDatabaseDump;
 use App\Tests\Support\System\InMemoryBackupStore;
+use App\Tests\Support\System\InMemoryBeats;
 use App\Tests\Support\System\RecordingLogger;
+use App\Tests\Support\System\RecordingPings;
 use App\Tests\Support\System\ReversingBackupCipher;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
@@ -27,6 +30,8 @@ final class BackupTest extends TestCase
     private InMemoryBackupStore $store;
     private RecordingLogger $logger;
     private MockClock $clock;
+    private InMemoryBeats $beats;
+    private RecordingPings $pings;
 
     protected function setUp(): void
     {
@@ -34,6 +39,27 @@ final class BackupTest extends TestCase
         $this->store = new InMemoryBackupStore();
         $this->logger = new RecordingLogger();
         $this->clock = new MockClock(new \DateTimeImmutable('2026-09-30 02:30:00+00:00'));
+        $this->beats = new InMemoryBeats();
+        $this->pings = new RecordingPings();
+    }
+
+    public function testEachOutcomeIsToldToTheMonitoring(): void
+    {
+        $this->backups()->create();
+        $this->backups()->verify();
+
+        self::assertSame(['backup' => '2026-09-30T02:30:00+00:00', 'backup_verify' => '2026-09-30T02:30:00+00:00'], array_map(static fn (\DateTimeImmutable $at): string => $at->format(\DATE_ATOM), $this->beats->last));
+        self::assertSame(['backup up', 'backup_verify up'], $this->pings->sent);
+
+        $this->database->failing = true;
+        try {
+            $this->backups()->create();
+            self::fail('The backup should have failed.');
+        } catch (BackupFailed) {
+        }
+        self::assertSame('backup down: pg_dump failed: connection refused', $this->pings->last());
+        // A failure is no beat: the last one stays, and grows old.
+        self::assertCount(2, $this->beats->last);
     }
 
     public function testABackupIsSentEncryptedUnderItsDateAndOldOnesAreDeleted(): void
@@ -201,6 +227,6 @@ final class BackupTest extends TestCase
 
     private function backups(): Backups
     {
-        return new Backups($this->database, new ReversingBackupCipher(), $this->store, new Retention(30), $this->clock, $this->logger);
+        return new Backups($this->database, new ReversingBackupCipher(), $this->store, new Retention(30), $this->clock, $this->logger, new Heartbeats($this->beats, $this->pings, $this->clock, new RecordingLogger()));
     }
 }

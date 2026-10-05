@@ -583,6 +583,55 @@
                 }
             }
         },
+        "/api/client-config": {
+            "get": {
+                "operationId": "api_client-config_get",
+                "tags": [
+                    "ClientConfig"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ClientConfig resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClientConfig.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClientConfig"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a ClientConfig resource.",
+                "description": "Retrieves a ClientConfig resource.",
+                "parameters": []
+            }
+        },
         "/api/coach": {
             "get": {
                 "operationId": "api_coach_get",
@@ -3884,7 +3933,25 @@
                 },
                 "summary": "Retrieves a Health resource.",
                 "description": "Retrieves a Health resource.",
-                "parameters": []
+                "parameters": [
+                    {
+                        "name": "scope",
+                        "in": "query",
+                        "description": "`readiness` (default) or `monitoring`.",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "readiness",
+                                "monitoring"
+                            ],
+                            "default": "readiness"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
             }
         },
         "/api/nutrition/entries": {
@@ -11786,6 +11853,65 @@
                     }
                 }
             },
+            "ClientConfig": {
+                "type": "object",
+                "description": "Settings of this deployment the PWA reads at start (error reporting); nothing secret.",
+                "required": [
+                    "environment",
+                    "errorReportingDsn",
+                    "release"
+                ],
+                "properties": {
+                    "environment": {
+                        "description": "production, staging or dev.",
+                        "type": "string"
+                    },
+                    "errorReportingDsn": {
+                        "description": "Where the PWA reports its errors (a Sentry-compatible DSN); null to report none.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "release": {
+                        "description": "The version deployed (git commit).",
+                        "type": "string"
+                    }
+                }
+            },
+            "ClientConfig.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "environment",
+                            "errorReportingDsn",
+                            "release"
+                        ],
+                        "properties": {
+                            "environment": {
+                                "description": "production, staging or dev.",
+                                "type": "string"
+                            },
+                            "errorReportingDsn": {
+                                "description": "Where the PWA reports its errors (a Sentry-compatible DSN); null to report none.",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "release": {
+                                "description": "The version deployed (git commit).",
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "description": "Settings of this deployment the PWA reads at start (error reporting); nothing secret."
+            },
             "Coach": {
                 "type": "object",
                 "description": "What the Coach offers now, as of its last analysis.",
@@ -16048,10 +16174,11 @@
             },
             "Health": {
                 "type": "object",
-                "description": "Readiness of the API and its dependencies. Answers 503 with the same body when degraded.",
+                "description": "Readiness of the API and its dependencies (the container probe); with `scope=monitoring`, also the worker, the backups and the disk (Uptime Kuma). Answers 503 with the same body when degraded.",
                 "required": [
                     "status",
-                    "checks"
+                    "checks",
+                    "monitors"
                 ],
                 "properties": {
                     "status": {
@@ -16070,6 +16197,23 @@
                                 "down"
                             ]
                         }
+                    },
+                    "monitors": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "additionalProperties": {
+                            "type": "string",
+                            "enum": [
+                                "ok",
+                                "late",
+                                "unknown",
+                                "low",
+                                "disabled",
+                                "pending"
+                            ]
+                        }
                     }
                 }
             },
@@ -16082,7 +16226,8 @@
                         "type": "object",
                         "required": [
                             "status",
-                            "checks"
+                            "checks",
+                            "monitors"
                         ],
                         "properties": {
                             "status": {
@@ -16101,11 +16246,28 @@
                                         "down"
                                     ]
                                 }
+                            },
+                            "monitors": {
+                                "type": [
+                                    "object",
+                                    "null"
+                                ],
+                                "additionalProperties": {
+                                    "type": "string",
+                                    "enum": [
+                                        "ok",
+                                        "late",
+                                        "unknown",
+                                        "low",
+                                        "disabled",
+                                        "pending"
+                                    ]
+                                }
                             }
                         }
                     }
                 ],
-                "description": "Readiness of the API and its dependencies. Answers 503 with the same body when degraded."
+                "description": "Readiness of the API and its dependencies (the container probe); with `scope=monitoring`, also the worker, the backups and the disk (Uptime Kuma). Answers 503 with the same body when degraded."
             },
             "HydraCollectionBaseSchema": {
                 "allOf": [
@@ -22891,6 +23053,10 @@
         {
             "name": "WeightSummary",
             "description": "The weight page (spec \u00a751\u201355): the latest weigh-in, the 7 and 30-day averages and the speed\nending today, the change since the first weigh-in, the goal, and the chart of a period."
+        },
+        {
+            "name": "ClientConfig",
+            "description": "The PWA's deployment settings (docs/MONITORING.md): public, read at start, cached briefly."
         },
         {
             "name": "Health",
