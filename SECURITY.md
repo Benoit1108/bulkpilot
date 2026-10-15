@@ -79,6 +79,17 @@ Le dépôt est public, l'application ne l'est pas. Signaler une vulnérabilité 
     Brevo (emails), Sentry (erreurs nettoyées des données personnelles, région UE), healthchecks.io (battements
     seulement : aucune donnée de compte), Tailscale (réseau ; le trafic est chiffré de bout en bout).
 
+## Dépendances
+
+- La CI bloque sur `composer audit --locked` et sur `pnpm audit --prod`. Côté PWA, « prod » veut dire ce qui part
+  dans le SPA compilé (Vue, le routeur, les icônes, la police, `ofetch`, `uqr`, `zxing-wasm`) ; Nuxt et ses modules
+  sont des outils de build, déclarés en `devDependencies`, et l'image de production ne sert que des fichiers statiques.
+- Les versions corrigées de dépendances indirectes sont imposées par `overrides` dans `pwa/pnpm-workspace.yaml`
+  quand le paquet qui les tire tarde à monter (`sharp`, `shell-quote`, `source-map-js`).
+- Restent connues, sans version corrigée publiée (octobre 2026), et seulement dans l'outillage de développement : `simple-git` (via `@nuxt/devtools`), `node-forge` (serveur de dev `listhen`), `braces` (recherche
+  de fichiers pendant le build). Elles n'existent que sur un poste de développement ou pendant la construction de
+  l'image ; Dependabot proposera la montée dès qu'elle existe. `pnpm audit` (sans `--prod`) les liste.
+
 ## Prévu
 
 | Sujet | Phase |

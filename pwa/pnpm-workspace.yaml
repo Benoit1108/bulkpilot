@@ -1,3 +1,10 @@
 allowBuilds:
   esbuild: true
   unrs-resolver: true
+
+# Patched versions of vulnerable transitive dependencies (pnpm audit), until the packages that pull
+# them in upgrade on their own. All of them are build or dev-server tooling; none ships in the SPA.
+overrides:
+  source-map-js: ^1.2.2
+  sharp: ^0.35.5
+  shell-quote: ^1.11.0
