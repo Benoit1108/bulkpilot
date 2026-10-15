@@ -81,7 +81,7 @@ CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile", "--watch" ]
 # Requires the "pwa" build context (see docker-compose.yml).
 #--------------------------------------------------------------------------
 # The build's output is plain files: built once on the runner's own platform, not emulated per target.
-FROM --platform=$BUILDPLATFORM node:24-alpine AS pwa_build
+FROM --platform=$BUILDPLATFORM node:25-alpine AS pwa_build
 
 WORKDIR /pwa
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
