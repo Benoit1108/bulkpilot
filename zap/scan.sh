@@ -73,10 +73,13 @@ PY
 )
 [ -n "$COOKIE" ] || { echo 'No session cookie: the account could not be created.'; exit 1; }
 
-zap-baseline.py -t "$TARGET" -c rules.tsv -J report/baseline.json -I -s -m 2 || true
+# ZAP's home in /tmp: the container may run as a user its image doesn't know (the CI runner's), whose
+# home it couldn't create.
+ZAP_HOME_DIR=/tmp/zap-home
+zap-baseline.py -t "$TARGET" -c rules.tsv -J report/baseline.json -I -s -m 2 -z "-dir $ZAP_HOME_DIR" || true
 SAFE=-S
 [ "${ZAP_ACTIVE:-0}" = '1' ] && SAFE=
 zap-api-scan.py -t /zap/wrk/report/api-spec.json -f openapi $SAFE -c rules.tsv -J report/api.json -I -s \
-	-z "-config replacer.full_list(0).description=session -config replacer.full_list(0).enabled=true -config replacer.full_list(0).matchtype=REQ_HEADER -config replacer.full_list(0).matchstr=Cookie -config replacer.full_list(0).regex=false -config replacer.full_list(0).replacement=$COOKIE -config replacer.full_list(1).description=origin -config replacer.full_list(1).enabled=true -config replacer.full_list(1).matchtype=REQ_HEADER -config replacer.full_list(1).matchstr=Origin -config replacer.full_list(1).regex=false -config replacer.full_list(1).replacement=$TARGET" || true
+	-z "-dir $ZAP_HOME_DIR -config replacer.full_list(0).description=session -config replacer.full_list(0).enabled=true -config replacer.full_list(0).matchtype=REQ_HEADER -config replacer.full_list(0).matchstr=Cookie -config replacer.full_list(0).regex=false -config replacer.full_list(0).replacement=$COOKIE -config replacer.full_list(1).description=origin -config replacer.full_list(1).enabled=true -config replacer.full_list(1).matchtype=REQ_HEADER -config replacer.full_list(1).matchstr=Origin -config replacer.full_list(1).regex=false -config replacer.full_list(1).replacement=$TARGET" || true
 
 exec python3 check-alerts.py --spec report/api-spec.json report/baseline.json report/api.json
