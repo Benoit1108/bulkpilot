@@ -164,7 +164,7 @@ services:
   # production, so the two never share cookies (ADR-0033). It terminates HTTPS and proxies to php.
   tailscale:
     profiles: [own-node]
-    image: tailscale/tailscale:v1.90.6@sha256:8eb8b450a85856807e8a216c4697333e15f8701cb6d344bed851bf6aa6a9605c
+    image: tailscale/tailscale:v1.102.5@sha256:c507f3a2a6ab1cabd8d809b98edeb41edbd5c3fb6ad9632ffd098b4c7d0b4065
     restart: unless-stopped
     logging: *logging
     hostname: ${TS_HOSTNAME:-bulkpilot-staging}
