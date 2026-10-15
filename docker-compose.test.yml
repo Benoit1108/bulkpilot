@@ -98,7 +98,7 @@ services:
   # The bucket over TLS, as a provider serves it: the browser loads photos from an https page.
   # The Host header is kept, so the presigned signature (made for s3-tls) still matches.
   s3-tls:
-    image: caddy:2.11.4-alpine
+    image: caddy:2.11.7-alpine
     command: ["caddy", "reverse-proxy", "--from", "https://s3-tls", "--to", "s3:7070", "--internal-certs"]
     depends_on:
       s3:
