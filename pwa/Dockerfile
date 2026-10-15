@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # Development image only: in production the SPA is built into the API image (api/Dockerfile).
-FROM node:24-alpine AS pwa_dev
+FROM node:25-alpine AS pwa_dev
 
 WORKDIR /app
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
