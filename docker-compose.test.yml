@@ -77,7 +77,7 @@ services:
       - /var/lib/postgresql
 
   mailer:
-    image: axllent/mailpit:v1.31.3
+    image: axllent/mailpit:v1.31.5
     environment:
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1

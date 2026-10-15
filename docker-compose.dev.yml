@@ -75,7 +75,7 @@ services:
         protocol: tcp
 
   mailer:
-    image: axllent/mailpit:v1.31.3
+    image: axllent/mailpit:v1.31.5
     ports:
       - target: 8025
         published: ${MAILPIT_PORT:-8025}
