@@ -68,7 +68,7 @@ cert: ## Copy Caddy's local root CA to ./caddy-root.crt (to trust it on your OS/
 .PHONY: openapi openapi-check
 # Stable business error codes (DomainException::errorCode()), so the PWA test suite can check
 # that every one of them has a French message.
-ERROR_CODES = grep -rhoE "return '[a-z_]+\.[a-z_.]+';" api/src | sed -E "s/return '(.*)';/\1/" | sort -u \
+ERROR_CODES = grep -rhoE "return '[a-z_]+\.[a-z_.]+';" api/src | sed -E "s/return '(.*)';/\1/" | LC_ALL=C sort -u \
 	| python3 -c 'import json,sys; print(json.dumps([l.strip() for l in sys.stdin if l.strip()], indent=2))'
 
 openapi: ## Export the OpenAPI spec and error codes, regenerate the TypeScript API types
