@@ -31,7 +31,10 @@ const ROW = 'flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 borde
       Pas encore de record&nbsp;: ils apparaîtront après ta première séance avec cet exercice.
     </p>
     <template v-else>
-      <ul class="flex flex-col">
+      <ul
+        class="flex flex-col"
+        role="list"
+      >
         <li
           v-for="record in progress.records"
           :key="record.kind"
@@ -48,7 +51,10 @@ const ROW = 'flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 borde
       <h3 class="mt-3 font-bold">
         Dernières séances
       </h3>
-      <ul class="flex flex-col">
+      <ul
+        class="flex flex-col"
+        role="list"
+      >
         <li
           v-for="session in recent"
           :key="session.workoutId"

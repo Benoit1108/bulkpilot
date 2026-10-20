@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { amountText } from '~/services/text/numbers'
 import { Eye, EyeOff } from 'lucide-vue-next'
 import { fieldClass } from './classes'
 
@@ -51,6 +52,11 @@ const describedBy = computed(() => [props.suffix && `${id}-suffix`, props.hint &
 // with a French keyboard on some phones. parseAmount() reads both "12,5" and "12.5".
 const nativeType = computed(() => (props.type === 'number' ? 'text' : actualType.value))
 const keyboard = computed(() => props.inputmode ?? (props.type === 'number' ? 'decimal' : undefined))
+// A figure set by code (a prefill, a stepper) reads « 81,5 » as everywhere else in the app.
+const shown = computed({
+  get: () => (typeof model.value === 'number' ? amountText(model.value) : model.value),
+  set: (value: string | number | null) => { model.value = value },
+})
 </script>
 
 <template>
@@ -68,7 +74,7 @@ const keyboard = computed(() => props.inputmode ?? (props.type === 'number' ? 'd
       <input
         :id="id"
         ref="field"
-        v-model="model"
+        v-model="shown"
         class="h-tap w-0 min-w-0 flex-1 bg-transparent px-3 text-base focus:outline-none"
         :type="nativeType"
         :autocomplete="autocomplete"

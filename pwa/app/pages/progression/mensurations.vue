@@ -49,7 +49,7 @@ async function onSaved(): Promise<void> {
         />
         <NuxtLink
           to="/progression/mesures"
-          :class="[TEXT_LINK, 'self-start text-sm']"
+          :class="[TEXT_LINK, 'text-sm']"
         >
           Ajouter ou retirer des mesures perso
         </NuxtLink>

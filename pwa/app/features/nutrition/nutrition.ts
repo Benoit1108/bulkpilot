@@ -9,6 +9,11 @@ export type CustomFoodInput = components['schemas']['Food.CustomFoodInput']
 export type NutritionTarget = components['schemas']['NutritionTarget']
 export type DayTarget = NonNullable<NutritionDay['target']>
 export type EnergyEstimate = components['schemas']['EnergyEstimate']
+
+/** The targets in force on `day`: the newest that has started (the API lists the newest first). */
+export function targetInForce(targets: readonly NutritionTarget[], day: string): NutritionTarget | null {
+  return targets.find(target => target.effectiveFrom <= day) ?? null
+}
 export type EstimateInput = components['schemas']['EstimateInput']
 export type MealSplit = components['schemas']['MealSplit']
 export type NutritionAverages = components['schemas']['NutritionAverages']

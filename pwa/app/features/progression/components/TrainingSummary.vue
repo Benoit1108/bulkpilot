@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import type { ChartSeries } from '~/components/ui/LineChart.vue'
-import { formatShortDay } from '~/services/calendar/days'
 import { formatNumber } from '~/services/text/numbers'
 import type { components } from '~/types/api'
 import { TEXT_LINK, DATA_TABLE } from '~/components/ui/classes'
+import { endedWeeks, weekLabel, WEEK_UNDER_WAY } from '../format'
 
 /**
  * The training of the period (spec §57): sessions and their frequency, working sets, reps,
- * tonnage and records beaten, and the tonnage week by week.
+ * tonnage and records beaten, and the tonnage week by week. The week under way is in the table
+ * only: its few sessions would make the line fall.
  */
-const props = defineProps<{ analytics: components['schemas']['TrainingAnalytics'], during: string }>()
+const props = defineProps<{ analytics: components['schemas']['TrainingAnalytics'], during: string, thisWeek: string }>()
 
 const tonnage = (kg: number) => `${formatNumber(kg, 0)}\u00A0kg`
 const figures = computed(() => {
@@ -23,9 +24,11 @@ const figures = computed(() => {
     { label: 'Records battus', value: String(totals.records) },
   ]
 })
-const series = computed<ChartSeries[]>(() => [{ name: 'Tonnage', variant: 'line', tone: 'accent', points: props.analytics.weeks.map(week => ({ x: week.week, y: week.tonnageKg })) }])
-const weekLabel = (week: string) => `sem. du ${formatShortDay(week)}`
-const summary = computed(() => `${tonnage(props.analytics.totals.tonnageKg)} soulevés en ${props.analytics.totals.sessions} séance${props.analytics.totals.sessions > 1 ? 's' : ''} ${props.during}.`)
+const series = computed<ChartSeries[]>(() => [{ name: 'Tonnage', variant: 'line', tone: 'accent', points: endedWeeks(props.analytics.weeks, props.thisWeek).map(week => ({ x: week.week, y: week.tonnageKg })) }])
+const label = (week: string) => weekLabel(week, props.thisWeek)
+/** Said only when the week under way has sessions the line leaves out. */
+const underWay = computed(() => props.analytics.weeks.some(week => week.week === props.thisWeek && week.sessions > 0))
+const summary = computed(() => `${tonnage(props.analytics.totals.tonnageKg)} soulevés en ${props.analytics.totals.sessions} séance${props.analytics.totals.sessions > 1 ? 's' : ''} ${props.during}.${underWay.value ? ` ${WEEK_UNDER_WAY}` : ''}`)
 </script>
 
 <template>
@@ -49,7 +52,7 @@ const summary = computed(() => `${tonnage(props.analytics.totals.tonnageKg)} sou
       :summary="summary"
       :series="series"
       :format-y="tonnage"
-      :format-x="weekLabel"
+      :format-x="label"
     >
       <template #table>
         <table :class="DATA_TABLE">
@@ -75,7 +78,7 @@ const summary = computed(() => `${tonnage(props.analytics.totals.tonnageKg)} sou
                 scope="row"
                 class="font-normal"
               >
-                {{ weekLabel(week.week) }}
+                {{ label(week.week) }}
               </th>
               <td>{{ week.sessions }}</td>
               <td>{{ tonnage(week.tonnageKg) }}</td>
@@ -86,7 +89,7 @@ const summary = computed(() => `${tonnage(props.analytics.totals.tonnageKg)} sou
     </UiLineChart>
     <NuxtLink
       to="/training/exercices"
-      :class="[TEXT_LINK, 'self-start']"
+      :class="TEXT_LINK"
     >
       La force et les records de chaque exercice
     </NuxtLink>

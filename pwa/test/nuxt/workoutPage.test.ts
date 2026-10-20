@@ -217,7 +217,7 @@ describe('training mode', () => {
     expect(wrapper.text()).toContain('Échauffement 1/1')
     expect(wrapper.get('[data-testid="previous-sets"]').text(), 'working sets only').toBe('80\u00A0kg × 12 · RIR\u00A02')
     expect(wrapper.text()).toContain('Suggestion\u00A0: 82,5\u00A0kg × 8')
-    expect((field(wrapper, 'Charge').element as HTMLInputElement).value).toBe('42.5')
+    expect((field(wrapper, 'Charge').element as HTMLInputElement).value).toBe('42,5')
     expect((choice(wrapper, 'Échauffement').element as HTMLInputElement).checked).toBe(true)
   })
 
@@ -231,7 +231,7 @@ describe('training mode', () => {
     expect(wrapper.text()).toContain('Série enregistrée\u00A0: 42,5\u00A0kg × 12.')
     expect(wrapper.findComponent(RestTimer).exists()).toBe(true)
     expect(document.activeElement?.textContent?.trim(), 'focus on the rest').toBe('Repos')
-    expect((field(wrapper, 'Charge').element as HTMLInputElement).value, 'the suggestion, not the warm-up').toBe('82.5')
+    expect((field(wrapper, 'Charge').element as HTMLInputElement).value, 'the suggestion, not the warm-up').toBe('82,5')
     expect(wrapper.text()).toContain('Série 1/2')
 
     await button(wrapper, 'Passer').trigger('click')

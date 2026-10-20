@@ -14,6 +14,7 @@ const id = computed(() => String(route.params.id))
 const api = useApi()
 const key = computed(() => TRAINING_KEYS.exercise(id.value))
 const { data: exercise, error, refresh } = useAsyncData(key, () => api.get('/api/exercises/{id}', { path: { id: id.value } }))
+usePageHeading(() => exercise.value?.name ?? null, { named: true })
 // Records and sessions: secondary, loaded apart (and never blocking the page).
 const { data: progress } = useAsyncData(() => `${key.value}-progress`, () => api.get('/api/exercises/{id}/progress', { path: { id: id.value } }))
 const gone = computed(() => error.value !== null && error.value !== undefined && asApiError(error.value).kind === 'not_found')
@@ -86,7 +87,7 @@ async function destroy(): Promise<void> {
       @retry="refresh()"
     />
     <template v-else-if="exercise">
-      <UiCard :title="exercise.name">
+      <UiCard>
         <dl class="grid grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] gap-3">
           <div
             v-for="fact in facts"

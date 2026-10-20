@@ -1,6 +1,7 @@
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { PAGE_HEADING_KEY } from '~/composables/usePageHeading'
 import FavoritesPage from '~/pages/nutrition/favoris.vue'
 import NutritionPage from '~/pages/nutrition/index.vue'
 import RecipePage from '~/pages/nutrition/recettes/[id].vue'
@@ -201,6 +202,7 @@ describe('recipes', () => {
     fake.on('DELETE /api/recipes/{id}', () => undefined)
     const wrapper = await mountSuspended(RecipePage, { route: `/nutrition/recettes/${recipe.id}` })
     await flushPromises()
+    expect(useState(PAGE_HEADING_KEY).value, 'the recipe names the page').toBe(recipe.name)
 
     const composition = wrapper.get('table').text()
     expect(composition).toContain('Par portion')

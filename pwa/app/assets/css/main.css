@@ -88,13 +88,20 @@
   }
 
   /*
-   * Lists styled by a component start flush (the browser's 40px indent only suits bare prose
-   * lists, which keep it); a list with markers says its own indent (ps-5). Same for definitions.
+   * Lists styled by a component start flush and without markers (the browser's 40px indent and
+   * bullets only suit bare prose lists, which keep them): such a list draws its own numbers or
+   * labels, and a list that wants markers says so with its indent (list-disc ps-5). Same for
+   * definitions.
    */
   ul[class],
   ol[class] {
     margin-block: 0;
     padding-inline-start: 0;
+    list-style: none;
+  }
+
+  dl[class] {
+    margin-block: 0;
   }
 
   dd {

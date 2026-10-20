@@ -110,6 +110,36 @@ describe('the quick actions', () => {
     expect(navigate).toHaveBeenCalledWith('/training')
     without.unmount()
   })
+
+  it('steps aside while the page scrolls down, and comes back when it scrolls up or ends', async () => {
+    const wrapper = await mountSuspended(QuickActions, { route: '/', attachTo: document.body })
+    const tucked = () => wrapper.get('button[aria-label="Ajouter"]').classes().includes('max-md:not-focus:invisible')
+    const PAGE_HEIGHT = 3000
+    Object.defineProperty(document.documentElement, 'scrollHeight', { configurable: true, get: () => PAGE_HEIGHT })
+    const scrollTo = async (y: number) => {
+      Object.defineProperty(window, 'scrollY', { configurable: true, value: y })
+      window.dispatchEvent(new Event('scroll'))
+      await nextTick()
+    }
+
+    try {
+      await scrollTo(60)
+      expect(tucked(), 'near the top it stays').toBe(false)
+      await scrollTo(400)
+      expect(tucked()).toBe(true)
+      await scrollTo(396)
+      expect(tucked(), 'a finger resting changes nothing').toBe(true)
+      await scrollTo(300)
+      expect(tucked()).toBe(false)
+      await scrollTo(PAGE_HEIGHT - window.innerHeight)
+      expect(tucked(), 'the end of the page keeps it clear').toBe(false)
+    }
+    finally {
+      wrapper.unmount()
+      Reflect.deleteProperty(document.documentElement, 'scrollHeight')
+      Reflect.deleteProperty(window, 'scrollY')
+    }
+  })
 })
 
 describe('the notification bell', () => {

@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<{
 }>(), { hideLegend: false })
 /** Many options share one row on a phone rather than leaving the last one alone below. */
 const crowded = computed(() => props.options.length > 3)
-const row = computed(() => (crowded.value ? 'grid auto-cols-fr grid-flow-col gap-1.5 sm:flex sm:flex-wrap sm:gap-2' : 'flex flex-wrap gap-2'))
+const row = computed(() => (crowded.value ? 'grid auto-cols-[minmax(0,1fr)] grid-flow-col gap-1.5 sm:flex sm:flex-wrap sm:gap-2' : 'flex flex-wrap gap-2'))
 </script>
 
 <template>
@@ -24,12 +24,13 @@ const row = computed(() => (crowded.value ? 'grid auto-cols-fr grid-flow-col gap
       {{ legend }}
     </legend>
     <!-- Many options share one row on a phone (equal columns, tighter pills) rather than leaving the
-         last one alone on a second line; from sm they wrap as they come. -->
+         last one alone on a second line; from sm they wrap as they come. In those narrow columns the
+         tick would push the label out of its pill: the thicker border marks the choice instead. -->
     <div :class="row">
       <label
         v-for="option in options"
         :key="option.value"
-        :class="[PILL, { 'max-sm:px-1 max-sm:has-checked:px-[3px]': crowded }]"
+        :class="[PILL, { 'max-sm:px-1 max-sm:has-checked:px-[3px] max-sm:has-checked:before:hidden': crowded }]"
       >
         <input
           v-model="value"

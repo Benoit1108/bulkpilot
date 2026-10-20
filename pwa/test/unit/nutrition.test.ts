@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { dayLabel, isDay, localDay, parseDay, shiftDay } from '~/services/calendar/days'
+import { dayLabel, isDay, localDay, parseDay, shiftDay, weekStart } from '~/services/calendar/days'
 import { formatGrams, formatKcal, formatMacro, formatSignedKcal } from '~/features/nutrition/format'
 import { formatNumber, parseAmount } from '~/services/text/numbers'
 import { MEAL_SLOTS, slotAt, slotLabel, toSlot } from '~/features/nutrition/nutrition'
@@ -31,6 +31,12 @@ describe('calendar days', () => {
     expect(shiftDay('2026-03-01', -1)).toBe('2026-02-28')
     expect(shiftDay('2026-12-31', 1)).toBe('2027-01-01')
     expect(parseDay('2026-09-28').getDate()).toBe(28)
+  })
+
+  it('finds the Monday of a week, across months', () => {
+    expect(weekStart('2026-10-20')).toBe('2026-10-19')
+    expect(weekStart('2026-10-19'), 'a Monday is its own').toBe('2026-10-19')
+    expect(weekStart('2026-11-01'), 'a Sunday ends the week').toBe('2026-10-26')
   })
 
   it('names the days around today, dates the others', () => {

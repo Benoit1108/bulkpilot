@@ -3,7 +3,7 @@ import { flushPromises } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import StrengthChart from '~/features/training/components/StrengthChart.vue'
 import AnalyticsPage from '~/pages/progression/analyses.vue'
-import { formatShortDay, localDay, parseDay, shiftDay } from '~/services/calendar/days'
+import { formatShortDay, localDay, shiftDay, weekStart } from '~/services/calendar/days'
 import { button } from '../support/dom'
 import { apiError, createFakeApi } from '../support/fakeApi'
 import { summary } from '../support/progression'
@@ -71,7 +71,7 @@ describe('analytics', () => {
   })
 
   it('marks the week under way and leaves it out of the comparison', async () => {
-    const monday = shiftDay(today, -((parseDay(today).getDay() + 6) % 7))
+    const monday = weekStart(today)
     const lastWeek = shiftDay(monday, -7)
     fake.on('GET /api/nutrition/history', () => ({ ...intake, weeks: [{ week: lastWeek, averageEnergyKcal: 2300, averageProteinGrams: 110, days: 7 }, { week: monday, averageEnergyKcal: 2900, averageProteinGrams: 140, days: 2 }] }))
     fake.on('GET /api/progression/weight', () => summary({ weeks: [{ week: lastWeek, averageKg: 50.6, weighIns: 5 }, { week: monday, averageKg: 51.4, weighIns: 1 }] }))
@@ -80,6 +80,48 @@ describe('analytics', () => {
 
     expect(card.text()).toContain('Il faut au moins deux semaines terminées')
     expect(card.find('tbody th').text()).toBe(`sem. du ${formatShortDay(monday)} (en cours)`)
+    expect(card.text(), 'its few days would pull the line').toContain('Moyenne des jours saisis de chaque semaine terminée, 1\u00A0semaine.')
+    expect(card.text()).toContain('Moyenne des pesées de chaque semaine terminée, 1\u00A0semaine.')
+  })
+
+  it('draws the tonnage of the finished weeks only, and lists the week under way', async () => {
+    const monday = weekStart(today)
+    const lastWeek = shiftDay(monday, -7)
+    fake.on('GET /api/training/analytics', () => ({ ...training, weeks: [{ ...training.weeks[0], week: lastWeek, tonnageKg: 57000 }, { ...training.weeks[1], week: monday, tonnageKg: 5000 }] }))
+    const wrapper = await openPage()
+    const chart = wrapper.findAll('figure').find(figure => figure.text().includes('Tonnage par semaine'))!
+
+    expect(chart.text()).toContain('La semaine en cours apparaîtra une fois terminée.')
+    expect(chart.findAll('tbody th').map(cell => cell.text())).toEqual([`sem. du ${formatShortDay(monday)} (en cours)`, `sem. du ${formatShortDay(lastWeek)}`])
+    expect(chart.findAll('svg circle'), 'the finished week alone, drawn as a dot').toHaveLength(1)
+  })
+
+  it('keeps the tonnage table for a first week under way, and hides the chart without sessions', async () => {
+    const monday = weekStart(today)
+    fake.on('GET /api/training/analytics', () => ({ ...training, totals: { ...training.totals, sessions: 2 }, weeks: [{ ...training.weeks[0], week: monday, sessions: 2 }] }))
+    const first = await openPage()
+    const chart = first.findAll('figure').find(figure => figure.text().includes('Tonnage par semaine'))!
+    expect(chart.findAll('svg circle'), 'nothing drawn yet').toHaveLength(0)
+    expect(chart.findAll('tbody th').map(cell => cell.text())).toEqual([`sem. du ${formatShortDay(monday)} (en cours)`])
+    first.unmount()
+
+    clearNuxtData()
+    fake.on('GET /api/training/analytics', () => ({ ...training, totals: { sessions: 0, workingSets: 0, reps: 0, tonnageKg: 0, records: 0 }, weeks: training.weeks.map(week => ({ ...week, sessions: 0, tonnageKg: 0 })), sessionsPerWeek: 0 }))
+    const none = await openPage()
+    expect(none.text()).not.toContain('Tonnage par semaine')
+  })
+
+  it('leaves the week under way out of the weekly means, and says so', async () => {
+    const monday = weekStart(today)
+    const lastWeek = shiftDay(monday, -7)
+    const days = Array.from({ length: 70 }, (_, index) => ({ day: shiftDay(today, -index), energyKcal: 2400, proteinGrams: 120 }))
+    fake.on('GET /api/nutrition/history', () => ({ ...intake, period: '6m', days, weeks: [{ week: lastWeek, averageEnergyKcal: 2400, averageProteinGrams: 120, days: 7 }, { week: monday, averageEnergyKcal: 900, averageProteinGrams: 40, days: 1 }] }))
+    const wrapper = await openPage()
+    const calories = wrapper.findAll('figure').find(figure => figure.text().startsWith('Calories2'))!
+
+    expect(calories.text()).toContain('La semaine en cours apparaîtra une fois terminée.')
+    expect(calories.findAll('tbody th').map(cell => cell.text())[0]).toBe(`sem. du ${formatShortDay(monday)} (en cours)`)
+    expect(calories.findAll('path').filter(path => path.attributes('d')?.includes('L')), 'one finished week: no weekly line yet').toHaveLength(0)
   })
 
   it('names each period by what it shows, the short label first', async () => {

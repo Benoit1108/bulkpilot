@@ -18,6 +18,7 @@ defineExpose({ focus: (id: string) => buttons.get(id)?.$el.focus() })
 <template>
   <ol
     class="flex flex-col"
+    role="list"
     aria-label="Séries faites"
   >
     <li

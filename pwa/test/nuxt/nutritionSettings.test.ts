@@ -96,6 +96,33 @@ describe('targets page', () => {
     expect(fake.calls.at(-1)?.body).toMatchObject({ goal: 'maintain', weeklyWeightChangeKg: 0 })
   })
 
+  it('starts from the targets in force, and an estimate replaces them', async () => {
+    fake.on('GET /api/nutrition/targets', () => [{ ...target, id: 'next', effectiveFrom: '2099-01-01', energyKcal: 2000 }, target])
+    fake.on('POST /api/nutrition/targets/estimate', () => estimate)
+    const wrapper = await mountSuspended(TargetsPage, { route: '/nutrition/objectifs' })
+    await flushPromises()
+
+    expect((field(wrapper, 'Calories').element as HTMLInputElement).value, 'not the targets planned later').toBe(String(target.energyKcal))
+    expect((field(wrapper, 'Protéines').element as HTMLInputElement).value).toBe(String(target.proteinGrams))
+    expect((field(wrapper, 'Glucides').element as HTMLInputElement).value).toBe(String(target.carbohydrateGrams))
+    expect((field(wrapper, 'Lipides').element as HTMLInputElement).value).toBe(String(target.fatGrams))
+    expect(wrapper.text()).toContain('Tes objectifs actuels.')
+    const history = wrapper.findAll('li').filter(item => item.text().includes('depuis le'))
+    expect(history.map(item => item.get('p').classes().includes('text-accent-ink')), 'the targets in force stand out, not the planned ones').toEqual([false, true])
+
+    const saveButton = button(wrapper, 'Enregistrer mes objectifs')
+    expect(saveButton.attributes('disabled'), 'nothing changed yet').toBeDefined()
+    await field(wrapper, 'Calories').setValue('2900')
+    expect(saveButton.attributes('disabled')).toBeUndefined()
+    await field(wrapper, 'Calories').setValue(String(target.energyKcal))
+    expect(saveButton.attributes('disabled'), 'typed back as it was').toBeDefined()
+
+    await field(wrapper, 'Poids actuel').setValue('80')
+    await wrapper.findAll('form')[0]!.trigger('submit')
+    await flushPromises()
+    expect((field(wrapper, 'Calories').element as HTMLInputElement).value).toBe('3300')
+  })
+
   it('warns when typed macros do not add up, and shows the refusal', async () => {
     fake.on('GET /api/nutrition/targets', () => [target])
     fake.on('POST /api/nutrition/targets', () => {

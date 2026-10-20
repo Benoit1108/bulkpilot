@@ -17,8 +17,11 @@ const VARIANTS: Record<ButtonVariant, string> = {
 
 export const buttonClass = (variant: ButtonVariant) => `${BUTTON} ${VARIANTS[variant]}`
 
-/** A link in running text or under a list ("Créer un aliment", "Voir le mouvement"), tall enough to tap. */
-export const TEXT_LINK = 'inline-flex min-h-tap min-w-tap items-center justify-center font-semibold text-accent-ink'
+/**
+ * A link in running text or under a list ("Créer un aliment", "Voir le mouvement"), tall enough to
+ * tap. It keeps its own width in a column (self-start) so that its label lines up with the text.
+ */
+export const TEXT_LINK = 'inline-flex min-h-tap min-w-tap items-center justify-center self-start font-semibold text-accent-ink'
 
 /** A one-tap choice (set kind, RIR): a radio hidden inside its label, filled once checked. */
 const CHIP_BASE = 'inline-flex min-h-tap min-w-tap cursor-pointer items-center justify-center rounded-md border border-line bg-surface-raised font-semibold has-checked:border-accent-fill has-checked:bg-accent-fill has-checked:text-accent-contrast has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent'

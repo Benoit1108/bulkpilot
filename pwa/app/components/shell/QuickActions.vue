@@ -18,6 +18,26 @@ const inSettings = computed(() => route.path.startsWith('/reglages'))
 const session = useWorkoutSession()
 const { start, pending: starting, message: startError } = useStartWorkout()
 
+/**
+ * On phones the floating button steps aside while the page scrolls down (it would cover the right
+ * edge of what is read) and comes back as soon as it scrolls up or reaches the end, whose bottom
+ * padding keeps it clear. Tucked, it is hidden from touch and screen readers too (visibility, once
+ * it has faded); focused, it always shows.
+ */
+const tucked = ref(false)
+/** Scrolls smaller than this (a finger resting) change nothing; as close to the end counts as the end. */
+const SLACK = 8
+/** Near the top it stays, out of the way of nothing. */
+const TOP = 80
+let lastY = 0
+useEventListener('scroll', () => {
+  const y = window.scrollY
+  const atEnd = y + window.innerHeight >= document.documentElement.scrollHeight - SLACK
+  if (Math.abs(y - lastY) < SLACK && !atEnd) return
+  tucked.value = y > lastY && y > TOP && !atEnd
+  lastY = y
+})
+
 /** Leaving for the chosen form closes the panel (the browser gives the focus back to the button). */
 const close = () => {
   open.value = false
@@ -44,7 +64,7 @@ async function train(action: QuickAction): Promise<void> {
 <template>
   <button
     type="button"
-    :class="[`${HEADER_BUTTON} max-md:fixed max-md:right-4 max-md:bottom-above-nav max-md:z-20 max-md:size-14 max-md:border-transparent max-md:bg-accent-fill max-md:text-accent-contrast max-md:shadow-raised`, { 'max-md:hidden': inSettings }]"
+    :class="[`${HEADER_BUTTON} max-md:fixed max-md:right-4 max-md:bottom-above-nav max-md:z-20 max-md:size-14 max-md:border-transparent max-md:bg-accent-fill max-md:text-accent-contrast max-md:shadow-raised max-md:transition-[translate,opacity,visibility] max-md:duration-200`, { 'max-md:hidden': inSettings, 'max-md:not-focus:invisible max-md:not-focus:translate-y-6 max-md:not-focus:opacity-0': tucked }]"
     aria-haspopup="dialog"
     aria-label="Ajouter"
     title="Ajouter"

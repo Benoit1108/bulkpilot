@@ -11,6 +11,7 @@ const id = computed(() => String(route.params.id))
 const api = useApi()
 const outbox = useWorkoutOutbox()
 const { data: workout, error, refresh } = useAsyncData(() => TRAINING_KEYS.workout(id.value), () => api.get('/api/workouts/{id}', { path: { id: id.value } }))
+usePageHeading(() => (workout.value ? workout.value.programDay?.dayName ?? 'Séance libre' : null), { named: true })
 /** Finished on this device and not sent yet: the API does not know it. */
 const sending = ref(false)
 onMounted(async () => {
@@ -51,7 +52,7 @@ const setsOf = (index: number): WorkoutSet[] => (workout.value?.sets ?? []).filt
       @retry="refresh()"
     />
     <template v-else-if="workout">
-      <UiCard :title="workout.programDay?.dayName ?? 'Séance libre'">
+      <UiCard>
         <p class="text-sm text-muted">
           {{ dateFormat.format(new Date(workout.startedAt)) }}<template v-if="duration">
             · {{ duration }}
@@ -87,11 +88,13 @@ const setsOf = (index: number): WorkoutSet[] => (workout.value?.sets ?? []).filt
         <ol
           v-if="setsOf(exercise.index).length"
           class="mt-2 flex flex-col gap-1 tabular-nums"
+          role="list"
         >
           <li
-            v-for="set in setsOf(exercise.index)"
+            v-for="(set, n) in setsOf(exercise.index)"
             :key="set.id"
           >
+            <span class="inline-block w-6 text-sm text-muted"><span class="sr-only">Série </span>{{ n + 1 }}</span>
             <span class="inline-block min-w-28 text-sm text-muted">{{ labelOf(SET_KINDS, set.kind) }}</span>
             {{ formatSet(set, exercise.measurement) }}
           </li>

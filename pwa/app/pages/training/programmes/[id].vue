@@ -21,6 +21,7 @@ const { data: program, error, refresh } = useAsyncData(
   key,
   () => api.get('/api/programs/{id}', { path: { id: id.value }, query: version.value === null ? {} : { version: version.value } }),
 )
+usePageHeading(() => program.value?.name ?? null, { named: true })
 const gone = computed(() => error.value !== null && error.value !== undefined && asApiError(error.value).kind === 'not_found')
 const current = computed(() => program.value !== null && program.value !== undefined && program.value.version === program.value.currentVersion)
 const hasHistory = computed(() => (program.value?.versions.length ?? 0) > 1)
@@ -74,7 +75,7 @@ async function archive(): Promise<void> {
       @retry="refresh()"
     />
     <template v-else-if="program">
-      <UiCard :title="program.name">
+      <UiCard>
         <p class="mb-3 text-sm text-muted">
           <template v-if="current">
             {{ program.active ? 'Programme suivi' : 'Programme non suivi' }} · version {{ program.version }}
@@ -127,7 +128,10 @@ async function archive(): Promise<void> {
         <p class="mb-3 text-sm text-muted">
           Chaque modification des jours crée une version&nbsp;; tes séances passées restent liées à la leur.
         </p>
-        <ul class="flex flex-col">
+        <ul
+          class="flex flex-col"
+          role="list"
+        >
           <li
             v-for="past in program.versions"
             :key="past.number"

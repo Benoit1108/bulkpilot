@@ -1,6 +1,7 @@
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { PAGE_HEADING_KEY } from '~/composables/usePageHeading'
 import ExercisePage from '~/pages/training/exercices/[id].vue'
 import ExercisesPage from '~/pages/training/exercices/index.vue'
 import NewExercisePage from '~/pages/training/exercices/nouveau.vue'
@@ -120,6 +121,7 @@ describe('exercises', () => {
     fake.on('DELETE /api/exercises/{id}', () => null)
     const wrapper = await mountSuspended(ExercisePage, { route: `/training/exercices/${yates.id}` })
     await flushPromises()
+    expect(useState(PAGE_HEADING_KEY).value, 'the exercise names the page').toBe(yates.name)
 
     expect(wrapper.text()).toContain('Muscles secondairesBiceps')
     expect(wrapper.text()).toContain('6–10\u00A0reps · RIR\u00A02 · repos 3\u00A0min · tempo 2-0-1-1')
@@ -240,6 +242,7 @@ describe('programs', () => {
     fake.on('POST /api/programs/{id}/activate', () => ppl)
     const wrapper = await mountSuspended(ProgramPage, { route: `/training/programmes/${ppl.id}` })
     await flushPromises()
+    expect(useState(PAGE_HEADING_KEY).value, 'the program names the page').toBe(ppl.name)
 
     expect(wrapper.text()).toContain('Programme suivi · version 2')
     const day = (name: string) => wrapper.findAll('[role="group"]').find(group => group.find('h3').exists() && group.get('h3').text() === name)!

@@ -2,17 +2,18 @@
 import type { Account } from '~/features/identity/account'
 import EstimateBreakdown from '~/features/nutrition/components/EstimateBreakdown.vue'
 import EstimateForm from '~/features/nutrition/components/EstimateForm.vue'
-import { optionalAmount, type Amount } from '~/services/text/numbers'
+import { optionalAmount, parseAmount, type Amount } from '~/services/text/numbers'
 import { localDay } from '~/services/calendar/days'
 import { formatKcal } from '~/features/nutrition/format'
-import type { EnergyEstimate, EstimateInput } from '~/features/nutrition/nutrition'
+import type { EnergyEstimate, EstimateInput, NutritionTarget } from '~/features/nutrition/nutrition'
 import { TARGET_KCAL, TARGET_TOLERANCE, energyOfMacros } from '~/features/nutrition/rules'
 
 /**
  * Step 1: the estimate (nothing saved). Step 2: the targets, prefilled from it and adjustable,
- * saved from today. Typing targets directly skips step 1.
+ * saved from today. Typing targets directly skips step 1. The fields start from the targets in
+ * force, so that changing one figure does not mean typing all four again.
  */
-defineProps<{ account: Account | null | undefined }>()
+const props = defineProps<{ account: Account | null | undefined, current?: NutritionTarget | null }>()
 const emit = defineEmits<{ saved: [] }>()
 
 const api = useApi()
@@ -41,10 +42,28 @@ const macroEnergy = computed(() => energyOfMacros(optionalAmount(protein.value) 
 const target = computed(() => optionalAmount(energyKcal.value) ?? 0)
 const consistent = computed(() => Math.abs(macroEnergy.value - target.value) <= target.value * TARGET_TOLERANCE)
 const hasTargets = computed(() => target.value > 0)
+const intro = computed(() => {
+  if (estimate.value) return 'Ajuste si besoin, puis enregistre. Ils s’appliquent à partir d’aujourd’hui\u00A0; les jours passés gardent leurs objectifs.'
+  if (props.current) return 'Tes objectifs actuels. Modifie-les ou calcule une nouvelle estimation\u00A0: les nouveaux s’appliqueront dès aujourd’hui, les jours passés gardent les leurs.'
+  return 'Calcule une estimation ou saisis tes propres valeurs. Ils s’appliquent à partir d’aujourd’hui\u00A0; les jours passés gardent leurs objectifs.'
+})
 
-/** The targets being typed (or prefilled from an estimate): leaving before saving them asks first. */
-const typed = () => [energyKcal.value, protein.value, carbohydrate.value, fat.value]
-const { markSaved } = useUnsavedChanges(typed)
+/**
+ * The targets being typed (or prefilled), as figures: « 2500 » typed back over 2500 is no change.
+ * Leaving before saving a change asks first; saving needs one (no duplicate of the targets in force).
+ */
+const typed = () => [energyKcal.value, protein.value, carbohydrate.value, fat.value].map(parseAmount)
+const { changed, markSaved } = useUnsavedChanges(typed)
+
+// The targets in force arrive after the form: they fill it only while nothing has been typed yet.
+watch(() => props.current, (current) => {
+  if (!current || estimate.value || typed().some(value => value !== null)) return
+  energyKcal.value = current.energyKcal
+  protein.value = current.proteinGrams
+  carbohydrate.value = current.carbohydrateGrams
+  fat.value = current.fatGrams
+  markSaved(typed())
+}, { immediate: true })
 
 async function save(): Promise<void> {
   saved.value = false
@@ -92,8 +111,7 @@ async function save(): Promise<void> {
         Mes objectifs quotidiens
       </h2>
       <p class="text-muted">
-        {{ estimate ? 'Ajuste si besoin, puis enregistre.' : 'Calcule une estimation ou saisis tes propres valeurs.' }}
-        Ils s’appliquent à partir d’aujourd’hui&nbsp;; les jours passés gardent leurs objectifs.
+        {{ intro }}
       </p>
       <UiAlert
         v-if="saving.message.value"
@@ -146,7 +164,7 @@ async function save(): Promise<void> {
       <UiButton
         type="submit"
         :loading="saving.pending.value"
-        :disabled="!hasTargets"
+        :disabled="!hasTargets || !changed"
       >
         Enregistrer mes objectifs
       </UiButton>

@@ -2,6 +2,7 @@ import 'fake-indexeddb/auto'
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { PAGE_HEADING_KEY } from '~/composables/usePageHeading'
 import { resetWorkoutOutbox, useWorkoutOutbox } from '~/features/training/outbox'
 import { resetWorkoutSession, useWorkoutSession } from '~/features/training/session'
 import type { Workout, WorkoutPlan } from '~/features/training/workout'
@@ -173,6 +174,8 @@ describe('history', () => {
     expect(detail.text()).toContain('Développé couché\u00A0— 1RM estimé\u00A0: 110\u00A0kg')
     expect(detail.text()).toContain('Effective 85\u00A0kg × 7 · RIR\u00A00')
     expect(detail.text()).toContain('Pas fait.')
+    expect(detail.findAll('li').map(item => item.text()).find(text => text.includes('85\u00A0kg')), 'each set says its number').toMatch(/^Série 1/)
+    expect(useState(PAGE_HEADING_KEY).value, 'the day names the page').toBe(plan.programDay!.dayName)
   })
 
   it('says a workout finished offline is on its way', async () => {

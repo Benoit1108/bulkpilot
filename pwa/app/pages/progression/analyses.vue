@@ -6,12 +6,14 @@ import TrainingSummary from '~/features/progression/components/TrainingSummary.v
 import { periodLong } from '~/features/progression/format'
 import { PROGRESSION_KEYS, type Period } from '~/features/progression/progression'
 import { TRAINING_KEYS } from '~/features/training/cacheKeys'
-import { localDay } from '~/services/calendar/days'
+import { localDay, weekStart } from '~/services/calendar/days'
 
 definePageMeta({ title: 'Analyses' })
 
 const api = useApi()
 const today = localDay()
+/** The week under way, as the API keys weeks: drawn only once it is over. */
+const thisWeek = weekStart(today)
 const period = ref<Period>('3m')
 const during = computed(() => periodLong(period.value))
 const query = () => ({ query: { period: period.value, today } })
@@ -41,6 +43,7 @@ const { data: training, error: trainingError, refresh: refreshTraining } = useAs
         v-else-if="intake && weight"
         :weights="weight.weeks"
         :intakes="intake.weeks"
+        :this-week="thisWeek"
       />
       <p
         v-else
@@ -60,6 +63,7 @@ const { data: training, error: trainingError, refresh: refreshTraining } = useAs
         v-else-if="intake"
         :history="intake"
         :during="during"
+        :this-week="thisWeek"
       />
       <p
         v-else
@@ -78,6 +82,7 @@ const { data: training, error: trainingError, refresh: refreshTraining } = useAs
       <TrainingSummary
         v-else-if="training"
         :analytics="training"
+        :this-week="thisWeek"
         :during="during"
       />
       <p

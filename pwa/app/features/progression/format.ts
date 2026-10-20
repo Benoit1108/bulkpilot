@@ -1,3 +1,4 @@
+import { formatShortDay } from '~/services/calendar/days'
 import { PERIODS, type GoalEstimate, type Period, type WeightSummary } from './progression'
 
 const tenth = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
@@ -73,3 +74,16 @@ export function periodLongStart(period: Period): string {
   const phrase = periodLong(period)
   return phrase.charAt(0).toUpperCase() + phrase.slice(1)
 }
+
+/** « sem. du 12 oct. », and « (en cours) » for the week under way (`thisWeek`, its Monday). */
+export function weekLabel(week: string, thisWeek: string): string {
+  return `sem. du ${formatShortDay(week)}${week === thisWeek ? ' (en cours)' : ''}`
+}
+
+/** The weeks already over: the few days of the week under way would pull a weekly line. */
+export function endedWeeks<T extends { week: string }>(weeks: readonly T[], thisWeek: string): T[] {
+  return weeks.filter(week => week.week !== thisWeek)
+}
+
+/** Said under a weekly chart that leaves the week under way out. */
+export const WEEK_UNDER_WAY = 'La semaine en cours apparaîtra une fois terminée.'

@@ -26,6 +26,11 @@ export function shiftDay(day: string, days: number): string {
   return localDay(date)
 }
 
+/** The Monday of the day's week, as the API keys weeks. */
+export function weekStart(day: string): string {
+  return shiftDay(day, -((parseDay(day).getDay() + 6) % 7))
+}
+
 const longDay = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
 const longDayWithYear = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 

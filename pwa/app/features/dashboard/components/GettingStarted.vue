@@ -41,7 +41,7 @@ watchEffect(() => emit('steps', left.value.length, STEPS.length))
       Quelques réglages, et le tableau de bord se remplit de tes vraies données.
     </p>
     <ol
-      class="m-0 flex flex-col gap-1 ps-5"
+      class="flex list-decimal flex-col gap-1 ps-5"
       role="list"
     >
       <li

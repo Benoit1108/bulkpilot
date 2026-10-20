@@ -133,7 +133,10 @@ function foodDetail(food: Food): string {
       <h3 class="text-sm font-semibold text-muted">
         Repas favoris
       </h3>
-      <ul class="flex flex-col">
+      <ul
+        class="flex flex-col"
+        role="list"
+      >
         <li
           v-for="meal in listedFavorites"
           :key="meal.id"
@@ -158,7 +161,10 @@ function foodDetail(food: Food): string {
       <h3 class="text-sm font-semibold text-muted">
         {{ browsing ? 'Récents' : 'Aliments' }}
       </h3>
-      <ul class="flex flex-col">
+      <ul
+        class="flex flex-col"
+        role="list"
+      >
         <li
           v-for="food in foods"
           :key="food.id"
@@ -183,7 +189,10 @@ function foodDetail(food: Food): string {
       <h3 class="text-sm font-semibold text-muted">
         Mes recettes
       </h3>
-      <ul class="flex flex-col">
+      <ul
+        class="flex flex-col"
+        role="list"
+      >
         <li
           v-for="recipe in listedRecipes"
           :key="recipe.id"

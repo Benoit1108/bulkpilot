@@ -31,7 +31,10 @@ function extras(exercise: ProgramExercise): string {
       >
         {{ day.name }}
       </h3>
-      <ol class="flex flex-col gap-2">
+      <ol
+        class="flex flex-col gap-2"
+        role="list"
+      >
         <li
           v-for="(block, b) in day.blocks"
           :key="b"
@@ -43,7 +46,10 @@ function extras(exercise: ProgramExercise): string {
           >
             Superset
           </p>
-          <ul class="flex flex-col gap-2">
+          <ul
+            class="flex flex-col gap-2"
+            role="list"
+          >
             <li
               v-for="(exercise, e) in block.exercises"
               :key="e"

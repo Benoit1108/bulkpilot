@@ -70,7 +70,10 @@ function add(chosen: Exercise): void {
     v-model:open="listing"
     title="Exercices de la séance"
   >
-    <ol class="flex flex-col">
+    <ol
+      class="flex flex-col"
+      role="list"
+    >
       <li
         v-for="planned in exercises"
         :key="planned.index"

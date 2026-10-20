@@ -11,6 +11,7 @@ const route = useRoute()
 const id = computed(() => String(route.params.id))
 const api = useApi()
 const { data: recipe, error, refresh } = useAsyncData(() => NUTRITION_KEYS.recipe(id.value), () => api.get('/api/recipes/{id}', { path: { id: id.value } }))
+usePageHeading(() => recipe.value?.name ?? null, { named: true })
 const gone = computed(() => error.value !== null && error.value !== undefined && asApiError(error.value).kind === 'not_found')
 const notice = ref<string | null>(null)
 const removal = useSubmission()
@@ -46,7 +47,7 @@ async function destroy(): Promise<void> {
       @retry="refresh()"
     />
     <template v-else-if="recipe">
-      <UiCard :title="recipe.name">
+      <UiCard>
         <RecipeComposition :recipe="recipe" />
       </UiCard>
       <UiCard title="Modifier">
