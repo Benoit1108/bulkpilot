@@ -33,7 +33,7 @@ use App\Nutrition\Presentation\Api\Barcode\ConfirmProductProcessor;
         ),
         new GetCollection(
             uriTemplate: '/foods/recent',
-            description: 'Foods the user logged lately, most recent first.',
+            description: 'Foods the user logged lately, most recent first, each with the quantity logged last (lastGrams).',
             paginationEnabled: false,
             provider: FoodProvider::class,
             name: 'foods_recent',
@@ -107,6 +107,8 @@ final readonly class Food
         public bool $editable,
         #[ApiProperty(required: true)]
         public ?string $barcode,
+        #[ApiProperty(required: true, description: 'The quantity the user logged last, on recent foods; null elsewhere.')]
+        public ?float $lastGrams,
     ) {
     }
 
@@ -123,6 +125,7 @@ final readonly class Food
             array_map(FoodPortion::of(...), $view->portions),
             $view->editable,
             $view->barcode,
+            $view->lastGrams,
         );
     }
 }

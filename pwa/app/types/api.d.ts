@@ -3095,6 +3095,8 @@ export interface components {
             portions: components["schemas"]["FoodPortion"][];
             editable: boolean;
             barcode: string | null;
+            /** @description The quantity the user logged last, on recent foods; null elsewhere. */
+            lastGrams: number | null;
         };
         /** @description Keeps a scanned product: as Open Food Facts gives it (shared, values read again from the source), or corrected (the user's own food, with its barcode). */
         "Food.ConfirmProductInput": {
@@ -3137,6 +3139,8 @@ export interface components {
             portions: components["schemas"]["FoodPortion.jsonld"][];
             editable: boolean;
             barcode: string | null;
+            /** @description The quantity the user logged last, on recent foods; null elsewhere. */
+            lastGrams: number | null;
         };
         /** @description A catalogue food, or one of the user's own. */
         "Food.jsonld_noid": components["schemas"]["HydraItemBaseSchemaWithoutId"] & {
@@ -3152,6 +3156,8 @@ export interface components {
             portions: components["schemas"]["FoodPortion.jsonld_noid"][];
             editable: boolean;
             barcode: string | null;
+            /** @description The quantity the user logged last, on recent foods; null elsewhere. */
+            lastGrams: number | null;
         };
         FoodPortion: {
             label: string;
@@ -3182,6 +3188,8 @@ export interface components {
             portions: components["schemas"]["FoodPortion_noid"][];
             editable: boolean;
             barcode: string | null;
+            /** @description The quantity the user logged last, on recent foods; null elsewhere. */
+            lastGrams: number | null;
         };
         GoalStepOutput: {
             weightKg: number;

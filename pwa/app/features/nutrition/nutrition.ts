@@ -26,6 +26,15 @@ export type MealBuilderResult = components['schemas']['MealBuilder']
 export type Proposal = MealBuilderResult['proposals'][number]
 
 /** What can be logged with a quantity: a food, or a dish (grams of the cooked recipe). */
+/** Energy and macros, per 100 g or for an amount eaten. */
+export interface Macros { energyKcal: number, protein: number, carbohydrate: number, fat: number }
+
+/** What an amount brings, from the values per 100 g (shown before logging; the API counts the journal). */
+export function macrosFor(per100g: Macros, grams: number): Macros {
+  const factor = grams / 100
+  return { energyKcal: per100g.energyKcal * factor, protein: per100g.protein * factor, carbohydrate: per100g.carbohydrate * factor, fat: per100g.fat * factor }
+}
+
 export type Loggable = { kind: 'food', food: Food } | { kind: 'recipe', recipe: Recipe }
 export type LogSource = { foodId: string } | { recipeId: string }
 

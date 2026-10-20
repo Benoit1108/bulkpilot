@@ -15614,7 +15614,8 @@
                     "per100g",
                     "portions",
                     "editable",
-                    "barcode"
+                    "barcode",
+                    "lastGrams"
                 ],
                 "properties": {
                     "id": {
@@ -15666,6 +15667,13 @@
                     "barcode": {
                         "type": [
                             "string",
+                            "null"
+                        ]
+                    },
+                    "lastGrams": {
+                        "description": "The quantity the user logged last, on recent foods; null elsewhere.",
+                        "type": [
+                            "number",
                             "null"
                         ]
                     }
@@ -15824,7 +15832,8 @@
                             "per100g",
                             "portions",
                             "editable",
-                            "barcode"
+                            "barcode",
+                            "lastGrams"
                         ],
                         "properties": {
                             "id": {
@@ -15878,6 +15887,13 @@
                                     "string",
                                     "null"
                                 ]
+                            },
+                            "lastGrams": {
+                                "description": "The quantity the user logged last, on recent foods; null elsewhere.",
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
                             }
                         }
                     }
@@ -15901,7 +15917,8 @@
                             "per100g",
                             "portions",
                             "editable",
-                            "barcode"
+                            "barcode",
+                            "lastGrams"
                         ],
                         "properties": {
                             "id": {
@@ -15953,6 +15970,13 @@
                             "barcode": {
                                 "type": [
                                     "string",
+                                    "null"
+                                ]
+                            },
+                            "lastGrams": {
+                                "description": "The quantity the user logged last, on recent foods; null elsewhere.",
+                                "type": [
+                                    "number",
                                     "null"
                                 ]
                             }
@@ -16033,7 +16057,8 @@
                     "per100g",
                     "portions",
                     "editable",
-                    "barcode"
+                    "barcode",
+                    "lastGrams"
                 ],
                 "properties": {
                     "id": {
@@ -16085,6 +16110,13 @@
                     "barcode": {
                         "type": [
                             "string",
+                            "null"
+                        ]
+                    },
+                    "lastGrams": {
+                        "description": "The quantity the user logged last, on recent foods; null elsewhere.",
+                        "type": [
+                            "number",
                             "null"
                         ]
                     }

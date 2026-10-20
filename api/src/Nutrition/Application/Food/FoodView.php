@@ -27,10 +27,12 @@ final readonly class FoodView
         public array $portions,
         public bool $editable,
         public ?string $barcode = null,
+        /** The quantity of the user's latest entry, on recent foods only. */
+        public ?float $lastGrams = null,
     ) {
     }
 
-    public static function of(Food $food, UserId $viewer): self
+    public static function of(Food $food, UserId $viewer, ?float $lastGrams = null): self
     {
         return new self(
             $food->id()->value,
@@ -43,6 +45,7 @@ final readonly class FoodView
             $food->portions(),
             $food->isEditableBy($viewer),
             $food->barcode()?->value,
+            $lastGrams,
         );
     }
 

@@ -59,7 +59,7 @@
 | GET | `/api/me/sessions` | Appareils connectés (`current` = celui-ci) | connecté |
 | DELETE | `/api/me/sessions/{id}` | Déconnecte un appareil (404 si inconnu ou à quelqu'un d'autre) → `204` | connecté |
 | GET | `/api/foods?q=&limit=` | Recherche (mots dans n'importe quel ordre, sans accents ni casse, 2 caractères min., 30 résultats max.) : aliments de l'utilisateur, puis noms qui commencent par la requête, puis les plus proches | connecté |
-| GET | `/api/foods/recent` | 20 derniers aliments saisis (encore visibles), le plus récent d'abord | connecté |
+| GET | `/api/foods/recent` | 20 derniers aliments saisis (encore visibles), le plus récent d'abord, chacun avec la quantité de sa dernière saisie (`lastGrams`, `null` dans les autres listes d'aliments) | connecté |
 | GET | `/api/foods/custom` | Aliments personnels, par nom | connecté |
 | GET | `/api/foods/{id}` | Un aliment CIQUAL ou personnel (404 si supprimé ou à quelqu'un d'autre) | connecté |
 | POST | `/api/foods` | Crée un aliment personnel (valeurs pour 100 g, portions, code-barres facultatif, unique parmi ses aliments → sinon 409) → `201 Food` | connecté |

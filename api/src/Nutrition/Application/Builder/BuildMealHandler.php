@@ -8,11 +8,13 @@ use App\Nutrition\Application\Food\ListRecentFoods;
 use App\Nutrition\Domain\Builder\MacroGoal;
 use App\Nutrition\Domain\Builder\MealBuilder;
 use App\Nutrition\Domain\Food\Food;
+use App\Nutrition\Domain\Food\FoodId;
 use App\Nutrition\Domain\Food\FoodRepository;
 use App\Nutrition\Domain\Food\FoodSource;
 use App\Nutrition\Domain\Food\NutrientAmounts;
 use App\Nutrition\Domain\Journal\JournalEntry;
 use App\Nutrition\Domain\Journal\JournalEntryRepository;
+use App\Nutrition\Domain\Journal\RecentFood;
 use App\Nutrition\Domain\Target\MealSplitRepository;
 use App\Nutrition\Domain\Target\NutritionTargetRepository;
 use App\Shared\Application\Bus\Query\QueryHandler;
@@ -66,7 +68,8 @@ final readonly class BuildMealHandler implements QueryHandler
      */
     private function candidates(BuildMeal $query): array
     {
-        $recent = $this->foods->visibleAmong($query->userId, $this->entries->recentFoods($query->userId, ListRecentFoods::LIMIT));
+        $recentIds = array_map(static fn (RecentFood $recent): FoodId => $recent->foodId, $this->entries->recentFoods($query->userId, ListRecentFoods::LIMIT));
+        $recent = $this->foods->visibleAmong($query->userId, $recentIds);
         $candidates = [];
         foreach ([...$recent, ...$this->foods->customFoodsOf($query->userId), ...$this->foods->fromCatalogue(FoodSource::Ciqual, self::STAPLES)] as $food) {
             $candidates[$food->id()->value] ??= $food;

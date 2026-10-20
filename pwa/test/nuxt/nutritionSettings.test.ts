@@ -97,7 +97,7 @@ describe('targets page', () => {
   })
 
   it('starts from the targets in force, and an estimate replaces them', async () => {
-    fake.on('GET /api/nutrition/targets', () => [{ ...target, id: 'next', effectiveFrom: '2099-01-01', energyKcal: 2000 }, target])
+    fake.on('GET /api/nutrition/targets', () => [{ ...target, id: 'next', effectiveFrom: '2099-01-01', energyKcal: 2000 }, target, { ...target, id: 'past', effectiveFrom: '2026-01-05', energyKcal: 2600 }])
     fake.on('POST /api/nutrition/targets/estimate', () => estimate)
     const wrapper = await mountSuspended(TargetsPage, { route: '/nutrition/objectifs' })
     await flushPromises()
@@ -107,8 +107,10 @@ describe('targets page', () => {
     expect((field(wrapper, 'Glucides').element as HTMLInputElement).value).toBe(String(target.carbohydrateGrams))
     expect((field(wrapper, 'Lipides').element as HTMLInputElement).value).toBe(String(target.fatGrams))
     expect(wrapper.text()).toContain('Tes objectifs actuels.')
-    const history = wrapper.findAll('li').filter(item => item.text().includes('depuis le'))
-    expect(history.map(item => item.get('p').classes().includes('text-accent-ink')), 'the targets in force stand out, not the planned ones').toEqual([false, true])
+    const history = wrapper.findAll('li').filter(item => /depuis le|à partir du/.test(item.text()))
+    expect(history.map(item => item.attributes('aria-current')), 'the targets in force stand out, not the planned or past ones').toEqual([undefined, 'true', undefined])
+    expect(history.map(item => item.get('p').text())).toEqual(['2\u202F000\u00A0kcal Prévu', '3\u202F000\u00A0kcal En vigueur', '2\u202F600\u00A0kcal'])
+    expect(history[0]!.text()).toContain('à partir du 1 janvier 2099')
 
     const saveButton = button(wrapper, 'Enregistrer mes objectifs')
     expect(saveButton.attributes('disabled'), 'nothing changed yet').toBeDefined()

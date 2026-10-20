@@ -2,7 +2,7 @@
 import MacroLine from '~/features/nutrition/components/MacroLine.vue'
 import { formatGrams } from '~/features/nutrition/format'
 import { parseAmount } from '~/services/text/numbers'
-import { MEAL_SLOTS, type MealSlot } from '~/features/nutrition/nutrition'
+import { macrosFor, MEAL_SLOTS, type Macros, type MealSlot } from '~/features/nutrition/nutrition'
 
 /**
  * How much, and in which meal. The preview multiplies the per-100 g values for guidance only:
@@ -10,7 +10,7 @@ import { MEAL_SLOTS, type MealSlot } from '~/features/nutrition/nutrition'
  */
 const props = withDefaults(defineProps<{
   name: string
-  per100g: { energyKcal: number, protein: number, carbohydrate: number, fat: number }
+  per100g: Macros
   portions?: ReadonlyArray<{ label: string, grams: number }>
   /** Shown under the portions, e.g. what one serving of a recipe weighs. */
   hint?: string
@@ -31,15 +31,7 @@ const quantity = computed(() => {
   const value = parseAmount(grams.value)
   return value !== null && value > 0 ? value : 0
 })
-const preview = computed(() => {
-  const factor = quantity.value / 100
-  return {
-    energyKcal: props.per100g.energyKcal * factor,
-    protein: props.per100g.protein * factor,
-    carbohydrate: props.per100g.carbohydrate * factor,
-    fat: props.per100g.fat * factor,
-  }
-})
+const preview = computed(() => macrosFor(props.per100g, quantity.value))
 
 function submit(): void {
   if (quantity.value > 0) emit('submit', quantity.value, slot.value ?? props.initialSlot)

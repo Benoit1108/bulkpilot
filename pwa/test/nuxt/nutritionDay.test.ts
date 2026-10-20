@@ -201,6 +201,126 @@ describe('nutrition page', () => {
     expect(wrapper.get('[data-testid="status"]').text()).toBe('Skyr nature ajouté au petit-déjeuner.')
   })
 
+  /** A journal that keeps what is logged, with skyr eaten lately (150 g last time). */
+  async function openQuickAdd(log: (body: { grams: number }) => unknown = () => undefined) {
+    let logged: ReturnType<typeof entry>[] = []
+    fake.on('GET /api/foods/recent', () => [{ ...skyr, lastGrams: 150 }])
+    fake.on('GET /api/nutrition/days/{day}', (_, params) => day(params!.path!.day!, logged))
+    fake.on('POST /api/nutrition/entries', async (body) => {
+      await log(body as { grams: number })
+      logged = [...logged, entry('breakfast', (body as { grams: number }).grams, skyr)]
+      return day(TODAY, logged)
+    })
+    const wrapper = await openPage()
+    await button(wrapper, 'Ajouter un aliment au petit-déjeuner').trigger('click')
+    await flushPromises()
+    return wrapper
+  }
+  const QUICK_SKYR = 'Ajouter Skyr nature, 150 g'
+  const entriesPosted = () => fake.calls.filter(call => call.route === 'POST /api/nutrition/entries').map(call => call.body)
+
+  it('adds a recent food again with its last quantity in one tap, the drawer staying open', async () => {
+    const wrapper = await openQuickAdd()
+
+    expect(wrapper.get('dialog[open] [aria-label="Récents"]').text()).toContain('150 g · 95 kcal')
+    await button(wrapper, QUICK_SKYR, 'dialog[open]').trigger('click')
+    await flushPromises()
+    await button(wrapper, QUICK_SKYR, 'dialog[open]').trigger('click')
+    await flushPromises()
+
+    expect(entriesPosted()).toEqual([
+      { foodId: skyr.id, day: TODAY, slot: 'breakfast', grams: 150 },
+      { foodId: skyr.id, day: TODAY, slot: 'breakfast', grams: 150 },
+    ])
+    expect(wrapper.get('dialog[open] [data-testid="quick-status"]').text()).toBe('Skyr nature ajouté au petit-déjeuner (150 g).')
+    await button(wrapper, 'Fermer', 'dialog[open]').trigger('click')
+    await flushPromises()
+    expect(wrapper.find('dialog[open]').exists()).toBe(false)
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('2 aliments ajoutés au petit-déjeuner.')
+  })
+
+  it('ignores a second tap while the first add is on its way', async () => {
+    let release = () => {}
+    const wrapper = await openQuickAdd(() => new Promise<void>((resolve) => {
+      release = resolve
+    }))
+
+    await button(wrapper, QUICK_SKYR, 'dialog[open]').trigger('click')
+    expect(button(wrapper, QUICK_SKYR, 'dialog[open]').attributes('aria-disabled')).toBe('true')
+    await button(wrapper, QUICK_SKYR, 'dialog[open]').trigger('click')
+    release()
+    await flushPromises()
+
+    expect(entriesPosted()).toHaveLength(1)
+    expect(button(wrapper, QUICK_SKYR, 'dialog[open]').attributes('aria-disabled')).toBeUndefined()
+  })
+
+  it('still says an add closed over before it was saved, in the meal it went to', async () => {
+    let release = () => {}
+    const wrapper = await openQuickAdd(() => new Promise<void>((resolve) => {
+      release = resolve
+    }))
+
+    await button(wrapper, QUICK_SKYR, 'dialog[open]').trigger('click')
+    await button(wrapper, 'Fermer', 'dialog[open]').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('')
+    release()
+    await flushPromises()
+
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('Skyr nature ajouté au petit-déjeuner (150 g).')
+    await button(wrapper, 'Ajouter un aliment au déjeuner').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('dialog[open] [data-testid="quick-status"]').text(), 'nothing left over from the last opening').toBe('')
+  })
+
+  it('says a quick add that failed, and leaves it out of the summary', async () => {
+    const wrapper = await openQuickAdd(() => {
+      throw apiError(500, 'internal')
+    })
+
+    await button(wrapper, QUICK_SKYR, 'dialog[open]').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.find('dialog[open] [role="alert"]').exists()).toBe(true)
+    expect(wrapper.get('dialog[open] [data-testid="quick-status"]').text()).toBe('')
+    await button(wrapper, 'Fermer', 'dialog[open]').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('')
+  })
+
+  it('opens a recent food at its last quantity, and sums up the quick adds before it', async () => {
+    const wrapper = await openQuickAdd()
+
+    await button(wrapper, QUICK_SKYR, 'dialog[open]').trigger('click')
+    await flushPromises()
+    const row = buttonStartingWith(wrapper, 'Skyr nature', 'dialog[open]')
+    expect(row.text(), 'the line says what touching it does').toMatch(/, régler la quantité$/)
+    await row.trigger('click')
+    expect((field(wrapper, 'Quantité').element as HTMLInputElement).value, 'the quantity its line shows').toBe('150')
+    await field(wrapper, 'Quantité').setValue('200')
+    await wrapper.get('dialog[open] form').trigger('submit')
+    await flushPromises()
+
+    expect(entriesPosted().map(body => (body as { grams: number }).grams)).toEqual([150, 200])
+    expect(wrapper.get('[data-testid="status"]').text()).toBe('Skyr nature ajouté au petit-déjeuner (150 g). Skyr nature ajouté au petit-déjeuner.')
+  })
+
+  it('has no quick add for a food found by its name: its line sets the quantity', async () => {
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] })
+    vi.setSystemTime(new Date(2026, 8, 28, 12, 0))
+    fake.on('GET /api/foods', () => [rice])
+    const wrapper = await openQuickAdd()
+
+    await field(wrapper, 'Rechercher un aliment ou une recette').setValue('riz')
+    await vi.advanceTimersByTimeAsync(300)
+    await flushPromises()
+
+    expect(wrapper.get('dialog[open] [aria-label="Aliments"]').text()).toContain('Riz blanc, cru')
+    expect(wrapper.findAll('dialog[open] button').some(b => b.attributes('aria-label')?.startsWith('Ajouter Riz'))).toBe(false)
+    vi.useRealTimers()
+  })
+
   it('reads quantities typed with a decimal comma', async () => {
     fake.on('GET /api/nutrition/days/{day}', (_, params) => day(params!.path!.day!))
     fake.on('POST /api/nutrition/entries', () => day(TODAY))
@@ -259,7 +379,7 @@ describe('nutrition page', () => {
     const dialog = wrapper.get('dialog[open]')
     expect(dialog.text()).toContain('Riz blanc, cuit')
     expect(dialog.text()).not.toContain('Riz blanc, cru')
-    expect(dialog.get('[role="status"]').text()).toBe('1\u00A0résultat')
+    expect(dialog.get('[data-testid="search-status"]').text()).toBe('1\u00A0résultat')
     vi.useRealTimers()
   })
 
@@ -275,7 +395,7 @@ describe('nutrition page', () => {
     await search.setValue('introuvable')
     await vi.advanceTimersByTimeAsync(300)
     await flushPromises()
-    expect(wrapper.get('dialog[open] [role="status"]').text()).toBe('Aucun résultat pour «\u00A0introuvable\u00A0».')
+    expect(wrapper.get('dialog[open] [data-testid="search-status"]').text()).toBe('Aucun résultat pour «\u00A0introuvable\u00A0».')
 
     fake.on('GET /api/foods', () => {
       throw apiError(503, null)
@@ -283,7 +403,7 @@ describe('nutrition page', () => {
     await search.setValue('panne')
     await vi.advanceTimersByTimeAsync(300)
     await flushPromises()
-    expect(wrapper.get('dialog[open] [role="status"]').text()).toContain('La recherche a échoué')
+    expect(wrapper.get('dialog[open] [data-testid="search-status"]').text()).toContain('La recherche a échoué')
 
     await search.setValue('')
     await flushPromises()

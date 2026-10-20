@@ -19,6 +19,7 @@ use App\Nutrition\Domain\Journal\JournalEntryId;
 use App\Nutrition\Domain\Journal\JournalEntryRepository;
 use App\Nutrition\Domain\Journal\LoggedFood;
 use App\Nutrition\Domain\Journal\MealSlot;
+use App\Nutrition\Domain\Journal\RecentFood;
 use App\Nutrition\Domain\Target\EnergyCalculator;
 use App\Nutrition\Domain\Target\EnergyInputs;
 use App\Nutrition\Domain\Target\Goal;
@@ -152,8 +153,10 @@ final class PersistenceTest extends KernelTestCase
         $this->foods->save($rice);
         $this->foods->save($oil);
         $entries = self::getContainer()->get(JournalEntryRepository::class);
-        $log = function (UserId $owner, Food $food, string $day, float $grams, string $at) use ($entries): JournalEntry {
-            $entry = JournalEntry::log(new JournalEntryId(\sprintf('00000000-0000-7000-8000-%012d', \count($this->entityManager->getUnitOfWork()->getIdentityMap()[JournalEntry::class] ?? []) + 1)), $owner, new \DateTimeImmutable($day), MealSlot::Lunch, LoggedFood::snapshotOf($food), $grams, new \DateTimeImmutable($at));
+        // Ids rise with each entry, as time-ordered ones do.
+        $sequence = 0;
+        $log = function (UserId $owner, Food $food, string $day, float $grams, string $at) use ($entries, &$sequence): JournalEntry {
+            $entry = JournalEntry::log(new JournalEntryId(\sprintf('00000000-0000-7000-8000-%012d', ++$sequence)), $owner, new \DateTimeImmutable($day), MealSlot::Lunch, LoggedFood::snapshotOf($food), $grams, new \DateTimeImmutable($at));
             $entries->save($entry);
             $this->entityManager->flush();
 
@@ -172,7 +175,18 @@ final class PersistenceTest extends KernelTestCase
         self::assertEqualsWithDelta(356 + 90.1, $totals['2026-09-27']->amounts->energyKcal, 0.001);
         self::assertEqualsWithDelta(1.4, $totals['2026-09-27']->amounts->fibre, 0.001, 'unknown fibre counts as nothing');
         self::assertEqualsWithDelta(712.0, $totals['2026-09-28']->amounts->energyKcal, 0.001);
-        self::assertSame(['9100', '17440'], array_map(fn (FoodId $id): string => (string) $this->foods->getVisibleTo($id, $this->alex)->sourceReference(), $entries->recentFoods($this->alex, 10)));
+        $reference = fn (RecentFood $food): string => (string) $this->foods->getVisibleTo($food->foodId, $this->alex)->sourceReference();
+        $recent = $entries->recentFoods($this->alex, 10);
+        self::assertSame(['9100', '17440'], array_map($reference, $recent));
+        self::assertSame([200.0, 10.0], array_map(static fn (RecentFood $food): float => $food->lastGrams, $recent), 'the latest entry of each food gives its quantity');
+
+        // Logged the same second (a favourite meal, a quick double tap): the later id settles both orders.
+        $log($this->alex, $oil, '2026-09-28', 15, '2026-09-28 12:00');
+        $log($this->alex, $oil, '2026-09-28', 20, '2026-09-28 12:00');
+        $recent = $entries->recentFoods($this->alex, 10);
+        self::assertSame(['17440', '9100'], array_map($reference, $recent));
+        self::assertSame([20.0, 200.0], array_map(static fn (RecentFood $food): float => $food->lastGrams, $recent));
+        self::assertSame(['17440'], array_map($reference, $entries->recentFoods($this->alex, 1)));
         self::assertCount(1, $entries->recentFoods($this->sam, 10));
     }
 

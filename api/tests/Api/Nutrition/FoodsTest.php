@@ -32,6 +32,7 @@ final class FoodsTest extends NutritionApiTestCase
             'portions' => [],
             'editable' => false,
             'barcode' => null,
+            'lastGrams' => null,
         ], array_diff_key(self::array($found, '0'), ['id' => 1, 'per100g' => 1]));
         self::assertSame(30.1, self::at($found, '0.per100g.protein'));
 
@@ -132,7 +133,13 @@ final class FoodsTest extends NutritionApiTestCase
         $egg = $this->foodId('oeuf');
         $this->logFood($rice, 100);
         $this->logFood($egg, 60, 'breakfast');
+        $this->logFood($rice, 150);
 
-        self::assertSame(['Oeuf, cru', 'Riz blanc, cru'], array_column($this->call('GET', '/api/foods/recent')->toArray(), 'name'));
+        $recent = $this->call('GET', '/api/foods/recent')->toArray();
+        self::assertSame(['Riz blanc, cru', 'Oeuf, cru'], array_column($recent, 'name'));
+        self::assertSame([150.0, 60.0], array_column($recent, 'lastGrams'), 'the quantity logged last, to log it again in one tap');
+        $found = array_column($this->call('GET', '/api/foods?q=oeuf')->toArray(), 'lastGrams');
+        self::assertNotEmpty($found);
+        self::assertSame([], array_filter($found, static fn (mixed $grams): bool => null !== $grams), 'only recent foods carry it');
     }
 }

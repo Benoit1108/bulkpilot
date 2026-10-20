@@ -94,6 +94,8 @@ const shown = computed({
         :id="`${id}-suffix`"
         class="pr-3 text-muted"
       >{{ suffix }}</span>
+      <!-- An action on the field itself (scanning a barcode instead of typing). -->
+      <slot name="end" />
       <button
         v-if="type === 'password'"
         type="button"

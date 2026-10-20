@@ -32,27 +32,35 @@ beforeEach(() => {
   fake.on('GET /api/nutrition/days/{day}', (_, params) => day(params!.path!.day!))
 })
 
-async function openPicker(slot: string) {
+async function openPicker(slot: string, tab?: 'favorites' | 'recipes') {
   const wrapper = await mountSuspended(NutritionPage, { route: '/nutrition' })
   await flushPromises()
   await button(wrapper, `Ajouter un aliment ${slot}`).trigger('click')
   await flushPromises()
+  if (tab) await wrapper.get(`dialog[open] input[name="picker-tab"][value="${tab}"]`).setValue()
   return wrapper
 }
 
 describe('logging a recipe or a favourite meal', () => {
-  it('lists favourites, then recent foods, then a few recipes', async () => {
+  it('opens on recent foods, favourites and recipes a tab away', async () => {
     const wrapper = await openPicker('au déjeuner')
+    const shown = () => wrapper.get('dialog[open]').findAll('section').map(section => section.attributes('aria-label'))
 
-    const headings = wrapper.get('dialog[open]').findAll('h3').map(h => h.text())
-    expect(headings).toEqual(['Repas favoris', 'Récents', 'Mes recettes'])
+    const tabs = wrapper.get('dialog[open]').findAll('input[name="picker-tab"]')
+    expect(tabs.map(tab => tab.element.closest('label')?.textContent?.trim())).toEqual(['Récents', 'Favoris', 'Recettes'])
+    expect((tabs[0]!.element as HTMLInputElement).checked).toBe(true)
+    expect(shown()).toEqual(['Récents'])
+    await tabs[1]!.setValue()
+    expect(shown()).toEqual(['Repas favoris'])
+    await tabs[2]!.setValue()
+    expect(shown()).toEqual(['Mes recettes'])
   })
 
   it('logs servings of a recipe', async () => {
     fake.on('POST /api/nutrition/entries', () => day(TODAY))
-    const wrapper = await openPicker('au déjeuner')
+    const wrapper = await openPicker('au déjeuner', 'recipes')
 
-    expect(wrapper.get('dialog[open]').text()).toContain('327\u00A0kcal / portion')
+    expect(wrapper.get('dialog[open] [aria-label="Mes recettes"]').text()).toContain('1 portion · 327\u00A0kcal')
     await buttonStartingWith(wrapper, 'Riz au poulet', 'dialog[open]').trigger('click')
     expect((field(wrapper, 'Quantité').element as HTMLInputElement).value).toBe('275')
     expect(wrapper.get('dialog[open] [data-testid="quantity-hint"]').text()).toBe('Une portion pèse 275\u00A0g.')
@@ -74,9 +82,21 @@ describe('logging a recipe or a favourite meal', () => {
     expect(wrapper.find('dialog[open] [aria-label="Mes recettes"]').exists()).toBe(false)
   })
 
+  it('adds one serving of a recipe in one tap', async () => {
+    fake.on('POST /api/nutrition/entries', () => day(TODAY))
+    const wrapper = await openPicker('au déjeuner', 'recipes')
+
+    await button(wrapper, 'Ajouter Riz au poulet, 1 portion', 'dialog[open]').trigger('click')
+    await flushPromises()
+
+    expect(fake.calls.find(call => call.route === 'POST /api/nutrition/entries')?.body).toEqual({ recipeId: recipe.id, day: TODAY, slot: 'lunch', grams: 275 })
+    expect(wrapper.get('dialog[open] [data-testid="quick-status"]').text()).toBe('Riz au poulet ajouté au déjeuner (1 portion).')
+    expect((wrapper.get('dialog[open] input[name="picker-tab"][value="recipes"]').element as HTMLInputElement).checked, 'still on its tab').toBe(true)
+  })
+
   it('adds a whole favourite meal in one tap, and says so', async () => {
     fake.on('POST /api/nutrition/favorite-meals/{id}/log', () => day(TODAY, [entry('breakfast', 150, skyr)]))
-    const wrapper = await openPicker('au petit-déjeuner')
+    const wrapper = await openPicker('au petit-déjeuner', 'favorites')
 
     await buttonStartingWith(wrapper, 'Ajouter le repas favori Petit-déj habituel', 'dialog[open]').trigger('click')
     await flushPromises()
@@ -91,7 +111,7 @@ describe('logging a recipe or a favourite meal', () => {
     fake.on('POST /api/nutrition/favorite-meals/{id}/log', () => {
       throw apiError(404, 'nutrition.favorite_meal_not_found')
     })
-    const wrapper = await openPicker('au petit-déjeuner')
+    const wrapper = await openPicker('au petit-déjeuner', 'favorites')
 
     await buttonStartingWith(wrapper, 'Ajouter le repas favori Petit-déj habituel', 'dialog[open]').trigger('click')
     await flushPromises()
@@ -157,6 +177,7 @@ describe('recipes', () => {
 
   it('composes a recipe from weighed ingredients, the search never submitting it', async () => {
     fake.on('GET /api/foods', () => [rice])
+    fake.on('GET /api/foods/recent', () => [{ ...rice, lastGrams: 80 }])
     fake.on('POST /api/recipes', () => recipe)
     const wrapper = await mountSuspended(NewRecipePage, { route: '/nutrition/recettes/nouvelle' })
     await flushPromises()
@@ -166,6 +187,9 @@ describe('recipes', () => {
     await button(wrapper, 'Ajouter un ingrédient').trigger('click')
     await flushPromises()
     expect(wrapper.find('dialog[open] [aria-label="Mes recettes"]').exists(), 'no recipe inside a recipe').toBe(false)
+    expect(wrapper.find('dialog[open] input[name="picker-tab"]').exists(), 'one list: no tabs').toBe(false)
+    expect(wrapper.get('dialog[open] h3').text()).toBe('Récents')
+    expect(wrapper.findAll('dialog[open] button').some(b => b.attributes('aria-label')?.startsWith('Ajouter ')), 'an ingredient is weighed, never added in one tap').toBe(false)
     expect(wrapper.find('dialog[open]').element.closest('form'), 'the picker is not inside the recipe form').toBeNull()
     await buttonStartingWith(wrapper, 'Riz blanc', 'dialog[open]').trigger('click')
     await flushPromises()

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Nutrition\Domain\Journal;
 
 use App\Nutrition\Domain\Exception\JournalEntryNotFound;
-use App\Nutrition\Domain\Food\FoodId;
 use App\Shared\Domain\Identifier\UserId;
 
 interface JournalEntryRepository
@@ -32,9 +31,9 @@ interface JournalEntryRepository
     public function dailyTotals(UserId $userId, \DateTimeImmutable $from, \DateTimeImmutable $to): array;
 
     /**
-     * Foods most recently logged by the user, most recent first.
+     * Foods most recently logged by the user, most recent first, each with its latest quantity.
      *
-     * @return list<FoodId>
+     * @return list<RecentFood>
      */
     public function recentFoods(UserId $userId, int $limit): array;
 }

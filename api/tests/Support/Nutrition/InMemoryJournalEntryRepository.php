@@ -11,6 +11,7 @@ use App\Nutrition\Domain\Journal\DayTotals;
 use App\Nutrition\Domain\Journal\JournalEntry;
 use App\Nutrition\Domain\Journal\JournalEntryId;
 use App\Nutrition\Domain\Journal\JournalEntryRepository;
+use App\Nutrition\Domain\Journal\RecentFood;
 use App\Shared\Domain\Identifier\UserId;
 
 final class InMemoryJournalEntryRepository implements JournalEntryRepository
@@ -66,13 +67,13 @@ final class InMemoryJournalEntryRepository implements JournalEntryRepository
         // As the SQL: most recent first, time-ordered ids settle entries logged at once.
         usort($entries, static fn (JournalEntry $a, JournalEntry $b): int => [$b->loggedAt(), $b->id()->value] <=> [$a->loggedAt(), $a->id()->value]);
 
-        $ids = [];
+        $recent = [];
         foreach ($entries as $entry) {
             $id = $entry->food()->foodId;
             \assert($id instanceof FoodId);
-            $ids[$id->value] = $id;
+            $recent[$id->value] ??= new RecentFood($id, $entry->grams());
         }
 
-        return \array_slice(array_values($ids), 0, $limit);
+        return \array_slice(array_values($recent), 0, $limit);
     }
 }

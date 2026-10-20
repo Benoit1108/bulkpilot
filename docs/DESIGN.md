@@ -82,6 +82,13 @@ est réservé aux barres de navigation. Toute cible tactile fait au moins 44 px.
   carte Moyennes, calculées par l'API.
 - **Repas** (journal) : une liste groupée par repas, un aliment par ligne (nom, quantité, kcal), un « + » rond par repas
   et une barre fine de sa part de la journée. Sur PC, les repas à gauche, le bilan et la semaine à droite.
+- **Panneau d'ajout** : il s'ouvre sur les aliments récents, avec les favoris et les recettes à un onglet (contrôle
+  segmenté) ; le scan du code-barres est dans le champ de recherche. Une ligne connue (aliment récent, recette) a un
+  « + » rond qui l'ajoute tout de suite avec la dernière quantité saisie (une portion pour une recette), sans fermer
+  le panneau : un repas, c'est plusieurs aliments. Toucher la ligne règle d'abord la quantité. En fermant, le journal
+  dit ce qui a été ajouté.
+- **Frise** (historique des objectifs) : un point par objectif sur un trait vertical, le plus récent en haut ; celui
+  en vigueur plein et en violet, un objectif prévu cerclé, chacun dit en toutes lettres (« En vigueur », « Prévu »).
 
 ## Navigation
 

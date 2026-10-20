@@ -55,3 +55,6 @@ export const fieldClass = {
 
 /** A round icon button of the page header (search, add, notifications, settings). */
 export const HEADER_BUTTON = 'relative grid size-tap cursor-pointer place-items-center rounded-full border border-transparent bg-surface p-0 text-accent-ink transition-colors hover:bg-surface-raised aria-[current=page]:bg-accent-soft'
+
+/** A round « + » that adds at once (add panel): tinted, its own classes (HEADER_BUTTON's background would win). */
+export const QUICK_ADD = 'grid size-tap shrink-0 cursor-pointer place-items-center rounded-full border-0 bg-accent-soft p-0 text-accent-ink transition-opacity hover:opacity-80 aria-disabled:cursor-wait aria-disabled:opacity-60'

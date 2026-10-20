@@ -35,7 +35,7 @@ test.describe('nutrition', () => {
     await page.getByRole('button', { name: 'Ajouter un aliment au déjeuner' }).click()
     const drawer = page.getByRole('dialog', { name: 'Ajouter au déjeuner' })
     await drawer.getByLabel('Rechercher un aliment ou une recette').fill('poulet saute')
-    await drawer.getByRole('button', { name: /Poulet, filet, sans peau, sauté\/poêlé/ }).click()
+    await drawer.getByRole('button', { name: /^Poulet, filet, sans peau, sauté\/poêlé \d/ }).click()
     await drawer.getByLabel('Quantité').fill('150')
     await drawer.getByRole('button', { name: 'Ajouter', exact: true }).click()
     await expect(drawer).toBeHidden()
@@ -47,6 +47,14 @@ test.describe('nutrition', () => {
 
     await page.reload()
     await expect(page.getByTestId('meal-lunch')).toContainText('Poulet')
+
+    // A recent food comes back with its last quantity: one tap adds it again, the drawer stays open.
+    await page.getByRole('button', { name: 'Ajouter un aliment au dîner' }).click()
+    const again = page.getByRole('dialog', { name: 'Ajouter au dîner' })
+    await again.getByRole('button', { name: 'Ajouter Poulet, filet, sans peau, sauté/poêlé, 150\u00A0g' }).click()
+    await expect(again.getByRole('status').filter({ hasText: 'ajouté au dîner (150\u00A0g).' })).toBeVisible()
+    await again.getByRole('button', { name: 'Fermer' }).click()
+    await expect(page.getByTestId('meal-dinner')).toContainText('Poulet')
 
     // The week strip: today holds meals, and another day of the week opens in one tap.
     const week = page.getByRole('list', { name: 'Jours de la semaine' })
@@ -141,7 +149,8 @@ test.describe('nutrition', () => {
     await page.goto('/nutrition')
     await page.getByRole('button', { name: 'Ajouter un aliment au déjeuner' }).click()
     const drawer = page.getByRole('dialog', { name: 'Ajouter au déjeuner' })
-    await drawer.getByRole('button', { name: /Riz au poulet/ }).click()
+    await drawer.getByRole('radio', { name: 'Recettes' }).check()
+    await drawer.getByRole('button', { name: /^Riz au poulet/ }).click()
     await expect(drawer.getByLabel('Quantité')).toHaveValue('275')
     await drawer.getByRole('button', { name: 'Ajouter', exact: true }).click()
     await expect(page.getByTestId('meal-lunch')).toContainText('Riz au poulet')
@@ -153,7 +162,9 @@ test.describe('nutrition', () => {
     await expect(page.getByText('« Midi habituel » est dans tes repas favoris.')).toBeVisible()
 
     await page.getByRole('button', { name: 'Ajouter un aliment au dîner' }).click()
-    await page.getByRole('dialog', { name: 'Ajouter au dîner' }).getByRole('button', { name: 'Ajouter le repas favori Midi habituel' }).click()
+    const dinner = page.getByRole('dialog', { name: 'Ajouter au dîner' })
+    await dinner.getByRole('radio', { name: 'Favoris' }).check()
+    await dinner.getByRole('button', { name: 'Ajouter le repas favori Midi habituel' }).click()
     await expect(page.getByTestId('meal-dinner')).toContainText('Riz au poulet')
   })
 

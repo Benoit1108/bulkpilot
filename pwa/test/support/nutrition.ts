@@ -11,6 +11,7 @@ export const rice: Food = {
   portions: [],
   editable: false,
   barcode: null,
+  lastGrams: null,
 }
 
 export const skyr: Food = {

@@ -11,6 +11,7 @@ use App\Nutrition\Domain\Journal\DayTotals;
 use App\Nutrition\Domain\Journal\JournalEntry;
 use App\Nutrition\Domain\Journal\JournalEntryId;
 use App\Nutrition\Domain\Journal\JournalEntryRepository;
+use App\Nutrition\Domain\Journal\RecentFood;
 use App\Shared\Domain\Identifier\UserId;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -92,16 +93,19 @@ final readonly class DoctrineJournalEntryRepository implements JournalEntryRepos
 
     public function recentFoods(UserId $userId, int $limit): array
     {
-        $ids = $this->entityManager->getConnection()->fetchFirstColumn(
-            'SELECT food_id FROM journal_entries
-             WHERE owner_id = :owner AND food_id IS NOT NULL
-             GROUP BY food_id
-             ORDER BY MAX(logged_at) DESC, MAX(id::text) DESC -- time-ordered ids settle the same second
+        // Each food's latest entry (time-ordered ids settle the same second), then the latest first.
+        $rows = $this->entityManager->getConnection()->fetchAllAssociative(
+            'SELECT food_id, grams FROM (
+                 SELECT DISTINCT ON (food_id) food_id, grams, logged_at, id::text AS tie FROM journal_entries
+                 WHERE owner_id = :owner AND food_id IS NOT NULL
+                 ORDER BY food_id, logged_at DESC, id::text DESC
+             ) latest
+             ORDER BY logged_at DESC, tie DESC
              LIMIT :limit',
             ['owner' => $userId->value, 'limit' => $limit],
         );
 
-        return array_map(static fn (mixed $id): FoodId => new FoodId(self::string($id)), $ids);
+        return array_map(static fn (array $row): RecentFood => new RecentFood(new FoodId(self::string($row['food_id'])), self::float($row['grams'])), $rows);
     }
 
     private static function string(mixed $value): string
