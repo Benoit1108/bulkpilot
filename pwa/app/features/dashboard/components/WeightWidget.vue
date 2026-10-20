@@ -1,17 +1,22 @@
 <script setup lang="ts">
-import { formatKg, formatSignedKg, formatTrend } from '~/features/progression/format'
+import { formatKg, formatSignedKg } from '~/features/progression/format'
 import { formatDayMonth } from '~/services/calendar/days'
 import { viewLong, viewPeriod, type DashboardView } from '../dashboard'
 import { useWeightSummary } from '../data'
 import DashboardWidget from './DashboardWidget.vue'
 
-/** The current weight and how it moves (spec §13: « poids actuel, variation hebdomadaire »). */
+/**
+ * The current weight and how it moved (spec §13: « poids actuel, variation hebdomadaire »), as a
+ * tile: the figure, the line of the 7-day mean, the change; the trend itself is on Progression.
+ */
 const props = defineProps<{ view: DashboardView, today: string }>()
 
 // The day view shows the week's change (spec §13 « variation hebdomadaire »).
 const { data: summary, status, error, refresh } = useWeightSummary(() => viewPeriod(props.view), () => props.today)
 /** Over the days shown, as the server has it. */
 const during = computed(() => (props.view === 'day' ? 'sur 7 jours' : viewLong(props.view)))
+/** The 7-day mean of each weigh-in: the line of the tile, without a single day's noise. */
+const trend = computed(() => (summary.value?.points ?? []).map(point => point.average7Kg))
 </script>
 
 <template>
@@ -23,13 +28,10 @@ const during = computed(() => (props.view === 'day' ? 'sur 7 jours' : viewLong(p
     @retry="refresh()"
   >
     <template v-if="summary?.latest">
-      <p>
-        <span class="text-2xl font-bold tabular-nums">{{ formatKg(summary.latest.weightKg) }}</span>
-        <span class="text-sm text-muted"> · {{ formatDayMonth(summary.latest.day, today) }}</span>
+      <p class="text-xs text-muted">
+        <span class="block text-2xl font-bold text-ink tabular-nums">{{ formatKg(summary.latest.weightKg) }}</span> {{ formatDayMonth(summary.latest.day, today) }}
       </p>
-      <p class="text-sm">
-        Tendance&nbsp;: {{ formatTrend(summary) }}
-      </p>
+      <UiSparkline :values="trend" />
       <p
         v-if="summary.periodChangeKg !== null"
         class="text-sm"

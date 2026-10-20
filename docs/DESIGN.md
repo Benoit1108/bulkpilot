@@ -10,7 +10,8 @@ UX/UI » (lien privé du propriétaire). Décision : [ADR-0034](adr/0034-apple-l
   Le reste de l'interface est en gris système ; le violet est la couleur des actions.
 - **Un chiffre-clé par tuile.** Grand chiffre, variation, mini-courbe ; le détail s'ouvre au toucher.
 - **Listes groupées** comme Réglages iOS : une ligne par élément, des séparateurs fins, pas de cartes vides étirées.
-- **Aucune morale.** Un dépassement s'affiche en gris avec sa valeur, jamais en rouge ; pas de badges ni de confettis.
+- **Aucune morale.** Dépasser n'est jamais rouge : la barre des calories passe en gris neutre avec sa valeur, un anneau
+  ou une macro reste fermé dans sa couleur ; pas de badges ni de confettis.
 - **Jamais la couleur seule** : un état choisi a aussi une graisse, un contour ou un texte.
 
 ## Couleurs
@@ -57,8 +58,16 @@ est réservé aux barres de navigation. Toute cible tactile fait au moins 44 px.
 - **Page** (`UiPage`) : `reading` (une colonne lisible, formulaires et listes) ou `columns` (cartes indépendantes,
   deux colonnes à partir de xl) ; ce qui concerne toute la page (lien retour, période de tous les graphiques) va dans
   l'emplacement `top`, au-dessus des colonnes, et une action reste dans le même bloc que la carte qu'elle concerne.
-- Les composants de données (anneau du jour, barres de macros, tuile à mini-courbe, bande de semaine, calendrier,
-  ligne de série, minuteur) arrivent avec la page qui les utilise en premier (phases R2 à R6).
+- **Anneaux** (`UiRing`) : calories dehors, puis protéines, glucides, lipides ; fermés à l'objectif et au-delà, dans
+  leur couleur ; décoratifs à côté d'un texte qui dit les chiffres, sinon une image nommée par eux. **Barres de
+  macros** (`MacroBars`) : « 98 / 150 g », la barre le lit en entier ; le bilan du journal y passe en R4.
+- **Tuile** (widget de l'accueil) : son nom en violet (15 px, `text-callout`) est le lien, étendu à toute la carte ; un
+  chiffre seul (24 px, `text-2xl` ; 40 px pour les calories) tient en tuile — moitié d'un téléphone, quart d'un grand
+  écran —, une liste ou un bouton prend une carte large. Les tuiles vont par deux dans l'ordre choisi par
+  l'utilisateur ; une tuile seule s'élargit (pas de trou, ordre de lecture intact). Mini-courbe (`UiSparkline`) ou
+  petites barres (`UiMiniBars`, semaines terminées, à partir de trois) sous le chiffre, décoratives.
+- Les autres composants de données (bande de semaine, calendrier, ligne de série, minuteur) arrivent avec la page qui
+  les utilise en premier (phases R3 à R6).
 
 ## Navigation
 

@@ -37,7 +37,7 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ['@fontsource-variable/inter', '~/assets/css/main.css'],
+  css: ['~/assets/css/fonts.css', '~/assets/css/main.css'],
 
   runtimeConfig: {
     public: {
@@ -95,8 +95,6 @@ export default defineNuxtConfig({
       navigateFallback: '/',
       navigateFallbackDenylist: [/^\/api/, /^\/_profiler/, /^\/_wdt/],
       globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
-      // Only the latin subsets of Inter are ever used by French UI copy.
-      globIgnores: ['**/inter-{cyrillic,cyrillic-ext,greek,greek-ext,vietnamese}-*.woff2'],
       // API responses are personal data: never served from a cache. Workbox matches routes on
       // the full URL, hence a function rather than a path RegExp.
       runtimeCaching: [{

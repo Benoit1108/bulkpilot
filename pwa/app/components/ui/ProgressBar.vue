@@ -1,7 +1,10 @@
 <script setup lang="ts">
+const FILLS = { accent: 'bg-accent', protein: 'bg-protein', carbs: 'bg-carbs', fat: 'bg-fat' } as const
+
 /**
  * Progress towards a target. Going over it is not an error (a bulk often needs it): the bar
- * stays full, shows the overflow in a neutral tone, and the text says by how much.
+ * stays full, in a neutral tone, and the text says by how much. A nutrient's bar keeps its colour
+ * (that colour names it), full.
  */
 const props = withDefaults(defineProps<{
   label: string
@@ -10,7 +13,9 @@ const props = withDefaults(defineProps<{
   /** Screen-reader text, e.g. "1 250 kcal sur 2 800". */
   valueText: string
   size?: 'md' | 'lg'
-}>(), { size: 'md' })
+  /** A nutrient keeps its colour (docs/DESIGN.md); anything else is the accent. */
+  tone?: keyof typeof FILLS
+}>(), { size: 'md', tone: 'accent' })
 
 const ratio = computed(() => (props.max && props.max > 0 ? props.value / props.max : 0))
 const fill = computed(() => `${Math.min(100, Math.round(ratio.value * 100))}%`)
@@ -33,7 +38,7 @@ const over = computed(() => ratio.value > 1)
     <!-- Over the target is not an error (spec §30): neutral, yet distinct from "on the way". -->
     <span
       class="absolute inset-y-0 left-0 rounded-[inherit] transition-[width] motion-reduce:transition-none"
-      :class="over ? 'bg-muted' : 'bg-accent'"
+      :class="over && tone === 'accent' ? 'bg-muted' : FILLS[tone]"
       :style="{ width: fill }"
     />
   </div>

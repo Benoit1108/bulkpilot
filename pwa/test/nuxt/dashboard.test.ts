@@ -84,13 +84,17 @@ describe('the dashboard', () => {
     const wrapper = await openDashboard()
 
     expect(titles(wrapper)).toEqual(['Poids', 'Nutrition', 'Repas', 'Entraînement', 'Coach', 'Objectif de poids', 'Records'])
+    // A figure alone is a tile, a list or a button a wide card (Apple Health's summary); tiles go in
+    // pairs in the user's order, and Poids, alone before Nutrition, takes the whole row.
+    const span = (title: string) => widget(wrapper, title).classes().find(name => name.startsWith('col-span'))
+    expect(titles(wrapper).map(span)).toEqual(['col-span-2', 'col-span-2', 'col-span-2', 'col-span-2', 'col-span-2', 'col-span-1', 'col-span-1'])
+    expect(widget(wrapper, 'Poids').get('h2 a').attributes('href'), 'the whole tile leads to its section').toBe('/progression')
     expect(widget(wrapper, 'Poids').text()).toContain('51,8\u00A0kg')
-    expect(widget(wrapper, 'Poids').text()).toContain('Tendance\u00A0: en hausse (+0,42\u00A0kg/semaine)')
     // The week's change, as the server has it (spec §13 « variation hebdomadaire »).
     expect(widget(wrapper, 'Poids').text()).toContain('+1,2\u00A0kg sur 7 jours')
     expect(fake.calls.find(call => call.route === 'GET /api/progression/weight')?.params).toMatchObject({ query: { period: '7d' } })
     const nutrition = widget(wrapper, 'Nutrition')
-    expect(nutrition.get('[role="progressbar"]').attributes('aria-label')).toBe('Calories')
+    expect(nutrition.findAll('[role="progressbar"]').map(bar => bar.attributes('aria-label'))).toEqual(['Protéines', 'Glucides', 'Lipides'])
     expect(nutrition.text()).toContain('sur 3\u202F000\u00A0kcal')
     expect(nutrition.findAll('dt').map(dt => dt.text())).toEqual(['Protéines', 'Glucides', 'Lipides'])
     expect(widget(wrapper, 'Repas').findAll('li').map(li => li.text())).toEqual([expect.stringMatching(/^Petit-déjeuner/), expect.stringMatching(/^Déjeuner/)])
@@ -151,6 +155,22 @@ describe('the dashboard', () => {
     expect(nutrition.find('[role="progressbar"]').exists()).toBe(false)
     expect(nutrition.get('a[href="/nutrition/objectifs"]').text()).toBe('Fixer mon objectif')
     expect(widget(wrapper, 'Coach').findAll('a').map(a => a.attributes('href'))).toContain('/progression?ajouter=pesee')
+  })
+
+  it('reads the day by what is left of the target, and by how much it was passed, never as an alarm', async () => {
+    withData()
+    const under = await openDashboard()
+    const left = widget(under, 'Nutrition')
+    expect(left.text()).toContain('Restantes')
+    expect(left.get('svg').attributes('aria-hidden'), 'the rings draw what the text says').toBe('true')
+    expect(left.get('a[href="/nutrition?ajouter=aliment"]').text()).toBe('Ajouter un aliment')
+    under.unmount()
+
+    clearNuxtData()
+    fake.on('GET /api/nutrition/days/{day}', () => day(today, [entry('lunch', 4000)]))
+    const over = await openDashboard()
+    expect(widget(over, 'Nutrition').text()).toContain('Au-dessus de l’objectif')
+    expect(widget(over, 'Nutrition').findAll('circle.stroke-accent'), 'the calories ring is closed, in its colour').toHaveLength(1)
   })
 
   it('sums up the last 7 days in the week view, with the weekly report and without the day\'s meals', async () => {

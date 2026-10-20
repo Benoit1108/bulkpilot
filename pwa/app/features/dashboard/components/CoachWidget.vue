@@ -25,7 +25,6 @@ const action = computed(() => {
   <DashboardWidget
     title="Coach"
     to="/coach"
-    link-label="Ouvrir"
     :loading="status === 'pending' && !coach"
     :failed="Boolean(error) && !coach"
     @retry="refresh()"

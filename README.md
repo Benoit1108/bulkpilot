@@ -70,4 +70,5 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 | 10 | Production (gratuite au départ) : VM Oracle Always Free derrière Tailscale, image construite une fois par la CI, testée puis signée (GHCR), PostgreSQL sur la VM et sauvegardes chiffrées, Cloudflare R2, Brevo, staging automatique puis production approuvée à la main avec retour arrière automatique, Sentry, Uptime Kuma et healthchecks.io | ✅ |
 | R0 | Refonte UX/UI (ADR-0034) : corrections rapides — alignements, listes, décimales à la française, graphiques hebdomadaires sans la semaine en cours, vrais titres de page | ✅ |
 | R1 | Charte graphique à la manière d’Apple Santé (docs/DESIGN.md), boutons en pilule, contrôle segmenté, cartes et listes groupées, barre latérale à icônes et pages de section, contenu pleine largeur, thème de l’appareil par défaut | ✅ |
-| R2–R6 | Accueil, entraînement (illustrations, minuteur), nutrition, progression, Coach et réglages | ⏳ |
+| R2 | Accueil façon Apple Santé : anneaux calories et macros, macros en couleur, tuiles poids (mini-courbe), séances et records (barres), objectif, séance du jour, cartes entières cliquables, tuiles personnalisables | ✅ |
+| R3–R6 | Entraînement (illustrations, minuteur), nutrition, progression, Coach et réglages | ⏳ |

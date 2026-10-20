@@ -146,7 +146,8 @@ describe('the workout widget', () => {
     const wrapper = await mountSuspended(WorkoutWidget, { props: { view: 'day', today } })
     await settle()
 
-    expect(wrapper.get('a').text()).toBe('Voir (Entraînement)')
+    expect(wrapper.get('h2 a').text(), 'the whole tile leads to the section').toBe('Entraînement')
+    expect(wrapper.get('h2 a').attributes('href')).toBe('/training')
     expect(wrapper.findAll('a').map(a => a.text())).toContain('Reprendre la séance')
     expect(wrapper.find('button').exists()).toBe(false)
   })

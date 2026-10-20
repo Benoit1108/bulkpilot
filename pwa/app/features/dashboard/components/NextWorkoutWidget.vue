@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Dumbbell } from 'lucide-vue-next'
 import { useWorkoutSession } from '~/features/training/session'
 import { useStartWorkout } from '~/features/training/startWorkout'
 import { formatDayMonth, localDay } from '~/services/calendar/days'
@@ -45,28 +46,37 @@ const lastDone = computed(() => (next.value?.lastDoneAt ? formatDayMonth(localDa
     </div>
     <div
       v-else-if="next"
-      class="flex flex-col gap-2"
+      class="flex flex-col gap-3"
     >
-      <p>
-        <span class="font-bold">{{ next.dayName }}</span>
-        <span class="block text-sm text-muted">
-          {{ next.programName }} · {{ next.exerciseCount }} {{ plural(next.exerciseCount, 'exercice') }}<template v-if="lastDone"> · fait la dernière fois le {{ lastDone }}</template>
+      <!-- On a phone the button takes the whole width under the day, within the thumb's reach. -->
+      <div class="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
+        <span class="grid size-tap place-items-center rounded-md bg-surface-raised text-accent">
+          <Dumbbell
+            :size="22"
+            aria-hidden="true"
+          />
         </span>
-      </p>
+        <p>
+          <span class="block text-lg font-bold">{{ next.dayName }}</span>
+          <span class="block text-sm text-muted">
+            {{ next.programName }} · {{ next.exerciseCount }} {{ plural(next.exerciseCount, 'exercice') }}<template v-if="lastDone"> · fait la dernière fois le {{ lastDone }}</template>
+          </span>
+        </p>
+        <UiButton
+          class="col-span-2 sm:col-span-1"
+          :loading="starting"
+          :aria-label="`Démarrer ${next.dayName}`"
+          @click="start"
+        >
+          Démarrer
+        </UiButton>
+      </div>
       <UiAlert
         v-if="startError"
         tone="error"
       >
         {{ startError }}
       </UiAlert>
-      <UiButton
-        class="self-start"
-        :loading="starting"
-        :aria-label="`Démarrer ${next.dayName}`"
-        @click="start"
-      >
-        Démarrer
-      </UiButton>
     </div>
     <div
       v-else

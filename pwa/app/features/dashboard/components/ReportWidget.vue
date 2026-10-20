@@ -22,7 +22,6 @@ const { coach, status, error, refresh } = useCoachOfDay(() => props.today)
     v-else
     title="Rapport de la semaine"
     to="/coach/rapports"
-    link-label="Rapports"
     :loading="status === 'pending' && !coach"
     :failed="Boolean(error) && !coach"
     @retry="refresh()"

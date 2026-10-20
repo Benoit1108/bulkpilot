@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
-import { formatKcal, formatMacro } from '~/features/nutrition/format'
+import type { RingValue } from '~/components/ui/Ring.vue'
+import MacroBars from '~/features/nutrition/components/MacroBars.vue'
+import { formatKcal } from '~/features/nutrition/format'
 import type { Nutrients, NutritionAverages, NutritionDay } from '~/features/nutrition/nutrition'
 import { plural } from '~/services/text/plural'
 import { viewDays, viewLong, type DashboardView } from '../dashboard'
@@ -36,23 +38,24 @@ const failed = computed(() => Boolean(error.value) && !(daily.value ? day.value 
 const emptyText = computed(() => (daily.value ? 'Rien de saisi aujourd’hui.' : `Aucun repas saisi ${viewLong(props.view)}.`))
 const nothing = computed(() => !loading.value && (!shown.value || (daily.value && shown.value.totals.energyKcal === 0)))
 
-const macros = computed(() => {
+/** What is left of the target (or how much over it): the figure the day is read by. */
+const left = computed(() => (shown.value?.target ? Math.round(shown.value.target.energyKcal - shown.value.totals.energyKcal) : null))
+const rings = computed<RingValue[]>(() => {
   const value = shown.value
-  if (!value) return []
+  if (!value?.target) return []
   return [
-    { label: 'Protéines', eaten: value.totals.protein, target: value.target?.proteinGrams ?? null },
-    { label: 'Glucides', eaten: value.totals.carbohydrate, target: value.target?.carbohydrateGrams ?? null },
-    { label: 'Lipides', eaten: value.totals.fat, target: value.target?.fatGrams ?? null },
+    { value: value.totals.energyKcal, max: value.target.energyKcal, tone: 'accent' },
+    { value: value.totals.protein, max: value.target.proteinGrams, tone: 'protein' },
+    { value: value.totals.carbohydrate, max: value.target.carbohydrateGrams, tone: 'carbs' },
+    { value: value.totals.fat, max: value.target.fatGrams, tone: 'fat' },
   ]
 })
-const macroText = (eaten: number, target: number | null) => (target === null ? formatMacro(eaten) : `${formatMacro(eaten)} sur ${formatMacro(target)}`)
 </script>
 
 <template>
   <DashboardWidget
     title="Nutrition"
     to="/nutrition"
-    link-label="Journal"
     :loading="loading"
     :failed="failed"
     @retry="refresh()"
@@ -72,44 +75,56 @@ const macroText = (eaten: number, target: number | null) => (target === null ? f
       </UiLinkButton>
     </div>
     <template v-else-if="shown">
-      <p v-if="!daily && averages">
+      <p
+        v-if="!daily && averages"
+        class="text-sm text-muted"
+      >
         Moyenne par jour, sur {{ averages.loggedDays }} {{ plural(averages.loggedDays, 'jour') }} {{ plural(averages.loggedDays, 'saisi') }} {{ viewLong(view) }}&nbsp;:
       </p>
-      <UiProgressBar
-        v-if="shown.target"
-        label="Calories"
-        :value="shown.totals.energyKcal"
-        :max="shown.target.energyKcal"
-        :value-text="`${formatKcal(shown.totals.energyKcal)} sur ${formatKcal(shown.target.energyKcal)}`"
-      />
-      <p>
-        <span class="text-2xl font-bold tabular-nums">{{ formatKcal(shown.totals.energyKcal) }}</span>
-        <span
-          v-if="shown.target"
-          class="text-muted"
-        > sur {{ formatKcal(shown.target.energyKcal) }}</span>
-      </p>
-      <dl class="m-0 grid grid-cols-3 gap-2 text-sm">
-        <div
-          v-for="macro in macros"
-          :key="macro.label"
+      <div class="flex flex-wrap items-center gap-4">
+        <!-- The figures are in the text beside it and in the bars below: the rings only draw them. -->
+        <UiRing
+          v-if="rings.length"
+          :rings="rings"
+          class="size-20 sm:size-24 md:size-28"
+        />
+        <p
+          v-if="left !== null"
+          class="flex min-w-0 flex-col"
         >
-          <dt class="text-muted">
-            {{ macro.label }}
-          </dt>
-          <dd class="m-0 tabular-nums">
-            {{ macroText(macro.eaten, macro.target) }}
-          </dd>
-        </div>
-      </dl>
-      <UiLinkButton
-        v-if="!shown.target"
-        to="/nutrition/objectifs"
-        variant="secondary"
-        class="self-start"
-      >
-        Fixer mon objectif
-      </UiLinkButton>
+          <span class="text-sm text-muted">{{ left >= 0 ? (daily ? 'Restantes' : 'Sous l’objectif') : 'Au-dessus de l’objectif' }}</span>
+          <span class="text-2xl font-bold tabular-nums sm:text-figure">{{ formatKcal(Math.abs(left)) }}</span>
+          <span class="text-sm text-muted">{{ formatKcal(shown.totals.energyKcal) }} sur {{ formatKcal(shown.target!.energyKcal) }}</span>
+        </p>
+        <p
+          v-else
+          class="text-figure font-bold tabular-nums"
+        >
+          {{ formatKcal(shown.totals.energyKcal) }}
+        </p>
+      </div>
+      <MacroBars
+        :protein="shown.totals.protein"
+        :carbohydrate="shown.totals.carbohydrate"
+        :fat="shown.totals.fat"
+        :target="shown.target"
+      />
+      <div class="flex flex-wrap gap-2">
+        <UiLinkButton
+          v-if="daily"
+          :to="{ path: '/nutrition', query: { ajouter: 'aliment' } }"
+          variant="secondary"
+        >
+          Ajouter un aliment
+        </UiLinkButton>
+        <UiLinkButton
+          v-if="!shown.target"
+          to="/nutrition/objectifs"
+          variant="secondary"
+        >
+          Fixer mon objectif
+        </UiLinkButton>
+      </div>
     </template>
   </DashboardWidget>
 </template>

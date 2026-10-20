@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { endedWeeks } from '~/features/progression/format'
+import { weekStart } from '~/services/calendar/days'
 import { plural } from '~/services/text/plural'
 import { viewLong, viewPeriod, type DashboardView } from '../dashboard'
 import { useTrainingAnalytics } from '../data'
@@ -17,16 +19,19 @@ const records = computed(() => analytics.value?.totals.records ?? 0)
   <DashboardWidget
     title="Records"
     to="/training/seances"
-    link-label="Séances"
     :loading="status === 'pending' && !analytics"
     :failed="Boolean(error) && !analytics"
     @retry="refresh()"
   >
-    <p v-if="analytics && records">
-      <span class="text-2xl font-bold tabular-nums">{{ records }}</span>
-      {{ plural(records, 'record') }} {{ plural(records, 'battu') }} {{ viewLong(shownView) }}
-      <span class="block text-sm text-muted">en {{ analytics.totals.sessions }} {{ plural(analytics.totals.sessions, 'séance') }}</span>
-    </p>
+    <template v-if="analytics && records">
+      <p class="text-sm">
+        <span class="block text-2xl font-bold tabular-nums">{{ records }}</span> {{ plural(records, 'record') }} {{ plural(records, 'battu') }} {{ viewLong(shownView) }}
+      </p>
+      <UiMiniBars :values="endedWeeks(analytics.weeks, weekStart(today)).map(week => week.records)" />
+      <p class="text-xs text-muted">
+        en {{ analytics.totals.sessions }} {{ plural(analytics.totals.sessions, 'séance') }}
+      </p>
+    </template>
     <p
       v-else
       class="text-sm text-muted"

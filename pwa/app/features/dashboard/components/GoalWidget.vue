@@ -24,18 +24,18 @@ const verb = computed(() => (goal.value?.direction === 'gaining' ? 'prendre' : '
     @retry="refresh()"
   >
     <template v-if="goal">
+      <p class="text-sm">
+        <span class="block text-2xl font-bold tabular-nums">{{ goal.percent }}&nbsp;%</span> du chemin vers {{ formatKg(goal.targetKg) }}
+      </p>
       <UiProgressBar
         :label="`Chemin parcouru vers ${formatKg(goal.targetKg)}`"
         :value="goal.percent"
         :max="100"
         :value-text="`${goal.percent}&nbsp;%`"
       />
-      <p>
-        <span class="font-bold">{{ goal.percent }}&nbsp;%</span> du chemin vers {{ formatKg(goal.targetKg) }}
-      </p>
       <p
         v-if="goal.toTarget.status !== 'reached'"
-        class="text-sm text-muted"
+        class="text-xs text-muted"
       >
         {{ formatKg(Math.abs(goal.toTargetKg)) }} à {{ verb }}, {{ formatEstimate(goal.toTarget) }}
       </p>

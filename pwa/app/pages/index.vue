@@ -42,8 +42,36 @@ const HIDDEN_IN: Partial<Record<WidgetKey, DashboardView[]>> = { meals: ['week',
 // A widget of a newer server this app does not know is kept in the layout, not shown.
 const shown = computed(() => (layout.value?.widgets ?? []).filter(widget => isKnownWidget(widget) && widget.visible && !HIDDEN_IN[widget.key]?.includes(view.value)))
 provide(SHOWN_WIDGETS, computed(() => shown.value.map(widget => widget.key)))
+/**
+ * Apple Health's summary: a figure alone is a tile (half a phone, a quarter of a wide screen), a
+ * widget with a list or a button is a wide card. The workout of the day has a button; the sessions
+ * of a week, a figure. Tiles go in pairs, in the order the user chose: one left alone becomes wide,
+ * so the grid has no hole and the screen reads in that same order.
+ */
+const TILES: readonly WidgetKey[] = ['weight', 'goal', 'records']
+const isTile = (key: WidgetKey) => TILES.includes(key) || (key === 'workout' && view.value !== 'day')
+function sizes(keys: readonly WidgetKey[]): Record<string, 'col-span-1' | 'col-span-2'> {
+  const sized: Record<string, 'col-span-1' | 'col-span-2'> = {}
+  let alone: WidgetKey | null = null
+  for (const key of keys) {
+    if (!isTile(key)) {
+      if (alone) sized[alone] = 'col-span-2'
+      alone = null
+      sized[key] = 'col-span-2'
+    }
+    else if (alone) {
+      sized[alone] = sized[key] = 'col-span-1'
+      alone = null
+    }
+    else alone = key
+  }
+  if (alone) sized[alone] = 'col-span-2'
+  return sized
+}
+const shownSizes = computed(() => sizes(shown.value.map(widget => widget.key)))
 /** Before the layout arrives: the default widgets as empty cards, so the page does not jump twice. */
 const placeholders = computed(() => (Object.keys(WIDGET_LABELS) as WidgetKey[]).filter(key => !HIDDEN_IN[key]?.includes(view.value)))
+const placeholderSizes = computed(() => sizes(placeholders.value))
 
 /** A first visit: nothing set up yet, « Pour commencer » says what to do instead of eight empty widgets. */
 const steps = ref<{ left: number, total: number } | null>(null)
@@ -126,12 +154,13 @@ async function customized(saved: boolean): Promise<void> {
       </p>
       <div
         v-if="!firstVisit"
-        class="grid items-start gap-4 md:grid-cols-2"
+        class="grid grid-cols-2 items-start gap-3 lg:grid-cols-4"
       >
         <component
           :is="WIDGETS[widget.key]"
           v-for="widget in shown"
           :key="widget.key"
+          :class="shownSizes[widget.key]"
           :view="view"
           :today="today"
         />
@@ -139,7 +168,7 @@ async function customized(saved: boolean): Promise<void> {
     </template>
     <div
       v-else
-      class="grid items-start gap-4 md:grid-cols-2"
+      class="grid grid-cols-2 items-start gap-3 lg:grid-cols-4"
       aria-busy="true"
     >
       <p
@@ -148,13 +177,18 @@ async function customized(saved: boolean): Promise<void> {
       >
         Chargement…
       </p>
-      <UiCard
+      <!-- Shaped as the tiles to come, so nothing moves when they arrive. -->
+      <section
         v-for="key in placeholders"
         :key="key"
-        :title="WIDGET_LABELS[key]"
+        class="flex flex-col gap-2 rounded-lg bg-surface p-4"
+        :class="placeholderSizes[key]"
       >
+        <h2 class="text-callout font-semibold text-accent-ink">
+          {{ WIDGET_LABELS[key] }}
+        </h2>
         <div class="min-h-28" />
-      </UiCard>
+      </section>
     </div>
     <UiStatus
       :message="notice"

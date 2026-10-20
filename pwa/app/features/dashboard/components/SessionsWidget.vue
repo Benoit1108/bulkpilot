@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { endedWeeks } from '~/features/progression/format'
+import { weekStart } from '~/services/calendar/days'
 import { formatNumber } from '~/services/text/numbers'
 import { plural } from '~/services/text/plural'
 import { viewLong, viewPeriod, type DashboardView } from '../dashboard'
@@ -19,13 +21,17 @@ const { data: analytics, status, error, refresh } = useTrainingAnalytics(() => v
     :failed="Boolean(error) && !analytics"
     @retry="refresh()"
   >
-    <p v-if="analytics">
-      <span class="text-2xl font-bold tabular-nums">{{ analytics.totals.sessions }}</span>
-      {{ plural(analytics.totals.sessions, 'séance') }} {{ viewLong(view) }}
-      <span
+    <template v-if="analytics">
+      <p class="text-sm">
+        <span class="block text-2xl font-bold tabular-nums">{{ analytics.totals.sessions }}</span> {{ plural(analytics.totals.sessions, 'séance') }} {{ viewLong(view) }}
+      </p>
+      <UiMiniBars :values="endedWeeks(analytics.weeks, weekStart(today)).map(week => week.sessions)" />
+      <p
         v-if="analytics.sessionsPerWeek !== null"
-        class="block text-sm text-muted"
-      >{{ formatNumber(analytics.sessionsPerWeek) }} par semaine en moyenne</span>
-    </p>
+        class="text-xs text-muted"
+      >
+        {{ formatNumber(analytics.sessionsPerWeek) }} par semaine en moyenne
+      </p>
+    </template>
   </DashboardWidget>
 </template>

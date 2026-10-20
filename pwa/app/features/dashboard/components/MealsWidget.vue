@@ -21,7 +21,6 @@ const alone = computed(() => !shownWidgets.value.includes('nutrition'))
   <DashboardWidget
     title="Repas"
     to="/nutrition"
-    link-label="Journal"
     :loading="status === 'pending' && !day"
     :failed="Boolean(error) && !day"
     @retry="refresh()"
