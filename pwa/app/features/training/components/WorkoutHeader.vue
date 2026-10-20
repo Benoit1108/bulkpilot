@@ -11,7 +11,7 @@ const emit = defineEmits<{ finish: [], long: [] }>()
     <div>
       <h1
         id="page-title"
-        class="text-xl font-extrabold tracking-caps uppercase"
+        class="text-xl font-extrabold"
       >
         {{ title }}
       </h1>

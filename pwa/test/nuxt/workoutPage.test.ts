@@ -12,10 +12,12 @@ import WorkoutPage from '~/pages/training/seance.vue'
 import { claimDevice } from '~/services/offline/owner'
 import { offlineStore } from '~/services/offline/store'
 import { button, choice, field } from '../support/dom'
-import { createFakeApi } from '../support/fakeApi'
-import { ppl, workoutExercise } from '../support/training'
+import { apiError, createFakeApi } from '../support/fakeApi'
+import { bench, ppl, workoutExercise } from '../support/training'
 
 const { api, navigate } = vi.hoisted(() => ({ api: { current: null as ReturnType<typeof createFakeApi> | null }, navigate: vi.fn() }))
+const { chime } = vi.hoisted(() => ({ chime: vi.fn() }))
+vi.mock('~/features/training/restChime', () => ({ playChime: chime, prepareChime: vi.fn() }))
 mockNuxtImport('useApi', () => () => api.current!.client)
 mockNuxtImport('navigateTo', () => navigate)
 const fake = createFakeApi()
@@ -63,6 +65,9 @@ async function openWorkout(query = '') {
 
 beforeEach(async () => {
   fake.reset()
+  clearNuxtData()
+  // The exercises' list says which picture each exercise of the workout has.
+  fake.on('GET /api/exercises', () => [{ ...bench, id: plan.exercises[0]!.exerciseId }])
   navigate.mockReset()
   resetWorkoutOutbox()
   resetWorkoutSession()
@@ -120,7 +125,7 @@ describe('the workout session', () => {
   it('corrects, removes, adds on the go, then finishes in one go', async () => {
     const session = useWorkoutSession()
     await session.start(null)
-    await session.addExercise({ id: 'e9', source: 'custom', name: 'Rowing Yates', primaryMuscle: 'upper_back', secondaryMuscles: [], type: 'compound', equipment: 'barbell', measurement: 'weight', description: null, mediaUrl: null, repMin: 6, repMax: 10, targetRir: 2, restSeconds: 150, tempo: null, note: 'Buste à 30°', editable: true })
+    await session.addExercise({ id: 'e9', source: 'custom', name: 'Rowing Yates', primaryMuscle: 'upper_back', secondaryMuscles: [], type: 'compound', equipment: 'barbell', measurement: 'weight', description: null, mediaUrl: null, libraryKey: null, repMin: 6, repMax: 10, targetRir: 2, restSeconds: 150, tempo: null, note: 'Buste à 30°', editable: true })
     expect(session.workout.value?.exercises[0]).toMatchObject({ sets: 3, incrementKg: 2.5, block: 0, added: true, note: 'Buste à 30°' })
     const set = await session.recordSet({ kind: 'normal', loadKg: 70, reps: 8, seconds: null, rir: null })
     await session.correctSet(set!.id, { kind: 'effective', loadKg: 72.5, reps: 8, seconds: null, rir: 0 })
@@ -137,6 +142,7 @@ describe('the workout session', () => {
 
 describe('the rest timer, the clock and the set form', () => {
   it('counts down, announces a few steps and the end, even one that passed', async () => {
+    chime.mockClear()
     vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval', 'Date'] })
     vi.setSystemTime(10_000)
     const vibrate = vi.fn()
@@ -149,6 +155,7 @@ describe('the rest timer, the clock and the set form', () => {
     await vi.advanceTimersByTimeAsync(60_000)
     expect(wrapper.emitted('done')).toHaveLength(1)
     expect(vibrate).toHaveBeenCalled()
+    expect(chime, 'and chimes, for phones that cannot vibrate').toHaveBeenCalled()
 
     await button(wrapper, '+15\u00A0s').trigger('click')
     await button(wrapper, '−15\u00A0s').trigger('click')
@@ -219,6 +226,20 @@ describe('training mode', () => {
     expect(wrapper.text()).toContain('Suggestion\u00A0: 82,5\u00A0kg × 8')
     expect((field(wrapper, 'Charge').element as HTMLInputElement).value).toBe('42,5')
     expect((choice(wrapper, 'Échauffement').element as HTMLInputElement).checked).toBe(true)
+    // The movement, folded under the exercise once the list of exercises is known.
+    expect(wrapper.get('details summary').text()).toBe('Voir le mouvement')
+    expect(wrapper.find('details [role="img"]').attributes('aria-label')).toContain('départ')
+  })
+
+  it('goes without the movement when the list of exercises cannot be read', async () => {
+    fake.on('GET /api/exercises', () => {
+      throw apiError(500, null)
+    })
+    await useWorkoutSession().start(plan)
+    const wrapper = await openWorkout()
+
+    expect(wrapper.find('details').exists()).toBe(false)
+    expect(wrapper.text()).toContain('Échauffement 1/1')
   })
 
   it('records a set, says so, rests, and starts the first working set from the suggestion', async () => {

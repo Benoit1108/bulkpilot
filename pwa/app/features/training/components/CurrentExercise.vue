@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { TRAINING_KEYS } from '~/features/training/cacheKeys'
+import ExerciseIllustration from '~/features/training/components/ExerciseIllustration.vue'
 import { supersetLine } from '~/features/training/nextSet'
 import { prescription } from '~/features/training/training'
 import { formatRecord, formatSet, formatSuggestion, isWorking, type SetKind, type WorkoutExercise, type WorkoutSet } from '~/features/training/workout'
@@ -14,6 +16,15 @@ const props = defineProps<{
   own: readonly WorkoutSet[]
   kind: SetKind
 }>()
+
+// The exercises' list (library keys, muscles), shared with the exercise pages and kept once read in
+// this visit (not read again at every exercise); without signal and never read, no picture.
+const api = useApi()
+const { data: library } = useAsyncData(TRAINING_KEYS.exercises, () => api.get('/api/exercises'), {
+  lazy: true,
+  getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key],
+})
+const known = computed(() => library.value?.find(entry => entry.id === props.exercise.exerciseId) ?? null)
 
 const heading = ref<HTMLElement | null>(null)
 defineExpose({ focus: () => heading.value?.focus() })
@@ -45,6 +56,22 @@ const records = computed(() => props.exercise.newRecords.map(record => formatRec
   <p class="font-semibold text-muted">
     {{ prescription(exercise, { rest: false, tempo: true }) }}
   </p>
+  <!-- Folded: the set form stays within the thumb's reach; one tap shows the movement. -->
+  <details
+    v-if="known"
+    class="text-sm"
+  >
+    <summary class="min-h-tap cursor-pointer content-center font-semibold text-accent-ink">
+      Voir le mouvement
+    </summary>
+    <ExerciseIllustration
+      :library-key="known.libraryKey"
+      :name="exercise.name"
+      :primary="known.primaryMuscle"
+      :secondary="known.secondaryMuscles"
+      compact
+    />
+  </details>
   <p
     v-for="cue in cues"
     :key="cue"

@@ -2881,6 +2881,7 @@ export interface components {
             measurement: "weight" | "bodyweight" | "duration";
             description: string | null;
             mediaUrl: string | null;
+            libraryKey: string | null;
             repMin: number;
             repMax: number;
             targetRir: number | null;
@@ -2945,6 +2946,7 @@ export interface components {
             measurement: "weight" | "bodyweight" | "duration";
             description: string | null;
             mediaUrl: string | null;
+            libraryKey: string | null;
             repMin: number;
             repMax: number;
             targetRir: number | null;

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Pause, Play } from 'lucide-vue-next'
 import type { LocalWorkout } from '~/features/training/session'
+import { playChime, prepareChime } from '~/features/training/restChime'
 import { formatClock, spokenDuration } from '~/features/training/workout'
 
 /**
  * The rest after a set (spec §44): starts on its own, can be paused, changed or skipped. Driven
  * by an end time, so it stays right after the app was in the background; a compact bar, so the
- * set form stays in reach.
+ * set form stays in reach. Its end vibrates (Android) and chimes (iPhones cannot vibrate).
  */
 const props = defineProps<{ rest: NonNullable<LocalWorkout['rest']> }>()
 const emit = defineEmits<{ pause: [], resume: [], adjust: [seconds: number], skip: [], done: [] }>()
@@ -16,6 +17,7 @@ const remaining = computed(() => (props.rest.endsAt !== null ? Math.max(0, props
 const paused = computed(() => props.rest.endsAt === null)
 const progress = computed(() => (props.rest.totalMs > 0 ? 1 - remaining.value / props.rest.totalMs : 1))
 const titleId = useId()
+onMounted(prepareChime)
 const heading = ref<HTMLElement | null>(null)
 defineExpose({ focus: () => heading.value?.focus() })
 
@@ -30,6 +32,7 @@ watch(() => Math.ceil(remaining.value / 1000), (seconds, before) => {
 watch(remaining, (value) => {
   if (value === 0 && !paused.value) {
     navigator.vibrate?.([200, 100, 200])
+    playChime()
     emit('done')
   }
 }, { immediate: true })
@@ -37,14 +40,14 @@ watch(remaining, (value) => {
 
 <template>
   <section
-    class="sticky top-safe-2 z-5 flex flex-col gap-2 rounded-md border border-accent bg-surface-raised p-3"
+    class="sticky top-safe-2 z-5 flex flex-col gap-2 rounded-xl border border-line bg-surface-raised p-3 shadow-raised"
     :aria-labelledby="titleId"
   >
     <div class="flex items-baseline justify-between gap-3">
       <h2
         :id="titleId"
         ref="heading"
-        class="text-sm font-bold tracking-caps text-muted uppercase focus:outline-none"
+        class="text-sm font-semibold text-muted focus:outline-none"
         tabindex="-1"
       >
         Repos<template v-if="paused">

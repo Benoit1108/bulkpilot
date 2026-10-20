@@ -59,7 +59,7 @@ async function archive(): Promise<void> {
 </script>
 
 <template>
-  <UiPage layout="columns">
+  <UiPage layout="wide">
     <template #top>
       <ShellBackLink
         to="/training/programmes"
@@ -123,8 +123,10 @@ async function archive(): Promise<void> {
         {{ action.message.value }}
       </UiAlert>
 
+      <!-- Only the days use the whole width; the rest reads at its usual width. -->
       <UiCard
         v-if="hasHistory"
+        class="max-w-reading"
         title="Versions"
       >
         <p class="mb-3 text-sm text-muted">
@@ -154,7 +156,10 @@ async function archive(): Promise<void> {
       </UiCard>
 
       <template v-if="current">
-        <UiCard title="Modifier">
+        <UiCard
+          class="max-w-reading"
+          title="Modifier"
+        >
           <ProgramForm
             :key="`${program.id}-${program.currentVersion}`"
             :program="program"

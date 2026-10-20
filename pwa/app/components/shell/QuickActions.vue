@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Plus } from 'lucide-vue-next'
 import { HEADER_BUTTON, LIST_ROW } from '~/components/ui/classes'
-import { fetchNextWorkout } from '~/features/dashboard/data'
+import { fetchNextWorkout } from '~/features/training/nextWorkout'
 import { QUICK_ACTIONS, type QuickAction } from '~/features/shell/quickActions'
 import { useWorkoutSession } from '~/features/training/session'
 import { useStartWorkout } from '~/features/training/startWorkout'

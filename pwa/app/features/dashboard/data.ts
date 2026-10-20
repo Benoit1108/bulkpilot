@@ -1,31 +1,13 @@
 import type { InjectionKey } from 'vue'
 import { PROGRESSION_KEYS } from '~/features/progression/progression'
 import { TRAINING_KEYS } from '~/features/training/cacheKeys'
-import { asApiError, type ApiClient } from '~/services/api/client'
+import { orNull } from '~/services/api/orNull'
 import type { WidgetKey } from './dashboard'
 
 /**
  * What several widgets read (and « Pour commencer » too): one fetch per key, whoever asks first.
  * The keys are the pages' own, so the dashboard and the sections share their data.
  */
-
-/** Nothing there is null, not an error (no active program, no weight goal). */
-async function orNull<T>(read: () => Promise<T>): Promise<T | null> {
-  try {
-    return await read()
-  }
-  catch (caught) {
-    if (asApiError(caught).kind === 'not_found') return null
-    throw caught
-  }
-}
-
-export const fetchNextWorkout = (api: ApiClient) => orNull(() => api.get('/api/training/next-workout'))
-
-export function useNextWorkout() {
-  const api = useApi()
-  return useAsyncData(TRAINING_KEYS.nextWorkout, () => fetchNextWorkout(api))
-}
 
 export function useWeightGoal(today: () => string) {
   const api = useApi()

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { TEXT_LINK } from '~/components/ui/classes'
-import { useNextWorkout, useWeightGoal, useWeightSummary } from '../data'
+import { useNextWorkout } from '~/features/training/nextWorkout'
+import { useWeightGoal, useWeightSummary } from '../data'
 
 /**
  * The first steps (spec §81: start fast, go deeper after), each gone once done. Read from what the

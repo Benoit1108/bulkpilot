@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TEXT_LINK } from '~/components/ui/classes'
 import type { ThemePreference } from '~/features/shell/theme'
 import { useServiceHealth } from '~/features/system/health'
 
@@ -100,6 +101,12 @@ async function leave(): Promise<void> {
       >
         Réessayer
       </UiButton>
+      <NuxtLink
+        to="/reglages/credits"
+        :class="TEXT_LINK"
+      >
+        Crédits et licences
+      </NuxtLink>
     </UiCard>
 
     <template v-if="account">

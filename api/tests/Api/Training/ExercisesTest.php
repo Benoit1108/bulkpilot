@@ -17,7 +17,7 @@ final class ExercisesTest extends TrainingApiTestCase
 
         $bench = $this->getJson('/api/exercises?q=developpe%20couche%20barre');
         self::assertSame('Développé couché à la barre', self::string($bench, '0.name'));
-        self::assertSame(['source' => 'library', 'primaryMuscle' => 'chest', 'measurement' => 'weight', 'note' => null, 'editable' => false], array_intersect_key(self::array($bench, '0'), ['source' => 1, 'primaryMuscle' => 1, 'measurement' => 1, 'note' => 1, 'editable' => 1]));
+        self::assertSame(['source' => 'library', 'primaryMuscle' => 'chest', 'measurement' => 'weight', 'libraryKey' => 'barbell_bench_press', 'note' => null, 'editable' => false], array_intersect_key(self::array($bench, '0'), ['source' => 1, 'primaryMuscle' => 1, 'measurement' => 1, 'libraryKey' => 1, 'note' => 1, 'editable' => 1]));
         self::assertSame(['triceps', 'front_delts'], self::array($bench, '0.secondaryMuscles'));
 
         $calves = $this->getJson('/api/exercises?muscle=calves');
@@ -38,7 +38,7 @@ final class ExercisesTest extends TrainingApiTestCase
         $created = $this->call('POST', '/api/exercises', $body)->toArray();
         self::assertResponseStatusCodeSame(201);
         $id = self::string($created, 'id');
-        self::assertSame(['source' => 'custom', 'mediaUrl' => 'https://example.org/yates', 'tempo' => '2-0-1-1', 'editable' => true], array_intersect_key($created, ['source' => 1, 'mediaUrl' => 1, 'tempo' => 1, 'editable' => 1]));
+        self::assertSame(['source' => 'custom', 'mediaUrl' => 'https://example.org/yates', 'libraryKey' => null, 'tempo' => '2-0-1-1', 'editable' => true], array_intersect_key($created, ['source' => 1, 'mediaUrl' => 1, 'libraryKey' => 1, 'tempo' => 1, 'editable' => 1]));
         self::assertSame('Rowing Yates', self::string($this->getJson('/api/exercises'), '0.name'), 'own ones first');
 
         $edited = $this->call('PUT', '/api/exercises/'.$id, ['name' => 'Rowing Yates supination', 'tempo' => null] + $body)->toArray();

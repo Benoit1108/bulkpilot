@@ -18,7 +18,8 @@ function extras(exercise: ProgramExercise): string {
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
+  <!-- Side by side on a wide screen: a push / pull / legs week reads at a glance. -->
+  <div class="grid grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] gap-4">
     <div
       v-for="(day, d) in days"
       :key="day.name"

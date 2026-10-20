@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { prepareChime } from '~/features/training/restChime'
 import CurrentExercise from '~/features/training/components/CurrentExercise.vue'
 import DoneSets from '~/features/training/components/DoneSets.vue'
 import FinishWorkout from '~/features/training/components/FinishWorkout.vue'
@@ -74,6 +75,8 @@ function focusExercise(): void {
 }
 
 async function record(values: SetValues): Promise<void> {
+  // The rest starts with this set: the sound that ends it is unlocked by this very tap (iOS).
+  prepareChime()
   const before = workout.value?.current
   const set = await session.recordSet(values)
   const now = workout.value
@@ -269,7 +272,7 @@ async function discard(): Promise<void> {
   <p v-else>
     <span
       id="page-title"
-      class="text-xl font-extrabold tracking-caps uppercase"
+      class="text-xl font-extrabold"
     >Chargement de la séance…</span>
   </p>
 </template>

@@ -26,6 +26,17 @@ export function shiftDay(day: string, days: number): string {
   return localDay(date)
 }
 
+/** The first day of the day's month. */
+export function monthStart(day: string): string {
+  return `${day.slice(0, 8)}01`
+}
+
+/** The first day of the month `months` away from the day's. */
+export function shiftMonth(day: string, months: number): string {
+  const date = parseDay(day)
+  return localDay(new Date(date.getFullYear(), date.getMonth() + months, 1))
+}
+
 /** The Monday of the day's week, as the API keys weeks. */
 export function weekStart(day: string): string {
   return shiftDay(day, -((parseDay(day).getDay() + 6) % 7))
@@ -57,6 +68,13 @@ export function formatShortDay(day: string): string {
 }
 
 const monthYear = new Intl.DateTimeFormat('fr-FR', { month: 'short', year: 'numeric' })
+
+const longMonth = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' })
+
+/** « octobre 2026 »: a calendar's month. */
+export function formatLongMonth(day: string): string {
+  return longMonth.format(parseDay(day))
+}
 
 /** « oct. 2023 »: under a chart that spans years, where the day of the month means little. */
 export function formatMonthYear(day: string): string {

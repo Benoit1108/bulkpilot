@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import ExerciseIllustration from '~/features/training/components/ExerciseIllustration.vue'
+import MuscleMap from '~/features/training/components/MuscleMap.vue'
+import { illustrationOf } from '~/features/training/illustrations'
 import { TEXT_LINK } from '~/components/ui/classes'
 import { ExternalLink } from 'lucide-vue-next'
 import ExerciseForm from '~/features/training/components/ExerciseForm.vue'
@@ -14,6 +17,7 @@ const id = computed(() => String(route.params.id))
 const api = useApi()
 const key = computed(() => TRAINING_KEYS.exercise(id.value))
 const { data: exercise, error, refresh } = useAsyncData(key, () => api.get('/api/exercises/{id}', { path: { id: id.value } }))
+const illustrated = computed(() => Boolean(exercise.value && illustrationOf(exercise.value.libraryKey)))
 usePageHeading(() => exercise.value?.name ?? null, { named: true })
 // Records and sessions: secondary, loaded apart (and never blocking the page).
 const { data: progress } = useAsyncData(() => `${key.value}-progress`, () => api.get('/api/exercises/{id}/progress', { path: { id: id.value } }))
@@ -89,7 +93,34 @@ async function destroy(): Promise<void> {
       @retry="refresh()"
     />
     <template v-else-if="exercise">
+      <UiCard title="Le mouvement">
+        <ExerciseIllustration
+          :library-key="exercise.libraryKey"
+          :name="exercise.name"
+          :primary="exercise.primaryMuscle"
+          :secondary="exercise.secondaryMuscles"
+        />
+      </UiCard>
       <UiCard>
+        <!-- The muscles drawn beside the facts (which name them), unless they already stand for a missing drawing. -->
+        <div
+          v-if="illustrated"
+          class="flex items-end gap-4"
+        >
+          <MuscleMap
+            :primary="exercise.primaryMuscle"
+            :secondary="exercise.secondaryMuscles"
+            class="h-36"
+            aria-hidden="true"
+          />
+          <p
+            class="flex flex-col gap-1 text-xs text-muted"
+            aria-hidden="true"
+          >
+            <span class="flex items-center gap-1.5"><span class="size-3 rounded-sm bg-accent" />principal</span>
+            <span class="flex items-center gap-1.5"><span class="size-3 rounded-sm bg-accent/45" />secondaire</span>
+          </p>
+        </div>
         <dl class="grid grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] gap-3">
           <div
             v-for="fact in facts"

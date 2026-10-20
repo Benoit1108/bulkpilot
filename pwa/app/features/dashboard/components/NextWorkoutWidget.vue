@@ -4,7 +4,7 @@ import { useWorkoutSession } from '~/features/training/session'
 import { useStartWorkout } from '~/features/training/startWorkout'
 import { formatDayMonth, localDay } from '~/services/calendar/days'
 import { plural } from '~/services/text/plural'
-import { useNextWorkout } from '../data'
+import { useNextWorkout } from '~/features/training/nextWorkout'
 import DashboardWidget from './DashboardWidget.vue'
 
 /** The next workout and a button to start it (spec §13); the server says which day comes next. */

@@ -12,6 +12,7 @@ export const bench: Exercise = {
   measurement: 'weight',
   description: null,
   mediaUrl: null,
+  libraryKey: 'barbell_bench_press',
   repMin: 6,
   repMax: 10,
   targetRir: 2,
@@ -21,11 +22,11 @@ export const bench: Exercise = {
   editable: false,
 }
 
-export const raise: Exercise = { ...bench, id: '0199a0b1-0000-7000-8000-0000000000e2', name: 'Élévations latérales aux haltères', primaryMuscle: 'side_delts', secondaryMuscles: ['traps'], type: 'isolation', equipment: 'dumbbell', repMin: 12, repMax: 20, targetRir: 1, restSeconds: 60 }
+export const raise: Exercise = { ...bench, id: '0199a0b1-0000-7000-8000-0000000000e2', name: 'Élévations latérales aux haltères', libraryKey: 'lateral_raise', primaryMuscle: 'side_delts', secondaryMuscles: ['traps'], type: 'isolation', equipment: 'dumbbell', repMin: 12, repMax: 20, targetRir: 1, restSeconds: 60 }
 
-export const plank: Exercise = { ...bench, id: '0199a0b1-0000-7000-8000-0000000000e3', name: 'Gainage (planche)', primaryMuscle: 'abs', secondaryMuscles: ['obliques'], type: 'isolation', equipment: 'bodyweight', measurement: 'duration', repMin: 30, repMax: 60, targetRir: null, restSeconds: 60 }
+export const plank: Exercise = { ...bench, id: '0199a0b1-0000-7000-8000-0000000000e3', name: 'Gainage (planche)', libraryKey: 'plank', primaryMuscle: 'abs', secondaryMuscles: ['obliques'], type: 'isolation', equipment: 'bodyweight', measurement: 'duration', repMin: 30, repMax: 60, targetRir: null, restSeconds: 60 }
 
-export const yates: Exercise = { ...bench, id: '0199a0b1-0000-7000-8000-0000000000e9', source: 'custom', name: 'Rowing Yates', primaryMuscle: 'upper_back', secondaryMuscles: ['biceps'], editable: true, note: 'Buste à 30°', description: 'Prise supination', mediaUrl: 'https://example.org/yates', tempo: '2-0-1-1' }
+export const yates: Exercise = { ...bench, id: '0199a0b1-0000-7000-8000-0000000000e9', source: 'custom', libraryKey: null, name: 'Rowing Yates', primaryMuscle: 'upper_back', secondaryMuscles: ['biceps'], editable: true, note: 'Buste à 30°', description: 'Prise supination', mediaUrl: 'https://example.org/yates', tempo: '2-0-1-1' }
 
 export function planned(exercise: Exercise, override: Partial<ProgramExercise> = {}): ProgramExercise {
   return {

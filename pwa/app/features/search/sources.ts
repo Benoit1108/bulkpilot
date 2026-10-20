@@ -62,6 +62,7 @@ export const PAGES: ReadonlyArray<{ label: string, to: string, words: string }> 
   { label: 'Réglages', to: '/reglages', words: 'parametres theme' },
   { label: 'Profil', to: '/reglages/profil', words: 'prenom taille' },
   { label: 'Compte et sécurité', to: '/reglages/compte', words: 'mot de passe appareils double authentification 2fa' },
+  { label: 'Crédits et licences', to: '/reglages/credits', words: 'licences sources illustrations auteurs' },
 ]
 
 /**

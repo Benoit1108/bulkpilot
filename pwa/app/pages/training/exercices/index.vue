@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Search } from 'lucide-vue-next'
 import { TRAINING_KEYS } from '~/features/training/cacheKeys'
-import { EQUIPMENT, MUSCLES, labelOf, type Muscle } from '~/features/training/training'
+import ExerciseIllustration from '~/features/training/components/ExerciseIllustration.vue'
+import { EQUIPMENT, MUSCLES, labelOf, type Exercise, type Muscle } from '~/features/training/training'
 import { matches } from '~/services/text/search'
 
 definePageMeta({ title: 'Exercices' })
@@ -15,54 +16,87 @@ const found = computed(() => (exercises.value ?? []).filter(exercise =>
   matches(exercise.name, query.value)
   && (muscle.value === null || exercise.primaryMuscle === muscle.value || exercise.secondaryMuscles.includes(muscle.value)),
 ))
-const items = computed(() => found.value.map(exercise => ({
-  to: `/training/exercices/${exercise.id}`,
-  title: exercise.name,
-  summary: [labelOf(MUSCLES, exercise.primaryMuscle), labelOf(EQUIPMENT, exercise.equipment), exercise.source === 'custom' ? 'perso' : null, exercise.note ? 'consigne' : null].filter(Boolean).join(' · '),
-})))
+/** By main muscle, in the order of the muscle list: the body read from the chest down. */
+const groups = computed(() => MUSCLES
+  .map(option => ({ ...option, exercises: found.value.filter(exercise => exercise.primaryMuscle === option.value) }))
+  .filter(group => group.exercises.length > 0))
+const summary = (exercise: Exercise) => [labelOf(EQUIPMENT, exercise.equipment), exercise.source === 'custom' ? 'perso' : null, exercise.note ? 'consigne' : null].filter(Boolean).join(' · ')
 </script>
 
 <template>
-  <UiPage>
-    <ShellBackLink
-      to="/training"
-      label="Training"
-    />
-    <UiLinkButton
-      to="/training/exercices/nouveau"
-    >
-      Nouvel exercice
-    </UiLinkButton>
-    <div class="grid grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-3">
-      <UiInput
-        v-model="query"
-        label="Rechercher un exercice"
-        autocomplete="off"
+  <UiPage layout="columns">
+    <template #top>
+      <ShellBackLink
+        to="/training"
+        label="Training"
       />
-      <UiSelect
-        v-model="muscle"
-        label="Muscle"
-        placeholder="Tous les muscles"
-        :options="MUSCLES"
-      />
-    </div>
-    <UiLoadError
-      v-if="error && !exercises"
-      @retry="refresh()"
-    />
-    <template v-else-if="exercises">
+      <div class="flex flex-wrap items-end gap-3">
+        <UiInput
+          v-model="query"
+          class="min-w-56 flex-1"
+          label="Rechercher un exercice"
+          autocomplete="off"
+        />
+        <UiSelect
+          v-model="muscle"
+          class="min-w-56 flex-1"
+          label="Muscle"
+          placeholder="Tous les muscles"
+          :options="MUSCLES"
+        />
+        <UiLinkButton to="/training/exercices/nouveau">
+          Nouvel exercice
+        </UiLinkButton>
+      </div>
       <p
+        v-if="exercises"
         class="text-sm text-muted"
         role="status"
       >
         {{ found.length }}&nbsp;exercice{{ found.length > 1 ? 's' : '' }}
       </p>
-      <UiNavList
-        v-if="items.length"
-        label="Exercices"
-        :items="items"
-      />
-      <UiCard v-else>
+    </template>
+    <UiLoadError
+      v-if="error && !exercises"
+      @retry="refresh()"
+    />
+    <template v-else-if="exercises">
+      <section
+        v-for="group in groups"
+        :key="group.value"
+        class="flex flex-col gap-2"
+      >
+        <h2 class="px-1 text-lg font-semibold">
+          {{ group.label }}
+        </h2>
+        <ul
+          class="divide-y divide-line overflow-hidden rounded-lg bg-surface"
+          role="list"
+        >
+          <li
+            v-for="exercise in group.exercises"
+            :key="exercise.id"
+          >
+            <NuxtLink
+              :to="`/training/exercices/${exercise.id}`"
+              class="flex min-h-tap items-center gap-3 px-3 py-2 text-ink no-underline transition-colors hover:bg-surface-raised focus-visible:-outline-offset-2"
+            >
+              <ExerciseIllustration
+                :library-key="exercise.libraryKey"
+                :name="exercise.name"
+                :primary="exercise.primaryMuscle"
+                :secondary="exercise.secondaryMuscles"
+                thumbnail
+              />
+              <span class="flex min-w-0 flex-col">
+                <span class="font-semibold">{{ exercise.name }}</span>
+                <span class="text-sm text-muted">{{ summary(exercise) }}</span>
+              </span>
+            </NuxtLink>
+          </li>
+        </ul>
+      </section>
+      <UiCard v-if="!groups.length">
         <UiEmptyState
           :icon="Search"
           title="Aucun exercice ne correspond"

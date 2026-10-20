@@ -27,7 +27,7 @@ const SECTIONS: Record<string, (ids: Populated) => string[]> = {
   'nutrition': ids => ['/nutrition', '/nutrition/objectifs', '/nutrition/repartition', '/nutrition/favoris', '/nutrition/aliments', '/nutrition/aliments/nouveau', `/nutrition/aliments/${ids.foodId}`, '/nutrition/recettes', '/nutrition/recettes/nouvelle', `/nutrition/recettes/${ids.recipeId}`],
   'training': ids => ['/training', '/training/programmes', '/training/programmes/nouveau', `/training/programmes/${ids.programId}`, '/training/exercices', '/training/exercices/nouveau', `/training/exercices/${ids.exerciseId}`, '/training/seances', `/training/seances/${ids.workoutId}`],
   'progression': () => ['/progression', '/progression/objectif', '/progression/pesees', '/progression/mensurations', '/progression/mesures', '/progression/photos', '/progression/analyses'],
-  'settings': () => ['/reglages', '/reglages/profil', '/reglages/compte', '/reglages/donnees', '/reglages/activite', '/reglages/suppression'],
+  'settings': () => ['/reglages', '/reglages/profil', '/reglages/compte', '/reglages/donnees', '/reglages/activite', '/reglages/suppression', '/reglages/credits'],
 }
 const SIGNED_OUT = ['/connexion', '/inscription', '/mot-de-passe-oublie', '/reinitialiser-mot-de-passe?token=x', '/verifier-email?token=x', '/nope']
 

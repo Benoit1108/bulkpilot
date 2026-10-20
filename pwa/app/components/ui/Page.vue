@@ -2,10 +2,12 @@
 /**
  * A page's content. « reading » (the default): one column at a comfortable width, for a form or a
  * list. « columns »: cards that stand on their own; from xl they flow into two columns (down the
- * first, then the second, as they are read), so a wide screen is used rather than left empty. What
- * concerns the whole page (the way back, a period for every chart) goes in `top`, above both columns.
+ * first, then the second, as they are read), so a wide screen is used rather than left empty.
+ * « wide »: one column as wide as the screen, for a card that lays itself out in columns (a
+ * program's days). What concerns the whole page (the way back, a period for every chart) goes in
+ * `top`, above the content.
  */
-withDefaults(defineProps<{ layout?: 'reading' | 'columns' }>(), { layout: 'reading' })
+withDefaults(defineProps<{ layout?: 'reading' | 'columns' | 'wide' }>(), { layout: 'reading' })
 </script>
 
 <template>
@@ -20,7 +22,8 @@ withDefaults(defineProps<{ layout?: 'reading' | 'columns' }>(), { layout: 'readi
   </div>
   <div
     v-else
-    class="flex max-w-reading flex-col gap-4"
+    class="flex flex-col gap-4"
+    :class="{ 'max-w-reading': layout === 'reading' }"
   >
     <slot name="top" />
     <slot />

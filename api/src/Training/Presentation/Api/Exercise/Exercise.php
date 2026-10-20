@@ -78,6 +78,9 @@ final readonly class Exercise
         public ?string $description,
         #[ApiProperty(required: true)]
         public ?string $mediaUrl,
+        /** The library's stable key (« barbell_bench_press »), what the app's illustrations are named by; null for the user's own exercises. */
+        #[ApiProperty(required: true)]
+        public ?string $libraryKey,
         /** Usual target: reps, or seconds for a timed exercise. */
         #[ApiProperty(required: true)]
         public int $repMin,
@@ -112,6 +115,7 @@ final readonly class Exercise
             $view->measurement->value,
             $view->description,
             $view->mediaUrl,
+            $view->libraryKey,
             $defaults->repRange->min,
             $defaults->repRange->max,
             $defaults->targetRir,

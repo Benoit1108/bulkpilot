@@ -10,6 +10,8 @@ export const TRAINING_KEYS = {
   workout: (id: string) => `training-workout-${id}`,
   nextWorkout: 'training-next-workout',
   analytics: (period: string, today: string) => `training-analytics-${period}-${today}`,
+  /** The workouts of a month, by its first day. */
+  month: (first: string) => `training-month-${first}`,
 } as const
 
 /** The finished workouts read at a time (the history's pages; its first one is shared with the search). */

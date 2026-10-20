@@ -93,11 +93,19 @@ export default defineNuxtConfig({
     },
     workbox: {
       navigateFallback: '/',
-      navigateFallbackDenylist: [/^\/api/, /^\/_profiler/, /^\/_wdt/],
+      // Files opened as pages of their own (a licence, the pictures' attribution) are not the app.
+      navigateFallbackDenylist: [/^\/api/, /^\/_profiler/, /^\/_wdt/, /^\/credits\//, /^\/exercises\//],
       globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+      // The exercises' pictures (about 1.5 MB) are not installed up front: each is kept once seen
+      // (below), for a month, so the ones of a page seen before show without signal.
+      globIgnores: ['exercises/**', 'credits/**'],
       // API responses are personal data: never served from a cache. Workbox matches routes on
       // the full URL, hence a function rather than a path RegExp.
       runtimeCaching: [{
+        urlPattern: ({ url, sameOrigin }) => sameOrigin && url.pathname.startsWith('/exercises/'),
+        handler: 'CacheFirst',
+        options: { cacheName: 'exercises', expiration: { maxEntries: 200, maxAgeSeconds: 30 * 24 * 3600 }, cacheableResponse: { statuses: [200] } },
+      }, {
         urlPattern: ({ url, sameOrigin }) => sameOrigin && url.pathname.startsWith('/api/'),
         handler: 'NetworkOnly',
       }, {

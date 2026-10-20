@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { TEXT_LINK } from '~/components/ui/classes'
 import { Dumbbell } from 'lucide-vue-next'
+import { useNextWorkout } from '~/features/training/nextWorkout'
+import SessionsCalendar from '~/features/training/components/SessionsCalendar.vue'
 import SyncStatus from '~/features/training/components/SyncStatus.vue'
 import { TRAINING_KEYS } from '~/features/training/cacheKeys'
 import { useWorkoutOutbox } from '~/features/training/outbox'
@@ -58,6 +60,11 @@ async function open(finishing: boolean): Promise<void> {
   await navigateTo(finishing ? { path: '/training/seance', query: { terminer: '1' } } : '/training/seance')
 }
 
+// The server says which day comes next (the one after the latest workout of the program).
+const { data: next } = useNextWorkout()
+const advised = computed(() => (next.value && active.value && next.value.programId === active.value.id ? next.value.dayIndex : null))
+const today = useToday()
+
 const exercisesIn = (program: Program, day: number) => (program.days[day]?.blocks ?? []).reduce((count, block) => count + block.exercises.length, 0)
 
 const shortcuts = [
@@ -68,8 +75,10 @@ const shortcuts = [
 </script>
 
 <template>
-  <UiPage>
-    <SyncStatus />
+  <UiPage layout="columns">
+    <template #top>
+      <SyncStatus />
+    </template>
     <UiCard
       v-if="local || elsewhere"
       title="Séance en cours"
@@ -90,82 +99,97 @@ const shortcuts = [
       </div>
     </UiCard>
 
-    <UiLoadError
-      v-if="error && !programs && !active"
-      @retry="refresh()"
-    />
-    <UiCard
-      v-else-if="active"
-      :title="active.name"
-    >
-      <p
-        v-if="offline"
-        class="mb-3 text-sm text-muted"
-      >
-        Hors ligne&nbsp;: le programme tel que gardé sur cet appareil.
-      </p>
-      <UiAlert
-        v-if="startError"
-        tone="error"
-      >
-        {{ startError }}
-      </UiAlert>
-      <ul
-        v-if="!local && !elsewhere"
-        class="mb-3 flex flex-col gap-2"
-      >
-        <li
-          v-for="(day, index) in active.days"
-          :key="day.name"
-          class="flex flex-wrap items-center gap-x-3 gap-y-2"
-        >
-          <UiButton
-            :loading="starting === index"
-            :disabled="starting !== null && starting !== index"
-            @click="start(index)"
-          >
-            Démarrer {{ day.name }}
-          </UiButton>
-          <span class="text-sm text-muted">{{ exercisesIn(active, index) }}&nbsp;exercice{{ exercisesIn(active, index) > 1 ? 's' : '' }}</span>
-        </li>
-      </ul>
-      <NuxtLink
-        :to="`/training/programmes/${active.id}`"
-        :class="TEXT_LINK"
-      >
-        Voir le programme
-      </NuxtLink>
-    </UiCard>
-    <UiCard v-else-if="programs">
-      <UiEmptyState
-        :icon="Dumbbell"
-        title="Aucun programme suivi"
-        :description="programs.length ? 'Choisis le programme à suivre parmi les tiens.' : 'Compose tes séances à partir de la bibliothèque d’exercices.'"
+    <!-- The program and the free session stay together, in the same column. -->
+    <div class="flex flex-col gap-4">
+      <UiLoadError
+        v-if="error && !programs && !active"
+        @retry="refresh()"
       />
-      <UiLinkButton
-        :to="programs.length ? '/training/programmes' : '/training/programmes/nouveau'"
+      <UiCard
+        v-else-if="active"
+        :title="active.name"
       >
-        {{ programs.length ? 'Mes programmes' : 'Créer un programme' }}
-      </UiLinkButton>
-    </UiCard>
-    <!-- About a program card's room while the programs load: the buttons below do not jump. -->
-    <p
-      v-else
-      class="min-h-56 text-muted"
-      role="status"
-      aria-busy="true"
-    >
-      Chargement…
-    </p>
-    <UiButton
-      v-if="!local && !elsewhere"
-      variant="secondary"
-      :loading="starting === 'free'"
-      :disabled="starting !== null && starting !== 'free'"
-      @click="start('free')"
-    >
-      Séance libre
-    </UiButton>
+        <p
+          v-if="offline"
+          class="mb-3 text-sm text-muted"
+        >
+          Hors ligne&nbsp;: le programme tel que gardé sur cet appareil.
+        </p>
+        <UiAlert
+          v-if="startError"
+          tone="error"
+        >
+          {{ startError }}
+        </UiAlert>
+        <ul
+          v-if="!local && !elsewhere"
+          class="mb-1 flex flex-col gap-2"
+          role="list"
+        >
+          <li
+            v-for="(day, index) in active.days"
+            :key="day.name"
+            class="flex items-center gap-3 rounded-md bg-surface-raised p-3"
+          >
+            <p class="min-w-0 flex-1">
+              <span class="font-semibold">{{ day.name }}</span>
+              <span
+                v-if="index === advised"
+                class="ms-2 rounded-sm bg-accent-fill px-1.5 py-0.5 text-xs font-semibold text-accent-contrast"
+              >Conseillé</span>
+              <span class="block text-sm text-muted">{{ exercisesIn(active, index) }}&nbsp;exercice{{ exercisesIn(active, index) > 1 ? 's' : '' }}</span>
+            </p>
+            <!-- The day that comes next is the main action; the others stay at hand. -->
+            <UiButton
+              :variant="index === advised ? 'primary' : 'secondary'"
+              :aria-label="`Démarrer ${day.name}`"
+              :loading="starting === index"
+              :disabled="starting !== null && starting !== index"
+              @click="start(index)"
+            >
+              Démarrer
+            </UiButton>
+          </li>
+        </ul>
+        <NuxtLink
+          :to="`/training/programmes/${active.id}`"
+          :class="TEXT_LINK"
+        >
+          Voir le programme
+        </NuxtLink>
+      </UiCard>
+      <UiCard v-else-if="programs">
+        <UiEmptyState
+          :icon="Dumbbell"
+          title="Aucun programme suivi"
+          :description="programs.length ? 'Choisis le programme à suivre parmi les tiens.' : 'Compose tes séances à partir de la bibliothèque d’exercices.'"
+        />
+        <UiLinkButton
+          :to="programs.length ? '/training/programmes' : '/training/programmes/nouveau'"
+        >
+          {{ programs.length ? 'Mes programmes' : 'Créer un programme' }}
+        </UiLinkButton>
+      </UiCard>
+      <!-- About a program card's room while the programs load: the buttons below do not jump. -->
+      <p
+        v-else
+        class="min-h-56 text-muted"
+        role="status"
+        aria-busy="true"
+      >
+        Chargement…
+      </p>
+      <UiButton
+        v-if="!local && !elsewhere"
+        variant="secondary"
+        :loading="starting === 'free'"
+        :disabled="starting !== null && starting !== 'free'"
+        @click="start('free')"
+      >
+        Séance libre
+      </UiButton>
+    </div>
+    <SessionsCalendar :today="today" />
     <UiNavList
       label="Entraînement"
       :items="shortcuts"

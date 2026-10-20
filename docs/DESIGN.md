@@ -55,8 +55,8 @@ est réservé aux barres de navigation. Toute cible tactile fait au moins 44 px.
   surélevé, contour à 3:1 et libellé plus gras.
 - **Carte** (`UiCard`) sans bordure, titre en texte normal semi-gras. **Liste groupée** (`UiNavList`).
 - **Panneau** (`UiDrawer`) : depuis le bas sur téléphone, sur le côté à partir de md.
-- **Page** (`UiPage`) : `reading` (une colonne lisible, formulaires et listes) ou `columns` (cartes indépendantes,
-  deux colonnes à partir de xl) ; ce qui concerne toute la page (lien retour, période de tous les graphiques) va dans
+- **Page** (`UiPage`) : `reading` (une colonne lisible, formulaires et listes), `columns` (cartes indépendantes,
+  deux colonnes à partir de xl) ou `wide` (une carte qui se met elle-même en colonnes, les jours d'un programme) ; ce qui concerne toute la page (lien retour, période de tous les graphiques) va dans
   l'emplacement `top`, au-dessus des colonnes, et une action reste dans le même bloc que la carte qu'elle concerne.
 - **Anneaux** (`UiRing`) : calories dehors, puis protéines, glucides, lipides ; fermés à l'objectif et au-delà, dans
   leur couleur ; décoratifs à côté d'un texte qui dit les chiffres, sinon une image nommée par eux. **Barres de
@@ -66,8 +66,15 @@ est réservé aux barres de navigation. Toute cible tactile fait au moins 44 px.
   écran —, une liste ou un bouton prend une carte large. Les tuiles vont par deux dans l'ordre choisi par
   l'utilisateur ; une tuile seule s'élargit (pas de trou, ordre de lecture intact). Mini-courbe (`UiSparkline`) ou
   petites barres (`UiMiniBars`, semaines terminées, à partir de trois) sous le chiffre, décoratives.
-- Les autres composants de données (bande de semaine, calendrier, ligne de série, minuteur) arrivent avec la page qui
-  les utilise en premier (phases R3 à R6).
+- **Calendrier du mois** (`UiMonthCalendar`) : lundi en premier, les jours marqués remplis en violet, aujourd'hui
+  cerclé ; un tableau, chaque jour lu avec ce qu'il porte ; pas de mois futur.
+- **Illustration d'exercice** (`ExerciseIllustration`) : les deux temps du dessin Everkinetic (départ, effort) peints
+  dans la couleur du thème par un masque CSS, ou l'image wger, sinon la silhouette des muscles (`MuscleMap`, d'après
+  react-body-highlighter, MIT) ; crédit sous l'image, liste complète sur la page Crédits. En vignette, l'effort seul,
+  décoratif. Les fichiers sont dans `pwa/public/exercises/` (provenance : `pwa/public/exercises/ATTRIBUTION.md` ; script
+  `pwa/scripts/exercise-illustrations/fetch.mjs`), gardés en cache une fois vus, pas installés d'avance.
+- Les autres composants de données (bande de semaine, ligne de série) arrivent avec la page qui les utilise en premier
+  (phases R4 à R6).
 
 ## Navigation
 

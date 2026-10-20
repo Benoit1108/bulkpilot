@@ -14654,6 +14654,7 @@
                     "measurement",
                     "description",
                     "mediaUrl",
+                    "libraryKey",
                     "repMin",
                     "repMax",
                     "targetRir",
@@ -14762,6 +14763,12 @@
                         ]
                     },
                     "mediaUrl": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "libraryKey": {
                         "type": [
                             "string",
                             "null"
@@ -14966,6 +14973,7 @@
                             "measurement",
                             "description",
                             "mediaUrl",
+                            "libraryKey",
                             "repMin",
                             "repMax",
                             "targetRir",
@@ -15074,6 +15082,12 @@
                                 ]
                             },
                             "mediaUrl": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "libraryKey": {
                                 "type": [
                                     "string",
                                     "null"

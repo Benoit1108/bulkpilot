@@ -163,7 +163,9 @@ pwa/app/
 └── types/          api.d.ts généré depuis l'OpenAPI (ne pas éditer)
 ```
 
-- **SPA** (`ssr: false`) : le shell est précaché par le service worker et démarre hors ligne (ADR-0005).
+- **SPA** (`ssr: false`) : le shell est précaché par le service worker et démarre hors ligne (ADR-0005). Les
+  illustrations des exercices (`public/exercises`, ~1,5 Mo) ne sont pas précachées : chacune est gardée un mois une
+  fois vue (cache `exercises`, CacheFirst) ; `/exercises/` et `/credits/` restent des fichiers, jamais la SPA.
 - **Client API unique** (`services/api/client.ts`) : cookie de session same-origin, JSON, erreurs normalisées
   en `ApiError` (message utilisateur / message technique / `traceId` = en-tête `X-Request-Id` posé par Caddy).
   Les lectures sont réessayées une fois (coupure réseau, 500/502/503/504), jamais les écritures.

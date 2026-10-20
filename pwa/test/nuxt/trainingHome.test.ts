@@ -2,6 +2,7 @@ import 'fake-indexeddb/auto'
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { localDay, shiftDay } from '~/services/calendar/days'
 import { PAGE_HEADING_KEY } from '~/composables/usePageHeading'
 import { resetWorkoutOutbox, useWorkoutOutbox } from '~/features/training/outbox'
 import { resetWorkoutSession, useWorkoutSession } from '~/features/training/session'
@@ -57,12 +58,38 @@ beforeEach(async () => {
   fake.on('GET /api/programs', () => [ppl])
   fake.on('GET /api/workouts/preview', (_, params) => planOf(Number((params as { query?: { day?: number } }).query?.day)))
   fake.on('GET /api/workouts/in-progress', () => [])
+  fake.on('GET /api/workouts', () => [])
+  fake.on('GET /api/training/next-workout', () => ({ programId: ppl.id, programName: ppl.name, versionNumber: ppl.currentVersion, dayIndex: 1, dayName: 'Pull', exerciseCount: 1, lastDoneAt: null, inProgress: false }))
 })
 
 describe('training home', () => {
+  it('shows the month\'s sessions on a calendar, and goes back a month', async () => {
+    const today = localDay()
+    const first = `${today.slice(0, 8)}01`
+    // Two sessions of this month, neither in the future (on the 1st, both that day).
+    const second = today.endsWith('-01') ? first : shiftDay(today, -1)
+    fake.on('GET /api/workouts', () => [first, second].map((day, i) => ({ id: `w${i}`, dayName: 'Push', startedAt: new Date(`${day}T18:00:00`).toISOString(), finishedAt: null, exercises: 1, workingSets: 3, volumeKg: 1000 })))
+    const wrapper = await openHome()
+    const calendar = wrapper.findAll('section').find(section => section.text().startsWith('Séances du mois'))!
+
+    const marked = calendar.findAll('td .sr-only').map(cell => cell.text()).filter(text => text.endsWith(', séance'))
+    expect(marked).toHaveLength(new Set([first, second]).size)
+    expect(calendar.text()).toContain('2 séances en')
+    expect(calendar.get('[aria-current="date"]').text()).toContain(String(Number(today.slice(8))))
+    expect(button(calendar as never, 'Mois suivant').attributes('aria-disabled'), 'no future month, the focus kept').toBe('true')
+
+    await button(calendar as never, 'Mois précédent').trigger('click')
+    await settle()
+    const asked = fake.calls.filter(call => call.route === 'GET /api/workouts').at(-1)?.params as { query: { before: string } }
+    expect(new Date(asked.query.before).getDate(), 'up to the first of the month shown').toBe(1)
+    expect(localDay(new Date(asked.query.before))).toBe(first)
+  })
+
   it('starts a day of the program followed', async () => {
     const wrapper = await openHome()
-    expect(wrapper.text()).toContain('Démarrer Push')
+    expect(button(wrapper, 'Démarrer Push').classes(), 'a day at hand').toContain('bg-surface-raised')
+    expect(button(wrapper, 'Démarrer Pull').classes(), 'the day that comes next is the main action').toContain('bg-accent-fill')
+    expect(wrapper.text()).toContain('PullConseillé')
     expect(wrapper.text()).toContain('3\u00A0exercices')
     expect(fake.calls.filter(call => call.route === 'GET /api/workouts/preview'), 'every day kept ahead of time').toHaveLength(2)
 

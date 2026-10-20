@@ -71,4 +71,5 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 | R0 | Refonte UX/UI (ADR-0034) : corrections rapides — alignements, listes, décimales à la française, graphiques hebdomadaires sans la semaine en cours, vrais titres de page | ✅ |
 | R1 | Charte graphique à la manière d’Apple Santé (docs/DESIGN.md), boutons en pilule, contrôle segmenté, cartes et listes groupées, barre latérale à icônes et pages de section, contenu pleine largeur, thème de l’appareil par défaut | ✅ |
 | R2 | Accueil façon Apple Santé : anneaux calories et macros, macros en couleur, tuiles poids (mini-courbe), séances et records (barres), objectif, séance du jour, cartes entières cliquables, tuiles personnalisables | ✅ |
-| R3–R6 | Entraînement (illustrations, minuteur), nutrition, progression, Coach et réglages | ⏳ |
+| R3 | Entraînement : dessins Everkinetic des exercices (images wger pour quelques-uns), silhouette des muscles, exercices rangés par muscle, jour conseillé, calendrier des séances du mois, programme en colonnes, son en fin de repos, page Crédits | ✅ |
+| R4–R6 | Nutrition, progression, Coach et réglages | ⏳ |

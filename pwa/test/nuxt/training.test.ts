@@ -37,7 +37,7 @@ describe('training home', () => {
     await flushPromises()
 
     expect(wrapper.text()).toContain('PPL Masse')
-    expect(wrapper.findAll('button').map(b => b.text()).filter(text => text.startsWith('Démarrer'))).toEqual(['Démarrer Push', 'Démarrer Pull'])
+    expect(wrapper.findAll('button').map(b => b.attributes('aria-label')).filter(label => label?.startsWith('Démarrer'))).toEqual(['Démarrer Push', 'Démarrer Pull'])
     expect(wrapper.text()).toContain('3\u00A0exercices')
   })
 
@@ -71,13 +71,21 @@ describe('exercises', () => {
     const wrapper = await mountSuspended(ExercisesPage, { route: '/training/exercices' })
     await flushPromises()
     expect(wrapper.get('[role="status"]').text()).toBe('4\u00A0exercices')
-    expect(wrapper.text()).toContain('Haut du dos · Barre · perso · consigne')
+    // By main muscle, each with its picture: a drawing, an image, or the muscles it works.
+    const groups = wrapper.findAll('section').map(group => [group.get('h2').text(), group.findAll('li a').map(link => link.text())])
+    expect(groups).toEqual([
+      ['Pectoraux', ['Développé couché à la barreBarre']],
+      ['Haut du dos', ['Rowing YatesBarre · perso · consigne']],
+      ['Deltoïdes latéraux', ['Élévations latérales aux haltèresHaltères']],
+      ['Abdominaux', ['Gainage (planche)Poids du corps']],
+    ])
+    expect(wrapper.findAll('li a')[1]!.find('svg[role="img"]').exists(), 'an own exercise shows its muscles').toBe(true)
 
     await field(wrapper, 'Rechercher un exercice').setValue('ELEVATIONS')
     expect(wrapper.get('[role="status"]').text()).toBe('1\u00A0exercice')
     await field(wrapper, 'Rechercher un exercice').setValue('')
     await field(wrapper, 'Muscle').setValue('triceps')
-    expect(wrapper.findAll('nav a').map(link => link.text())).toEqual([expect.stringContaining('Développé couché')])
+    expect(wrapper.findAll('li a').map(link => link.text())).toEqual([expect.stringContaining('Développé couché')])
     expect(fake.calls.filter(call => call.route === 'GET /api/exercises'), 'loaded once').toHaveLength(1)
   })
 
@@ -152,6 +160,11 @@ describe('exercises', () => {
     await flushPromises()
     expect(library.text()).toContain('Exercice de la bibliothèque')
     expect(library.findAll('button').some(b => b.text() === 'Supprimer l’exercice')).toBe(false)
+    // Its drawing, then the muscles beside the facts that name them (decoration there), with a key.
+    const movement = library.findAll('section').find(section => section.text().startsWith('Le mouvement'))!
+    expect(movement.findAll('[role="img"]').map(frame => frame.attributes('aria-label'))).toEqual(['Développé couché à la barre\u00A0: départ', 'Développé couché à la barre\u00A0: effort'])
+    expect(library.find('svg[aria-hidden="true"] polygon').exists()).toBe(true)
+    expect(library.text()).toContain('principalsecondaire')
 
     clearNuxtData()
     fake.on('GET /api/exercises/{id}', () => {
