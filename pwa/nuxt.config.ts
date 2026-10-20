@@ -3,6 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { THEME_COLORS } from './app/features/shell/theme'
 
 const appName = process.env.NUXT_PUBLIC_APP_NAME ?? 'BulkPilot'
+// The manifest cannot follow the device's theme: the splash screen and first paint stay dark.
 const themeColor = THEME_COLORS.dark
 
 export default defineNuxtConfig({

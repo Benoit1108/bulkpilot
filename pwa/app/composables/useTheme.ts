@@ -5,7 +5,7 @@ function readStoredPreference(): ThemePreference {
     return parsePreference(localStorage.getItem(THEME_STORAGE_KEY))
   }
   catch {
-    return 'dark'
+    return 'system'
   }
 }
 
@@ -14,9 +14,10 @@ function systemPrefersLight(): boolean {
 }
 
 /**
- * Dark by default; "system" follows the OS. The preference is a per-device convenience kept in
- * localStorage (public/theme-init.js applies it before first paint); plugins/theme.client.ts
- * keeps the document in sync, including OS changes while "system" is selected.
+ * The device's setting by default ("system"); light or dark when chosen. The preference is a
+ * per-device convenience kept in localStorage (public/theme-init.js applies it before first
+ * paint); plugins/theme.client.ts keeps the document in sync, including OS changes while
+ * "system" is selected.
  */
 export function useTheme() {
   const preference = useState<ThemePreference>('theme-preference', readStoredPreference)
@@ -31,7 +32,7 @@ export function useTheme() {
   function setPreference(next: ThemePreference): void {
     preference.value = next
     try {
-      if (next === 'dark') localStorage.removeItem(THEME_STORAGE_KEY)
+      if (next === 'system') localStorage.removeItem(THEME_STORAGE_KEY)
       else localStorage.setItem(THEME_STORAGE_KEY, next)
     }
     catch {

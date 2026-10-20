@@ -13,7 +13,7 @@ const titleId = useId()
 <template>
   <component
     :is="as"
-    class="flex scroll-mt-8 flex-col gap-3 rounded-lg border border-line bg-surface p-4"
+    class="flex scroll-mt-8 flex-col gap-3 rounded-lg bg-surface p-4"
     :aria-labelledby="title && as !== 'div' ? titleId : undefined"
   >
     <header
@@ -23,7 +23,7 @@ const titleId = useId()
       <h2
         v-if="title"
         :id="titleId"
-        class="text-sm font-semibold tracking-caps text-muted uppercase"
+        class="text-lg font-semibold tracking-snug"
       >
         {{ title }}
       </h2>

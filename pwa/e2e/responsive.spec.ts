@@ -31,7 +31,8 @@ const SECTIONS: Record<string, (ids: Populated) => string[]> = {
 }
 const SIGNED_OUT = ['/connexion', '/inscription', '/mot-de-passe-oublie', '/reinitialiser-mot-de-passe?token=x', '/verifier-email?token=x', '/nope']
 
-const BASE = { baseURL: process.env.E2E_BASE_URL ?? 'https://localhost', ignoreHTTPSErrors: true }
+/** Contexts made here do not inherit the config's `use`: dark, as the device setting the first pass checks. */
+const BASE = { baseURL: process.env.E2E_BASE_URL ?? 'https://localhost', ignoreHTTPSErrors: true, colorScheme: 'dark' as const }
 
 function device(browser: Browser, size: Size, storageState?: Awaited<ReturnType<BrowserContext['storageState']>>): Promise<BrowserContext> {
   return browser.newContext({ ...BASE, storageState, viewport: { width: size.width, height: size.height }, hasTouch: size.touch, isMobile: size.touch && size.width < 768 })

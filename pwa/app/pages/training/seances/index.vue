@@ -27,7 +27,7 @@ const items = computed(() => workouts.value.map(workout => ({
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/training"
       label="Training"
@@ -81,5 +81,5 @@ const items = computed(() => workouts.value.map(workout => ({
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

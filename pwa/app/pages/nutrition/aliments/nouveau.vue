@@ -16,7 +16,7 @@ async function onSaved(): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       :to="back"
       :label="route.query.retour ? 'Retour' : 'Mes aliments'"
@@ -24,5 +24,5 @@ async function onSaved(): Promise<void> {
     <UiCard>
       <CustomFoodForm @saved="onSaved" />
     </UiCard>
-  </div>
+  </UiPage>
 </template>

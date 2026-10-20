@@ -72,7 +72,7 @@ async function submit(): Promise<void> {
       <label
         v-for="option in PERSONALITIES"
         :key="option.value"
-        class="flex min-h-tap cursor-pointer items-start gap-3 rounded-md border border-line bg-surface-raised p-3 has-checked:border-accent has-checked:bg-accent-soft has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
+        class="group flex min-h-tap cursor-pointer items-start gap-3 rounded-md border border-line bg-surface-raised p-3 has-checked:border-accent has-checked:bg-accent-soft has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
       >
         <input
           v-model="personality"
@@ -86,7 +86,7 @@ async function submit(): Promise<void> {
           <span class="font-semibold">{{ option.label }}</span>
           <span
             :id="hintId(option.value)"
-            class="text-sm text-muted"
+            class="text-sm text-muted group-has-checked:text-ink"
             aria-hidden="true"
           >{{ option.description }}</span>
         </span>

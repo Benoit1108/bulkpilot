@@ -15,7 +15,7 @@ const items = computed(() => (foods.value ?? []).map(food => ({
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/nutrition"
       label="Nutrition"
@@ -41,5 +41,5 @@ const items = computed(() => (foods.value ?? []).map(food => ({
         description="Crée un aliment à partir de son étiquette quand il manque dans la base CIQUAL."
       />
     </UiCard>
-  </div>
+  </UiPage>
 </template>

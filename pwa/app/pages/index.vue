@@ -74,8 +74,9 @@ async function customized(saved: boolean): Promise<void> {
     />
 
     <div class="flex items-center justify-between gap-2">
-      <UiPillGroup
+      <UiSegmented
         v-model="view"
+        class="flex-1 sm:flex-none"
         legend="Période du tableau de bord"
         name="dashboard-view"
         :options="VIEWS"
@@ -125,7 +126,7 @@ async function customized(saved: boolean): Promise<void> {
       </p>
       <div
         v-if="!firstVisit"
-        class="grid gap-4 md:grid-cols-2"
+        class="grid items-start gap-4 md:grid-cols-2"
       >
         <component
           :is="WIDGETS[widget.key]"
@@ -138,7 +139,7 @@ async function customized(saved: boolean): Promise<void> {
     </template>
     <div
       v-else
-      class="grid gap-4 md:grid-cols-2"
+      class="grid items-start gap-4 md:grid-cols-2"
       aria-busy="true"
     >
       <p

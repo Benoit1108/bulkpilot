@@ -71,11 +71,13 @@ async function destroy(): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
-    <ShellBackLink
-      to="/training/exercices"
-      label="Exercices"
-    />
+  <UiPage layout="columns">
+    <template #top>
+      <ShellBackLink
+        to="/training/exercices"
+        label="Exercices"
+      />
+    </template>
     <UiAlert
       v-if="gone"
       tone="error"
@@ -165,7 +167,11 @@ async function destroy(): Promise<void> {
         </form>
       </UiCard>
 
-      <template v-if="exercise.editable">
+      <!-- Editing and deleting stay together, in the same column. -->
+      <div
+        v-if="exercise.editable"
+        class="flex flex-col gap-4"
+      >
         <UiCard title="Modifier">
           <ExerciseForm
             :key="exercise.id"
@@ -184,11 +190,11 @@ async function destroy(): Promise<void> {
           :loading="removal.pending.value"
           @confirm="destroy"
         />
-      </template>
+      </div>
     </template>
     <UiStatus
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

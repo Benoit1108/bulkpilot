@@ -20,7 +20,7 @@ const erased = computed(() => `Ce jour-là, tout est effacé${policy.value ? ` (
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/reglages/compte"
       label="Compte et sécurité"
@@ -91,5 +91,5 @@ const erased = computed(() => `Ce jour-là, tout est effacé${policy.value ? ` (
         :reauthentication-minutes="policy?.reauthenticationMinutes"
       />
     </UiCard>
-  </div>
+  </UiPage>
 </template>

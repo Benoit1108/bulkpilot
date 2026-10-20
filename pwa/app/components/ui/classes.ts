@@ -5,11 +5,13 @@
  */
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
 
-const BUTTON = 'inline-flex min-h-tap cursor-pointer touch-manipulation items-center justify-center gap-2 rounded-md border px-4 font-semibold no-underline transition-[background-color,border-color,opacity] disabled:cursor-not-allowed disabled:opacity-55 aria-disabled:cursor-not-allowed aria-disabled:opacity-55'
+const BUTTON = 'inline-flex min-h-tap cursor-pointer touch-manipulation items-center justify-center gap-2 rounded-full border px-5 font-semibold no-underline transition-[background-color,border-color,opacity] disabled:cursor-not-allowed disabled:opacity-55 aria-disabled:cursor-not-allowed aria-disabled:opacity-55'
 
 const VARIANTS: Record<ButtonVariant, string> = {
+  /** The one main action of a screen. */
   primary: 'border-transparent bg-accent-fill text-accent-contrast not-disabled:not-aria-disabled:hover:bg-accent-fill-hover',
-  secondary: 'border-line bg-surface-raised text-ink not-disabled:not-aria-disabled:hover:border-accent',
+  /** Tinted: an action beside the main one. */
+  secondary: 'border-transparent bg-surface-raised text-accent-ink not-disabled:not-aria-disabled:hover:bg-accent-soft',
   ghost: 'border-transparent bg-transparent text-accent-ink not-disabled:not-aria-disabled:hover:bg-accent-soft',
   /** A destructive action about to happen (a confirm button once armed). */
   danger: 'border-danger bg-transparent text-danger not-disabled:not-aria-disabled:hover:bg-danger/10',
@@ -52,4 +54,4 @@ export const fieldClass = {
 } as const
 
 /** A round icon button of the page header (search, add, notifications, settings). */
-export const HEADER_BUTTON = 'relative grid size-tap cursor-pointer place-items-center rounded-full border border-line bg-surface p-0 text-muted transition-colors hover:border-accent hover:text-ink aria-[current=page]:border-accent aria-[current=page]:bg-accent-soft aria-[current=page]:text-accent-ink'
+export const HEADER_BUTTON = 'relative grid size-tap cursor-pointer place-items-center rounded-full border border-transparent bg-surface p-0 text-accent-ink transition-colors hover:bg-surface-raised aria-[current=page]:bg-accent-soft'

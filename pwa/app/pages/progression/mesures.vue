@@ -14,7 +14,7 @@ async function onChanged(): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/progression/mensurations"
       label="Mensurations"
@@ -32,5 +32,5 @@ async function onChanged(): Promise<void> {
         @changed="onChanged"
       />
     </UiCard>
-  </div>
+  </UiPage>
 </template>

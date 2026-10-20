@@ -31,11 +31,13 @@ async function destroy(): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
-    <ShellBackLink
-      to="/nutrition/recettes"
-      label="Mes recettes"
-    />
+  <UiPage layout="columns">
+    <template #top>
+      <ShellBackLink
+        to="/nutrition/recettes"
+        label="Mes recettes"
+      />
+    </template>
     <UiAlert
       v-if="gone"
       tone="error"
@@ -50,28 +52,31 @@ async function destroy(): Promise<void> {
       <UiCard>
         <RecipeComposition :recipe="recipe" />
       </UiCard>
-      <UiCard title="Modifier">
-        <RecipeForm
-          :key="recipe.id"
-          :recipe="recipe"
-          @saved="onSaved"
+      <!-- Editing and deleting stay together, in the same column. -->
+      <div class="flex flex-col gap-4">
+        <UiCard title="Modifier">
+          <RecipeForm
+            :key="recipe.id"
+            :recipe="recipe"
+            @saved="onSaved"
+          />
+        </UiCard>
+        <UiAlert
+          v-if="removal.message.value"
+          tone="error"
+        >
+          {{ removal.message.value }}
+        </UiAlert>
+        <UiConfirmButton
+          label="Supprimer la recette"
+          :loading="removal.pending.value"
+          @confirm="destroy"
         />
-      </UiCard>
-      <UiAlert
-        v-if="removal.message.value"
-        tone="error"
-      >
-        {{ removal.message.value }}
-      </UiAlert>
-      <UiConfirmButton
-        label="Supprimer la recette"
-        :loading="removal.pending.value"
-        @confirm="destroy"
-      />
+      </div>
     </template>
     <UiStatus
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

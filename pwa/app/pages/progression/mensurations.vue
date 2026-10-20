@@ -30,11 +30,13 @@ async function onSaved(): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
-    <ShellBackLink
-      to="/progression"
-      label="Progression"
-    />
+  <UiPage layout="columns">
+    <template #top>
+      <ShellBackLink
+        to="/progression"
+        label="Progression"
+      />
+    </template>
     <UiLoadError
       v-if="(error && !summary) || (measuresError && !measures)"
       @retry="refresh(); refreshMeasures()"
@@ -67,5 +69,5 @@ async function onSaved(): Promise<void> {
     >
       Chargement…
     </p>
-  </div>
+  </UiPage>
 </template>

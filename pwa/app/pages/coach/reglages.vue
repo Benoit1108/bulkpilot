@@ -16,7 +16,7 @@ function onSaved(saved: CoachSettings): void {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/coach"
       label="Coach"
@@ -38,5 +38,5 @@ function onSaved(saved: CoachSettings): void {
     >
       Chargement…
     </p>
-  </div>
+  </UiPage>
 </template>

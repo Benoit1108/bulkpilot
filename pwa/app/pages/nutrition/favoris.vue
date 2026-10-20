@@ -20,7 +20,7 @@ async function remove(meal: FavoriteMeal): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/nutrition"
       label="Nutrition"
@@ -79,5 +79,5 @@ async function remove(meal: FavoriteMeal): Promise<void> {
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

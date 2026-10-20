@@ -3,11 +3,11 @@ import { parsePreference, resolveTheme } from '~/features/shell/theme'
 
 describe('theme preference', () => {
   it.each([
-    [null, 'dark'],
+    [null, 'system'],
     ['light', 'light'],
     ['system', 'system'],
     ['dark', 'dark'],
-    ['garbage', 'dark'],
+    ['garbage', 'system'],
   ])('parses stored %s as %s', (stored, expected) => {
     expect(parsePreference(stored)).toBe(expected)
   })

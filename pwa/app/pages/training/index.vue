@@ -68,7 +68,7 @@ const shortcuts = [
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <SyncStatus />
     <UiCard
       v-if="local || elsewhere"
@@ -170,5 +170,5 @@ const shortcuts = [
       label="Entraînement"
       :items="shortcuts"
     />
-  </div>
+  </UiPage>
 </template>

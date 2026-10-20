@@ -53,7 +53,7 @@ function cancel(): void {
   <UiCard as="div">
     <h2
       ref="heading"
-      class="text-sm font-semibold tracking-caps text-muted uppercase"
+      class="text-lg font-semibold tracking-snug"
       tabindex="-1"
     >
       Personnaliser le tableau de bord

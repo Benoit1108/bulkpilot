@@ -155,7 +155,7 @@
     inset: 0 0 auto;
     z-index: 30;
     height: env(safe-area-inset-top);
-    background: #17141f;
+    background: #000000;
     pointer-events: none;
   }
 

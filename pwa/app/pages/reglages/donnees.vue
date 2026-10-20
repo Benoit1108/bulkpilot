@@ -43,11 +43,13 @@ const { downloading, message: downloadError, fetchArchive } = useExportDownload(
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
-    <ShellBackLink
-      to="/reglages"
-      label="Réglages"
-    />
+  <UiPage layout="columns">
+    <template #top>
+      <ShellBackLink
+        to="/reglages"
+        label="Réglages"
+      />
+    </template>
     <UiCard title="Exporter mes données">
       <ExportForm
         :under-way="underWay"
@@ -96,5 +98,5 @@ const { downloading, message: downloadError, fetchArchive } = useExportDownload(
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

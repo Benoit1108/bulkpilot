@@ -40,17 +40,21 @@ useEventListener('keydown', (event) => {
     >Aller au contenu</a>
     <ShellNav />
     <div>
+      <!--
+        Phones, as iOS: the buttons on their own row, the large title below them with the whole width.
+        From md, title and buttons share one row.
+      -->
       <header
-        class="mx-auto flex max-w-content items-center justify-between gap-3 pt-4 px-gutter pb-2 md:pt-8"
+        class="mx-auto flex max-w-content flex-col-reverse gap-1 py-2 px-gutter md:flex-row md:items-center md:justify-between md:gap-3 md:pt-8"
       >
         <!-- Words break at syllables (lang fr), never in the middle of one, where the header is narrow. -->
         <h1
           id="page-title"
-          class="min-w-0 text-xl font-bold tracking-tight wrap-break-word hyphens-auto md:text-2xl"
+          class="min-w-0 text-large-title font-bold tracking-tight wrap-break-word hyphens-auto"
         >
           {{ title }}
         </h1>
-        <div class="flex shrink-0 items-center gap-2">
+        <div class="flex shrink-0 items-center justify-end gap-2">
           <button
             type="button"
             :class="`${HEADER_BUTTON} md:hidden`"
@@ -68,7 +72,7 @@ useEventListener('keydown', (event) => {
           <!-- From md, the shortcut shows. -->
           <button
             type="button"
-            class="hidden min-h-tap cursor-pointer items-center gap-2 rounded-full border border-line bg-surface px-4 text-sm text-muted transition-colors hover:border-accent hover:text-ink md:inline-flex"
+            class="hidden min-h-tap cursor-pointer items-center gap-2 rounded-full border border-transparent bg-surface px-4 text-sm text-muted transition-colors hover:bg-surface-raised hover:text-ink md:inline-flex"
             aria-haspopup="dialog"
             aria-keyshortcuts="Control+K Meta+K"
             @click="openSearch"

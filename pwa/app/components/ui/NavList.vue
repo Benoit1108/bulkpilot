@@ -23,7 +23,7 @@ const keeper = (item: NavListItem) => (props.keep && item.id ? (element: unknown
 
 <template>
   <nav :aria-label="label">
-    <ul class="m-0 list-none divide-y divide-line rounded-lg border border-line bg-surface p-0">
+    <ul class="divide-y divide-line overflow-hidden rounded-lg bg-surface">
       <li
         v-for="item in items"
         :key="item.to"
@@ -32,7 +32,7 @@ const keeper = (item: NavListItem) => (props.keep && item.id ? (element: unknown
       >
         <NuxtLink
           :to="item.to"
-          class="flex min-h-14 items-center justify-between gap-3 px-4 py-3 text-ink no-underline focus-visible:rounded-lg focus-visible:-outline-offset-2"
+          class="flex min-h-14 items-center justify-between gap-3 px-4 py-3 text-ink no-underline transition-colors hover:bg-surface-raised focus-visible:rounded-lg focus-visible:-outline-offset-2"
         >
           <span class="flex flex-col">
             <span class="font-semibold">{{ item.title }}</span>
@@ -44,6 +44,7 @@ const keeper = (item: NavListItem) => (props.keep && item.id ? (element: unknown
           </span>
           <ChevronRight
             :size="20"
+            class="shrink-0 text-muted"
             aria-hidden="true"
           />
         </NuxtLink>

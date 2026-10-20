@@ -23,7 +23,7 @@ async function destroy(): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/nutrition/aliments"
       label="Mes aliments"
@@ -68,5 +68,5 @@ async function destroy(): Promise<void> {
         </p>
       </template>
     </template>
-  </div>
+  </UiPage>
 </template>

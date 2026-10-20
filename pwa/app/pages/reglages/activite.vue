@@ -18,7 +18,7 @@ const rows = computed(() => items.value.map(entry => ({ entry, label: activityLa
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/reglages"
       label="Réglages"
@@ -95,5 +95,5 @@ const rows = computed(() => items.value.map(entry => ({ entry, label: activityLa
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

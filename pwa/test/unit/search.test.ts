@@ -22,6 +22,7 @@ describe('the search sources', () => {
   it('lead to every section of the navigation', () => {
     const pages = PAGES.map(page => page.to)
     for (const item of [...primaryNavigation, settingsNavigation]) expect(pages).toContain(item.to)
+    for (const page of primaryNavigation.flatMap(item => item.pages ?? [])) expect(pages, 'each page of the sidebar can be searched for').toContain(page.to)
   })
 
   it('offer shortcuts before anything is typed, the page one is on aside', () => {

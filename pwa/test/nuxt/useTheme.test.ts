@@ -13,17 +13,19 @@ beforeAll(() => {
 })
 
 afterEach(() => {
-  useTheme().setPreference('dark')
+  useTheme().setPreference('system')
   localStorage.clear()
 })
 
+const deviceTheme = () => (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+
 describe('useTheme', () => {
-  it('is dark by default and the startup plugin reflects it on the document', () => {
+  it('follows the device by default and the startup plugin reflects it on the document', () => {
     const { preference, theme } = useTheme()
 
-    expect(preference.value).toBe('dark')
-    expect(theme.value).toBe('dark')
-    expect(document.documentElement.dataset.theme).toBe('dark')
+    expect(preference.value).toBe('system')
+    expect(theme.value).toBe(deviceTheme())
+    expect(document.documentElement.dataset.theme).toBe(deviceTheme())
   })
 
   it('applies and remembers the light theme, including the browser theme colour', () => {
@@ -34,26 +36,26 @@ describe('useTheme', () => {
     expect(theme.value).toBe('light')
     expect(document.documentElement.dataset.theme).toBe('light')
     expect(localStorage.getItem('theme')).toBe('light')
-    expect(themeColor()).toBe('#f7f6fb')
+    expect(themeColor()).toBe('#f2f2f7')
   })
 
-  it('forgets the preference when going back to the dark default', () => {
+  it('remembers the dark theme as a choice of its own', () => {
     const { setPreference } = useTheme()
 
-    setPreference('light')
     setPreference('dark')
 
     expect(document.documentElement.dataset.theme).toBe('dark')
-    expect(localStorage.getItem('theme')).toBeNull()
-    expect(themeColor()).toBe('#0d0b14')
+    expect(localStorage.getItem('theme')).toBe('dark')
+    expect(themeColor()).toBe('#000000')
   })
 
-  it('stores "system" and resolves it from the OS preference', () => {
+  it('forgets the choice when going back to the device setting', () => {
     const { theme, setPreference } = useTheme()
 
+    setPreference('light')
     setPreference('system')
 
-    expect(localStorage.getItem('theme')).toBe('system')
-    expect(theme.value).toBe(matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+    expect(localStorage.getItem('theme')).toBeNull()
+    expect(theme.value).toBe(deviceTheme())
   })
 })

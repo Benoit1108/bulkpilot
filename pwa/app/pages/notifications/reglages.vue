@@ -13,7 +13,7 @@ function onSaved(saved: NotificationSettings): void {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/notifications"
       label="Notifications"
@@ -35,5 +35,5 @@ function onSaved(saved: NotificationSettings): void {
     >
       Chargement…
     </p>
-  </div>
+  </UiPage>
 </template>

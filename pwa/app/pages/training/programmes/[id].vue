@@ -59,11 +59,13 @@ async function archive(): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
-    <ShellBackLink
-      to="/training/programmes"
-      label="Mes programmes"
-    />
+  <UiPage layout="columns">
+    <template #top>
+      <ShellBackLink
+        to="/training/programmes"
+        label="Mes programmes"
+      />
+    </template>
     <UiAlert
       v-if="gone"
       tone="error"
@@ -171,5 +173,5 @@ async function archive(): Promise<void> {
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

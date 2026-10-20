@@ -13,11 +13,13 @@ const erasure = computed(() => `Ton compte est fermé tout de suite puis effacé
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
-    <ShellBackLink
-      to="/reglages"
-      label="Réglages"
-    />
+  <UiPage layout="columns">
+    <template #top>
+      <ShellBackLink
+        to="/reglages"
+        label="Réglages"
+      />
+    </template>
     <template v-if="account">
       <UiCard
         id="email"
@@ -53,5 +55,5 @@ const erasure = computed(() => `Ton compte est fermé tout de suite puis effacé
         </UiLinkButton>
       </UiCard>
     </template>
-  </div>
+  </UiPage>
 </template>

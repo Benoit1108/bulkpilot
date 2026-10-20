@@ -23,7 +23,7 @@ const items = computed(() => found.value.map(exercise => ({
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/training"
       label="Training"
@@ -70,5 +70,5 @@ const items = computed(() => found.value.map(exercise => ({
         />
       </UiCard>
     </template>
-  </div>
+  </UiPage>
 </template>

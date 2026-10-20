@@ -7,7 +7,7 @@ const { account } = useAccount()
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/reglages"
       label="Réglages"
@@ -15,5 +15,5 @@ const { account } = useAccount()
     <UiCard v-if="account">
       <ProfileForm :account="account" />
     </UiCard>
-  </div>
+  </UiPage>
 </template>

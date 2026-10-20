@@ -1,16 +1,17 @@
 // Runs before the app boots so the stored theme never flashes. Mirrors app/features/shell/theme.ts:
-// "dark" is the default (nothing stored), "light" and "system" are the stored alternatives.
+// the device's setting is the default (nothing stored), "light" and "dark" are the stored choices.
 (function () {
-  var colors = { dark: '#0d0b14', light: '#f7f6fb' }
-  var theme = 'dark'
+  var colors = { dark: '#000000', light: '#f2f2f7' }
+  var preference = null
   try {
-    var preference = localStorage.getItem('theme')
-    if (preference === 'light') theme = 'light'
-    else if (preference === 'system' && matchMedia('(prefers-color-scheme: light)').matches) theme = 'light'
+    preference = localStorage.getItem('theme')
   }
   catch {
-    // Storage unavailable (private mode): keep the default theme.
+    // Storage unavailable (private mode): follow the device.
   }
+  var theme = preference === 'light' || preference === 'dark'
+    ? preference
+    : (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
   document.documentElement.dataset.theme = theme
 
   // The theme-color meta may be declared after this script: set it once the head is parsed too.

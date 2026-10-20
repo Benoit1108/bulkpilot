@@ -36,11 +36,13 @@ const setsOf = (index: number): WorkoutSet[] => (workout.value?.sets ?? []).filt
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
-    <ShellBackLink
-      to="/training/seances"
-      label="Historique"
-    />
+  <UiPage layout="columns">
+    <template #top>
+      <ShellBackLink
+        to="/training/seances"
+        label="Historique"
+      />
+    </template>
     <UiAlert
       v-if="missing && !workout"
       tone="info"
@@ -107,5 +109,5 @@ const setsOf = (index: number): WorkoutSet[] => (workout.value?.sets ?? []).filt
         </p>
       </UiCard>
     </template>
-  </div>
+  </UiPage>
 </template>

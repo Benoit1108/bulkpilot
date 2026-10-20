@@ -18,11 +18,13 @@ async function onSaved(): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
-    <ShellBackLink
-      to="/nutrition"
-      label="Nutrition"
-    />
+  <UiPage layout="columns">
+    <template #top>
+      <ShellBackLink
+        to="/nutrition"
+        label="Nutrition"
+      />
+    </template>
     <UiCard>
       <TargetEstimator
         :account="account"
@@ -48,5 +50,5 @@ async function onSaved(): Promise<void> {
         Chargement…
       </p>
     </UiCard>
-  </div>
+  </UiPage>
 </template>

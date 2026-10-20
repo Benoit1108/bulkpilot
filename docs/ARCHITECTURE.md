@@ -172,11 +172,13 @@ pwa/app/
   `make openapi-check` (CI) échoue si l'un est périmé. Un test Vitest exige un message français pour chaque code d'erreur.
 - **Session perdue** : seul un appareil *qui était connecté* est renvoyé vers la connexion (et ses données en cache vidées) ;
   le 401 attendu d'un visiteur ne déclenche rien.
-- **Navigation** : barre basse sur téléphone ; rail vertical dès 48rem ; barre latérale libellée dès 75rem.
+- **Navigation** : barre basse sur téléphone ; rail d'icônes dès 48rem ; dès 75rem, barre latérale à icônes où la section
+  ouverte liste ses pages (`features/shell/navigation.ts` ; la section porte `aria-current="true"`, sa page `"page"`).
   Les Réglages sont séparés des cinq sections (en-tête sur téléphone, bas du rail sinon).
-- **Design system** : tokens dans le thème Tailwind (`assets/css/tokens.css`), thème sombre par défaut (clair et « système »
-  dans les Réglages : seules les couleurs changent), accent violet, `accent-fill` pour les surfaces portant du texte blanc
-  (contraste AA), cibles tactiles ≥ 44 px (`min-h-tap`, `size-tap`), état actif de navigation non porté par la seule couleur.
+- **Design system** ([DESIGN.md](DESIGN.md), ADR-0034) : tokens dans le thème Tailwind (`assets/css/tokens.css`), thème de
+  l'appareil par défaut (clair ou sombre au choix dans les Réglages : seules les couleurs changent), gris système et accent
+  violet, `accent-fill` toujours avec son texte `accent-contrast` (noir en sombre, blanc en clair, contraste AA), cibles
+  tactiles ≥ 44 px (`min-h-tap`, `size-tap`), état actif de navigation non porté par la seule couleur.
 - **Styles** (ADR-0025) : Tailwind v4, sans son preflight (la base est celle de `main.css`). Règles :
   - uniquement des classes utilitaires dans les templates, pas de bloc `<style>` ; exception : ce que les utilitaires ne savent
     pas dire proprement (animation propre, pseudo-élément d'un composant tiers), dans un `<style scoped>` court et commenté ;

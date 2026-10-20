@@ -15,7 +15,7 @@ const items = computed(() => (recipes.value ?? []).map(recipe => ({
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/nutrition"
       label="Nutrition"
@@ -41,5 +41,5 @@ const items = computed(() => (recipes.value ?? []).map(recipe => ({
         description="Compose un plat à partir de ses ingrédients pesés&nbsp;: il se saisira ensuite en portions."
       />
     </UiCard>
-  </div>
+  </UiPage>
 </template>

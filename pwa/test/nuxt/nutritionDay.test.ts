@@ -331,7 +331,7 @@ describe('nutrition page', () => {
     fake.on('GET /api/nutrition/averages', () => ({ days: 30, loggedDays: 12, dailyAverage: { energyKcal: 2800, protein: 140, carbohydrate: 350, fat: 90, fibre: null }, currentTarget: target }))
     const wrapper = await openPage()
 
-    await button(wrapper, '30\u00A0jours').trigger('click')
+    await wrapper.get('input[name="averages-period"][value="30"]').setValue(true)
     await flushPromises()
 
     expect(fake.client.get).toHaveBeenCalledWith('/api/nutrition/averages', { query: { days: 30, today: TODAY } })

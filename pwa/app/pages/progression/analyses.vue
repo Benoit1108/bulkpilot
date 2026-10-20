@@ -24,16 +24,18 @@ const { data: training, error: trainingError, refresh: refreshTraining } = useAs
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage layout="columns">
+    <template #top>
+      <ShellBackLink
+        to="/progression"
+        label="Progression"
+      />
+      <PeriodPicker
+        v-model="period"
+        name="analytics-period"
+      />
+    </template>
     <!-- Each chart keeps about its room while it loads: the cards below do not jump (layout shift). -->
-    <ShellBackLink
-      to="/progression"
-      label="Progression"
-    />
-    <PeriodPicker
-      v-model="period"
-      name="analytics-period"
-    />
     <UiCard title="Calories face au poids">
       <UiLoadError
         v-if="(intakeError && !intake) || (weightError && !weight)"
@@ -94,5 +96,5 @@ const { data: training, error: trainingError, refresh: refreshTraining } = useAs
         Chargement…
       </p>
     </UiCard>
-  </div>
+  </UiPage>
 </template>

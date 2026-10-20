@@ -42,7 +42,7 @@ const links = [
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage layout="columns">
     <UiLoadError
       v-if="error && !summary"
       @retry="refresh()"
@@ -122,5 +122,5 @@ const links = [
         :items="links"
       />
     </template>
-  </div>
+  </UiPage>
 </template>

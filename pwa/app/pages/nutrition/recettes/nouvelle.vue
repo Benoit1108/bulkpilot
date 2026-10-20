@@ -12,7 +12,7 @@ async function onSaved(recipe: Recipe): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/nutrition/recettes"
       label="Mes recettes"
@@ -20,5 +20,5 @@ async function onSaved(recipe: Recipe): Promise<void> {
     <UiCard>
       <RecipeForm @saved="onSaved" />
     </UiCard>
-  </div>
+  </UiPage>
 </template>

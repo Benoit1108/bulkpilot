@@ -10,9 +10,10 @@ test.describe('app shell', () => {
     const nav = page.getByRole('navigation', { name: 'Navigation principale' })
 
     for (const section of [...sections.slice(1), 'Accueil']) {
-      await nav.getByRole('link', { name: section }).click()
+      await nav.getByRole('link', { name: section, exact: true }).click()
       await expect(page.getByRole('heading', { level: 1, name: heading(section) })).toBeVisible()
-      await expect(nav.getByRole('link', { name: section })).toHaveAttribute('aria-current', 'page')
+      // A section with pages is the current section; its own page is the current page (sidebar).
+      await expect(nav.getByRole('link', { name: section, exact: true })).toHaveAttribute('aria-current', section === 'Accueil' ? 'page' : 'true')
       await expect(page).toHaveTitle(`${section} · BulkPilot`)
     }
   })
@@ -41,10 +42,15 @@ test.describe('settings', () => {
     await expect(page.getByTestId('service-status')).toHaveText('Connecté')
   })
 
-  test('theme defaults to dark and the chosen theme survives a reload', async ({ page }) => {
+  test('theme follows the device by default and the chosen theme survives a reload', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' })
     await page.goto('/reglages')
     const html = page.locator('html')
     await expect(html).toHaveAttribute('data-theme', 'dark')
+    await expect(page.getByRole('radio', { name: 'Système' })).toBeChecked()
+    await page.emulateMedia({ colorScheme: 'light' })
+    await expect(html, 'a change of the device setting applies at once').toHaveAttribute('data-theme', 'light')
+    await page.emulateMedia({ colorScheme: 'dark' })
 
     await page.getByRole('radio', { name: 'Clair' }).check()
     await expect(html).toHaveAttribute('data-theme', 'light')
@@ -65,6 +71,18 @@ test.describe('settings', () => {
     }
   })
 
+  for (const scheme of ['light', 'dark'] as const) {
+    test(`with nothing stored, the device's ${scheme} theme is applied before the app bundle runs`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: scheme })
+      await page.route('**/_nuxt/**', route => route.abort())
+
+      await page.goto('/')
+
+      await expect(page.locator('html')).toHaveAttribute('data-theme', scheme)
+      await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', scheme === 'light' ? '#f2f2f7' : '#000000')
+    })
+  }
+
   test('the stored theme is applied before the app bundle runs', async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem('theme', 'light'))
     await page.route('**/_nuxt/**', route => route.abort())
@@ -72,7 +90,7 @@ test.describe('settings', () => {
     await page.goto('/')
 
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
-    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#f7f6fb')
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#f2f2f7')
   })
 })
 
@@ -103,10 +121,10 @@ test.describe('layout by screen size', () => {
 
   test('each theme paints its own background', async ({ page }) => {
     await page.goto('/reglages')
-    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(13, 11, 20)')
+    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(0, 0, 0)')
 
     await page.getByRole('radio', { name: 'Clair' }).check()
-    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(247, 246, 251)')
+    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(242, 242, 247)')
   })
 })
 

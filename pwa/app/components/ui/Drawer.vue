@@ -37,7 +37,7 @@ function closeOnBackdrop(event: MouseEvent): void {
   <!-- A bottom sheet on phones, a side panel from md. -->
   <dialog
     ref="dialog"
-    class="mx-0 mt-auto mb-0 max-h-[90dvh] w-full max-w-full rounded-t-lg border border-line bg-surface p-0 text-ink shadow-raised backdrop:bg-scrim md:mt-0 md:ml-auto md:h-dvh md:max-h-dvh md:w-md md:rounded-l-lg md:rounded-tr-none"
+    class="mx-0 mt-auto mb-0 max-h-[90dvh] w-full max-w-full rounded-t-xl border border-line bg-surface p-0 text-ink shadow-raised backdrop:bg-scrim md:mt-0 md:ml-auto md:h-dvh md:max-h-dvh md:w-md md:rounded-l-xl md:rounded-tr-none"
     :aria-labelledby="titleId"
     @close="open = false"
     @pointerdown="press"

@@ -18,7 +18,7 @@ const items = computed(() => (programs.value ?? []).map(program => ({
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/training"
       label="Training"
@@ -44,5 +44,5 @@ const items = computed(() => (programs.value ?? []).map(program => ({
         description="Un programme regroupe tes séances&nbsp;: PPL, Full Body, Vacances… Un seul est suivi à la fois."
       />
     </UiCard>
-  </div>
+  </UiPage>
 </template>

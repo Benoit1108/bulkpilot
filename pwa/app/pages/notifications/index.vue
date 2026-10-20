@@ -61,7 +61,7 @@ async function readAll(): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <div class="flex flex-wrap items-center justify-between gap-3">
       <NuxtLink
         to="/notifications/reglages"
@@ -167,5 +167,5 @@ async function readAll(): Promise<void> {
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

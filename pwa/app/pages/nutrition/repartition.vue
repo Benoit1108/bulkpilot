@@ -17,7 +17,7 @@ function onSaved(value: MealSplit): void {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/nutrition"
       label="Nutrition"
@@ -36,5 +36,5 @@ function onSaved(value: MealSplit): void {
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

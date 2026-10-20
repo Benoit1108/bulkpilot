@@ -42,7 +42,7 @@ function extras(exercise: ProgramExercise): string {
         >
           <p
             v-if="isSuperset(block)"
-            class="text-xs font-semibold tracking-caps text-muted uppercase"
+            class="text-sm font-semibold text-muted"
           >
             Superset
           </p>

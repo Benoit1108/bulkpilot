@@ -19,7 +19,7 @@ const { firstPage, items: reports, status, error, refresh, hasMore, loading, not
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/coach"
       label="Coach"
@@ -80,5 +80,5 @@ const { firstPage, items: reports, status, error, refresh, hasMore, loading, not
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

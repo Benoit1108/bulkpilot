@@ -11,9 +11,9 @@ const { pending: signingOut, message: signOutError, run } = useSubmission()
 const appName = useRuntimeConfig().public.appName
 
 const themeOptions: ReadonlyArray<{ value: ThemePreference, label: string }> = [
-  { value: 'dark', label: 'Sombre' },
-  { value: 'light', label: 'Clair' },
   { value: 'system', label: 'Système' },
+  { value: 'light', label: 'Clair' },
+  { value: 'dark', label: 'Sombre' },
 ]
 
 const statusLabels = {
@@ -57,7 +57,7 @@ async function leave(): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <UiNavList
       v-if="account"
       label="Sections des réglages"
@@ -65,26 +65,13 @@ async function leave(): Promise<void> {
     />
 
     <UiCard title="Apparence">
-      <fieldset class="m-0 grid grid-cols-3 gap-2 p-0">
-        <legend class="mb-2 text-sm text-muted">
-          Thème
-        </legend>
-        <label
-          v-for="option in themeOptions"
-          :key="option.value"
-          class="relative grid min-h-tap cursor-pointer place-items-center rounded-md border border-line bg-surface-raised font-semibold has-checked:border-accent has-checked:bg-accent-soft has-checked:text-accent-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
-        >
-          <input
-            type="radio"
-            name="theme"
-            class="absolute inset-0 m-0 cursor-pointer opacity-0"
-            :value="option.value"
-            :checked="preference === option.value"
-            @change="setPreference(option.value)"
-          >
-          <span>{{ option.label }}</span>
-        </label>
-      </fieldset>
+      <UiSegmented
+        :model-value="preference"
+        legend="Thème"
+        name="theme"
+        :options="themeOptions"
+        @update:model-value="setPreference"
+      />
     </UiCard>
 
     <UiCard title="À propos">
@@ -130,5 +117,5 @@ async function leave(): Promise<void> {
         Se déconnecter
       </UiButton>
     </template>
-  </div>
+  </UiPage>
 </template>

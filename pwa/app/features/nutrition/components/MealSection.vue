@@ -14,7 +14,7 @@ const titleId = computed(() => `meal-title-${props.meal.slot}`)
 
 <template>
   <section
-    class="flex flex-col gap-2 rounded-lg border border-line bg-surface p-4"
+    class="flex flex-col gap-2 rounded-lg bg-surface p-4"
     :aria-labelledby="titleId"
     :data-testid="`meal-${meal.slot}`"
   >

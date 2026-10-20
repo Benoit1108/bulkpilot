@@ -18,6 +18,9 @@ export default defineConfig({
     ignoreHTTPSErrors: true,
     launchOptions: { args: ['--ignore-certificate-errors'] },
     trace: 'retain-on-failure',
+    // The app follows the device's theme: the specs run in dark, the default most checks were written
+    // for; responsive.spec checks the light theme too.
+    colorScheme: 'dark',
   },
   projects: [
     { name: 'mobile', use: { ...devices['Pixel 7'] } },

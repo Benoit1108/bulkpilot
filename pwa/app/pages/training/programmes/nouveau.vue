@@ -12,7 +12,7 @@ async function onSaved(program: Program): Promise<void> {
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/training/programmes"
       label="Mes programmes"
@@ -20,5 +20,5 @@ async function onSaved(program: Program): Promise<void> {
     <UiCard>
       <ProgramForm @saved="onSaved" />
     </UiCard>
-  </div>
+  </UiPage>
 </template>

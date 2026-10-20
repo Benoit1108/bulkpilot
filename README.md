@@ -49,7 +49,7 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 ## Documentation
 
 - [Architecture](docs/ARCHITECTURE.md) · [Domaine](docs/DOMAIN.md) · [API](docs/API.md)
-- [Développement](docs/DEVELOPMENT.md) · [Tests](docs/TESTING.md) · [Critères d’acceptation](docs/ACCEPTANCE.md) · [Déploiement](docs/DEPLOYMENT.md) · [Supervision](docs/MONITORING.md)
+- [Développement](docs/DEVELOPMENT.md) · [Tests](docs/TESTING.md) · [Critères d’acceptation](docs/ACCEPTANCE.md) · [Déploiement](docs/DEPLOYMENT.md) · [Supervision](docs/MONITORING.md) · [Charte graphique](docs/DESIGN.md)
 - [Sécurité](SECURITY.md) · [Contribuer](CONTRIBUTING.md) · [Décisions (ADR)](docs/adr/)
 
 ## Avancement
@@ -68,3 +68,6 @@ docs/    Architecture, domaine, API, développement, déploiement, tests, ADR
 | 8 | Export / sécurité : exports (JSON, CSV, Excel, PDF, photos), suppression du compte après 7 jours, journal d’activité, sauvegardes chiffrées vérifiées | ✅ |
 | 9 | Qualité : matrice d’accès et scan ZAP, budgets SQL, index et charge (k6), Lighthouse, hors ligne, gabarits responsive, mutation testing, données de démo, critères d’acceptation | ✅ |
 | 10 | Production (gratuite au départ) : VM Oracle Always Free derrière Tailscale, image construite une fois par la CI, testée puis signée (GHCR), PostgreSQL sur la VM et sauvegardes chiffrées, Cloudflare R2, Brevo, staging automatique puis production approuvée à la main avec retour arrière automatique, Sentry, Uptime Kuma et healthchecks.io | ✅ |
+| R0 | Refonte UX/UI (ADR-0034) : corrections rapides — alignements, listes, décimales à la française, graphiques hebdomadaires sans la semaine en cours, vrais titres de page | ✅ |
+| R1 | Charte graphique à la manière d’Apple Santé (docs/DESIGN.md), boutons en pilule, contrôle segmenté, cartes et listes groupées, barre latérale à icônes et pages de section, contenu pleine largeur, thème de l’appareil par défaut | ✅ |
+| R2–R6 | Accueil, entraînement (illustrations, minuteur), nutrition, progression, Coach et réglages | ⏳ |

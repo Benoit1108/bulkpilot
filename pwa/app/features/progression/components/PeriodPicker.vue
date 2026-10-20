@@ -7,7 +7,7 @@ defineProps<{ name: string }>()
 </script>
 
 <template>
-  <UiPillGroup
+  <UiSegmented
     v-model="period"
     legend="Période"
     hide-legend

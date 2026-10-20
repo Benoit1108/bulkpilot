@@ -90,7 +90,7 @@ const links = [
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <nav
       aria-label="Coach"
       class="flex flex-wrap gap-x-4"
@@ -123,7 +123,7 @@ const links = [
         <h2
           id="coach-recommendations"
           ref="heading"
-          class="text-sm font-semibold tracking-caps text-muted uppercase"
+          class="text-lg font-semibold tracking-snug"
           tabindex="-1"
         >
           Recommandations
@@ -185,5 +185,5 @@ const links = [
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

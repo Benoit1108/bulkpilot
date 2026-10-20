@@ -18,7 +18,7 @@ const onDay = (time: string) => formatFullDay(localDay(new Date(time)))
 </script>
 
 <template>
-  <div class="flex max-w-reading flex-col gap-4">
+  <UiPage>
     <ShellBackLink
       to="/coach"
       label="Coach"
@@ -105,5 +105,5 @@ const onDay = (time: string) => formatFullDay(localDay(new Date(time)))
       :message="notice"
       @dismiss="notice = null"
     />
-  </div>
+  </UiPage>
 </template>

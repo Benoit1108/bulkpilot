@@ -71,7 +71,8 @@ test.describe('progression', () => {
     await page.getByRole('button', { name: 'Ajouter la mesure' }).click()
     await expect(page.getByText('Mesure « Hanches » ajoutée.')).toBeVisible()
 
-    await page.getByRole('link', { name: 'Mensurations' }).click()
+    // The page's own way back (from xl the sidebar lists Mensurations too).
+    await page.getByRole('main').getByRole('link', { name: 'Mensurations' }).click()
     await page.getByLabel('Taille').fill('78,5')
     await page.getByLabel('Hanches').fill('94')
     await page.getByRole('button', { name: 'Enregistrer les mensurations' }).click()

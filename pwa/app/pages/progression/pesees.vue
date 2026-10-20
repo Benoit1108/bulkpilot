@@ -50,6 +50,7 @@ async function remove(weighIn: WeighIn, index: number): Promise<void> {
     class="flex max-w-reading flex-col gap-4 focus:outline-none"
     tabindex="-1"
   >
+    <!-- UiPage's reading layout, on an element of its own: the page needs a ref on its root. -->
     <ShellBackLink
       to="/progression"
       label="Progression"

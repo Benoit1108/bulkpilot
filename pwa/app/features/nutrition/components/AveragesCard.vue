@@ -4,8 +4,9 @@ import { formatKcal, formatMacro } from '~/features/nutrition/format'
 
 const props = defineProps<{ today: string }>()
 
-const PERIODS = [7, 30] as const
-const days = ref<(typeof PERIODS)[number]>(7)
+const PERIODS = [{ value: '7', label: '7\u00A0jours' }, { value: '30', label: '30\u00A0jours' }] as const
+const period = ref<(typeof PERIODS)[number]['value']>('7')
+const days = computed(() => Number(period.value))
 
 const api = useApi()
 const { data: averages, status, error, refresh } = useAsyncData(
@@ -30,22 +31,13 @@ const rows = computed(() => {
 <template>
   <UiCard title="Moyennes">
     <template #actions>
-      <div
-        class="flex gap-1 rounded-full bg-surface-raised p-1"
-        role="group"
-        aria-label="Période"
-      >
-        <button
-          v-for="period in PERIODS"
-          :key="period"
-          type="button"
-          class="min-h-tap cursor-pointer rounded-full bg-transparent px-3 font-semibold text-muted aria-pressed:bg-accent-fill aria-pressed:text-accent-contrast"
-          :aria-pressed="days === period"
-          @click="days = period"
-        >
-          {{ period }}&nbsp;jours
-        </button>
-      </div>
+      <UiSegmented
+        v-model="period"
+        legend="Période"
+        name="averages-period"
+        :options="PERIODS"
+        hide-legend
+      />
     </template>
 
     <p

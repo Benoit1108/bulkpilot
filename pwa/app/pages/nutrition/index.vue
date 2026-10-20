@@ -166,7 +166,7 @@ const shortcuts = [
         :day="shownDay"
         @build="building = true"
       />
-      <div class="grid gap-3 lg:grid-cols-2">
+      <div class="grid items-start gap-3 lg:grid-cols-2">
         <MealSection
           v-for="meal in shownDay.meals"
           :key="meal.slot"
