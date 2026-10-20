@@ -7,8 +7,11 @@ import EntryDrawer from '~/features/nutrition/components/EntryDrawer.vue'
 import MealBuilderDrawer from '~/features/nutrition/components/MealBuilderDrawer.vue'
 import MealSection from '~/features/nutrition/components/MealSection.vue'
 import SaveFavoriteDrawer from '~/features/nutrition/components/SaveFavoriteDrawer.vue'
-import { dayLabel, isDay, localDay, shiftDay } from '~/services/calendar/days'
-import { slotAt, type Entry, type MealSlot } from '~/features/nutrition/nutrition'
+import WeekIntake from '~/features/nutrition/components/WeekIntake.vue'
+import { useLoggedWeek } from '~/features/nutrition/loggedWeek'
+import { dayLabel, formatDayIn, isDay, localDay, shiftDay } from '~/services/calendar/days'
+import { NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
+import { slotAt, type Entry, type MealSlot, type NutritionDay } from '~/features/nutrition/nutrition'
 
 definePageMeta({ title: 'Nutrition' })
 
@@ -16,11 +19,19 @@ const route = useRoute()
 const today = ref(localDay())
 // The day lives in the URL (?jour=YYYY-MM-DD): back/forward and reloads keep it.
 const day = computed(() => (isDay(route.query.jour) ? route.query.jour : today.value))
-const label = computed(() => dayLabel(day.value, today.value))
+/** « Aujourd’hui », or the real date (« dimanche 19 octobre »): « Hier » alone hid it, the week strip places it. */
+const label = computed(() => (day.value === today.value ? dayLabel(day.value, today.value) : formatDayIn(day.value, today.value)))
 const isToday = computed(() => day.value >= today.value)
 
 const { journal, previous, status, error, refresh, log, logMany, logFavorite, correct, remove } = useNutritionDay(day)
 const shownDay = computed(() => journal.value ?? previous.value)
+
+// The week around the day: which days hold meals (the strip's dots) and their calories (the bars).
+const { kcal: weekKcal, target: weekTarget } = useLoggedWeek(() => day.value, () => today.value)
+/** The history leaves today out (under way): today's calories come from today's journal, once read. */
+const { data: todays } = useNuxtData<NutritionDay>(NUTRITION_KEYS.day(today.value))
+const week = computed(() => weekKcal.value.map(entry => (entry.day === today.value && todays.value?.day === today.value ? { day: entry.day, energyKcal: todays.value.totals.energyKcal || null } : entry)))
+const loggedDays = computed(() => new Set(week.value.filter(entry => entry.energyKcal).map(entry => entry.day)))
 
 const dayLabelElement = ref<HTMLElement | null>(null)
 async function goTo(target: string): Promise<void> {
@@ -91,73 +102,82 @@ const shortcuts = [
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
-    <nav
-      class="flex items-center gap-2"
-      aria-label="Changer de jour"
-    >
-      <UiButton
-        variant="ghost"
-        aria-label="Jour précédent"
-        @click="goTo(shiftDay(day, -1))"
+  <div class="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_22rem] lg:grid-rows-[auto_auto_1fr] lg:items-start lg:gap-x-6">
+    <!-- From lg: the days and meals on the left, the day's figures and the week on the right. -->
+    <div class="flex flex-col gap-2 lg:col-start-1 lg:row-start-1">
+      <nav
+        class="flex items-center gap-2"
+        aria-label="Changer de jour"
       >
-        <ChevronLeft
-          :size="20"
-          aria-hidden="true"
-        />
-      </UiButton>
+        <UiButton
+          variant="ghost"
+          aria-label="Jour précédent"
+          @click="goTo(shiftDay(day, -1))"
+        >
+          <ChevronLeft
+            :size="20"
+            aria-hidden="true"
+          />
+        </UiButton>
+        <p
+          ref="dayLabelElement"
+          class="flex-1 text-center font-bold first-letter:uppercase focus:outline-none"
+          tabindex="-1"
+          data-testid="day-label"
+          aria-live="polite"
+        >
+          {{ label }}
+        </p>
+        <UiButton
+          variant="ghost"
+          aria-label="Jour suivant"
+          :aria-disabled="isToday ? 'true' : undefined"
+          @click="next"
+        >
+          <ChevronRight
+            :size="20"
+            aria-hidden="true"
+          />
+        </UiButton>
+        <UiButton
+          v-if="day !== today"
+          variant="secondary"
+          @click="goTo(today)"
+        >
+          Aujourd’hui
+        </UiButton>
+      </nav>
+      <UiWeekStrip
+        :day="day"
+        :today="today"
+        :marked="loggedDays"
+        mark-label="repas saisis"
+        @pick="goTo"
+      />
+      <UiAlert
+        v-if="error && !journal && status !== 'pending'"
+        tone="error"
+      >
+        Impossible de charger cette journée.
+        <UiButton
+          variant="ghost"
+          @click="refresh()"
+        >
+          Réessayer
+        </UiButton>
+      </UiAlert>
       <p
-        ref="dayLabelElement"
-        class="flex-1 text-center font-bold first-letter:uppercase focus:outline-none"
-        tabindex="-1"
-        data-testid="day-label"
-        aria-live="polite"
+        class="sr-only"
+        role="status"
       >
-        {{ label }}
+        {{ journal ? '' : 'Chargement…' }}
       </p>
-      <UiButton
-        variant="ghost"
-        aria-label="Jour suivant"
-        :aria-disabled="isToday ? 'true' : undefined"
-        @click="next"
-      >
-        <ChevronRight
-          :size="20"
-          aria-hidden="true"
-        />
-      </UiButton>
-      <UiButton
-        v-if="day !== today"
-        variant="secondary"
-        @click="goTo(today)"
-      >
-        Aujourd’hui
-      </UiButton>
-    </nav>
+    </div>
 
-    <UiAlert
-      v-if="error && !journal && status !== 'pending'"
-      tone="error"
-    >
-      Impossible de charger cette journée.
-      <UiButton
-        variant="ghost"
-        @click="refresh()"
-      >
-        Réessayer
-      </UiButton>
-    </UiAlert>
-    <p
-      class="sr-only"
-      role="status"
-    >
-      {{ journal ? '' : 'Chargement…' }}
-    </p>
-    <!-- While the next day loads, the previous one stays, inert: the page keeps its height (no layout
-         shift) and nothing can be written to the wrong day. The very first load keeps about a day's room. -->
+    <!-- Under the week on a phone; from lg, the column beside the meals, the day at the top. -->
     <div
       v-if="shownDay"
-      class="flex flex-col gap-4"
+      class="lg:col-start-2 lg:row-span-2 lg:row-start-1"
       :class="{ 'opacity-60': !journal }"
       :inert="!journal || undefined"
       :aria-busy="!journal || undefined"
@@ -166,29 +186,46 @@ const shortcuts = [
         :day="shownDay"
         @build="building = true"
       />
-      <div class="grid items-start gap-3 lg:grid-cols-2">
-        <MealSection
-          v-for="meal in shownDay.meals"
-          :key="meal.slot"
-          :meal="meal"
-          @add="add"
-          @edit="edit"
-          @favorite="saveFavorite"
-        />
-      </div>
+    </div>
+    <!-- While the next day loads, the previous one stays, inert: the page keeps its height (no layout
+         shift) and nothing can be written to the wrong day. The very first load keeps about a day's room. -->
+    <div
+      v-if="shownDay"
+      class="flex flex-col gap-5 lg:col-start-1 lg:row-span-2 lg:row-start-2"
+      :class="{ 'opacity-60': !journal }"
+      :inert="!journal || undefined"
+      :aria-busy="!journal || undefined"
+    >
+      <MealSection
+        v-for="meal in shownDay.meals"
+        :key="meal.slot"
+        :meal="meal"
+        @add="add"
+        @edit="edit"
+        @favorite="saveFavorite"
+      />
     </div>
     <div
       v-else-if="!error"
-      class="min-h-144"
+      class="min-h-144 lg:col-start-1 lg:row-span-2 lg:row-start-2"
       aria-busy="true"
     />
 
-    <AveragesCard :today="today" />
+    <div class="flex flex-col gap-4 lg:col-start-2 lg:row-start-3">
+      <WeekIntake
+        :days="week"
+        :target="weekTarget?.energyKcal ?? null"
+        :today="today"
+      />
+      <AveragesCard
+        :today="today"
+      />
 
-    <UiNavList
-      label="Réglages nutrition"
-      :items="shortcuts"
-    />
+      <UiNavList
+        label="Réglages nutrition"
+        :items="shortcuts"
+      />
+    </div>
 
     <UiStatus
       :message="notice"

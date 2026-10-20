@@ -10,13 +10,20 @@ export const NUTRITION_KEYS = {
   mealSplit: 'nutrition-meal-split',
   day: (day: string) => `nutrition-day-${day}`,
   averages: (days: number, today: string) => `nutrition-averages-${days}-${today}`,
+  /** The days logged over a period (the journal's week strip and the analyses page). */
+  history: (period: string, today: string) => `nutrition-history-${period}-${today}`,
   food: (id: string) => `nutrition-food-${id}`,
   recipe: (id: string) => `nutrition-recipe-${id}`,
 } as const
 
 /** Everything computed from the journal: days and averages. */
 export function isJournalDerived(key: string): boolean {
-  return key.startsWith('nutrition-day-') || key.startsWith('nutrition-averages-')
+  return key.startsWith('nutrition-day-') || key.startsWith('nutrition-averages-') || key.startsWith('nutrition-history-')
+}
+
+/** Shown beside the day being written (its averages, its week): refreshed in place, never blanked. */
+export function isShownBesideTheDay(key: string): boolean {
+  return key.startsWith('nutrition-averages-') || key.startsWith('nutrition-history-')
 }
 
 /** Everything that shows the target: its history, and the days and averages judged against it. */

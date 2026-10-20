@@ -1,4 +1,4 @@
-import { isJournalDerived, NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
+import { isJournalDerived, isShownBesideTheDay, NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
 import type { LogSource, MealSlot, NutritionDay } from '~/features/nutrition/nutrition'
 
 export interface EntryChange {
@@ -30,14 +30,14 @@ export function useNutritionDay(day: Ref<string>) {
   /**
    * Shows the day the server answered with (or reloads it: an entry moved away, a load in flight),
    * then drops what else the journal feeds (other days, meal builder) and reloads the averages
-   * shown next to it.
+   * and the week shown next to it.
    */
   async function changed(result: NutritionDay | null): Promise<void> {
     if (result && result.day === day.value && status.value !== 'pending') data.value = result
     else await refresh()
     const current = NUTRITION_KEYS.day(day.value)
-    clearNuxtData(key => isJournalDerived(key) && key !== current && !key.startsWith('nutrition-averages-'))
-    await refreshNuxtData(Object.keys(nuxtApp.payload.data).filter(key => key.startsWith('nutrition-averages-')))
+    clearNuxtData(key => isJournalDerived(key) && key !== current && !isShownBesideTheDay(key))
+    await refreshNuxtData(Object.keys(nuxtApp.payload.data).filter(isShownBesideTheDay))
   }
 
   async function log(source: LogSource, slot: MealSlot, grams: number): Promise<void> {

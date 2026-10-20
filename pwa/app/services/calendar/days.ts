@@ -26,6 +26,9 @@ export function shiftDay(day: string, days: number): string {
   return localDay(date)
 }
 
+/** The days of a week, Monday first, by their letter (« M » twice: the full name is read out apart). */
+export const WEEKDAY_LETTERS = ['L', 'M', 'M', 'J', 'V', 'S', 'D'] as const
+
 /** The first day of the day's month. */
 export function monthStart(day: string): string {
   return `${day.slice(0, 8)}01`
@@ -44,6 +47,11 @@ export function weekStart(day: string): string {
 
 const longDay = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
 const longDayWithYear = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+
+/** « mercredi 30 septembre », or « mardi 30 septembre 2025 » outside the year of `today`. */
+export function formatDayIn(day: string, today: string): string {
+  return (day.slice(0, 4) === today.slice(0, 4) ? longDay : longDayWithYear).format(parseDay(day))
+}
 
 /** « mercredi 30 septembre », the day at the top of the home page. */
 export function formatLongDay(day: string): string {

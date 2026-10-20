@@ -2,7 +2,7 @@ import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import DaySummary from '~/features/nutrition/components/DaySummary.vue'
-import { shiftDay } from '~/services/calendar/days'
+import { formatDayIn, formatLongDay, shiftDay, weekStart } from '~/services/calendar/days'
 import NutritionPage from '~/pages/nutrition/index.vue'
 import { freezeToday, TODAY } from '../support/clock'
 import { button, buttonStartingWith, field } from '../support/dom'
@@ -38,11 +38,13 @@ describe('day summary', () => {
   it('shows what is left, then a neutral overflow', async () => {
     const left = await mountSuspended(DaySummary, { props: { day: day(TODAY, [entry('lunch', 500)]) } })
     expect(left.get('[data-testid="energy-gap"]').text()).toBe('Encore 1\u202F240\u00A0kcal')
-    expect(left.get('[role="progressbar"]').attributes('aria-valuetext')).toBe('1\u202F760\u00A0kcal sur 3\u202F000\u00A0kcal')
+    expect(left.text()).toContain('1\u202F760\u00A0kcal sur 3\u202F000\u00A0kcal')
+    expect(left.findAll('[role="progressbar"]').map(bar => bar.attributes('aria-label')), 'each macro in its bar').toEqual(['Protéines', 'Glucides', 'Lipides'])
 
     const over = await mountSuspended(DaySummary, { props: { day: day(TODAY, [entry('lunch', 1000)]) } })
-    expect(over.get('[data-testid="energy-gap"]').text()).toBe('+520\u00A0kcal au-delà de l’objectif')
-    expect(over.get('[aria-label="Calories"]').attributes('aria-valuenow'), 'never above its maximum').toBe('3000')
+    expect(over.get('[data-testid="energy-gap"]').text()).toBe('Au-delà de l’objectif +520\u00A0kcal')
+    const [drawn, around] = over.findAll('circle').at(-1)!.attributes('stroke-dasharray')!.split(' ').map(Number)
+    expect(drawn, 'the ring closed, never past its round').toBe(around)
 
     const exact = await mountSuspended(DaySummary, { props: { day: { ...day(TODAY), totals: { energyKcal: 3000, protein: 0, carbohydrate: 0, fat: 0, fibre: null } } } })
     expect(exact.get('[data-testid="energy-gap"]').text()).toBe('Objectif atteint')
@@ -66,7 +68,7 @@ describe('nutrition page', () => {
     expect(wrapper.get('[data-testid="day-label"]').text()).toBe('Aujourd’hui')
     const lunch = wrapper.get('[data-testid="meal-lunch"]')
     expect(lunch.text()).toContain('Riz blanc, cru')
-    expect(lunch.text()).toContain('/ 900\u00A0kcal')
+    expect(lunch.text()).toContain('sur 900\u00A0kcal')
     expect(button(wrapper, 'Jour suivant').attributes('aria-disabled'), 'stays focusable').toBe('true')
     expect(wrapper.findAll('button').some(b => b.text() === 'Aujourd’hui')).toBe(false)
   })
@@ -77,7 +79,7 @@ describe('nutrition page', () => {
     const wrapper = await mountSuspended(NutritionPage, { route: `/nutrition?jour=${yesterday}`, attachTo: document.body })
     await flushPromises()
 
-    expect(wrapper.get('[data-testid="day-label"]').text()).toBe('Hier')
+    expect(wrapper.get('[data-testid="day-label"]').text(), 'the real date, not only « Hier »').toBe(formatLongDay(yesterday))
     await button(wrapper, 'Jour précédent').trigger('click')
     expect(navigate).toHaveBeenCalledWith({ query: { jour: shiftDay(TODAY, -2) } })
     await button(wrapper, 'Jour suivant').trigger('click')
@@ -87,6 +89,43 @@ describe('nutrition page', () => {
     expect(navigate).toHaveBeenLastCalledWith({ query: {} })
     expect(document.activeElement).toBe(wrapper.get('[data-testid="day-label"]').element)
     wrapper.unmount()
+  })
+
+  it('shows the week of the day, a dot under each day with meals, and opens a day in one tap', async () => {
+    // A Wednesday of last week, shown: its week reaches back nine days, beyond « 7d ».
+    const shown = shiftDay(TODAY, -5)
+    const monday = weekStart(shown)
+    fake.on('GET /api/nutrition/days/{day}', (_, params) => day(params!.path!.day!))
+    fake.on('GET /api/nutrition/history', () => ({ period: '30d', days: [{ day: monday, energyKcal: 2400, proteinGrams: 140 }], weeks: [], averageEnergyKcal: 2400, averageProteinGrams: 140, target: { energyKcal: 3000, proteinGrams: 150 } }))
+    const wrapper = await openPage(`/nutrition?jour=${shown}`)
+
+    expect(fake.calls.find(call => call.route === 'GET /api/nutrition/history')?.params).toEqual({ query: { period: '30d', today: TODAY } })
+    const days = wrapper.findAll('ol[aria-label="Jours de la semaine"] button')
+    expect(days.map(cell => cell.attributes('aria-label')).filter(label => label?.endsWith('repas saisis')), 'the Monday the history has').toEqual([`${formatDayIn(monday, TODAY)}, repas saisis`])
+    expect(days.find(cell => cell.attributes('aria-current') === 'date')!.attributes('aria-label')).toBe(formatDayIn(shown, TODAY))
+    expect(days.filter(cell => cell.attributes('aria-disabled') === 'true'), 'last week: nothing to come').toHaveLength(0)
+
+    await days[0]!.trigger('click')
+    expect(navigate).toHaveBeenLastCalledWith({ query: { jour: monday } })
+    const week = wrapper.findAll('section').find(section => section.text().startsWith('Cette semaine'))!
+    expect(week.findAll('tbody td').map(cell => cell.text())[0]).toBe('2\u202F400\u00A0kcal')
+  })
+
+  it('marks the days of the current week to come, and refreshes the week once food is logged', async () => {
+    fake.on('GET /api/nutrition/days/{day}', (_, params) => day(params!.path!.day!))
+    fake.on('GET /api/nutrition/history', () => ({ period: '7d', days: [], weeks: [], averageEnergyKcal: null, averageProteinGrams: null, target: null }))
+    fake.on('POST /api/nutrition/entries', () => day(TODAY, [entry('lunch', 150)]))
+    const wrapper = await openPage()
+
+    const days = wrapper.findAll('ol[aria-label="Jours de la semaine"] button')
+    const shown = days.findIndex(cell => cell.attributes('aria-current') === 'date')
+    expect(days.filter(cell => cell.attributes('aria-disabled') === 'true')).toHaveLength(6 - shown)
+    const loads = () => fake.calls.filter(call => call.route === 'GET /api/nutrition/history').length
+    const before = loads()
+
+    await useNutritionDay(ref(TODAY)).log({ foodId: rice.id }, 'lunch', 150)
+    await flushPromises()
+    expect(loads(), 'the week read again, in place').toBeGreaterThan(before)
   })
 
   it('does not go past today', async () => {

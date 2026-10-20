@@ -110,3 +110,17 @@ describe('meal of the time of day', () => {
     expect(searchKey('Weißbier')).toBe('weissbier')
   })
 })
+
+describe('the history that reaches a week', () => {
+  it('is the shortest period still covering the week, a period counting today in', async () => {
+    const { periodReaching } = await import('~/features/nutrition/loggedWeek')
+    expect(periodReaching('2026-10-19', '2026-10-20')).toBe('7d')
+    expect(periodReaching('2026-10-14', '2026-10-20'), '« 7d » starts six days back').toBe('7d')
+    expect(periodReaching('2026-10-13', '2026-10-20'), 'a day further needs « 30d »').toBe('30d')
+    expect(periodReaching('2026-09-21', '2026-10-20')).toBe('30d')
+    expect(periodReaching('2026-09-20', '2026-10-20')).toBe('3m')
+    expect(periodReaching('2026-05-04', '2026-10-20')).toBe('6m')
+    expect(periodReaching('2025-11-03', '2026-10-20')).toBe('1y')
+    expect(periodReaching('2024-01-01', '2026-10-20')).toBe('all')
+  })
+})

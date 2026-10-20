@@ -60,7 +60,7 @@ est réservé aux barres de navigation. Toute cible tactile fait au moins 44 px.
   l'emplacement `top`, au-dessus des colonnes, et une action reste dans le même bloc que la carte qu'elle concerne.
 - **Anneaux** (`UiRing`) : calories dehors, puis protéines, glucides, lipides ; fermés à l'objectif et au-delà, dans
   leur couleur ; décoratifs à côté d'un texte qui dit les chiffres, sinon une image nommée par eux. **Barres de
-  macros** (`MacroBars`) : « 98 / 150 g », la barre le lit en entier ; le bilan du journal y passe en R4.
+  macros** (`MacroBars`) : « 98 / 150 g », la barre le lit en entier ; sur l'accueil et dans le bilan du journal.
 - **Tuile** (widget de l'accueil) : son nom en violet (15 px, `text-callout`) est le lien, étendu à toute la carte ; un
   chiffre seul (24 px, `text-2xl` ; 40 px pour les calories) tient en tuile — moitié d'un téléphone, quart d'un grand
   écran —, une liste ou un bouton prend une carte large. Les tuiles vont par deux dans l'ordre choisi par
@@ -73,8 +73,15 @@ est réservé aux barres de navigation. Toute cible tactile fait au moins 44 px.
   react-body-highlighter, MIT) ; crédit sous l'image, liste complète sur la page Crédits. En vignette, l'effort seul,
   décoratif. Les fichiers sont dans `pwa/public/exercises/` (provenance : `pwa/public/exercises/ATTRIBUTION.md` ; script
   `pwa/scripts/exercise-illustrations/fetch.mjs`), gardés en cache une fois vus, pas installés d'avance.
-- Les autres composants de données (bande de semaine, ligne de série) arrivent avec la page qui les utilise en premier
-  (phases R4 à R6).
+- **Bande de semaine** (`UiWeekStrip`) : les sept jours de la semaine du jour affiché, lundi en premier, un point sous
+  ceux qui ont des repas, le jour affiché plein, aujourd'hui en violet ; un jour à venir reste focalisable mais ne
+  s'ouvre pas. Seule exception à la cible de 44 px : sur les téléphones les plus étroits, une colonne fait un peu moins
+  de 44 px de large (les flèches à côté donnent les mêmes déplacements en taille normale).
+- **Semaine en barres** (`WeekIntake`) : une barre de calories par jour face au pointillé de l'objectif, le jour en
+  cours plus clair ; un tableau masqué le dit en mots (« à venir », « en cours »). Les moyennes restent celles de la
+  carte Moyennes, calculées par l'API.
+- **Repas** (journal) : une liste groupée par repas, un aliment par ligne (nom, quantité, kcal), un « + » rond par repas
+  et une barre fine de sa part de la journée. Sur PC, les repas à gauche, le bilan et la semaine à droite.
 
 ## Navigation
 

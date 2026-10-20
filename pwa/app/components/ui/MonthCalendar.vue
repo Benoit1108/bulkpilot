@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
-import { formatLongDay, formatLongMonth, monthStart, parseDay, shiftDay, shiftMonth } from '~/services/calendar/days'
+import { formatLongDay, formatLongMonth, monthStart, parseDay, shiftDay, shiftMonth, WEEKDAY_LETTERS } from '~/services/calendar/days'
 
 /**
  * A month, Monday first, its marked days filled (a session done, a day logged): a table, so a
@@ -17,7 +17,8 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ 'update:month': [month: string] }>()
 
-const WEEKDAYS = [['L', 'lundi'], ['M', 'mardi'], ['M', 'mercredi'], ['J', 'jeudi'], ['V', 'vendredi'], ['S', 'samedi'], ['D', 'dimanche']] as const
+const NAMES = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'] as const
+const WEEKDAYS = WEEKDAY_LETTERS.map((letter, i) => [letter, NAMES[i]!] as const)
 const first = computed(() => monthStart(props.month))
 const weeks = computed(() => {
   const start = parseDay(first.value)

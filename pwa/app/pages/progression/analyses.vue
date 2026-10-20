@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { NUTRITION_KEYS } from '~/features/nutrition/cacheKeys'
 import CaloriesVsWeight from '~/features/progression/components/CaloriesVsWeight.vue'
 import IntakeCharts from '~/features/progression/components/IntakeCharts.vue'
 import PeriodPicker from '~/features/progression/components/PeriodPicker.vue'
@@ -18,7 +19,7 @@ const period = ref<Period>('3m')
 const during = computed(() => periodLong(period.value))
 const query = () => ({ query: { period: period.value, today } })
 // Each context computes its own figures; this page only sets them side by side.
-const { data: intake, error: intakeError, refresh: refreshIntake } = useAsyncData(() => `nutrition-history-${period.value}-${today}`, () => api.get('/api/nutrition/history', query()), { watch: [period] })
+const { data: intake, error: intakeError, refresh: refreshIntake } = useAsyncData(() => NUTRITION_KEYS.history(period.value, today), () => api.get('/api/nutrition/history', query()), { watch: [period] })
 const { data: weight, error: weightError, refresh: refreshWeight } = useAsyncData(() => PROGRESSION_KEYS.weight(period.value, today), () => api.get('/api/progression/weight', query()), { watch: [period] })
 const { data: training, error: trainingError, refresh: refreshTraining } = useAsyncData(() => TRAINING_KEYS.analytics(period.value, today), () => api.get('/api/training/analytics', query()), { watch: [period] })
 </script>

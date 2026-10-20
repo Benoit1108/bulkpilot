@@ -4,8 +4,8 @@ import { formatNumber } from '~/services/text/numbers'
 
 /**
  * The three macros side by side, each in its own colour (docs/DESIGN.md): what was eaten against
- * the target, as a bar and in figures. Without a target, the figure alone. The journal's day summary
- * moves to it when the journal is redone (R4).
+ * the target, as a bar and in figures. Without a target, the figure alone. On the dashboard and in the
+ * journal's day summary.
  */
 const props = defineProps<{
   protein: number

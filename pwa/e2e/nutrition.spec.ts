@@ -47,6 +47,15 @@ test.describe('nutrition', () => {
 
     await page.reload()
     await expect(page.getByTestId('meal-lunch')).toContainText('Poulet')
+
+    // The week strip: today holds meals, and another day of the week opens in one tap.
+    const week = page.getByRole('list', { name: 'Jours de la semaine' })
+    await expect(week.getByRole('button', { name: /aujourd’hui, repas saisis$/ })).toHaveAttribute('aria-current', 'date')
+    const earlier = week.getByRole('button').first()
+    if (await earlier.getAttribute('aria-current') !== 'date') {
+      await earlier.click()
+      await expect(page).toHaveURL(/\/nutrition\?jour=\d{4}-\d{2}-\d{2}$/)
+    }
   })
 
   test('an entry is corrected, moved to another meal, then removed', async ({ page, account: _account }) => {
