@@ -61,11 +61,16 @@ est réservé aux barres de navigation. Toute cible tactile fait au moins 44 px.
 - **Anneaux** (`UiRing`) : calories dehors, puis protéines, glucides, lipides ; fermés à l'objectif et au-delà, dans
   leur couleur ; décoratifs à côté d'un texte qui dit les chiffres, sinon une image nommée par eux. **Barres de
   macros** (`MacroBars`) : « 98 / 150 g », la barre le lit en entier ; sur l'accueil et dans le bilan du journal.
-- **Tuile** (widget de l'accueil) : son nom en violet (15 px, `text-callout`) est le lien, étendu à toute la carte ; un
+- **Tuile** (`UiTile` : widget de l'accueil, chiffres d'une section) : son nom en violet (15 px, `text-callout`) est le lien, étendu à toute la carte ; un
   chiffre seul (24 px, `text-2xl` ; 40 px pour les calories) tient en tuile — moitié d'un téléphone, quart d'un grand
   écran —, une liste ou un bouton prend une carte large. Les tuiles vont par deux dans l'ordre choisi par
   l'utilisateur ; une tuile seule s'élargit (pas de trou, ordre de lecture intact). Mini-courbe (`UiSparkline`) ou
   petites barres (`UiMiniBars`, semaines terminées, à partir de trois) sous le chiffre, décoratives.
+- **Tableau de bord Progression** : la période et « Ajouter une pesée » en haut (la pesée s'ouvre dans un panneau, le
+  « + » global aussi) ; le poids en tête (dernière pesée en grand, tendance, courbe, moyennes) avec l'objectif à côté
+  sur PC ; quatre tuiles (calories et protéines par jour, tonnage de la dernière semaine, une mensuration) ; les séries
+  par muscle de la semaine en cours, en barres. Les pesées vont par mois, chacune avec son écart à la précédente ;
+  les mensurations ont leur mini-courbe à côté de l'écart. Les analyses tiennent en grille de deux colonnes.
 - **Calendrier du mois** (`UiMonthCalendar`) : lundi en premier, les jours marqués remplis en violet, aujourd'hui
   cerclé ; un tableau, chaque jour lu avec ce qu'il porte ; pas de mois futur.
 - **Illustration d'exercice** (`ExerciseIllustration`) : les deux temps du dessin Everkinetic (départ, effort) peints

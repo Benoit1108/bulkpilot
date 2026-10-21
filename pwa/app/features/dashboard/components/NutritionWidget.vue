@@ -6,7 +6,6 @@ import { formatKcal } from '~/features/nutrition/format'
 import type { Nutrients, NutritionAverages, NutritionDay } from '~/features/nutrition/nutrition'
 import { plural } from '~/services/text/plural'
 import { viewDays, viewLong, type DashboardView } from '../dashboard'
-import DashboardWidget from './DashboardWidget.vue'
 
 /**
  * Calories and macros (spec §13): what was eaten today against the target, or the daily
@@ -53,7 +52,7 @@ const rings = computed<RingValue[]>(() => {
 </script>
 
 <template>
-  <DashboardWidget
+  <UiTile
     title="Nutrition"
     to="/nutrition"
     :loading="loading"
@@ -126,5 +125,5 @@ const rings = computed<RingValue[]>(() => {
         </UiLinkButton>
       </div>
     </template>
-  </DashboardWidget>
+  </UiTile>
 </template>

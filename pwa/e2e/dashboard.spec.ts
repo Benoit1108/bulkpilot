@@ -50,7 +50,8 @@ test.describe('dashboard', () => {
     await expectAccessible(page)
     await panel.getByRole('link', { name: 'Pesée' }).click()
     await expect(page).toHaveURL(/\/progression$/)
-    await expect(page.getByRole('textbox', { name: 'Poids' })).toBeFocused()
+    await expect(page.getByRole('dialog', { name: 'Ajouter une pesée' }).getByRole('textbox', { name: 'Poids' })).toBeFocused()
+    await page.keyboard.press('Escape')
 
     await page.keyboard.press('Control+k')
     const search = page.getByRole('combobox', { name: 'Rechercher' })

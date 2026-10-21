@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { DashboardView } from '../dashboard'
 import WeeklyReportCard from '~/features/coach/components/WeeklyReportCard.vue'
-import DashboardWidget from './DashboardWidget.vue'
 import { useCoachOfDay } from '~/features/coach/coachOfDay'
 
 /** The last weekly report (spec §59), drawn by the Coach once a week is over. */
@@ -18,7 +17,7 @@ const { coach, status, error, refresh } = useCoachOfDay(() => props.today)
     :today="today"
     link-to-all
   />
-  <DashboardWidget
+  <UiTile
     v-else
     title="Rapport de la semaine"
     to="/coach/rapports"
@@ -29,5 +28,5 @@ const { coach, status, error, refresh } = useCoachOfDay(() => props.today)
     <p class="text-sm text-muted">
       Ton premier rapport arrivera après ta première semaine complète.
     </p>
-  </DashboardWidget>
+  </UiTile>
 </template>

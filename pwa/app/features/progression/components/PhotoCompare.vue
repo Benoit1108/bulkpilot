@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { PILL } from '~/components/ui/classes'
 import { formatFullDay } from '~/services/calendar/days'
 import { formatCm, formatKg, formatSignedCm, formatSignedKg } from '../format'
 import { measureName, poseLabel, POSES, type PhotoSession, type Pose } from '../progression'
@@ -13,6 +12,7 @@ const props = defineProps<{ sessions: PhotoSession[] }>()
 const days = computed(() => props.sessions.map(session => session.day))
 const before = ref(days.value.at(-1) ?? '')
 const after = ref(days.value[0] ?? '')
+const MODES = [{ value: 'side' as const, label: 'Côte à côte' }, { value: 'slider' as const, label: 'Curseur' }]
 const mode = ref<'side' | 'slider'>('side')
 const pose = ref<Pose>('front')
 const reveal = ref(50)
@@ -67,54 +67,18 @@ const sliderId = useId()
       />
     </div>
     <div class="flex flex-wrap gap-4">
-      <fieldset class="m-0 min-w-0 border-0 p-0">
-        <legend class="mb-1 text-sm font-semibold">
-          Pose
-        </legend>
-        <div class="flex flex-wrap gap-2">
-          <label
-            v-for="option in poses"
-            :key="option.value"
-            :class="PILL"
-          >
-            <input
-              v-model="pose"
-              type="radio"
-              name="compare-pose"
-              :value="option.value"
-              class="sr-only"
-            >
-            {{ option.label }}
-          </label>
-        </div>
-      </fieldset>
-      <fieldset class="m-0 min-w-0 border-0 p-0">
-        <legend class="mb-1 text-sm font-semibold">
-          Affichage
-        </legend>
-        <div class="flex flex-wrap gap-2">
-          <label :class="PILL">
-            <input
-              v-model="mode"
-              type="radio"
-              name="compare-mode"
-              value="side"
-              class="sr-only"
-            >
-            Côte à côte
-          </label>
-          <label :class="PILL">
-            <input
-              v-model="mode"
-              type="radio"
-              name="compare-mode"
-              value="slider"
-              class="sr-only"
-            >
-            Curseur
-          </label>
-        </div>
-      </fieldset>
+      <UiSegmented
+        v-model="pose"
+        legend="Pose"
+        name="compare-pose"
+        :options="poses"
+      />
+      <UiSegmented
+        v-model="mode"
+        legend="Affichage"
+        name="compare-mode"
+        :options="MODES"
+      />
     </div>
     <p
       v-if="!pair"

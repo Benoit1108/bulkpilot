@@ -1,19 +1,19 @@
 <script setup lang="ts">
 /**
- * One widget of the dashboard, as an Apple Health tile: its name in the accent colour, the whole
- * card leading to the section it sums up (its name is the link, stretched over the card; a button
- * inside stays a button). It loads on its own, so a failure stays in it (the others show) and does
- * not take the focus away from where the user is.
+ * A tile, as in Apple Health (a dashboard widget, a section's summary): its name in the accent
+ * colour, the whole card leading to what it sums up (its name is the link, stretched over the card;
+ * a button inside stays a button). It loads on its own, so a failure stays in it (the others show)
+ * and does not take the focus away from where the user is.
  */
 defineProps<{
   title: string
-  /** Where to see more (the section the widget sums up). */
+  /** Where to see more (what the tile sums up). */
   to?: string
   loading: boolean
   failed: boolean
   /**
-   * The room kept while loading, about the height of the widget once loaded — its empty state for a
-   * new account: the widgets below do not jump when the data arrives (layout shift). Literal
+   * The room kept while loading, about the height of the tile once loaded — its empty state for a
+   * new account: the tiles below do not jump when the data arrives (layout shift). Literal
    * classes, so Tailwind sees them.
    */
   reserve?: 'min-h-28' | 'min-h-40'

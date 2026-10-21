@@ -10,6 +10,8 @@ export const TRAINING_KEYS = {
   workout: (id: string) => `training-workout-${id}`,
   nextWorkout: 'training-next-workout',
   analytics: (period: string, today: string) => `training-analytics-${period}-${today}`,
+  /** The week under way and the last full one. */
+  week: (today: string) => `training-week-${today}`,
   /** The workouts of a month, by its first day. */
   month: (first: string) => `training-month-${first}`,
 } as const

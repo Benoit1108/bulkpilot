@@ -5,7 +5,6 @@ import { formatNumber } from '~/services/text/numbers'
 import { plural } from '~/services/text/plural'
 import { viewLong, viewPeriod, type DashboardView } from '../dashboard'
 import { useTrainingAnalytics } from '../data'
-import DashboardWidget from './DashboardWidget.vue'
 
 /** Over a week or a month, the sessions done (spec §13), counted by the server. */
 const props = defineProps<{ view: DashboardView, today: string }>()
@@ -14,7 +13,7 @@ const { data: analytics, status, error, refresh } = useTrainingAnalytics(() => v
 </script>
 
 <template>
-  <DashboardWidget
+  <UiTile
     title="Entraînement"
     to="/training"
     :loading="status === 'pending' && !analytics"
@@ -33,5 +32,5 @@ const { data: analytics, status, error, refresh } = useTrainingAnalytics(() => v
         {{ formatNumber(analytics.sessionsPerWeek) }} par semaine en moyenne
       </p>
     </template>
-  </DashboardWidget>
+  </UiTile>
 </template>

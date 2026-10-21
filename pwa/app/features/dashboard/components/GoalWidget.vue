@@ -2,7 +2,6 @@
 import type { DashboardView } from '../dashboard'
 import { formatEstimate, formatKg } from '~/features/progression/format'
 import { useWeightGoal } from '../data'
-import DashboardWidget from './DashboardWidget.vue'
 
 /** The weight goal followed (spec §13 « progression »): the way done and what is left. */
 // Every widget is given the view; this one is the same whatever it is.
@@ -16,7 +15,7 @@ const verb = computed(() => (goal.value?.direction === 'gaining' ? 'prendre' : '
 </script>
 
 <template>
-  <DashboardWidget
+  <UiTile
     title="Objectif de poids"
     to="/progression/objectif"
     :loading="status === 'pending' && goal === undefined"
@@ -60,5 +59,5 @@ const verb = computed(() => (goal.value?.direction === 'gaining' ? 'prendre' : '
         Fixer un objectif
       </UiLinkButton>
     </div>
-  </DashboardWidget>
+  </UiTile>
 </template>

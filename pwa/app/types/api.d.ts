@@ -1684,6 +1684,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/training/week": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a TrainingWeek resource.
+         * @description Retrieves a TrainingWeek resource.
+         */
+        get: operations["api_trainingweek_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/me/two-factor/disable": {
         parameters: {
             query?: never;
@@ -4434,6 +4454,40 @@ export interface components {
             })[];
             /** @description Sessions a week on average over the period. */
             sessionsPerWeek: number | null;
+        };
+        /** @description Working sets of the week under way by the main muscle of their exercise, and the last full week's sessions and tonnage (weeks start on Monday). */
+        TrainingWeek: {
+            /** Format: date */
+            week: string;
+            muscles: {
+                /** @enum {string} */
+                muscle: "chest" | "lats" | "upper_back" | "traps" | "lower_back" | "front_delts" | "side_delts" | "rear_delts" | "biceps" | "triceps" | "forearms" | "abs" | "obliques" | "glutes" | "quads" | "hamstrings" | "adductors" | "calves";
+                workingSets: number;
+            }[];
+            lastWeek: {
+                /** Format: date */
+                week: string;
+                sessions: number;
+                workingSets: number;
+                tonnageKg: number;
+            };
+        };
+        /** @description Working sets of the week under way by the main muscle of their exercise, and the last full week's sessions and tonnage (weeks start on Monday). */
+        "TrainingWeek.jsonld": components["schemas"]["HydraItemBaseSchema"] & {
+            /** Format: date */
+            week: string;
+            muscles: {
+                /** @enum {string} */
+                muscle: "chest" | "lats" | "upper_back" | "traps" | "lower_back" | "front_delts" | "side_delts" | "rear_delts" | "biceps" | "triceps" | "forearms" | "abs" | "obliques" | "glutes" | "quads" | "hamstrings" | "adductors" | "calves";
+                workingSets: number;
+            }[];
+            lastWeek: {
+                /** Format: date */
+                week: string;
+                sessions: number;
+                workingSets: number;
+                tonnageKg: number;
+            };
         };
         TrendPointOutput: {
             /** Format: date */
@@ -9764,6 +9818,52 @@ export interface operations {
                 content: {
                     "application/ld+json": components["schemas"]["TrainingAnalytics.jsonld"];
                     "application/json": components["schemas"]["TrainingAnalytics"];
+                };
+            };
+            /** @description A query parameter is malformed. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["Error.jsonld"];
+                    "application/problem+json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    api_trainingweek_get: {
+        parameters: {
+            query?: {
+                /** @description The device's today (YYYY-MM-DD). */
+                today?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description TrainingWeek resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["TrainingWeek.jsonld"];
+                    "application/json": components["schemas"]["TrainingWeek"];
                 };
             };
             /** @description A query parameter is malformed. */

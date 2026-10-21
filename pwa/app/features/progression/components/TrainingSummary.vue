@@ -3,7 +3,7 @@ import type { ChartSeries } from '~/components/ui/LineChart.vue'
 import { formatNumber } from '~/services/text/numbers'
 import type { components } from '~/types/api'
 import { TEXT_LINK, DATA_TABLE } from '~/components/ui/classes'
-import { endedWeeks, weekLabel, WEEK_UNDER_WAY } from '../format'
+import { endedWeeks, formatTonnage, weekLabel, WEEK_UNDER_WAY } from '../format'
 
 /**
  * The training of the period (spec §57): sessions and their frequency, working sets, reps,
@@ -12,7 +12,6 @@ import { endedWeeks, weekLabel, WEEK_UNDER_WAY } from '../format'
  */
 const props = defineProps<{ analytics: components['schemas']['TrainingAnalytics'], during: string, thisWeek: string }>()
 
-const tonnage = (kg: number) => `${formatNumber(kg, 0)}\u00A0kg`
 const figures = computed(() => {
   const { totals, sessionsPerWeek } = props.analytics
   return [
@@ -20,7 +19,7 @@ const figures = computed(() => {
     { label: 'Séances par semaine', value: sessionsPerWeek === null ? '—' : formatNumber(sessionsPerWeek, 1) },
     { label: 'Séries de travail', value: String(totals.workingSets) },
     { label: 'Répétitions', value: formatNumber(totals.reps, 0) },
-    { label: 'Tonnage', value: tonnage(totals.tonnageKg) },
+    { label: 'Tonnage', value: formatTonnage(totals.tonnageKg) },
     { label: 'Records battus', value: String(totals.records) },
   ]
 })
@@ -28,7 +27,7 @@ const series = computed<ChartSeries[]>(() => [{ name: 'Tonnage', variant: 'line'
 const label = (week: string) => weekLabel(week, props.thisWeek)
 /** Said only when the week under way has sessions the line leaves out. */
 const underWay = computed(() => props.analytics.weeks.some(week => week.week === props.thisWeek && week.sessions > 0))
-const summary = computed(() => `${tonnage(props.analytics.totals.tonnageKg)} soulevés en ${props.analytics.totals.sessions} séance${props.analytics.totals.sessions > 1 ? 's' : ''} ${props.during}.${underWay.value ? ` ${WEEK_UNDER_WAY}` : ''}`)
+const summary = computed(() => `${formatTonnage(props.analytics.totals.tonnageKg)} soulevés en ${props.analytics.totals.sessions} séance${props.analytics.totals.sessions > 1 ? 's' : ''} ${props.during}.${underWay.value ? ` ${WEEK_UNDER_WAY}` : ''}`)
 </script>
 
 <template>
@@ -51,7 +50,7 @@ const summary = computed(() => `${tonnage(props.analytics.totals.tonnageKg)} sou
       title="Tonnage par semaine"
       :summary="summary"
       :series="series"
-      :format-y="tonnage"
+      :format-y="formatTonnage"
       :format-x="label"
     >
       <template #table>
@@ -81,7 +80,7 @@ const summary = computed(() => `${tonnage(props.analytics.totals.tonnageKg)} sou
                 {{ label(week.week) }}
               </th>
               <td>{{ week.sessions }}</td>
-              <td>{{ tonnage(week.tonnageKg) }}</td>
+              <td>{{ formatTonnage(week.tonnageKg) }}</td>
             </tr>
           </tbody>
         </table>

@@ -31,6 +31,7 @@ const training = {
 
 beforeEach(() => {
   fake.reset()
+  fake.on('GET /api/training/week', () => ({ week: weekStart(today), muscles: [{ muscle: 'chest', workingSets: 14 }, { muscle: 'calves', workingSets: 1 }], lastWeek: { week: shiftDay(weekStart(today), -7), sessions: 0, workingSets: 0, tonnageKg: 0 } }))
   clearNuxtData()
   fake.on('GET /api/nutrition/history', () => intake)
   fake.on('GET /api/progression/weight', () => summary({ weeks: [{ week: '2026-09-14', averageKg: 50.6, weighIns: 1 }, { week: '2026-09-21', averageKg: 51.2, weighIns: 1 }] }))
@@ -68,6 +69,8 @@ describe('analytics', () => {
     expect(wrapper.text()).toContain('Séances par semaine3')
     expect(wrapper.text()).toContain('Tonnage31\u202F251\u00A0kg')
     expect(wrapper.text()).toContain('31\u202F251\u00A0kg soulevés en 6 séances sur les 3 derniers mois.')
+    const muscles = wrapper.findAll('li').filter(item => item.text().includes('série')).map(item => item.text())
+    expect(muscles, 'the most worked first, a singular for one').toEqual(['Pectoraux14\u00A0séries', 'Mollets1\u00A0série'])
   })
 
   it('marks the week under way and leaves it out of the comparison', async () => {

@@ -9037,6 +9037,89 @@
                 ]
             }
         },
+        "/api/training/week": {
+            "get": {
+                "operationId": "api_trainingweek_get",
+                "tags": [
+                    "TrainingWeek"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TrainingWeek resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrainingWeek.jsonld"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrainingWeek"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A query parameter is malformed.",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a TrainingWeek resource.",
+                "description": "Retrieves a TrainingWeek resource.",
+                "parameters": [
+                    {
+                        "name": "today",
+                        "in": "query",
+                        "description": "The device's today (YYYY-MM-DD).",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
         "/api/me/two-factor/disable": {
             "post": {
                 "operationId": "api_metwo-factordisable_post",
@@ -21119,6 +21202,167 @@
                 ],
                 "description": "Totals of the finished workouts of a period, and of each of its weeks (Monday first)."
             },
+            "TrainingWeek": {
+                "type": "object",
+                "description": "Working sets of the week under way by the main muscle of their exercise, and the last full week's sessions and tonnage (weeks start on Monday).",
+                "required": [
+                    "week",
+                    "muscles",
+                    "lastWeek"
+                ],
+                "properties": {
+                    "week": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "muscles": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "muscle": {
+                                    "type": "string",
+                                    "enum": [
+                                        "chest",
+                                        "lats",
+                                        "upper_back",
+                                        "traps",
+                                        "lower_back",
+                                        "front_delts",
+                                        "side_delts",
+                                        "rear_delts",
+                                        "biceps",
+                                        "triceps",
+                                        "forearms",
+                                        "abs",
+                                        "obliques",
+                                        "glutes",
+                                        "quads",
+                                        "hamstrings",
+                                        "adductors",
+                                        "calves"
+                                    ]
+                                },
+                                "workingSets": {
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "muscle",
+                                "workingSets"
+                            ]
+                        }
+                    },
+                    "lastWeek": {
+                        "type": "object",
+                        "properties": {
+                            "week": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "sessions": {
+                                "type": "integer"
+                            },
+                            "workingSets": {
+                                "type": "integer"
+                            },
+                            "tonnageKg": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "week",
+                            "sessions",
+                            "workingSets",
+                            "tonnageKg"
+                        ]
+                    }
+                }
+            },
+            "TrainingWeek.jsonld": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/HydraItemBaseSchema"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "week",
+                            "muscles",
+                            "lastWeek"
+                        ],
+                        "properties": {
+                            "week": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "muscles": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "muscle": {
+                                            "type": "string",
+                                            "enum": [
+                                                "chest",
+                                                "lats",
+                                                "upper_back",
+                                                "traps",
+                                                "lower_back",
+                                                "front_delts",
+                                                "side_delts",
+                                                "rear_delts",
+                                                "biceps",
+                                                "triceps",
+                                                "forearms",
+                                                "abs",
+                                                "obliques",
+                                                "glutes",
+                                                "quads",
+                                                "hamstrings",
+                                                "adductors",
+                                                "calves"
+                                            ]
+                                        },
+                                        "workingSets": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "muscle",
+                                        "workingSets"
+                                    ]
+                                }
+                            },
+                            "lastWeek": {
+                                "type": "object",
+                                "properties": {
+                                    "week": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "sessions": {
+                                        "type": "integer"
+                                    },
+                                    "workingSets": {
+                                        "type": "integer"
+                                    },
+                                    "tonnageKg": {
+                                        "type": "number"
+                                    }
+                                },
+                                "required": [
+                                    "week",
+                                    "sessions",
+                                    "workingSets",
+                                    "tonnageKg"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "Working sets of the week under way by the main muscle of their exercise, and the last full week's sessions and tonnage (weeks start on Monday)."
+            },
             "TrendPointOutput": {
                 "type": "object",
                 "required": [
@@ -23119,6 +23363,10 @@
         {
             "name": "TrainingAnalytics",
             "description": "The training of a period (spec \u00a757): sessions, frequency, working sets, reps, tonnage and\nrecords beaten, in all and week by week."
+        },
+        {
+            "name": "TrainingWeek",
+            "description": "The week under way and the one before it, whatever period the other figures cover: the working\nsets by muscle so far, and what the last full week lifted."
         },
         {
             "name": "NextWorkout",

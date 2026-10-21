@@ -72,6 +72,7 @@ abstract class DemoAccountTestCase extends ApiTestCase
             'measurements' => ['/api/progression/measurements?period=3m&today='.$this->today, 5],
             'next workout' => ['/api/training/next-workout', 7],
             'training analytics' => ['/api/training/analytics?period=3m&today='.$this->today, 4],
+            'training week' => ['/api/training/week?today='.$this->today, 5],
             'workouts history' => ['/api/workouts?limit=20', 4],
             'workout' => ['/api/workouts/'.$workout, 6],
             'programs' => ['/api/programs', 6],

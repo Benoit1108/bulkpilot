@@ -4,7 +4,6 @@ import { weekStart } from '~/services/calendar/days'
 import { plural } from '~/services/text/plural'
 import { viewLong, viewPeriod, type DashboardView } from '../dashboard'
 import { useTrainingAnalytics } from '../data'
-import DashboardWidget from './DashboardWidget.vue'
 
 /** The records beaten lately (spec §13 « PR éventuels »), counted by the server. */
 const props = defineProps<{ view: DashboardView, today: string }>()
@@ -16,7 +15,7 @@ const records = computed(() => analytics.value?.totals.records ?? 0)
 </script>
 
 <template>
-  <DashboardWidget
+  <UiTile
     title="Records"
     to="/training/seances"
     :loading="status === 'pending' && !analytics"
@@ -38,5 +37,5 @@ const records = computed(() => analytics.value?.totals.records ?? 0)
     >
       Aucun record battu {{ viewLong(shownView) }}.
     </p>
-  </DashboardWidget>
+  </UiTile>
 </template>

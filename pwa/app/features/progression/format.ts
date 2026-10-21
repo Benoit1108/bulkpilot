@@ -1,4 +1,5 @@
 import { formatShortDay } from '~/services/calendar/days'
+import { formatNumber } from '~/services/text/numbers'
 import { PERIODS, type GoalEstimate, type Period, type WeightSummary } from './progression'
 
 const tenth = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
@@ -16,6 +17,11 @@ export function formatSignedKg(kg: number): string {
   // Halves away from zero, as the API rounds (Math.round would send −1,25 to −1,2).
   const rounded = Math.sign(kg) * Math.round(Math.abs(kg) * 10) / 10
   return `${sign(rounded)}${formatKg(Math.abs(rounded))}`
+}
+
+/** « 5 730 kg » lifted: to the kilogram. */
+export function formatTonnage(kg: number): string {
+  return `${formatNumber(kg, 0)}${NBSP}kg`
 }
 
 /** « 35,2 cm ». */

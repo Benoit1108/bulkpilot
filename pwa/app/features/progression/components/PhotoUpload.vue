@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { PILL } from '~/components/ui/classes'
 import { localDay } from '~/services/calendar/days'
 import { shrinkPhoto } from '~/services/media/shrink'
 import { poseLabel, POSES, type Pose, type ProgressPhoto } from '../progression'
@@ -113,27 +112,12 @@ defineExpose({ focus: () => input.value?.focus() })
         alt="Aperçu de la photo choisie"
         class="max-h-64 w-auto self-start rounded-md border border-line object-contain"
       >
-      <fieldset class="m-0 min-w-0 border-0 p-0">
-        <legend class="mb-1 text-sm font-semibold">
-          Pose
-        </legend>
-        <div class="flex flex-wrap gap-2">
-          <label
-            v-for="option in POSES"
-            :key="option.value"
-            :class="PILL"
-          >
-            <input
-              v-model="pose"
-              type="radio"
-              name="photo-pose"
-              :value="option.value"
-              class="sr-only"
-            >
-            {{ option.label }}
-          </label>
-        </div>
-      </fieldset>
+      <UiSegmented
+        v-model="pose"
+        legend="Pose"
+        name="photo-pose"
+        :options="POSES"
+      />
       <UiInput
         v-model="day"
         label="Jour"

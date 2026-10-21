@@ -104,7 +104,8 @@ describe('measurements', () => {
     const wrapper = await openPage()
 
     const rows = wrapper.findAll('tbody tr').map(row => row.text())
-    expect(rows).toEqual(['Taille79,2\u00A0cm+1,2\u00A0cm', 'Bras gauche35,0\u00A0cm—', 'Hanches95,0\u00A0cm—'])
+    expect(rows).toEqual(['Taille79,2\u00A0cm +1,2\u00A0cm', 'Bras gauche35,0\u00A0cm —', 'Hanches95,0\u00A0cm —'])
+    expect(wrapper.findAll('tbody svg[aria-hidden="true"]'), 'a small line where there are two values or more').toHaveLength(1)
     expect(wrapper.get('figure').text()).toContain('Taille\u00A0: +1,2\u00A0cm sur les 3 derniers mois, 79,2\u00A0cm à la dernière mesure, le 20 septembre 2026.')
 
     await field(wrapper, 'Courbe de').setValue(HIPS)

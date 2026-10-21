@@ -6,7 +6,8 @@ import { measureName, type MeasureSeries, type Period } from '../progression'
 import PeriodPicker from './PeriodPicker.vue'
 
 /**
- * Each measure's latest value and change over the period, and the chart of the one picked (spec §55).
+ * Each measure's latest value and change over the period with its small line, and the chart of
+ * the one picked (spec §55).
  */
 const props = defineProps<{ series: MeasureSeries[] }>()
 const period = defineModel<Period>('period', { required: true })
@@ -24,6 +25,8 @@ const summary = computed(() => {
   if (series.changeCm === null) return `Une mesure ${during.value}\u00A0: ${formatCm(series.points[0]!.cm)}.`
   return `${measureName(series)}\u00A0: ${formatSignedCm(series.changeCm)} ${during.value}, ${formatCm(series.latest!.cm)} à la dernière mesure, le ${formatFullDay(series.latest!.day)}.`
 })
+/** Each measure's line over the period, beside its change (the shape only, the figures are in the table). */
+const lines = computed(() => Object.fromEntries(measured.value.map(series => [series.key, series.points.map(point => point.cm)])))
 const change = (series: MeasureSeries) => (series.changeCm === null ? '—' : formatSignedCm(series.changeCm))
 </script>
 
@@ -59,7 +62,12 @@ const change = (series: MeasureSeries) => (series.changeCm === null ? '—' : fo
             {{ measureName(measure) }}
           </th>
           <td>{{ formatCm(measure.latest!.cm) }}</td>
-          <td>{{ change(measure) }}</td>
+          <td>
+            <span class="inline-flex items-center justify-end gap-2">
+              <span class="w-14 max-sm:hidden"><UiSparkline :values="lines[measure.key] ?? []" /></span>
+              {{ change(measure) }}
+            </span>
+          </td>
         </tr>
       </tbody>
     </table>

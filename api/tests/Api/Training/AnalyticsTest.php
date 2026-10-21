@@ -46,7 +46,15 @@ final class AnalyticsTest extends TrainingApiTestCase
         $week = '2026-09-28';
         self::assertSame([1], array_values(array_map(static fn (mixed $one): int => self::int($one, 'sessions'), array_filter(self::array($analytics, 'weeks'), static fn (mixed $one): bool => $week === self::at($one, 'week')))));
 
+        $week = $this->getJson('/api/training/week?today=2026-09-30');
+        self::assertSame('2026-09-28', self::at($week, 'week'));
+        self::assertSame([['muscle' => 'chest', 'workingSets' => 2]], self::array($week, 'muscles'), 'by the main muscle of the exercise');
+        self::assertSame(['week' => '2026-09-21', 'sessions' => 0, 'workingSets' => 0, 'tonnageKg' => 0.0], self::array($week, 'lastWeek'));
+        $this->call('GET', '/api/training/week?today=someday');
+        self::assertResponseStatusCodeSame(400);
+
         $this->register('sam@example.com', 'Sam');
         self::assertSame(0, self::int($this->getJson('/api/training/analytics'), 'totals.sessions'));
+        self::assertSame([], self::array($this->getJson('/api/training/week?today=2026-09-30'), 'muscles'));
     }
 }

@@ -5,7 +5,6 @@ import { useStartWorkout } from '~/features/training/startWorkout'
 import { formatDayMonth, localDay } from '~/services/calendar/days'
 import { plural } from '~/services/text/plural'
 import { useNextWorkout } from '~/features/training/nextWorkout'
-import DashboardWidget from './DashboardWidget.vue'
 
 /** The next workout and a button to start it (spec §13); the server says which day comes next. */
 const props = defineProps<{ today: string }>()
@@ -28,7 +27,7 @@ const lastDone = computed(() => (next.value?.lastDoneAt ? formatDayMonth(localDa
 </script>
 
 <template>
-  <DashboardWidget
+  <UiTile
     title="Entraînement"
     to="/training"
     :loading="status === 'pending' && next === undefined"
@@ -92,5 +91,5 @@ const lastDone = computed(() => (next.value?.lastDoneAt ? formatDayMonth(localDa
         Choisir un programme
       </UiLinkButton>
     </div>
-  </DashboardWidget>
+  </UiTile>
 </template>

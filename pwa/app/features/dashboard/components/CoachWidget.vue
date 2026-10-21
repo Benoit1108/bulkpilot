@@ -2,7 +2,6 @@
 import type { DashboardView } from '../dashboard'
 import { CALLS_TO_ACTION, LEVELS } from '~/features/coach/coach'
 import { plural } from '~/services/text/plural'
-import DashboardWidget from './DashboardWidget.vue'
 import { useCoachOfDay } from '~/features/coach/coachOfDay'
 
 /** The Coach's most important recommendation (spec §13); deciding on it happens in the Coach. */
@@ -22,7 +21,7 @@ const action = computed(() => {
 </script>
 
 <template>
-  <DashboardWidget
+  <UiTile
     title="Coach"
     to="/coach"
     :loading="status === 'pending' && !coach"
@@ -61,5 +60,5 @@ const action = computed(() => {
     >
       Rien à signaler&nbsp;: continue ton plan.
     </p>
-  </DashboardWidget>
+  </UiTile>
 </template>

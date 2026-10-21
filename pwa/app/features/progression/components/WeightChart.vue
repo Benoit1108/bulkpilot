@@ -3,14 +3,13 @@ import type { ChartMark, ChartSeries } from '~/components/ui/LineChart.vue'
 import { formatFullDay, formatShortDay } from '~/services/calendar/days'
 import { formatKg, formatSignedKg, periodLong, periodLongStart } from '../format'
 import type { Period, WeightSummary } from '../progression'
-import PeriodPicker from './PeriodPicker.vue'
 
 /**
  * The weight over a period (spec §55): each weigh-in, the 7-day and 30-day averages, and the
- * goal's next step and target as lines to reach.
+ * goal's next step and target as lines to reach. The period is picked by the page (it sets every
+ * figure shown beside the chart).
  */
-const props = defineProps<{ summary: WeightSummary }>()
-const period = defineModel<Period>('period', { required: true })
+const props = defineProps<{ summary: WeightSummary, period: Period }>()
 
 const points = computed(() => props.summary.points)
 const series = computed<ChartSeries[]>(() => [
@@ -25,25 +24,21 @@ const marks = computed<ChartMark[]>(() => {
   return [...next, { y: goal.targetKg, label: `Objectif ${formatKg(goal.targetKg)}` }]
 })
 
-const during = computed(() => periodLong(period.value))
+const during = computed(() => periodLong(props.period))
 const summaryText = computed(() => {
   const first = points.value[0]
   const last = points.value.at(-1)
   if (!first || !last) return `Aucune pesée ${during.value}.`
   if (first === last) return `Une pesée ${during.value}\u00A0: ${formatKg(last.weightKg)}.`
-  return `${periodLongStart(period.value)}, la moyenne 7 jours passe de ${formatKg(first.average7Kg)} à ${formatKg(last.average7Kg)} (${formatSignedKg(last.average7Kg - first.average7Kg)}), sur ${points.value.length} pesées.`
+  return `${periodLongStart(props.period)}, la moyenne 7 jours passe de ${formatKg(first.average7Kg)} à ${formatKg(last.average7Kg)} (${formatSignedKg(last.average7Kg - first.average7Kg)}), sur ${points.value.length} pesées.`
 })
 </script>
 
 <template>
   <div class="flex flex-col gap-3">
-    <PeriodPicker
-      v-model="period"
-      name="weight-period"
-    />
     <UiLineChart
       v-if="points.length"
-      title="Poids"
+      title="Pesées et moyennes"
       :summary="summaryText"
       :series="series"
       :marks="marks"

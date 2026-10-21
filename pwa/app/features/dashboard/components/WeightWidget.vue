@@ -3,7 +3,6 @@ import { formatKg, formatSignedKg } from '~/features/progression/format'
 import { formatDayMonth } from '~/services/calendar/days'
 import { viewLong, viewPeriod, type DashboardView } from '../dashboard'
 import { useWeightSummary } from '../data'
-import DashboardWidget from './DashboardWidget.vue'
 
 /**
  * The current weight and how it moved (spec §13: « poids actuel, variation hebdomadaire »), as a
@@ -20,7 +19,7 @@ const trend = computed(() => (summary.value?.points ?? []).map(point => point.av
 </script>
 
 <template>
-  <DashboardWidget
+  <UiTile
     title="Poids"
     to="/progression"
     :loading="status === 'pending' && !summary"
@@ -53,5 +52,5 @@ const trend = computed(() => (summary.value?.points ?? []).map(point => point.av
         Ajouter une pesée
       </UiLinkButton>
     </div>
-  </DashboardWidget>
+  </UiTile>
 </template>

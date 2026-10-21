@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Scale } from 'lucide-vue-next'
-import { formatKg } from '~/features/progression/format'
+import { formatKg, formatSignedKg } from '~/features/progression/format'
 import { isWeightDerived, PROGRESSION_KEYS, type WeighIn } from '~/features/progression/progression'
-import { formatFullDay } from '~/services/calendar/days'
+import { formatFullDay, formatLongMonth, monthStart } from '~/services/calendar/days'
 
 definePageMeta({ title: 'Pesées' })
 
@@ -11,6 +11,22 @@ const api = useApi()
 const { data: firstPage, error, refresh } = useAsyncData(PROGRESSION_KEYS.weighIns, () => api.get('/api/progression/weigh-ins', { query: { limit: PAGE } }))
 const more = ref<WeighIn[]>([])
 const weighIns = computed(() => [...(firstPage.value ?? []), ...more.value])
+/**
+ * By month, the latest first, each weigh-in with how far it moved from the one before it (the
+ * last one loaded has none until older ones are read). `index` is its place in the whole list.
+ */
+const months = computed(() => {
+  const groups: Array<{ month: string, title: string, rows: Array<{ weighIn: WeighIn, index: number, change: string | null }> }> = []
+  weighIns.value.forEach((weighIn, index) => {
+    const before = weighIns.value[index + 1]
+    const row = { weighIn, index, change: before ? formatSignedKg(weighIn.weightKg - before.weightKg) : null }
+    const month = monthStart(weighIn.day)
+    const group = groups.at(-1)
+    if (group?.month === month) group.rows.push(row)
+    else groups.push({ month, title: formatLongMonth(month), rows: [row] })
+  })
+  return groups
+})
 const hasMore = ref(true)
 watch(firstPage, (page) => {
   more.value = []
@@ -67,28 +83,50 @@ async function remove(weighIn: WeighIn, index: number): Promise<void> {
         {{ removal.message.value }}
       </UiAlert>
       <p class="text-sm text-muted">
-        Pour corriger une pesée, enregistre de nouveau ce jour-là depuis la page Progression.
+        Pour corriger une pesée,
+        <NuxtLink
+          :to="{ path: '/progression', query: { ajouter: 'pesee' } }"
+          class="font-semibold text-accent-ink"
+        >enregistre de nouveau ce jour-là</NuxtLink>.
       </p>
-      <ul class="m-0 flex list-none flex-col p-0">
-        <li
-          v-for="(weighIn, i) in weighIns"
-          :key="weighIn.day"
-          class="flex items-center justify-between gap-3 border-t border-line py-1"
+      <section
+        v-for="group in months"
+        :key="group.month"
+        class="flex flex-col gap-1"
+      >
+        <h2 class="text-lg font-semibold first-letter:uppercase">
+          {{ group.title }}
+        </h2>
+        <ul
+          class="m-0 flex flex-col divide-y divide-line p-0"
+          role="list"
         >
-          <span>
-            <span class="font-semibold tabular-nums">{{ formatKg(weighIn.weightKg) }}</span>
-            <span class="text-muted"> · {{ formatFullDay(weighIn.day) }}</span>
-          </span>
-          <UiConfirmButton
-            label="Retirer"
-            :accessible-label="`Retirer la pesée du ${formatFullDay(weighIn.day)}`"
-            confirm-label="Confirmer"
-            variant="ghost"
-            data-remove
-            @confirm="remove(weighIn, i)"
-          />
-        </li>
-      </ul>
+          <li
+            v-for="row in group.rows"
+            :key="row.weighIn.day"
+            class="flex items-center justify-between gap-3 py-1"
+          >
+            <span class="flex flex-col">
+              <span>
+                <span class="font-semibold tabular-nums">{{ formatKg(row.weighIn.weightKg) }}</span>
+                <span
+                  v-if="row.change"
+                  class="text-sm text-muted tabular-nums"
+                ><span aria-hidden="true"> · </span>{{ row.change }}<span class="sr-only"> depuis la pesée d’avant</span></span>
+              </span>
+              <span class="text-sm text-muted">{{ formatFullDay(row.weighIn.day) }}</span>
+            </span>
+            <UiConfirmButton
+              label="Retirer"
+              :accessible-label="`Retirer la pesée du ${formatFullDay(row.weighIn.day)}`"
+              confirm-label="Confirmer"
+              variant="ghost"
+              data-remove
+              @confirm="remove(row.weighIn, row.index)"
+            />
+          </li>
+        </ul>
+      </section>
       <UiButton
         v-if="hasMore"
         variant="secondary"

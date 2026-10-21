@@ -24,7 +24,7 @@ ont précédé le plan, validé sur des maquettes Claude Design.
   dans la phase qui les utilise en premier.
 
 **Conséquences.** Les anciennes couleurs et la colonne de 640 px partout disparaissent ; les pastilles à coche
-(`PILL`) ne restent que sur les photos, remplacées quand la page sera refaite (R5) ; les pages non encore refaites
+(`PILL`) sont remplacées partout par le contrôle segmenté (les photos en dernier, en R5) ; les pages non encore refaites
 gardent leur structure dans la nouvelle charte. Un utilisateur qui n'avait rien choisi voit désormais le thème de son
 appareil ; un choix « Sombre » antérieur n'était pas enregistré (c'était la valeur par défaut) et suit donc aussi
 l'appareil, à rechoisir une fois. Le manifeste garde le fond sombre (écran de lancement) : il ne peut pas suivre le

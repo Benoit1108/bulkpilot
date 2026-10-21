@@ -3,7 +3,6 @@ import type { DashboardView } from '../dashboard'
 import { formatKcal } from '~/features/nutrition/format'
 import { slotLabel } from '~/features/nutrition/nutrition'
 import { SHOWN_WIDGETS } from '../data'
-import DashboardWidget from './DashboardWidget.vue'
 
 /** The day's meals (spec §13 « repas »), each with what it adds up to. */
 // Every widget is given the view; this one is the same whatever it is.
@@ -18,7 +17,7 @@ const alone = computed(() => !shownWidgets.value.includes('nutrition'))
 </script>
 
 <template>
-  <DashboardWidget
+  <UiTile
     title="Repas"
     to="/nutrition"
     :loading="status === 'pending' && !day"
@@ -57,5 +56,5 @@ const alone = computed(() => !shownWidgets.value.includes('nutrition'))
         Ajouter un aliment
       </UiLinkButton>
     </div>
-  </DashboardWidget>
+  </UiTile>
 </template>

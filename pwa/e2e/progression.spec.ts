@@ -20,14 +20,17 @@ test.describe('progression', () => {
   test('a weigh-in, the averages and the trend, then a goal with milestones and its estimate', async ({ page, account: _account }) => {
     await weighInsOfTheLastWeeks(page)
     await page.goto('/progression')
-    await expect(page.getByRole('textbox', { name: 'Poids' })).toHaveValue('49,1')
     // Spec §112: the averages are worked out again from the new weigh-in.
     const figure = (label: string) => page.locator('dt', { hasText: label }).locator('xpath=following-sibling::dd')
     await expect(figure('Moyenne 7 jours')).toHaveText('aucune pesée ces 7 derniers jours')
     await expect(figure('Moyenne 30 jours')).toHaveText('48,6 kg')
 
-    await page.getByRole('textbox', { name: 'Poids' }).fill('49,6')
-    await page.getByRole('button', { name: 'Enregistrer la pesée' }).click()
+    await page.getByRole('button', { name: 'Ajouter une pesée' }).click()
+    const weighing = page.getByRole('dialog', { name: 'Ajouter une pesée' })
+    await expect(weighing.getByRole('textbox', { name: 'Poids' })).toHaveValue('49,1')
+    await weighing.getByRole('textbox', { name: 'Poids' }).fill('49,6')
+    await weighing.getByRole('button', { name: 'Enregistrer la pesée' }).click()
+    await expect(weighing).toBeHidden()
     await expect(page.getByText('Pesée du jour enregistrée : 49,6 kg.')).toBeVisible()
     await expect(figure('Moyenne 7 jours')).toHaveText('49,6 kg')
     await expect(figure('Moyenne 30 jours')).toHaveText('48,8 kg')
@@ -35,12 +38,14 @@ test.describe('progression', () => {
     await expect(page.getByText('Aucun objectif de poids')).toBeVisible()
     await expectAccessible(page)
 
-    const chart = page.getByRole('group', { name: 'Poids' })
+    // The weight card's own chart (the page also sets calories against the weight).
+    const weightCard = page.getByRole('region', { name: 'Poids', exact: true })
+    const chart = weightCard.getByRole('group', { name: 'Pesées et moyennes' })
     await chart.focus()
     await page.keyboard.press('End')
-    await expect(page.getByRole('figure').getByRole('status')).toContainText('Pesées : 49,6 kg')
-    await page.getByText('Voir les valeurs').click()
-    await expect(page.getByRole('table')).toContainText('49,6 kg')
+    await expect(weightCard.getByRole('figure').getByRole('status')).toContainText('Pesées : 49,6 kg')
+    await weightCard.getByText('Voir les valeurs').click()
+    await expect(weightCard.getByRole('table')).toContainText('49,6 kg')
 
     await page.getByRole('link', { name: 'Fixer un objectif' }).click()
     await page.getByLabel('Poids visé').fill('55')
