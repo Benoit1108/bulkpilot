@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ChevronRight } from 'lucide-vue-next'
-import { buttonClass } from '~/components/ui/classes'
+import { buttonClass, type ButtonVariant } from '~/components/ui/classes'
 import { CALLS_TO_ACTION, LEVELS, type Decision, type Recommendation } from '../coach'
+import CoachLevel from './CoachLevel.vue'
 import { proposalMacros, proposalSummary } from '../format'
 
 /**
@@ -15,15 +16,18 @@ const props = defineProps<{
   busy?: boolean
   /** Why the answer to this one failed. */
   message?: string | null
+  /** The first of the list: its answer is the screen's one main action, the others' are tinted. */
+  lead?: boolean
 }>()
 defineEmits<{ decide: [decision: Decision] }>()
 
 const titleId = useId()
 const level = computed(() => LEVELS[props.recommendation.level])
 const callToAction = computed(() => CALLS_TO_ACTION[props.recommendation.kind] ?? null)
-const actions = computed<ReadonlyArray<{ decision: Decision, label: string, variant: 'primary' | 'secondary' | 'ghost' }>>(() => (props.recommendation.proposal
-  ? [{ decision: 'accept', label: 'Accepter', variant: 'primary' }, { decision: 'reject', label: 'Refuser', variant: 'secondary' }, { decision: 'postpone', label: 'Plus tard', variant: 'ghost' }]
-  : [{ decision: 'accept', label: 'C’est noté', variant: callToAction.value ? 'secondary' : 'primary' }, { decision: 'postpone', label: 'Plus tard', variant: 'ghost' }]))
+const main = computed<ButtonVariant>(() => (props.lead ? 'primary' : 'secondary'))
+const actions = computed<ReadonlyArray<{ decision: Decision, label: string, variant: ButtonVariant }>>(() => (props.recommendation.proposal
+  ? [{ decision: 'accept', label: 'Accepter', variant: main.value }, { decision: 'reject', label: 'Refuser', variant: props.lead ? 'secondary' : 'ghost' }, { decision: 'postpone', label: 'Plus tard', variant: 'ghost' }]
+  : [{ decision: 'accept', label: 'C’est noté', variant: callToAction.value ? 'secondary' : main.value }, { decision: 'postpone', label: 'Plus tard', variant: 'ghost' }]))
 
 const title = ref<HTMLElement | null>(null)
 defineExpose({ focus: () => title.value?.focus() })
@@ -42,7 +46,7 @@ defineExpose({ focus: () => title.value?.focus() })
       class="flex flex-col gap-1"
       tabindex="-1"
     >
-      <span class="text-sm font-semibold"><span aria-hidden="true">{{ level.emoji }}</span> {{ level.label }}<span class="sr-only">&nbsp;:</span></span>
+      <span class="text-sm font-semibold"><CoachLevel :level="recommendation.level" /><span class="sr-only">&nbsp;:</span></span>
       <span class="text-lg font-bold">{{ recommendation.title }}</span>
     </h3>
     <p>{{ recommendation.body }}</p>
@@ -84,7 +88,7 @@ defineExpose({ focus: () => title.value?.focus() })
       <NuxtLink
         v-if="callToAction && !recommendation.proposal"
         :to="callToAction.to"
-        :class="buttonClass('primary')"
+        :class="buttonClass(main)"
       >
         {{ callToAction.label }}
       </NuxtLink>

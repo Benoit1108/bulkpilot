@@ -57,7 +57,7 @@ export const PAGES: ReadonlyArray<{ label: string, to: string, words: string }> 
   { label: 'Adhérence', to: '/coach', words: 'statistiques adherence score regularite' },
   { label: 'Historique du Coach', to: '/coach/historique', words: 'recommandations decisions' },
   { label: 'Rapports hebdomadaires', to: '/coach/rapports', words: 'rapport semaine' },
-  { label: 'Réglages du Coach', to: '/coach/reglages', words: 'personnalite ton rythme' },
+  { label: 'Préférences du Coach', to: '/coach/reglages', words: 'reglages personnalite ton rythme' },
   { label: 'Notifications', to: '/notifications', words: 'alertes' },
   { label: 'Réglages', to: '/reglages', words: 'parametres theme' },
   { label: 'Profil', to: '/reglages/profil', words: 'prenom taille' },

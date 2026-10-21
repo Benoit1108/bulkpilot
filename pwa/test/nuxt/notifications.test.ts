@@ -39,6 +39,9 @@ describe('the notifications', () => {
     expect(items[0]!.text()).toContain('Non lue\u00A0: Calories très insuffisantes')
     expect(items[0]!.attributes('data-unread')).toBe('true')
     expect(items[1]!.text()).not.toContain('Non lue')
+    // Each category's own icon, in its tint, beside the words that say what it is.
+    expect(items.map(item => item.get('.rounded-md[aria-hidden="true"]').classes().join(' '))).toEqual([expect.stringContaining('text-warning'), expect.stringContaining('text-carbs')])
+    expect(items[0]!.find('.lucide-flame').exists()).toBe(true)
     expect(button(wrapper, 'Tout marquer comme lu').exists()).toBe(true)
     wrapper.unmount()
   })

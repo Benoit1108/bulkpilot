@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Sparkles } from 'lucide-vue-next'
-import { TEXT_LINK } from '~/components/ui/classes'
 import AdherenceCard from '~/features/coach/components/AdherenceCard.vue'
 import RecommendationCard from '~/features/coach/components/RecommendationCard.vue'
 import WeeklyReportCard from '~/features/coach/components/WeeklyReportCard.vue'
@@ -83,28 +82,14 @@ const analysedLabel = computed(() => {
   return day === today.value ? 'Analysé aujourd’hui' : `Analysé le ${formatFullDay(day)}`
 })
 const links = [
-  { to: '/coach/historique', label: 'Historique' },
-  { to: '/coach/rapports', label: 'Rapports' },
-  { to: '/coach/reglages', label: 'Réglages' },
+  { to: '/coach/historique', title: 'Historique du Coach', summary: 'Les recommandations passées et ta réponse' },
+  { to: '/coach/rapports', title: 'Rapports de la semaine', summary: 'Le bilan de chaque semaine' },
+  { to: '/coach/reglages', title: 'Préférences du Coach', summary: 'Personnalité, ton, rythme d’analyse' },
 ]
 </script>
 
 <template>
   <UiPage>
-    <nav
-      aria-label="Coach"
-      class="flex flex-wrap gap-x-4"
-    >
-      <NuxtLink
-        v-for="link in links"
-        :key="link.to"
-        :to="link.to"
-        :class="TEXT_LINK"
-        class="text-sm"
-      >
-        {{ link.label }}
-      </NuxtLink>
-    </nav>
     <UiLoadError
       v-if="error && !coach"
       @retry="refresh()"
@@ -141,6 +126,7 @@ const links = [
           :recommendation="recommendation"
           :busy="writing.pending.value"
           :message="messageFor(recommendation)"
+          :lead="i === 0"
           @decide="decision => decide(i, recommendation, decision)"
         />
         <UiCard v-if="!coach.recommendations.length">
@@ -171,7 +157,6 @@ const links = [
         v-if="coach.report"
         :report="coach.report"
         :today="today"
-        link-to-all
       />
     </template>
     <p
@@ -181,6 +166,10 @@ const links = [
     >
       Chargement…
     </p>
+    <UiNavList
+      label="Le Coach"
+      :items="links"
+    />
     <UiStatus
       :message="notice"
       @dismiss="notice = null"

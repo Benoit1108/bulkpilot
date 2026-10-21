@@ -2,7 +2,7 @@
 import CoachSettingsForm from '~/features/coach/components/CoachSettingsForm.vue'
 import { COACH_KEYS, isCoachDay, type CoachSettings } from '~/features/coach/coach'
 
-definePageMeta({ title: 'Réglages du Coach' })
+definePageMeta({ title: 'Préférences du Coach' })
 
 const api = useApi()
 const { data: settings, error, refresh } = useAsyncData(COACH_KEYS.settings, () => api.get('/api/coach/settings'))

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { hasQuietHours } from '~/features/notifications/notifications'
+import { CATEGORIES, categoryIcon, hasQuietHours } from '~/features/notifications/notifications'
 import { formatMoment } from '~/services/calendar/days'
 import { CHECK_INTERVAL_MS, createNotificationSync } from '~/features/notifications/sync'
 import { apiError, createFakeApi } from '../support/fakeApi'
@@ -105,5 +105,14 @@ describe('notification wording', () => {
   it('knows no quiet hours by their missing ends', () => {
     expect(hasQuietHours({ quietFrom: '23:00', quietTo: '08:00' })).toBe(true)
     expect(hasQuietHours({ quietFrom: null, quietTo: null })).toBe(false)
+  })
+})
+
+describe('category icons', () => {
+  it('gives each category its own icon, and a bell to one this version does not know', () => {
+    const icons = CATEGORIES.map(category => categoryIcon(category.value))
+    expect(icons.every(icon => icon.tint.includes('text-')), 'every category has a tint').toBe(true)
+    expect(new Set(icons.map(icon => icon.icon)).size, 'told apart at a glance').toBe(CATEGORIES.length)
+    expect(categoryIcon('something_new')).toEqual({ icon: expect.anything(), tint: 'bg-surface-raised text-muted' })
   })
 })

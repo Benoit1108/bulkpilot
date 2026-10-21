@@ -53,7 +53,19 @@ describe('the Coach', () => {
     expect(wrapper.text()).toContain('Calories\u00A0: 5 jours sur 7 à ±10\u00A0% de l’objectif')
     expect(wrapper.text()).toContain('Entraînement\u00A0: 2 séances sur 3 prévues')
     expect(wrapper.text()).toContain('Sur les 7 derniers jours, aujourd’hui à part.')
-    expect(wrapper.get('[role="progressbar"]').attributes('aria-valuenow')).toBe('75')
+    const adherence = wrapper.findAll('section').find(section => section.find('h2').exists() && section.get('h2').text() === 'Adhérence')!
+    expect(adherence.get('[data-testid="adherence-score"]').text()).toBe('75')
+    expect(adherence.text()).toContain('sur 100')
+    const parts = adherence.findAll('li')
+    expect(parts[0]!.findAll('span[aria-hidden="true"] > span').map(dot => dot.classes().includes('bg-accent')), 'a dot per day expected, filled when kept').toEqual([true, true, true, true, true, false, false])
+    expect(adherence.find('svg[aria-hidden="true"]').exists(), 'the ring, beside the score in words').toBe(true)
+    // One main action on the screen: the first recommendation's (« Accepter »), the next one's is tinted.
+    expect(cards[0]!.findAll('button').find(b => b.text() === `Accepter\u00A0: ${increase.title}`)!.classes()).toContain('bg-accent-fill')
+    expect(cards[1]!.get('a').classes()).not.toContain('bg-accent-fill')
+    expect(wrapper.findAll('[data-recommendation] .bg-accent-fill')).toHaveLength(1)
+    // Each level: its icon, in its tone, before the word.
+    expect(cards[0]!.get('h3 svg').classes()).toEqual(expect.arrayContaining(['lucide-circle-alert', 'text-danger']))
+    expect(cards[1]!.get('h3 svg').classes()).toEqual(expect.arrayContaining(['lucide-info', 'text-success']))
 
     expect(wrapper.text()).toContain('Semaine du 21 septembre')
     expect(wrapper.text()).toContain('47,8 → 48,2\u00A0kg (+0,4\u00A0kg)')
@@ -69,7 +81,8 @@ describe('the Coach', () => {
     const wrapper = await openCoach()
     expect(wrapper.text()).toContain('Le Coach analyse tes données chaque jour. Rien ne change sans ton accord.')
     expect(wrapper.text()).toContain('Ton adhérence s’affichera après quelques jours de saisie.')
-    expect(wrapper.find('[role="progressbar"]').exists()).toBe(false)
+    expect(wrapper.text()).not.toContain('sur 100')
+    expect(wrapper.findAll('section').find(section => section.find('h2').exists() && section.get('h2').text() === 'Adhérence')!.find('svg').exists(), 'no ring without a score').toBe(false)
     wrapper.unmount()
   })
 
@@ -90,6 +103,7 @@ describe('the Coach', () => {
     expect(wrapper.findAll('[data-recommendation]')).toHaveLength(1)
     expect(wrapper.get('[data-testid="status"]').text()).toBe('Objectif passé à 2\u202F500\u00A0kcal à partir de demain.')
     expect(document.activeElement?.textContent, 'the one that took its place').toContain('Pèse-toi plus souvent')
+    expect(wrapper.get('[data-recommendation] a').classes(), 'it now leads: its action is the main one').toContain('bg-accent-fill')
     expect(useNuxtData(NUTRITION_KEYS.targets).data.value, 'the target changed').toBeUndefined()
     expect(useNuxtData(NUTRITION_KEYS.recipes).data.value, 'the rest is untouched').toEqual([])
     wrapper.unmount()
@@ -318,7 +332,7 @@ describe('the settings', () => {
     await flushPromises()
 
     expect(fake.calls.filter(call => call.route === 'PUT /api/coach/settings').map(call => call.body)).toEqual([{ personality: 'encouraging', paceKgPerWeek: -0.25 }])
-    expect(wrapper.text()).toContain('Réglages du Coach enregistrés.')
+    expect(wrapper.text()).toContain('Préférences du Coach enregistrées.')
   })
 
   it('sends no pace when the field is blank, and shows a refused one', async () => {

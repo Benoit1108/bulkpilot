@@ -61,9 +61,9 @@ est réservé aux barres de navigation. Toute cible tactile fait au moins 44 px.
 - **Anneaux** (`UiRing`) : calories dehors, puis protéines, glucides, lipides ; fermés à l'objectif et au-delà, dans
   leur couleur ; décoratifs à côté d'un texte qui dit les chiffres, sinon une image nommée par eux. **Barres de
   macros** (`MacroBars`) : « 98 / 150 g », la barre le lit en entier ; sur l'accueil et dans le bilan du journal.
-- **Tuile** (`UiTile` : widget de l'accueil, chiffres d'une section) : son nom en violet (15 px, `text-callout`) est le lien, étendu à toute la carte ; un
-  chiffre seul (24 px, `text-2xl` ; 40 px pour les calories) tient en tuile — moitié d'un téléphone, quart d'un grand
-  écran —, une liste ou un bouton prend une carte large. Les tuiles vont par deux dans l'ordre choisi par
+- **Tuile** (`UiTile` : widget de l'accueil, chiffres d'une section) : son nom en violet (15 px, `text-callout`) est
+  le lien, étendu à toute la carte ; un chiffre seul (24 px, `text-2xl` ; 40 px pour les calories) tient en tuile —
+  moitié d'un téléphone, quart d'un grand écran —, une liste ou un bouton prend une carte large. Les tuiles vont par deux dans l'ordre choisi par
   l'utilisateur ; une tuile seule s'élargit (pas de trou, ordre de lecture intact). Mini-courbe (`UiSparkline`) ou
   petites barres (`UiMiniBars`, semaines terminées, à partir de trois) sous le chiffre, décoratives.
 - **Tableau de bord Progression** : la période et « Ajouter une pesée » en haut (la pesée s'ouvre dans un panneau, le
@@ -94,6 +94,16 @@ est réservé aux barres de navigation. Toute cible tactile fait au moins 44 px.
   dit ce qui a été ajouté.
 - **Frise** (historique des objectifs) : un point par objectif sur un trait vertical, le plus récent en haut ; celui
   en vigueur plein et en violet, un objectif prévu cerclé, chacun dit en toutes lettres (« En vigueur », « Prévu »).
+
+- **Coach** : le niveau d'une recommandation par une icône dans sa teinte et son mot (Prioritaire, À surveiller,
+  Information), jamais un émoji ; seule la première recommandation porte le bouton plein de l'écran, les suivantes
+  sont teintées. L'adhérence en anneau (le score à côté, en grand) et, pour chaque partie, un point par jour ou par
+  séance attendu, plein quand il est tenu (décoratifs : le texte dit les chiffres).
+- **Notifications** : chaque catégorie a son icône dans un carré teinté, comme les listes d'iOS ; le point violet et
+  les mots disent « non lue ».
+- **Réglages** : « À propos » en liste groupée (le nom à gauche, la valeur à droite) ; « Se déconnecter » à part, en
+  rouge, sur toute la largeur (bouton `leave`). Une sous-page garde un seul nom partout : son titre (« Préférences du
+  Coach », « Rapports de la semaine »), abrégé seulement dans la barre latérale de sa section.
 
 ## Navigation
 

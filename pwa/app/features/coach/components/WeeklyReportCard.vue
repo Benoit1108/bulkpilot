@@ -22,7 +22,7 @@ defineProps<{ report: WeeklyReport, today: string, linkToAll?: boolean }>()
       <NuxtLink
         to="/coach/rapports"
         :class="TEXT_LINK"
-        class="text-sm"
+        class="shrink-0 text-sm whitespace-nowrap"
       >
         Tous les rapports
       </NuxtLink>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { History } from 'lucide-vue-next'
-import { COACH_KEYS, LEVELS, statusLabel, type Recommendation } from '~/features/coach/coach'
+import CoachLevel from '~/features/coach/components/CoachLevel.vue'
+import { COACH_KEYS, statusLabel, type Recommendation } from '~/features/coach/coach'
 import { proposalSummary } from '~/features/coach/format'
 import { formatFullDay, localDay } from '~/services/calendar/days'
 
@@ -49,7 +50,7 @@ const onDay = (time: string) => formatFullDay(localDay(new Date(time)))
           tabindex="-1"
         >
           <span class="text-sm text-muted">
-            {{ onDay(recommendation.createdAt) }} · <span aria-hidden="true">{{ LEVELS[recommendation.level].emoji }}</span> {{ LEVELS[recommendation.level].label }}
+            {{ onDay(recommendation.createdAt) }} · <CoachLevel :level="recommendation.level" />
           </span>
           <span class="font-semibold">{{ recommendation.title }}</span>
           <span

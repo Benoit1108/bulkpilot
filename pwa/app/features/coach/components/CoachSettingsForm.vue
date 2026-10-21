@@ -38,7 +38,7 @@ async function submit(): Promise<void> {
   await run(async () => {
     const settings = await api.put('/api/coach/settings', sent)
     markSaved(sent)
-    saved.value = 'Réglages du Coach enregistrés.'
+    saved.value = 'Préférences du Coach enregistrées.'
     emit('saved', settings)
   })
 }

@@ -1,3 +1,5 @@
+import { CircleAlert, Info, TriangleAlert } from 'lucide-vue-next'
+import type { Component } from 'vue'
 import type { components } from '~/types/api'
 
 export type Coach = components['schemas']['Coach']
@@ -10,11 +12,11 @@ export type CoachSettings = components['schemas']['CoachSettings']
 type Level = Recommendation['level']
 export type Decision = 'accept' | 'reject' | 'postpone'
 
-/** How much a recommendation matters (spec §68): the emoji and the word, never the colour alone. */
-export const LEVELS: Readonly<Record<Level, { emoji: string, label: string, border: string }>> = {
-  priority: { emoji: '🔴', label: 'Prioritaire', border: 'border-l-danger' },
-  watch: { emoji: '🟠', label: 'À surveiller', border: 'border-l-accent' },
-  info: { emoji: '🟢', label: 'Information', border: 'border-l-success' },
+/** How much a recommendation matters (spec §68): an icon in its tone and the word, never the colour alone. */
+export const LEVELS: Readonly<Record<Level, { icon: Component, tint: string, label: string, border: string }>> = {
+  priority: { icon: CircleAlert, tint: 'text-danger', label: 'Prioritaire', border: 'border-l-danger' },
+  watch: { icon: TriangleAlert, tint: 'text-warning', label: 'À surveiller', border: 'border-l-warning' },
+  info: { icon: Info, tint: 'text-success', label: 'Information', border: 'border-l-success' },
 }
 
 /**

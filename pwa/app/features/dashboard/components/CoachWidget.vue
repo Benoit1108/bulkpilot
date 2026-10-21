@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { DashboardView } from '../dashboard'
-import { CALLS_TO_ACTION, LEVELS } from '~/features/coach/coach'
+import CoachLevel from '~/features/coach/components/CoachLevel.vue'
+import { CALLS_TO_ACTION } from '~/features/coach/coach'
 import { plural } from '~/services/text/plural'
 import { useCoachOfDay } from '~/features/coach/coachOfDay'
 
@@ -33,8 +34,7 @@ const action = computed(() => {
       class="flex flex-col gap-1"
     >
       <p class="font-bold">
-        <span aria-hidden="true">{{ LEVELS[top.level].emoji }}</span>
-        {{ LEVELS[top.level].label }}&nbsp;: {{ top.title }}
+        <CoachLevel :level="top.level" />&nbsp;: {{ top.title }}
       </p>
       <p class="text-sm">
         {{ top.body }}

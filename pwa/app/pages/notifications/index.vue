@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Bell } from 'lucide-vue-next'
 import { useNotificationsBadge } from '~/features/notifications/badge'
-import { CATEGORIES, NOTIFICATION_KEYS, type AppNotification } from '~/features/notifications/notifications'
+import { CATEGORIES, categoryIcon, NOTIFICATION_KEYS, type AppNotification } from '~/features/notifications/notifications'
 import { formatMoment } from '~/services/calendar/days'
 
 definePageMeta({ title: 'Notifications' })
@@ -71,7 +71,7 @@ async function readAll(): Promise<void> {
       </NuxtLink>
       <UiButton
         v-if="unread"
-        variant="secondary"
+        variant="ghost"
         :loading="marking.pending.value"
         @click="readAll"
       >
@@ -120,10 +120,20 @@ async function readAll(): Promise<void> {
           >
             <!-- Unread: a dot and the words, never the colour alone. -->
             <span
-              class="mt-2 size-2.5 shrink-0 rounded-full"
+              class="mt-3.5 size-2.5 shrink-0 rounded-full"
               :class="notification.readAt ? 'bg-transparent' : 'bg-accent-fill'"
               aria-hidden="true"
             />
+            <span
+              class="grid size-9 shrink-0 place-items-center rounded-md"
+              :class="categoryIcon(notification.category).tint"
+              aria-hidden="true"
+            >
+              <component
+                :is="categoryIcon(notification.category).icon"
+                :size="18"
+              />
+            </span>
             <span class="flex min-w-0 flex-col gap-1">
               <span :class="notification.readAt ? 'font-semibold' : 'font-bold'">
                 <span

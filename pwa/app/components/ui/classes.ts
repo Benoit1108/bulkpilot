@@ -3,7 +3,7 @@
  * fields. Tailwind reads them from here: each class is written out in full (whole class lists may be
  * joined, a class name is never built from pieces).
  */
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'leave'
 
 const BUTTON = 'inline-flex min-h-tap cursor-pointer touch-manipulation items-center justify-center gap-2 rounded-full border px-5 font-semibold no-underline transition-[background-color,border-color,opacity] disabled:cursor-not-allowed disabled:opacity-55 aria-disabled:cursor-not-allowed aria-disabled:opacity-55'
 
@@ -15,6 +15,8 @@ const VARIANTS: Record<ButtonVariant, string> = {
   ghost: 'border-transparent bg-transparent text-accent-ink not-disabled:not-aria-disabled:hover:bg-accent-soft',
   /** A destructive action about to happen (a confirm button once armed). */
   danger: 'border-danger bg-transparent text-danger not-disabled:not-aria-disabled:hover:bg-danger/10',
+  /** Leaving (« Se déconnecter »): on its own, the width of the list above it, in red as iOS puts it. */
+  leave: 'w-full border-transparent bg-surface text-danger not-disabled:not-aria-disabled:hover:bg-surface-raised',
 }
 
 export const buttonClass = (variant: ButtonVariant) => `${BUTTON} ${VARIANTS[variant]}`
