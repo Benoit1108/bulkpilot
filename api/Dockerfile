@@ -3,7 +3,7 @@
 #--------------------------------------------------------------------------
 # Base: FrankenPHP + PHP 8.5 + extensions shared by every target
 #--------------------------------------------------------------------------
-FROM dunglas/frankenphp:1.12-php8.5-trixie AS frankenphp_base
+FROM dunglas/frankenphp:1.13-php8.5-trixie AS frankenphp_base
 
 WORKDIR /app
 
